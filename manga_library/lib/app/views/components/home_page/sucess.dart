@@ -11,9 +11,9 @@ class Sucess extends StatelessWidget {
 
   alinharMangas() {
     for (int i = 0; i < dados.length; ++i) {
-      if (i < 16) {
+      if (i < 18) {
         lancamentos.add(dados[i]);
-      } else if (i < 31) {
+      } else if (i < 33) {
         popular.add(dados[i]);
       } else {
         ultimosAtualizados.add(dados[i]);
@@ -78,9 +78,11 @@ class Sucess extends StatelessWidget {
             ),
           ),
 
-          HorizontalList(lista: lancamentos),
-          HorizontalList(lista: popular),
-          HorizontalList(lista: ultimosAtualizados),
+          HorizontalList(lista: lancamentos, identificacion: 'Lançamentos',),
+          const SizedBox(height: 10,),
+          HorizontalList(lista: popular, identificacion: 'Popular',),
+          const SizedBox(height: 10,),
+          HorizontalList(lista: ultimosAtualizados, identificacion: 'Ultimos Atualizados',),
         ],
       ),
     );

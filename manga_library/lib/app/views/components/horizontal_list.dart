@@ -1,27 +1,34 @@
-
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 
 class HorizontalList extends StatelessWidget {
   final List<ModelHomePage> lista;
-  const HorizontalList({super.key, required this.lista});
+  final String identificacion;
+  const HorizontalList({super.key, required this.lista, required this.identificacion});
 
   Widget item(ModelHomePage data) {
-    return SizedBox(
-      width: 110,
-      height: 170,
-      child: Column(
-        children: [
-          SizedBox(
-            width: 100,
-            height: 150,
-            child: Image.network(data.img),
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: GestureDetector(
+        onTap: (){},
+        child: SizedBox(
+          width: 110,
+          height: 170,
+          child: Column(
+            children: [
+              SizedBox(
+                width: 145,
+                height: 187.5,
+                child: Image.network(data.img, fit: BoxFit.fill,),
+              ),
+              Text(data.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  )),
+            ],
           ),
-          Text(data.name, style: const TextStyle(
-            color: Color.fromARGB(255, 3, 3, 3),
-            fontSize: 14,
-          )),
-        ],
+        ),
       ),
     );
   }
@@ -30,10 +37,20 @@ class HorizontalList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 250,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => item(lista[index]),
+      height: 235,
+      child: Column(
+        children: [
+          Text(identificacion, style: const TextStyle(fontSize: 19)),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 210,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: lista.length,
+              itemBuilder: (context, index) => item(lista[index]),
+            ),
+          ),
+        ],
       ),
     );
   }
