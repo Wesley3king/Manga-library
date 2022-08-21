@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/views/home_page.dart';
+import 'package:manga_library/app/views/routes/routes.dart';
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
@@ -43,13 +44,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       theme: theme,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home',
-      routes: {
-        '/home': (context) => const HomePage(),
-      },
+      routerDelegate: routes.routerDelegate,
+      routeInformationParser: routes.routeInformationParser,
+      routeInformationProvider: routes.routeInformationProvider,
     );
   }
 }

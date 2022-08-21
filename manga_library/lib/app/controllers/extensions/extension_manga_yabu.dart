@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chaleno/chaleno.dart';
+import 'package:manga_library/app/models/manga_info_model.dart';
 
 class ExtensionMangaYabu {
   homePage() async {
@@ -61,5 +63,42 @@ class ExtensionMangaYabu {
       log(e.toString());
       return null;
     }
+  }
+
+  Future<ModelMangaInfo?> mangaInfo(String link) async {
+    try {
+        var parser = await Chaleno().load('https://mangayabu.top/manga/$link/');
+
+        var dados = parser?.querySelector('script#manga-info').html.toString();
+
+        if (dados != null) {
+          // estes recortam a parte em html
+          List<String> corteHtml1 = dados.split('type="application/json">');
+          List<String> corteHtml2 = corteHtml1[1].split('</script>');
+
+          // faz um decode para json e processa os capitulos
+          var decoded = json.decode(corteHtml2[0]);
+          List capitulos = decoded['allposts'];
+          List<Allposts> capitulosAllposts = capitulos
+              .map(
+                (element) => Allposts.fromJson(element),
+              )
+              .toList();
+
+          return ModelMangaInfo(
+            chapterName: decoded['chapter_name'],
+            chapters: decoded['chapters'],
+            description: decoded['description'],
+            cover: decoded['cover'],
+            genres: decoded['genres'],
+            chapterList: decoded['chapter_list'],
+            alternativeName: decoded['alternative_name'],
+            allposts: capitulosAllposts,
+          );
+        }
+      } catch (e) {
+        log(e.toString());
+        return null;
+      }
   }
 }

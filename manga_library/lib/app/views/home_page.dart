@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
-import 'package:manga_library/app/views/components/home_page/error.dart';
+import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/home_page/sucess.dart';
 
 class HomePage extends StatefulWidget {
