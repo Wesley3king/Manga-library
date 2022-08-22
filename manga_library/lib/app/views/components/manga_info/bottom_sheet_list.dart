@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/models/manga_info_model.dart';
 
 class ButtomBottomSheetChapterList extends StatelessWidget {
-  const ButtomBottomSheetChapterList({super.key});
+  final List<Allposts> listaCapitulos;
+  const ButtomBottomSheetChapterList({super.key, required this.listaCapitulos});
 
   @override
   Widget build(BuildContext context) {
+    const double bottomSheetRadius = 25.0;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
       child: ElevatedButton(
@@ -28,32 +32,47 @@ class ButtomBottomSheetChapterList extends StatelessWidget {
           ],
         ),
         onPressed: () {
+          //print();
           showModalBottomSheet(
-           // shape: ShapeBorder(),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(bottomSheetRadius),
+                    topRight: Radius.circular(bottomSheetRadius))),
             context: context,
             builder: (context) => SizedBox(
               height: 500,
               child: Column(
-                children: [      
+                children: [
                   Container(
                     height: 35,
                     width: double.infinity,
-                    color: Colors.blue,
-                    alignment: Alignment.topCenter,
+                    decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(bottomSheetRadius),
+                            topRight: Radius.circular(bottomSheetRadius))),
+                    alignment: Alignment.topRight,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: const Icon(Icons.close),
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 5, right: 8),
+                        child: Icon(
+                          Icons.close,
+                        ),
+                      ),
                     ),
                   ),
-            
                   Expanded(
                     child: ListView.builder(
-                      itemCount: 11,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text('item $index'),
-                      ),),
+                        itemCount: listaCapitulos.length,
+                        itemBuilder: (context, index) {
+                          final Allposts capitulo = listaCapitulos[index];
+                          return ListTile(
+                            title: Text('Capitulo ${capitulo.num}'),
+                          );
+                        }),
                   )
                 ],
               ),

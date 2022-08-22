@@ -48,31 +48,19 @@ class Allposts {
   Allposts({
     required this.id,
     required this.num,
-    required this.date,
-    required this.scan,
-    required this.scanuri,
   });
   late final int id;
   late final String num;
-  late final String date;
-  late final String scan;
-  late final String scanuri;
   
   Allposts.fromJson(Map<String, dynamic> json){
     id = json['id'];
     num = json['num'];
-    date = json['date'];
-    scan = json['scan'];
-    scanuri = json['scanuri'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['num'] = num;
-    _data['date'] = date;
-    _data['scan'] = scan;
-    _data['scanuri'] = scanuri;
     return _data;
   }
 }

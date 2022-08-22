@@ -26,8 +26,18 @@ class _MangaInfoState extends State<MangaInfo> {
         return _loading();
       case MangaInfoStates.loading:
         return _loading();
-      case MangaInfoStates.sucess:
-        return SucessMangaInfo(dados: _mangaInfoController.data);
+      case MangaInfoStates.sucess1:
+        return SucessMangaInfo(
+          dados: _mangaInfoController.data,
+          sucess2: false,
+          capitulosDisponiveis: const [],
+        );
+      case MangaInfoStates.sucess2:
+        return SucessMangaInfo(
+          dados: _mangaInfoController.data,
+          sucess2: true,
+          capitulosDisponiveis: _mangaInfoController.capitulosDisponiveis,
+        );
       case MangaInfoStates.error:
         return const ErrorHomePage();
     }
