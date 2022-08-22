@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/views/components/manga_info/bottom_sheet_list.dart';
 
 class SucessMangaInfo extends StatelessWidget {
   final ModelMangaInfo dados;
@@ -50,6 +51,7 @@ class SucessMangaInfo extends StatelessWidget {
             ),
             const SizedBox(width: 12,),
             Text(dados.chapterName, style: const TextStyle(fontSize: 22, ),),
+            const ButtomBottomSheetChapterList(),
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Padding(
@@ -78,8 +80,9 @@ class SucessMangaInfo extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(dados.description, textAlign: TextAlign.justify, style: TextStyle(fontSize: 16),),
-            )
+              child: Text(dados.description, textAlign: TextAlign.justify, style: const TextStyle(fontSize: 16),),
+            ),
+            const SizedBox(height: 20,),
           ],
         )
       );
