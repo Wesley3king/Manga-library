@@ -18,13 +18,14 @@ class MangaInfoController {
     alternativeName: false,
     allposts: [],
   );
-  final List<ModelLeitor> capitulosDisponiveis = [];
+  List<ModelLeitor>? capitulosDisponiveis = [];
 
   ValueNotifier state = ValueNotifier<MangaInfoStates>(MangaInfoStates.start);
 
   Future start(String url) async {
     state.value = MangaInfoStates.loading;
     try {
+      print('------------');
       final ModelMangaInfo? _dados = await mangaYabu.mangaInfo(url);
       if (_dados != null) {
         data = _dados;
@@ -32,20 +33,73 @@ class MangaInfoController {
       } else {
         state.value = MangaInfoStates.error;
       }
-      final List<ModelLeitor>? _capitulosDisponiveis =
-          await yabuFetchServices.fetchCapitulos(url);
-      print(_capitulosDisponiveis);
+      capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
+      // print(_capitulosDisponiveis);
 
-      if (_capitulosDisponiveis != null &&
-          state.value != MangaInfoStates.error) {
+      if (state.value != MangaInfoStates.error) {
         state.value = MangaInfoStates.sucess2;
       } else {
         state.value = MangaInfoStates.error;
       }
     } catch (e) {
+      print(e);
       state.value = MangaInfoStates.error;
     }
   }
 }
 
 enum MangaInfoStates { start, loading, sucess1, sucess2, error }
+
+class BottomSheetController {
+  List<ModelCapitulosCorrelacionados> capitulosCorrelacionados = [];
+
+  ValueNotifier<BottomSheetStates> state =
+      ValueNotifier<BottomSheetStates>(BottomSheetStates.start);
+
+  start(List<ModelLeitor>? listaCapitulosDisponiveis,
+      List<Allposts> listaCapitulos) {
+    state.value = BottomSheetStates.loading;
+    try {
+      print('start');
+      correlacionarCapitulos(listaCapitulosDisponiveis ?? [], listaCapitulos);
+      print('------- end');
+      print(capitulosCorrelacionados);
+      state.value = BottomSheetStates.sucess;
+    } catch (e) {
+      print(e);
+      state.value = BottomSheetStates.error;
+    }
+  }
+
+  correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis,
+      List<Allposts> listaCapitulos) {
+    for (int indice = 0; indice < listaCapitulos.length; ++indice) {
+      bool adicionado = false;
+      for (int alreadyIndice = 0;
+          alreadyIndice < listaCapitulosDisponiveis.length;
+          ++alreadyIndice) {
+        int idCapituloDisponivel = listaCapitulosDisponiveis[alreadyIndice].id;
+        if (listaCapitulos[indice].id == idCapituloDisponivel) {
+          capitulosCorrelacionados.add(ModelCapitulosCorrelacionados(
+            id: idCapituloDisponivel,
+            capitulo: listaCapitulosDisponiveis[alreadyIndice].capitulo,
+            disponivel: true,
+            readed: false,
+          ));
+          adicionado = true;
+          break;
+        }
+      }
+       if (!adicionado) {
+          capitulosCorrelacionados.add(ModelCapitulosCorrelacionados(
+            id: listaCapitulos[indice].id,
+            capitulo: listaCapitulos[indice].num,
+            disponivel: false,
+            readed: false,
+          ));
+        }
+    }
+  }
+}
+
+enum BottomSheetStates { start, loading, sucess, error }

@@ -97,7 +97,7 @@ class ExtensionMangaYabu {
           );
         }
       } catch (e) {
-        log(e.toString());
+        print(e);
         return null;
       }
   }

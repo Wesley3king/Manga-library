@@ -10,15 +10,15 @@ class YabuFetchServices {
   Future<List<ModelLeitor>?> fetchCapitulos(String url) async {
     try {
       var data = await dio.post('https://vast-falls-98079.herokuapp.com/manga',
-          data: {"url": 'https://mangayabu.top/manga/$url/'});
+          data: {"url": 'https://mangayabu.top/manga/$url'});
 
       var dadosManga = data.data as Map<String, dynamic>;
+      print(dadosManga);
       print('entrou');
       List<ModelLeitor> listaCapitulos = dadosManga['data']['capitulos']
           .map<ModelLeitor>((lista) => ModelLeitor.fromJson(lista))
           .toList();
       print('passou');
-
 
       return listaCapitulos;
     } catch (e) {

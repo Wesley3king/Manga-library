@@ -6,7 +6,7 @@ void main() async {
   var yabuFtechServices = YabuFetchServices();
 
   test('deve retornar uma lista de capitulos', () async {
-    final List<ModelLeitor>? response = await yabuFtechServices.fetchCapitulos('one-piece');
+    final List<ModelLeitor>? response = await yabuFtechServices.fetchCapitulos('solo-leveling');
 
     if (response != null) {
       print(response[0].capitulo);

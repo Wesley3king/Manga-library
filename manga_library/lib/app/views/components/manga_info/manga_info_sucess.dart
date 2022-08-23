@@ -3,16 +3,21 @@ import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_list.dart';
 
-class SucessMangaInfo extends StatelessWidget {
+class SucessMangaInfo extends StatefulWidget {
   final ModelMangaInfo dados;
   final bool sucess2;
-  final List<ModelLeitor> capitulosDisponiveis;
+  final List<ModelLeitor>? capitulosDisponiveis;
   const SucessMangaInfo(
       {super.key,
       required this.dados,
       required this.sucess2,
       required this.capitulosDisponiveis});
 
+  @override
+  State<SucessMangaInfo> createState() => _SucessMangaInfoState();
+}
+
+class _SucessMangaInfoState extends State<SucessMangaInfo> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -28,7 +33,7 @@ class SucessMangaInfo extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: 400,
                 child: Image.network(
-                  dados.cover,
+                  widget.dados.cover,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -56,7 +61,7 @@ class SucessMangaInfo extends StatelessWidget {
                   width: 150,
                   height: 225,
                   child: Image.network(
-                    dados.cover,
+                    widget.dados.cover,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -68,20 +73,20 @@ class SucessMangaInfo extends StatelessWidget {
           width: 12,
         ),
         Text(
-          dados.chapterName,
+          widget.dados.chapterName,
           style: const TextStyle(
             fontSize: 22,
           ),
         ),
-        sucess2
-            ? ButtomBottomSheetChapterList(listaCapitulos: dados.allposts)
+        widget.sucess2
+            ? ButtomBottomSheetChapterList(listaCapitulos: widget.dados.allposts, listaCapitulosDisponiveis: widget.capitulosDisponiveis,)
             : const CircularProgressIndicator(),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Capítulos: ${dados.chapters}',
+                'Capítulos: ${widget.dados.chapters}',
                 textAlign: TextAlign.start,
               ),
             )),
@@ -90,7 +95,7 @@ class SucessMangaInfo extends StatelessWidget {
           height: 37,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: dados.genres.length,
+            itemCount: widget.dados.genres.length,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.all(4.0),
               child: Container(
@@ -101,7 +106,7 @@ class SucessMangaInfo extends StatelessWidget {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(top: 6.0, right: 7.0, left: 7.0),
-                  child: Text(dados.genres[index]),
+                  child: Text(widget.dados.genres[index]),
                 ),
               ),
             ),
@@ -110,7 +115,7 @@ class SucessMangaInfo extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            dados.description,
+            widget.dados.description,
             textAlign: TextAlign.justify,
             style: const TextStyle(fontSize: 16),
           ),

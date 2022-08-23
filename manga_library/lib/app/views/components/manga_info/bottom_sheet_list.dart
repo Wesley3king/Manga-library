@@ -1,9 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/manga_info_controller.dart';
+import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/views/components/error.dart';
+import 'package:manga_library/app/views/components/manga_info/bottom_sheet_states.dart';
 
-class ButtomBottomSheetChapterList extends StatelessWidget {
+class ButtomBottomSheetChapterList extends StatefulWidget {
   final List<Allposts> listaCapitulos;
-  const ButtomBottomSheetChapterList({super.key, required this.listaCapitulos});
+  final List<ModelLeitor>? listaCapitulosDisponiveis;
+  const ButtomBottomSheetChapterList(
+      {super.key,
+      required this.listaCapitulos,
+      required this.listaCapitulosDisponiveis});
+
+  @override
+  State<ButtomBottomSheetChapterList> createState() =>
+      _ButtomBottomSheetChapterListState();
+}
+
+class _ButtomBottomSheetChapterListState
+    extends State<ButtomBottomSheetChapterList> {
+  final BottomSheetController bottomSheetController = BottomSheetController();
+
+  final BottomSheetStatesPages statePages = BottomSheetStatesPages();
+
+  Widget _stateManagement(BottomSheetStates state) {
+    switch (state) {
+      case BottomSheetStates.start:
+        return statePages.loading();
+      case BottomSheetStates.loading:
+        return statePages.loading();
+      case BottomSheetStates.sucess:
+        return statePages.sucess(bottomSheetController.capitulosCorrelacionados);
+      case BottomSheetStates.error:
+        return const ErrorHomePage();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print('iniciou ------');
+    bottomSheetController.start(widget.listaCapitulosDisponiveis, widget.listaCapitulos);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,15 +104,11 @@ class ButtomBottomSheetChapterList extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                        itemCount: listaCapitulos.length,
-                        itemBuilder: (context, index) {
-                          final Allposts capitulo = listaCapitulos[index];
-                          return ListTile(
-                            title: Text('Capitulo ${capitulo.num}'),
-                          );
-                        }),
-                  )
+                      child: AnimatedBuilder(
+                    animation: bottomSheetController.state,
+                    builder: (context, child) =>
+                        _stateManagement(bottomSheetController.state.value),
+                  ))
                 ],
               ),
             ),
