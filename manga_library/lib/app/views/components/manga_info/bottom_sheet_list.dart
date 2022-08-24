@@ -8,10 +8,13 @@ import 'package:manga_library/app/views/components/manga_info/bottom_sheet_state
 class ButtomBottomSheetChapterList extends StatefulWidget {
   final List<Allposts> listaCapitulos;
   final List<ModelLeitor>? listaCapitulosDisponiveis;
+  final String link;
   const ButtomBottomSheetChapterList(
       {super.key,
       required this.listaCapitulos,
-      required this.listaCapitulosDisponiveis});
+      required this.listaCapitulosDisponiveis,
+      required this.link
+    });
 
   @override
   State<ButtomBottomSheetChapterList> createState() =>
@@ -31,7 +34,8 @@ class _ButtomBottomSheetChapterListState
       case BottomSheetStates.loading:
         return statePages.loading();
       case BottomSheetStates.sucess:
-        return statePages.sucess(bottomSheetController.capitulosCorrelacionados);
+        return statePages
+            .sucess(bottomSheetController.capitulosCorrelacionados, widget.link);
       case BottomSheetStates.error:
         return const ErrorHomePage();
     }
@@ -41,7 +45,10 @@ class _ButtomBottomSheetChapterListState
   void initState() {
     super.initState();
     print('iniciou ------');
-    bottomSheetController.start(widget.listaCapitulosDisponiveis, widget.listaCapitulos);
+    bottomSheetController.start(
+        widget.listaCapitulosDisponiveis,
+        widget.listaCapitulos,
+        widget.link);
   }
 
   @override

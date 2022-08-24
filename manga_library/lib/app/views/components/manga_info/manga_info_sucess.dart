@@ -7,10 +7,12 @@ class SucessMangaInfo extends StatefulWidget {
   final ModelMangaInfo dados;
   final bool sucess2;
   final List<ModelLeitor>? capitulosDisponiveis;
+  final String link;
   const SucessMangaInfo(
       {super.key,
       required this.dados,
       required this.sucess2,
+      required this.link,
       required this.capitulosDisponiveis});
 
   @override
@@ -79,7 +81,9 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
           ),
         ),
         widget.sucess2
-            ? ButtomBottomSheetChapterList(listaCapitulos: widget.dados.allposts, listaCapitulosDisponiveis: widget.capitulosDisponiveis,)
+            ? ButtomBottomSheetChapterList(
+              listaCapitulos: widget.dados.allposts, listaCapitulosDisponiveis: widget.capitulosDisponiveis,
+              link: widget.link,)
             : const CircularProgressIndicator(),
         SizedBox(
             width: MediaQuery.of(context).size.width,

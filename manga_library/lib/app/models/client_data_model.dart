@@ -36,3 +36,8 @@ class ClientDataModel {
     return _data;
   }
 }
+// {
+//   "name": String,
+//   "link": String,
+//   "capitulos": List<int>
+// }

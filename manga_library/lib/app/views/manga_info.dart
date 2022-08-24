@@ -31,12 +31,14 @@ class _MangaInfoState extends State<MangaInfo> {
           dados: _mangaInfoController.data,
           sucess2: false,
           capitulosDisponiveis: const [],
+          link: widget.link,
         );
       case MangaInfoStates.sucess2:
         return SucessMangaInfo(
           dados: _mangaInfoController.data,
           sucess2: true,
           capitulosDisponiveis: _mangaInfoController.capitulosDisponiveis,
+          link: widget.link,
         );
       case MangaInfoStates.error:
         return const ErrorHomePage();

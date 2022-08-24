@@ -1,10 +1,14 @@
 import 'package:hive/hive.dart';
+import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 
 class HiveController {
-  Box? clientData;
+  static Box? clientData;
 
-  void start() async {
+  Future<void> start() async {
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(ClientDataModelHiveAdapter());
+    }
     clientData = await Hive.openBox('clientData');
   }
 
@@ -12,18 +16,41 @@ class HiveController {
     clientData?.close();
   }
 
-  getClientData() {}
+  Future<dynamic> getClientData() async {
+    try {
+      return await clientData?.get('clientAllData');
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 
-  writeClientData() {
+  void writeClientData() {
     final ClientDataModel model = ClientDataModel(
       id: 1,
       name: 'King of Shadows',
       mail: 'king@mail.com',
       password: 'teste32#f',
       favoritos: [],
-      capitulosLidos: [],
+      capitulosLidos: [
+        {
+          "name": "Jujutsu Kaisen",
+          "link": "https://mangayabu.top/manga/jujutsu-kaisen",
+          "capitulos": ["910445", "979479", "969470"]
+        }
+      ],
     );
 
     clientData?.put('clientAllData', model);
+  }
+
+  Future<bool> updateClientData(ClientDataModel data) async {
+    try {
+      await clientData?.put('clientAllData', data);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }
