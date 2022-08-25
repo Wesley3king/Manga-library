@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/manga_info_controller.dart';
 
 import '../../../models/manga_info_model.dart';
 
 class BottomSheetStatesPages {
-  BottomSheetController bottomSheetController = BottomSheetController();
+  // BottomSheetController bottomSheetController = BottomSheetController();
   Widget loading() {
     return const Center(
       child: CircularProgressIndicator(),
     );
   }
 
-  Widget sucess(List<ModelCapitulosCorrelacionados> capitulos, String link) {
+  Widget sucess(List<ModelCapitulosCorrelacionados> capitulos, String link, Map<String, Function> metodos) {
     print('length: ${capitulos.length}');
     return ListView.builder(
         itemCount: capitulos.length,
@@ -23,7 +22,8 @@ class BottomSheetStatesPages {
               'Capitulo ${capitulo.capitulo}',
               style: capitulo.disponivel ? const TextStyle() : indisponivel,
             ),
-            trailing: capitulo.readed ? lido(capitulo.id.toString(), link) : naoLido(capitulo.id.toString(), link),
+            subtitle: Text(capitulo.readed ? "lido": "não lido"),
+            trailing: capitulo.readed ? metodos['lido']!(capitulo.id.toString(), link) : metodos['naoLido']!(capitulo.id.toString(), link),
           );
         });
   }
@@ -33,24 +33,24 @@ class BottomSheetStatesPages {
   //TextStyle lido = const TextStyle(color: Colors.red);
 
   // trailings
-  GestureDetector naoLido(String id, String link) {
-    return GestureDetector(
-      onTap: () {
-        bottomSheetController.marcarDesmarcar(id, link);
-      },
-      child: const Icon(Icons.check),
-    );
-  }
+  // GestureDetector naoLido(String id, String link) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       bottomSheetController.marcarDesmarcar(id, link);
+  //     },
+  //     child: const Icon(Icons.check),
+  //   );
+  // }
 
-  GestureDetector lido(String id, String link) {
-    return GestureDetector(
-      onTap: () {
-        bottomSheetController.marcarDesmarcar(id, link);
-      },
-      child: const Icon(
-        Icons.check,
-        color: Colors.green,
-      ),
-    );
-  }
+  // GestureDetector lido(String id, String link) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       bottomSheetController.marcarDesmarcar(id, link);
+  //     },
+  //     child: const Icon(
+  //       Icons.check,
+  //       color: Colors.green,
+  //     ),
+  //   );
+  // }
 }

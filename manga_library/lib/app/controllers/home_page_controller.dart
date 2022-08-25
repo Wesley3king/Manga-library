@@ -16,7 +16,7 @@ class HomePageController {
     state.value = HomeStates.loading;
     // inicializar o Hive
     await _hiveController.start();
-    _hiveController.writeClientData();
+    //_hiveController.writeClientData();
     List? dados = await mangaYabu.homePage();
 
     if (dados != null) {

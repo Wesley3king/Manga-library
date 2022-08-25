@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/views/home_page.dart';
+import 'package:manga_library/app/views/leitor.dart';
 import 'package:manga_library/app/views/manga_info.dart';
 
 final routes = GoRouter(initialLocation: '/home', routes: [
@@ -15,4 +16,13 @@ final routes = GoRouter(initialLocation: '/home', routes: [
       return MangaInfo(link: url);
     },
   ),
+  GoRoute(
+    path: '/leitor/:link/:id',
+    builder: (context, state) {
+      String url = state.params['link'].toString();
+      String id = state.params['id'].toString();
+
+      return Leitor(link: url,id: id,);
+    },
+  )
 ]);

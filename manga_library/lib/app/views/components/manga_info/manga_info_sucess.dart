@@ -82,8 +82,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         ),
         widget.sucess2
             ? ButtomBottomSheetChapterList(
-              listaCapitulos: widget.dados.allposts, listaCapitulosDisponiveis: widget.capitulosDisponiveis,
-              link: widget.link,)
+              listaCapitulos: widget.dados.allposts, listaCapitulosDisponiveis: widget.capitulosDisponiveis, nameImageLink: {"name": widget.dados.chapterName, "img": widget.dados.cover, "link": widget.link},)
             : const CircularProgressIndicator(),
         SizedBox(
             width: MediaQuery.of(context).size.width,

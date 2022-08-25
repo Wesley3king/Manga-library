@@ -13,12 +13,12 @@ class YabuFetchServices {
           data: {"url": 'https://mangayabu.top/manga/$url'});
 
       var dadosManga = data.data as Map<String, dynamic>;
-      print(dadosManga);
-      print('entrou');
+      //print(dadosManga);
+      //print('entrou');
       List<ModelLeitor> listaCapitulos = dadosManga['data']['capitulos']
           .map<ModelLeitor>((lista) => ModelLeitor.fromJson(lista))
           .toList();
-      print('passou');
+      //print('passou');
 
       return listaCapitulos;
     } catch (e) {

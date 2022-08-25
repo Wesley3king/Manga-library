@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
@@ -36,6 +37,7 @@ class MangaInfoController {
         state.value = MangaInfoStates.error;
       }
       capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
+      MomentData.capitulosDisponiveis = capitulosDisponiveis ?? [];
       // print(_capitulosDisponiveis);
 
       if (state.value != MangaInfoStates.error) {
@@ -76,30 +78,62 @@ class BottomSheetController {
     }
   }
 
-  marcarDesmarcar(String id, String link) async {
+  update(List<ModelLeitor>? listaCapitulosDisponiveis,
+      List<Allposts> listaCapitulos, String link) async {
+    state.value = BottomSheetStates.loading;
+    try {
+      print('restart');
+      await correlacionarCapitulos(
+          listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+      print('- restart - end');
+      state.value = BottomSheetStates.sucess;
+    } catch (e) {
+      print('erro no Restart BottomSheetController at update');
+      print(e);
+      state.value = BottomSheetStates.error;
+    }
+  }
+
+  marcarDesmarcar(
+      String id, String link, Map<String, String> nameAndImage) async {
     ClientDataModel clientData = await _hiveController.getClientData();
+    print(clientData.capitulosLidos);
 
     // achar o manga pelo link
     // List<dynamic> capitulosLidos = [];
     RegExp regex = RegExp('https://mangayabu.top/manga/$link',
         dotAll: true, caseSensitive: false);
+    bool existe = false;
     for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
       if (clientData.capitulosLidos[i]['link'].contains(regex)) {
+        existe = true;
         List<dynamic> capitulosLidos =
             clientData.capitulosLidos[i]['capitulos'];
         if (capitulosLidos.contains(id)) {
           print('temos o capitulo. removendo...');
           capitulosLidos.removeWhere((element) => element == id);
-          clientData.capitulosLidos[i] = capitulosLidos;
-          _hiveController.updateClientData(clientData);
+          clientData.capitulosLidos[i]['capitulos'] = capitulosLidos;
+
+          await _hiveController.updateClientData(clientData);
         } else {
           print('não temos o capitulo. adicionado...');
           capitulosLidos.add(id);
-          clientData.capitulosLidos[i] = capitulosLidos;
-          _hiveController.updateClientData(clientData);
+          clientData.capitulosLidos[i]['capitulos'] = capitulosLidos;
+          await _hiveController.updateClientData(clientData);
         }
       }
     }
+    if (!existe) {
+      clientData.capitulosLidos.add({
+        "name": nameAndImage["name"],
+        "img": nameAndImage["img"],
+        "link": 'https://mangayabu.top/manga/$link',
+        "capitulos": [id],
+      });
+      print('não existe! adicionado...');
+      await _hiveController.updateClientData(clientData);
+    }
+    print('marcar desmarcar concluido!');
   }
 
   correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis,
@@ -109,22 +143,21 @@ class BottomSheetController {
     print('parte 0.1 erro');
 
     // achar o manga pelo link
-    
+
     List<dynamic> capitulosLidos = [];
     RegExp regex = RegExp('https://mangayabu.top/manga/$link',
         dotAll: true, caseSensitive: false);
+    // print(clientData.capitulosLidos);
+    // print(clientData.capitulosLidos.length);
+
     for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
-      try {
-      clientData.capitulosLidos[i]['link'].contains(regex);
-    } catch (e) {
-      print('aqui esta ele!');
-    }
       if (clientData.capitulosLidos[i]['link'].contains(regex)) {
         capitulosLidos = clientData.capitulosLidos[i]['capitulos'];
       }
     }
 
     print('parte 1 erro');
+    capitulosCorrelacionados = [];
 
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
       bool adicionado = false;
@@ -152,7 +185,12 @@ class BottomSheetController {
         ));
       }
     }
+    print('--- teste reload 1 --- ');
+    for (int i = 0; i < 2; ++i) {
+      print(capitulosCorrelacionados[i].readed);
+    }
     // correlacionar os capitulos lidos
+    print(capitulosLidos);
     if (capitulosLidos.isNotEmpty) {
       print('inicio = ${capitulosCorrelacionados.length}');
       List<ModelCapitulosCorrelacionados> listaCapitulosCorrelacionadosLidos =
@@ -178,9 +216,12 @@ class BottomSheetController {
           adicionado = true;
         }
       }
-
+      print('--- teste reload 2 --- ');
+      for (int i = 0; i < 2; ++i) {
+        print(listaCapitulosCorrelacionadosLidos[i].readed);
+      }
       capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
-      print('final = ${capitulosCorrelacionados.length}');
+      print('-- final = ${capitulosCorrelacionados.length}');
     }
   }
 }

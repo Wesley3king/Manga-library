@@ -8,13 +8,12 @@ import 'package:manga_library/app/views/components/manga_info/bottom_sheet_state
 class ButtomBottomSheetChapterList extends StatefulWidget {
   final List<Allposts> listaCapitulos;
   final List<ModelLeitor>? listaCapitulosDisponiveis;
-  final String link;
+  final Map<String, String> nameImageLink;
   const ButtomBottomSheetChapterList(
       {super.key,
       required this.listaCapitulos,
       required this.listaCapitulosDisponiveis,
-      required this.link
-    });
+      required this.nameImageLink});
 
   @override
   State<ButtomBottomSheetChapterList> createState() =>
@@ -27,6 +26,35 @@ class _ButtomBottomSheetChapterListState
 
   final BottomSheetStatesPages statePages = BottomSheetStatesPages();
 
+  // trailings
+  GestureDetector naoLido(String id, String link) {
+    return GestureDetector(
+      onTap: () async {
+        await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        bottomSheetController.update(widget.listaCapitulosDisponiveis,
+            widget.listaCapitulos, widget.nameImageLink["link"]!);
+      },
+      child: const Icon(Icons.check),
+    );
+  }
+
+  GestureDetector lido(String id, String link) {
+    return GestureDetector(
+      onTap: () async {
+        // await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        // bottomSheetController.update(widget.listaCapitulosDisponiveis,
+        //     widget.listaCapitulos, widget.nameImageLink["link"]!);
+        await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        bottomSheetController.update(widget.listaCapitulosDisponiveis,
+            widget.listaCapitulos, widget.nameImageLink["link"]!);
+      },
+      child: const Icon(
+        Icons.check,
+        color: Colors.green,
+      ),
+    );
+  }
+
   Widget _stateManagement(BottomSheetStates state) {
     switch (state) {
       case BottomSheetStates.start:
@@ -34,8 +62,11 @@ class _ButtomBottomSheetChapterListState
       case BottomSheetStates.loading:
         return statePages.loading();
       case BottomSheetStates.sucess:
-        return statePages
-            .sucess(bottomSheetController.capitulosCorrelacionados, widget.link);
+        return statePages.sucess(
+          bottomSheetController.capitulosCorrelacionados,
+          widget.nameImageLink["link"]!,
+          {"lido": lido, "naoLido": naoLido},
+        );
       case BottomSheetStates.error:
         return const ErrorHomePage();
     }
@@ -46,9 +77,7 @@ class _ButtomBottomSheetChapterListState
     super.initState();
     print('iniciou ------');
     bottomSheetController.start(
-        widget.listaCapitulosDisponiveis,
-        widget.listaCapitulos,
-        widget.link);
+        widget.listaCapitulosDisponiveis, widget.listaCapitulos, widget.nameImageLink["link"]!);
   }
 
   @override
