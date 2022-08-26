@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/manga_info_model.dart';
 
@@ -24,6 +25,7 @@ class BottomSheetStatesPages {
             ),
             subtitle: Text(capitulo.readed ? "lido": "não lido"),
             trailing: capitulo.readed ? metodos['lido']!(capitulo.id.toString(), link) : metodos['naoLido']!(capitulo.id.toString(), link),
+            onTap: () => GoRouter.of(context).push('/leitor/$link/${capitulo.id}'),
           );
         });
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
+import 'package:manga_library/app/views/components/leitor/pages_states.dart';
 
 class PagesLeitor extends StatefulWidget {
   final String link;
@@ -11,16 +12,25 @@ class PagesLeitor extends StatefulWidget {
 }
 
 class _PagesLeitorState extends State<PagesLeitor> {
-  LeitorController _leitorController = LeitorController();
+  final LeitorController _leitorController = LeitorController();
+  final PagesController pagesController = PagesController();
+  final PagesStates _pagesStates = PagesStates();
 
   @override
   void initState() {
     super.initState();
     _leitorController.start(widget.link, widget.id);
+    // pagesController.start();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return _pagesStates.pages(
+      _leitorController.capitulosEmCarga,
+      pagesController
+    );
   }
 }
+// Container(
+//       child: Text('${widget.id} -- ${widget.link}'),
+//     );

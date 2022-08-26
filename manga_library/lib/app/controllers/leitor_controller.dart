@@ -5,30 +5,46 @@ import '../models/leitor_model.dart';
 
 class LeitorController {
   List<ModelLeitor> capitulos = [];
-  ValueNotifier<int> state = ValueNotifier<int>(0);
+  List<ModelLeitor> capitulosEmCarga = [];
 
   void start(String link, String id) {
     try {
       capitulos = MomentData.capitulosDisponiveis;
 
-      loadImages(capitulos, id);
+      identificarCapitulo(capitulos, id);
     } catch (e) {
       print('erro em start LeitorController');
       print(e);
     }
   }
 
-  loadImages(List<ModelLeitor> capitulos, String id) {
-    List pages = [];
+  identificarCapitulo(List<ModelLeitor> capitulos, String id) {
+    // List pages = [];
     for (int i = 0; i < capitulos.length; ++i) {
       if ((capitulos[i].id).toString() == id) {
-        pages = capitulos[i].pages;
+        capitulosEmCarga.add(capitulos[i]);
       }
     }
   }
+}
+
+class PagesController {
+  int maxPages = 0;
+  ValueNotifier<int> state = ValueNotifier<int>(1);
+  // start() {
+  //   state.value++;
+  //   print('iniciou!');
+  // }
+  set setMaxPages(int max) {
+    maxPages = max;
+  }
 
   startNextPage() {
-    //state.value = state.value + 1;
-    state.value++;
+    if (state.value < maxPages) {
+      state.value++;
+    }
+    print('state = ${state.value}');
+    print('max = $maxPages');
+
   }
 }
