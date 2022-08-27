@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 
 import '../../../models/leitor_model.dart';
 
 class PagesStates {
+  final FullScreenController fullScreenController = FullScreenController();
+
   Widget _loading() {
     return const SizedBox(
       width: double.infinity,
-      height: 350,
+      height: 450,
       child: Center(
         child: CircularProgressIndicator(),
       ),
@@ -36,12 +39,10 @@ class PagesStates {
     );
   }
 
-  Widget page(String src, Function next, int index) {
+  Widget page(String src) {
     return IntrinsicHeight(
       child: Image(
-        image: CachedNetworkImageProvider(
-          src,
-          ),
+        image: CachedNetworkImageProvider(src),
         key: UniqueKey(),
         loadingBuilder: (
           context,
@@ -53,11 +54,11 @@ class PagesStates {
             // next();
             // print(' indice = $index');
             // if (index == 0) {
-            //   print('delayed!');
-              Future.delayed(const Duration(seconds: 2), () {
-                print('executando ... $index');
-                next();
-              });
+            // //   print('delayed!');
+            // Future.delayed(const Duration(seconds: 2), () {
+            //   print('executando ... $index');
+            //   next();
+            // });
             // } else {
             //   print(' index != 0 ok');
             //   //next();
@@ -66,10 +67,11 @@ class PagesStates {
           }
           return _loading();
         },
-        errorBuilder: (context, error, stackTrace) => _error(src),
+        // errorBuilder: (context, error, stackTrace) => _error(src),
       ),
     );
   }
+
 /*
 src,
         loadingBuilder: (
@@ -97,35 +99,27 @@ src,
         },
         errorBuilder: (context, error, stackTrace) => _error(src),
 */
-  List<Widget> builderList(ModelLeitor data, int count, Function next) {
+  List<Widget> builderList(ModelLeitor data) {
     List<Widget> lista = [];
-    for (int i = 0; i < count; ++i) {
-      lista.add(page(data.pages[i], next, i));
+    for (int i = 0; i < data.pages.length; ++i) {
+      lista.add(page(data.pages[i]));
     }
     return lista;
   }
 
-  Widget listPages(ModelLeitor data, int count, Function next) {
-    print('${data.pages.length} -- $count');
-    // return ListView.builder(
-    //   itemCount: count,
-    //   itemBuilder: (context, index) => page(data.pages[index], next, index),
-    // );
-    return ListView(
-      children: builderList(data, count, next),
+  Widget listPages(ModelLeitor data) {
+    return InteractiveViewer(
+      maxScale: 4.0,
+      child: ListView(
+        children: builderList(data),
+      ),
     );
   }
 
-  AnimatedBuilder pages(
-      List<ModelLeitor> capitulos, PagesController controller) {
-    controller.maxPages = capitulos[0].pages.length;
-    return AnimatedBuilder(
-      animation: controller.state,
-      builder: ((context, child) => listPages(
-            capitulos[0],
-            controller.state.value,
-            controller.startNextPage,
-          )),
+  GestureDetector pages(List<ModelLeitor> capitulos, PagesController controller) {
+    return GestureDetector(
+      onDoubleTap: fullScreenController.setFullScreen,
+      child: listPages(capitulos[0]),
     );
   }
 }

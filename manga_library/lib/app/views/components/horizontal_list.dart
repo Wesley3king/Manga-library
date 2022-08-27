@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
@@ -14,7 +15,8 @@ class HorizontalList extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           List<String> corteUrl1 = data.url.split('manga/');
-          GoRouter.of(context).push('/info/${corteUrl1[1].replaceFirst('/','')}');
+          GoRouter.of(context)
+              .push('/info/${corteUrl1[1].replaceFirst('/', '')}');
         },
         child: SizedBox(
           width: 110,
@@ -22,11 +24,21 @@ class HorizontalList extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                width: 145,
+                width: 145.0,
                 height: 187.5,
-                child: Image.network(
-                  data.img,
+                child: Image(
+                  image: CachedNetworkImageProvider(data.img),
+                  width: 145.0,
+                  height: 187.5,
                   fit: BoxFit.fill,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Container(
+                      color: Colors.grey,
+                    );
+                  },
                 ),
               ),
               Text(data.name,

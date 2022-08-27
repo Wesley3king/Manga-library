@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/home_page/sucess.dart';
@@ -81,10 +82,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _homePageController.state,
-        builder: (context, child) =>
-            stateManagement(_homePageController.state.value),
-      ),
+          animation: _homePageController.state,
+          builder: (context, child) =>
+              stateManagement(_homePageController.state.value),
+        ),
     );
   }
 }

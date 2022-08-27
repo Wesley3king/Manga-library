@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
@@ -34,8 +35,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 400,
-                child: Image.network(
-                  widget.dados.cover,
+                child: Image(
+                  image: CachedNetworkImageProvider(
+                    widget.dados.cover,
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -62,8 +65,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                 child: SizedBox(
                   width: 150,
                   height: 225,
-                  child: Image.network(
-                    widget.dados.cover,
+                  child: Image(
+                    image: CachedNetworkImageProvider(widget.dados.cover,),
                     fit: BoxFit.fill,
                   ),
                 ),
