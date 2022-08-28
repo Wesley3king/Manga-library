@@ -6,6 +6,7 @@ import 'package:manga_library/app/models/home_page_model.dart';
 enum HomeStates { start, loading, sucess, error }
 
 class HomePageController {
+  static String errorMessage = '';
   final mangaYabu = ExtensionMangaYabu();
   final HiveController _hiveController = HiveController();
   List<ModelHomePage> data = [];

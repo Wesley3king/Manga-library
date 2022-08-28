@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/home_page_controller.dart';
 
 class ErrorHomePage extends StatelessWidget {
   const ErrorHomePage({super.key});
@@ -7,13 +8,14 @@ class ErrorHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        children: const <Widget>[
+        children: <Widget>[
           SizedBox(
             width: 100,
             height: 100,
             child: Icon(Icons.info),
           ),
           Text('Error'),
+          Text('${HomePageController.errorMessage}'),
         ],
       ),
     );

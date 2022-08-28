@@ -18,7 +18,20 @@ class HiveController {
 
   Future<dynamic> getClientData() async {
     try {
-      return await clientData?.get('clientAllData');
+      ClientDataModel? data = await clientData?.get('clientAllData');
+      if (data == null) {
+        writeClientData();
+        return ClientDataModel(
+          id: 1,
+          name: 'King of Shadows',
+          mail: 'king@mail.com',
+          password: 'teste32#f',
+          favoritos: [],
+          capitulosLidos: [],
+        );
+      } else {
+        return data;
+      }
     } catch (e) {
       print(e);
       return null;
@@ -32,13 +45,7 @@ class HiveController {
       mail: 'king@mail.com',
       password: 'teste32#f',
       favoritos: [],
-      capitulosLidos: [
-        {
-          "name": "Jujutsu Kaisen",
-          "link": "https://mangayabu.top/manga/jujutsu-kaisen",
-          "capitulos": ["910445", "979479", "969470"]
-        }
-      ],
+      capitulosLidos: [],
     );
 
     clientData?.put('clientAllData', model);

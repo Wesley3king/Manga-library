@@ -7,6 +7,7 @@ import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 import '../models/leitor_model.dart';
 import 'extensions/extension_manga_yabu.dart';
+import 'home_page_controller.dart';
 
 class MangaInfoController {
   final mangaYabu = ExtensionMangaYabu();
@@ -43,10 +44,12 @@ class MangaInfoController {
       if (state.value != MangaInfoStates.error) {
         state.value = MangaInfoStates.sucess2;
       } else {
+        HomePageController.errorMessage = 'erro no null 2';
         state.value = MangaInfoStates.error;
       }
     } catch (e) {
       print(e);
+      HomePageController.errorMessage = 'erro no catch do MangaInfo: $e';
       state.value = MangaInfoStates.error;
     }
   }
@@ -72,6 +75,7 @@ class BottomSheetController {
       print(capitulosCorrelacionados);
       state.value = BottomSheetStates.sucess;
     } catch (e) {
+      HomePageController.errorMessage = 'erro no catch BottomSheetController: $e';
       print('erro no start BottomSheetController');
       print(e);
       state.value = BottomSheetStates.error;
