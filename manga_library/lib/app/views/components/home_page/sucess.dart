@@ -4,10 +4,11 @@ import 'package:manga_library/app/views/components/horizontal_list.dart';
 
 class Sucess extends StatelessWidget {
   final List<ModelHomePage> dados;
+  final ScrollController controllerScroll;
   List<ModelHomePage> lancamentos = [];
   List<ModelHomePage> popular = [];
   List<ModelHomePage> ultimosAtualizados = [];
-  Sucess({super.key, required this.dados});
+  Sucess({super.key, required this.dados, required this.controllerScroll});
 
   alinharMangas() {
     for (int i = 0; i < dados.length; ++i) {
@@ -25,6 +26,7 @@ class Sucess extends StatelessWidget {
   Widget build(BuildContext context) {
     alinharMangas();
     return SingleChildScrollView(
+      controller: controllerScroll,
       child: Column(
         children: [
           SizedBox(
@@ -57,11 +59,14 @@ class Sucess extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: 150,
-                        height: 225,
-                        child: Image.network(dados[0].img),
+                        height: 240,
+                        child: Image.network(
+                          dados[0].img,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Text(dados[0].name,
                           style: const TextStyle(
@@ -77,12 +82,24 @@ class Sucess extends StatelessWidget {
               ],
             ),
           ),
-
-          HorizontalList(lista: lancamentos, identificacion: 'Lançamentos',),
-          const SizedBox(height: 10,),
-          HorizontalList(lista: popular, identificacion: 'Popular',),
-          const SizedBox(height: 10,),
-          HorizontalList(lista: ultimosAtualizados, identificacion: 'Ultimos Atualizados',),
+          HorizontalList(
+            lista: lancamentos,
+            identificacion: 'Lançamentos',
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          HorizontalList(
+            lista: popular,
+            identificacion: 'Popular',
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          HorizontalList(
+            lista: ultimosAtualizados,
+            identificacion: 'Ultimos Atualizados',
+          ),
         ],
       ),
     );

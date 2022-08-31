@@ -1,15 +1,18 @@
 import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/libraries_model.dart';
 
 class HiveController {
   static Box? clientData;
+  static Box? libraries;
 
   Future<void> start() async {
-    if (!Hive.isAdapterRegistered(1)) {
+    if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ClientDataModelHiveAdapter());
     }
     clientData = await Hive.openBox('clientData');
+    libraries = await Hive.openBox('libraries');
   }
 
   void end() {
@@ -59,5 +62,41 @@ class HiveController {
       print(e);
       return false;
     }
+  }
+
+  // library
+  writeLibraryData() async {
+    final LibraryModel model = LibraryModel.fromJson({
+      "library": "favoritos",
+      "books": [
+        {
+          "name": "Kawaii Dake ja Nai Shikimori-san",
+          "link":
+              "https://mangayabu.top/manga/kawaii-dake-ja-nai-shikimori-san/",
+          "img":
+              "https://mangayabu.top/wp-content/uploads/2022/07/f0037b59a279112676b9.jpg"
+        },
+        {
+          "name": "Boku no Hero Academia",
+          "link": "https://mangayabu.top/manga/boku-no-hero-academia/",
+          "img":
+              "https://mangayabu.top/wp-content/uploads/2022/06/0cb2e604c5c9900bacb7.jpg"
+        },
+        {
+          "name": "Mushoku Tensei: Isekai Ittara Honki Dasu",
+          "link":
+              "https://mangayabu.top/manga/mushoku-tensei-isekai-ittara-honki-dasu/",
+          "img":
+              "https://mangayabu.top/wp-content/uploads/2022/07/97cf1278675bc2fd52b3.jpg"
+        },
+      ]
+    });
+    await libraries?.put('libraries', model.toJson());
+    return model;
+  }
+
+  getLibraries() async {
+    var data = await libraries?.get('libraries');
+    return [];
   }
 }

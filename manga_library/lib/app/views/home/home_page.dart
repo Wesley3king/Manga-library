@@ -1,8 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
+import 'package:manga_library/app/views/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/home_page/sucess.dart';
 
@@ -14,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController controller = ScrollController();
+
   final HomePageController _homePageController = HomePageController();
   Widget _start() {
     return SizedBox(
@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
       case HomeStates.sucess:
         return Sucess(
           dados: _homePageController.data,
+          controllerScroll: controller,
         );
       case HomeStates.error:
         return const ErrorHomePage();
@@ -79,13 +80,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedBuilder(
-          animation: _homePageController.state,
-          builder: (context, child) =>
-              stateManagement(_homePageController.state.value),
-        ),
+        animation: _homePageController.state,
+        builder: (context, child) =>
+            stateManagement(_homePageController.state.value),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(controller: controller,),
     );
   }
 }

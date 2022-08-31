@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/views/home_page.dart';
+import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/routes/routes.dart';
 
 ThemeData darkTheme = ThemeData(

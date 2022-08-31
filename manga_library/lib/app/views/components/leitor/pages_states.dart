@@ -102,24 +102,33 @@ src,
   List<Widget> builderList(ModelLeitor data) {
     List<Widget> lista = [];
     for (int i = 0; i < data.pages.length; ++i) {
-      lista.add(page(data.pages[i]));
+      lista.add(IntrinsicHeight(
+          child: Image.network(
+        data.pages[i],
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 500,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+        },
+        errorBuilder: (context, error, stackTrace) => _error(data.pages[i]),
+      )));
     }
     return lista;
   }
 
-  Widget listPages(ModelLeitor data) {
+  Widget pages(List<ModelLeitor> capitulos, PagesController controller) {
     return InteractiveViewer(
       maxScale: 4.0,
       child: ListView(
-        children: builderList(data),
+        cacheExtent: 10000.0,
+        addAutomaticKeepAlives: true,
+        children: builderList(capitulos[0]),
       ),
-    );
-  }
-
-  GestureDetector pages(List<ModelLeitor> capitulos, PagesController controller) {
-    return GestureDetector(
-      onDoubleTap: fullScreenController.setFullScreen,
-      child: listPages(capitulos[0]),
     );
   }
 }
