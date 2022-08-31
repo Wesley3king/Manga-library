@@ -65,7 +65,7 @@ class HiveController {
   }
 
   // library
-  writeLibraryData() async {
+  Future<List<LibraryModel>> writeLibraryData() async {
     final LibraryModel model = LibraryModel.fromJson({
       "library": "favoritos",
       "books": [
@@ -91,12 +91,35 @@ class HiveController {
         },
       ]
     });
-    await libraries?.put('libraries', model.toJson());
-    return model;
+    libraries?.put('libraries', [model.toJson()]);
+    return [model];
   }
 
-  getLibraries() async {
-    var data = await libraries?.get('libraries');
-    return [];
+  Future<List<LibraryModel>> getLibraries() async {
+    List<dynamic>? data = await libraries?.get('libraries');
+    print(data);
+    if (data != null) {
+      print('entrou na converção');
+      List<LibraryModel> librariesModels = [];
+      try {
+        librariesModels = data.map((e) {
+          Map<String, dynamic> map = {
+            "library": e['library'],
+            "books": e['books'],
+          };
+          return LibraryModel.fromJson(map);
+        }).toList();
+      } catch (e, s) {
+        print(e);
+        print(s);
+      }
+      print('saiu da converção');
+
+      return librariesModels;
+    } else {
+      print('não é uma lista \n em HiveController - getLibraries');
+      print(data.runtimeType);
+      return writeLibraryData();
+    }
   }
 }

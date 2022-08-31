@@ -5,16 +5,16 @@ class LibraryModel {
   });
   late final String library;
   late final List<Books> books;
-  
-  LibraryModel.fromJson(Map<String, dynamic> json){
+
+  LibraryModel.fromJson(Map<String, dynamic> json) {
     library = json['library'];
-    books = List.from(json['books']).map((e)=>Books.fromJson(e)).toList();
+    books = List.from(json['books']).map((e) => Books.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['library'] = library;
-    _data['books'] = books.map((e)=>e.toJson()).toList();
+    _data['books'] = books.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -28,8 +28,8 @@ class Books {
   late final String name;
   late final String link;
   late final String img;
-  
-  Books.fromJson(Map<String, dynamic> json){
+
+  Books.fromJson(Map<dynamic, dynamic> json) {
     name = json['name'];
     link = json['link'];
     img = json['img'];
