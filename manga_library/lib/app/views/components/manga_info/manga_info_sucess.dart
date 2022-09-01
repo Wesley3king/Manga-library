@@ -77,11 +77,23 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         const SizedBox(
           width: 12,
         ),
-        Text(
-          widget.dados.chapterName,
-          style: const TextStyle(
-            fontSize: 22,
-          ),
+        Row(
+          children: [
+            SizedBox(
+              width: 55,
+              height: 55,
+              child: IconButton(onPressed: (){}, icon: const Icon(Icons.favorite, size: 40,))),
+            Expanded(
+              child: Text(
+                widget.dados.chapterName,
+                // maxLines: 4,
+                softWrap: true,
+                style: const TextStyle(
+                  fontSize: 22,
+                ),
+              ),
+            ),
+          ],
         ),
         widget.sucess2
             ? ButtomBottomSheetChapterList(

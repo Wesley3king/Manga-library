@@ -11,7 +11,7 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  LibraryController _libraryController = LibraryController();
+  final LibraryController _libraryController = LibraryController();
   ScrollController controller = ScrollController();
 
   Widget _loading() {
@@ -38,7 +38,7 @@ class _LibraryPageState extends State<LibraryPage> {
       case LibraryStates.loading:
         return _loading();
       case LibraryStates.sucess:
-        return LibrarrySucessState(dados: _libraryController.librariesData,);
+        return LibrarrySucessState(dados: _libraryController.librariesData, controllerScroll: controller,);
       case LibraryStates.error:
         return _error();
     }

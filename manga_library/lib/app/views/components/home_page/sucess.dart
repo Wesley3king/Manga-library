@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/views/components/horizontal_list.dart';
@@ -37,10 +38,12 @@ class Sucess extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: 330,
-                  child: Image.network(
-                    dados[0].img,
-                    fit: BoxFit.cover,
-                  ),
+                  child: CachedNetworkImage(
+                      imageUrl: dados[0].img,
+                      placeholder: (context, url) => Container(color: Colors.grey,),
+                      errorWidget: (context, url, error) => const Center(child: Icon(Icons.report_problem),),
+                      fit: BoxFit.fill,
+                    )
                 ),
                 Container(
                   decoration: const BoxDecoration(
@@ -60,10 +63,12 @@ class Sucess extends StatelessWidget {
                       SizedBox(
                         width: 150,
                         height: 240,
-                        child: Image.network(
-                          dados[0].img,
+                        child: CachedNetworkImage(
+                          imageUrl: dados[0].img,
+                          placeholder: (context, url) => Container(color: Colors.grey,),
+                          errorWidget: (context, url, error) => const Center(child: Icon(Icons.report_problem),),
                           fit: BoxFit.fill,
-                        ),
+                        )
                       ),
                       const SizedBox(
                         height: 10,

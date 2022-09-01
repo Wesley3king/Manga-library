@@ -35,16 +35,19 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           data: const IconThemeData(color: Colors.white),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(onPressed: () => GoRouter.of(context).push('/home'), icon: const Icon(Icons.home)),
-                IconButton(
-                    onPressed: () => GoRouter.of(context).push('/library'), icon: const Icon(Icons.local_library)),
-                IconButton(onPressed: () => GoRouter.of(context).push('/search'), icon: const Icon(Icons.explore)),
-                IconButton(
-                    onPressed: () => GoRouter.of(context).push('/settings'), icon: const Icon(Icons.more_horiz)),
-              ],
+            child: IconTheme(
+              data: const IconThemeData(color: Colors.grey),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(onPressed: () => GoRouter.of(context).push('/home'), icon: const Icon(Icons.home)),
+                  IconButton(
+                      onPressed: () => GoRouter.of(context).push('/library'), icon: const Icon(Icons.local_library)),
+                  IconButton(onPressed: () => GoRouter.of(context).push('/search'), icon: const Icon(Icons.explore)),
+                  IconButton(
+                      onPressed: () => GoRouter.of(context).push('/settings'), icon: const Icon(Icons.more_horiz)),
+                ],
+              ),
             ),
           ),
         ),
