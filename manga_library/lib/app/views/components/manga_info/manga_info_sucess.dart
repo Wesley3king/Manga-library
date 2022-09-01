@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_list.dart';
 
 class SucessMangaInfo extends StatefulWidget {
@@ -79,10 +80,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         ),
         Row(
           children: [
-            SizedBox(
-              width: 55,
-              height: 55,
-              child: IconButton(onPressed: (){}, icon: const Icon(Icons.favorite, size: 40,))),
+            const AddToLibrary(),
             Expanded(
               child: Text(
                 widget.dados.chapterName,

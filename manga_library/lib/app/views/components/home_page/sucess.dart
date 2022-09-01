@@ -42,7 +42,7 @@ class Sucess extends StatelessWidget {
                       imageUrl: dados[0].img,
                       placeholder: (context, url) => Container(color: Colors.grey,),
                       errorWidget: (context, url, error) => const Center(child: Icon(Icons.report_problem),),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     )
                 ),
                 Container(

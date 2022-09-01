@@ -6,6 +6,7 @@ import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 import '../models/leitor_model.dart';
+import '../models/libraries_model.dart';
 import 'extensions/extension_manga_yabu.dart';
 import 'home_page_controller.dart';
 
@@ -75,7 +76,8 @@ class BottomSheetController {
       print(capitulosCorrelacionados);
       state.value = BottomSheetStates.sucess;
     } catch (e) {
-      HomePageController.errorMessage = 'erro no catch BottomSheetController: $e';
+      HomePageController.errorMessage =
+          'erro no catch BottomSheetController: $e';
       print('erro no start BottomSheetController');
       print(e);
       state.value = BottomSheetStates.error;
@@ -231,3 +233,26 @@ class BottomSheetController {
 }
 
 enum BottomSheetStates { start, loading, sucess, error }
+
+class DialogController {
+  List<LibraryModel> dataLibrary = [];
+  List<CheckboxListTile> addToLibraryCheckboxes = [];
+  ValueNotifier<DialogStates> state =
+      ValueNotifier<DialogStates>(DialogStates.start);
+  Future<bool> start() async {
+    state.value = DialogStates.loading;
+    try {
+      final HiveController _hiveController = HiveController();
+      dataLibrary = await _hiveController.getLibraries();
+      //generateValues(dataLibrary);
+      return true;
+    } catch (e, s) {
+      state.value = DialogStates.error;
+      print(e);
+      print(s);
+      return false;
+    }
+  }
+}
+
+enum DialogStates { start, loading, sucess, error }
