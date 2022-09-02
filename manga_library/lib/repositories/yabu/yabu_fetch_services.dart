@@ -26,4 +26,22 @@ class YabuFetchServices {
       return null;
     }
   }
+
+  Future<Map<String, dynamic>> search(String txt) async {
+    try {
+      var data = await dio.post('https://vast-falls-98079.herokuapp.com/search',
+          data: {"txt": txt});
+      return {
+        "font": "MangaYabu",
+        "data": data.data,
+      };
+    } catch (e, s) {
+      print('error no search! $e');
+      print(s);
+      return {
+            "font": "MangaYabu",
+            "data": [],
+          };
+    }
+  }
 }

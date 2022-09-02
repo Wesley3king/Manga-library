@@ -122,4 +122,16 @@ class HiveController {
       return writeLibraryData();
     }
   }
+
+  Future<bool> updateLibraries(List<LibraryModel> listModel) async {
+    try {
+      List<Map<String, dynamic>> data =
+          listModel.map((model) => model.toJson()).toList();
+      await libraries?.put('libraries', data);
+      return true;
+    } catch (e) {
+      print('erro no updateLibraries: $e');
+      return false;
+    }
+  }
 }

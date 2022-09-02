@@ -67,7 +67,9 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   width: 150,
                   height: 225,
                   child: Image(
-                    image: CachedNetworkImageProvider(widget.dados.cover,),
+                    image: CachedNetworkImageProvider(
+                      widget.dados.cover,
+                    ),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -80,7 +82,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         ),
         Row(
           children: [
-            const AddToLibrary(),
+            AddToLibrary(
+              link: 'https://mangayabu.top/manga/${widget.link}',
+              dados: widget.dados,
+            ),
             Expanded(
               child: Text(
                 widget.dados.chapterName,
@@ -95,7 +100,14 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         ),
         widget.sucess2
             ? ButtomBottomSheetChapterList(
-              listaCapitulos: widget.dados.allposts, listaCapitulosDisponiveis: widget.capitulosDisponiveis, nameImageLink: {"name": widget.dados.chapterName, "img": widget.dados.cover, "link": widget.link},)
+                listaCapitulos: widget.dados.allposts,
+                listaCapitulosDisponiveis: widget.capitulosDisponiveis,
+                nameImageLink: {
+                  "name": widget.dados.chapterName,
+                  "img": widget.dados.cover,
+                  "link": widget.link
+                },
+              )
             : const CircularProgressIndicator(),
         SizedBox(
             width: MediaQuery.of(context).size.width,

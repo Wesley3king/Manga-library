@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
+import 'package:manga_library/app/models/manga_info_model.dart';
 
 import '../../../models/libraries_model.dart';
 
 class AddToLibrary extends StatefulWidget {
-  const AddToLibrary({super.key});
+  final String link;
+  final ModelMangaInfo dados;
+  const AddToLibrary({super.key, required this.link, required this.dados});
 
   @override
   State<AddToLibrary> createState() => _AddToLibraryState();
@@ -53,40 +56,69 @@ class _AddToLibraryState extends State<AddToLibrary> {
     }
   }
 
-  List<Widget> checkboxes = [];
   List<Map> resultado = [];
-  generateValues(List<LibraryModel> lista) {
-    for (int i = 0; i < lista.length; ++i) {
-      resultado.add({
-        "library": lista[i].library,
-        "selected": false,
-      });
+  generateValues(
+      List<LibraryModel> lista, Function setState, BuildContext context) {
+    if (resultado.isEmpty) {
+      for (int i = 0; i < lista.length; ++i) {
+        bool existe = false;
+        for (int iManga = 0; iManga < lista[i].books.length; ++iManga) {
+          // print('${lista[i].books[iManga].link} == ${widget.link}/');
+          if (lista[i].books[iManga].link == '${widget.link}/') {
+            resultado.add({
+              "library": lista[i].library,
+              "selected": true,
+            });
+            existe = true;
+            break;
+          }
+        }
+        if (!existe) {
+          resultado.add({
+            "library": lista[i].library,
+            "selected": false,
+          });
+        }
+      }
     }
+    List<Widget> checkboxes = [];
     for (int i = 0; i < resultado.length; ++i) {
       checkboxes.add(CheckboxListTile(
         title: Text(resultado[i]['library']),
         value: resultado[i]['selected'],
         onChanged: (value) => setState(() {
           resultado[i]['selected'] = !resultado[i]['selected'];
-          print('acionado --------');
           print(resultado[i]['selected'] ? "adicionado!" : "removido!");
         }),
       ));
     }
+    // adicionar a confirmação
+    checkboxes.add(Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        TextButton(
+            onPressed: () {
+              resultado = [];
+              Navigator.of(context).pop();
+            },
+            child: const Text('cancelar')),
+        TextButton(
+            onPressed: () {
+              _dialogController.addOrRemoveFromLibrary(resultado, {
+                "name": widget.dados.chapterName,
+                "link": '${widget.link}/',
+                "img": widget.dados.cover,
+              });
+              Navigator.of(context).pop();
+            },
+            child: const Text('confirmar')),
+      ],
+    ));
+    return checkboxes;
   }
 
   void startar() async {
     bool addToLibrary = await _dialogController.start();
-    if (addToLibrary) {
-      generateValues(_dialogController.dataLibrary);
-    } else {
-      checkboxes.add(const SizedBox(
-        height: 100,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ));
-    }
   }
 
   @override
@@ -103,12 +135,14 @@ class _AddToLibraryState extends State<AddToLibrary> {
         child: IconButton(
             onPressed: () {
               showDialog(
-                context: context,
-                builder: (context) => SimpleDialog(
-                  title: const Text('Adicionar:'),
-                  children: checkboxes,
-                ),
-              );
+                  context: context,
+                  builder: (context) => StatefulBuilder(
+                        builder: (context, setState) => SimpleDialog(
+                          title: const Text('Adicionar:'),
+                          children: generateValues(
+                              _dialogController.dataLibrary, setState, context),
+                        ),
+                      ));
             },
             icon: const Icon(
               Icons.favorite,

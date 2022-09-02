@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
@@ -235,15 +237,16 @@ class BottomSheetController {
 enum BottomSheetStates { start, loading, sucess, error }
 
 class DialogController {
+  final HiveController hiveController = HiveController();
   List<LibraryModel> dataLibrary = [];
   List<CheckboxListTile> addToLibraryCheckboxes = [];
   ValueNotifier<DialogStates> state =
       ValueNotifier<DialogStates>(DialogStates.start);
+
   Future<bool> start() async {
     state.value = DialogStates.loading;
     try {
-      final HiveController _hiveController = HiveController();
-      dataLibrary = await _hiveController.getLibraries();
+      dataLibrary = await hiveController.getLibraries();
       //generateValues(dataLibrary);
       return true;
     } catch (e, s) {
@@ -252,6 +255,50 @@ class DialogController {
       print(s);
       return false;
     }
+  }
+
+  // adicionar e remover da library
+  Future<bool> addOrRemoveFromLibrary(
+      List<Map> lista, Map<String, String> book) async {
+    print('inicio do processo de atualização da library');
+    bool haveError = false;
+    dataLibrary = await hiveController.getLibraries();
+
+    for (int i = 0; i < lista.length; ++i) {
+      bool existe = false;
+      bool executed = false;
+      for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
+        print(
+            "teste 1 = ${dataLibrary[i].library} - ${lista[i]['library']} == ${dataLibrary[i].library == lista[i]['library'] ? "true" : "false"}");
+        print(
+            "teste 2 = ${dataLibrary[i].books[iBook].link} - ${book['link']} == ${dataLibrary[i].books[iBook].link == book['link'] ? "true" : "false"}");
+
+        if (dataLibrary[i].library == lista[i]['library'] &&
+            dataLibrary[i].books[iBook].link == book['link']) {
+          print("achei o manga na library");
+          if (!lista[i]['selected']) {
+            print('remover da library');
+            dataLibrary[i].books.removeWhere((element) => element.link == book['link']);
+            await hiveController.updateLibraries(dataLibrary)
+            ? haveError = false
+            : haveError = true;
+            executed = true;
+            break;
+          } else {
+            existe = true;
+          }
+        }
+      }
+      if (!existe && !executed && lista[i]['selected']) {
+        print('adicionar a library');
+        dataLibrary[i].books.add(Books.fromJson(book));
+        await hiveController.updateLibraries(dataLibrary)
+            ? haveError = false
+            : haveError = true;
+      }
+    }
+
+    return !haveError;
   }
 }
 
