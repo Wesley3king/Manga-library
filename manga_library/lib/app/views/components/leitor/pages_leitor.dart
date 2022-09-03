@@ -12,10 +12,12 @@ class PagesLeitor extends StatefulWidget {
   State<PagesLeitor> createState() => _PagesLeitorState();
 }
 
-class _PagesLeitorState extends State<PagesLeitor> with AutomaticKeepAliveClientMixin {
+class _PagesLeitorState extends State<PagesLeitor>
+    with AutomaticKeepAliveClientMixin {
   final LeitorController _leitorController = LeitorController();
   final PagesController pagesController = PagesController();
   final PagesStates _pagesStates = PagesStates();
+  final FullScreenController screenController = FullScreenController();
 
   @override
   bool get wantKeepAlive => true;
@@ -24,16 +26,18 @@ class _PagesLeitorState extends State<PagesLeitor> with AutomaticKeepAliveClient
   void initState() {
     super.initState();
     _leitorController.start(widget.link, widget.id);
-    // pagesController.start();
+    screenController.enterFullScreen();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    screenController.exitFullScreen();
   }
 
   @override
   Widget build(BuildContext context) {
-    FullScreenController().enterFullScreen();
     return _pagesStates.pages(
-      _leitorController.capitulosEmCarga,
-      pagesController
-    );
+        _leitorController.capitulosEmCarga, pagesController);
   }
 }
-

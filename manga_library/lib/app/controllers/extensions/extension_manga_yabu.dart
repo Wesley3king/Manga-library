@@ -3,9 +3,14 @@ import 'dart:developer';
 
 import 'package:chaleno/chaleno.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
+import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/search_model.dart';
+import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 class ExtensionMangaYabu {
+  final YabuFetchServices yabuFetchServices = YabuFetchServices();
+
   homePage() async {
     const String url = 'https://mangayabu.top/';
     const String indentify = '.manga-card';
@@ -116,5 +121,10 @@ class ExtensionMangaYabu {
       print(e);
       return null;
     }
+  }
+
+  Future<SearchModel> search(String txt) async {
+    Map<String, dynamic> data = await yabuFetchServices.search(txt);
+    return SearchModel.fromJson(data);
   }
 }

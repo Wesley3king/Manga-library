@@ -33,7 +33,7 @@ class YabuFetchServices {
           data: {"txt": txt});
       return {
         "font": "MangaYabu",
-        "data": data.data,
+        "data": data.data['data'],
       };
     } catch (e, s) {
       print('error no search! $e');

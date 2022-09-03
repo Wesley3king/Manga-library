@@ -67,7 +67,7 @@ class PagesStates {
           }
           return _loading();
         },
-        // errorBuilder: (context, error, stackTrace) => _error(src),
+        errorBuilder: (context, error, stackTrace) => _error(src),
       ),
     );
   }
