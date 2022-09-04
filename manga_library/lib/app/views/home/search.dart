@@ -4,6 +4,8 @@ import 'package:manga_library/app/views/components/search/search_result.dart';
 
 import '../../controllers/search_controller.dart';
 
+final SearchController searchController = SearchController();
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -72,7 +74,6 @@ class MySearchDelegate extends SearchDelegate {
 // aqui é onde será construido o resulatdo
   @override
   Widget buildResults(BuildContext context) {
-    final SearchController searchController = SearchController();
     if (query != '') {
       searchController.search(query);
       return SearchResult(

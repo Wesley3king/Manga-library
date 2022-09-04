@@ -41,7 +41,7 @@ class MangaInfoController {
         state.value = MangaInfoStates.error;
       }
       capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
-      MomentData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+      GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
       // print(_capitulosDisponiveis);
 
       if (state.value != MangaInfoStates.error) {
@@ -149,7 +149,10 @@ class BottomSheetController {
     print('parte 0 erro');
     ClientDataModel clientData = await _hiveController.getClientData();
     print('parte 0.1 erro');
-
+    // aqui verificamos se podemos exibir o botão de atualizar/adicionar no servidor
+    // print(
+    //     'old: ${GlobalData.showAdiminAtualizationBanner ? "T" : "F"} / ${clientData.isAdimin ? "T" : "F"}');
+    GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
     // achar o manga pelo link
 
     List<dynamic> capitulosLidos = [];
@@ -278,10 +281,12 @@ class DialogController {
           print("achei o manga na library");
           if (!lista[i]['selected']) {
             print('remover da library');
-            dataLibrary[i].books.removeWhere((element) => element.link == book['link']);
+            dataLibrary[i]
+                .books
+                .removeWhere((element) => element.link == book['link']);
             await hiveController.updateLibraries(dataLibrary)
-            ? haveError = false
-            : haveError = true;
+                ? haveError = false
+                : haveError = true;
             executed = true;
             break;
           } else {

@@ -9,7 +9,7 @@ class LeitorController {
 
   void start(String link, String id) {
     try {
-      capitulos = MomentData.capitulosDisponiveis;
+      capitulos = GlobalData.capitulosDisponiveis;
 
       identificarCapitulo(capitulos, id);
     } catch (e) {

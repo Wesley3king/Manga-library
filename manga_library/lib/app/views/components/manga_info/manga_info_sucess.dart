@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
@@ -22,6 +23,17 @@ class SucessMangaInfo extends StatefulWidget {
 }
 
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
+  Widget _showAdiminAtualizationBanner() {
+    // print(
+    //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
+    if (GlobalData.showAdiminAtualizationBanner) {
+      return TextButton(
+          onPressed: () {}, child: const Text('Adicionar/Atualizar'));
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -111,12 +123,17 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             : const CircularProgressIndicator(),
         SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Capítulos: ${widget.dados.chapters}',
-                textAlign: TextAlign.start,
-              ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Capítulos: ${widget.dados.chapters}',
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                _showAdiminAtualizationBanner(),
+              ],
             )),
         SizedBox(
           width: MediaQuery.of(context).size.width,

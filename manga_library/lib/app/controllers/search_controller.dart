@@ -6,6 +6,7 @@ import 'package:manga_library/app/models/search_model.dart';
 class SearchController {
   List<SearchModel> result = [];
   static bool finalized = false;
+  String lastSearch = "";
   List<dynamic> extensions = [ExtensionMangaYabu()];
 
   ValueNotifier<SearchStates> state = ValueNotifier(SearchStates.start);
@@ -22,15 +23,21 @@ class SearchController {
   Future<void> search(String txt) async {
     try {
       finalized = false;
-      for (int i = 0; i < extensions.length; ++i) {
-        state.value = SearchStates.loading;
-        print('iniciado');
-        result.add(await extensions[i].search(txt));
-        print('terminado!');
-        print(result);
-        state.value = SearchStates.sucess;
+      print("$lastSearch / $txt");
+      if (lastSearch != txt) {
+        result = [];
+        for (int i = 0; i < extensions.length; ++i) {
+          state.value = SearchStates.loading;
+          print('iniciado');
+          result.add(await extensions[i].search(txt));
+          print('terminado!');
+          print(result[0].books);
+          state.value = SearchStates.sucess;
+        }
       }
+      state.value = SearchStates.sucess;
       finalized = true;
+      lastSearch = txt;
     } catch (e) {
       print("erro no search: $e");
       state.value = SearchStates.error;

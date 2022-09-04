@@ -1,7 +1,7 @@
  import 'leitor_model.dart';
 
-class MomentData {
+class GlobalData {
   static List<ModelLeitor> capitulosDisponiveis = [];
-
-
+  
+  static bool showAdiminAtualizationBanner = false;
  }

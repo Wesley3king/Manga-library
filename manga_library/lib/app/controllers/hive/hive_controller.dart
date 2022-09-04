@@ -29,6 +29,7 @@ class HiveController {
           name: 'King of Shadows',
           mail: 'king@mail.com',
           password: 'teste32#f',
+          isAdimin: true,
           favoritos: [],
           capitulosLidos: [],
         );
@@ -47,6 +48,7 @@ class HiveController {
       name: 'King of Shadows',
       mail: 'king@mail.com',
       password: 'teste32#f',
+      isAdimin: true,
       favoritos: [],
       capitulosLidos: [],
     );

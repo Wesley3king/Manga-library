@@ -12,6 +12,7 @@ class ClientDataModelHiveAdapter extends TypeAdapter<ClientDataModel> {
       name: reader.readString(),
       mail: reader.readString(),
       password: reader.readString(),
+      isAdimin: reader.readBool(),
       favoritos: reader.readList(),
       capitulosLidos: reader.readList(),
     );
@@ -23,6 +24,7 @@ class ClientDataModelHiveAdapter extends TypeAdapter<ClientDataModel> {
     writer.writeString(obj.name);
     writer.writeString(obj.mail);
     writer.writeString(obj.password);
+    writer.writeBool(obj.isAdimin);
     writer.writeList(obj.favoritos);
     writer.writeList(obj.capitulosLidos);
   }
