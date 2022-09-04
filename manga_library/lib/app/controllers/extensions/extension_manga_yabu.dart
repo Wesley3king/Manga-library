@@ -128,3 +128,12 @@ class ExtensionMangaYabu {
     return SearchModel.fromJson(data);
   }
 }
+
+class ExtensionMangaYabuAdimin {
+  final YabuFetchServices yabuFetchServices = YabuFetchServices();
+
+  Future<SearchModel> search(String txt) async {
+    Map<String, dynamic> data = await yabuFetchServices.searchNewBook(txt);
+    return SearchModel.fromJson(data);
+  }
+}

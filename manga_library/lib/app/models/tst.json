@@ -13,5 +13,53 @@
             "img": ""
         }
       ]
-    }
+    },
+    "Model de Configurações do App",
+    [
+      {
+        "type": "theme",
+        "nameOptions": "Thema e Idioma",
+        "settings" : [
+          {
+            "nameConfig": "String",
+            "description": "String",
+            "inputType": "String",
+            "optionsAndValues": [
+              {"option": "String", "value": "bool"}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "leitor",
+        "nameOptions": "Leitor",
+        "settings" : [
+          {
+            "nameConfig": "Tipo do leitor",
+            "description": "o modo como as paginas serão organizadas",
+            "inputType": "radio",
+            "optionsAndValues": [
+              {"option": "String", "value": "webtoon"},
+              {"option": "String", "value": "vertical"},
+              {"option": "String", "value": "horizontal"}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "geral",
+        "nameOptions": "Geral",
+        "settings" : [
+          {
+            "nameConfig": "Rolar a Barra",
+            "description": "retira a barra ao rolar para baixo",
+            "inputType": "switch",
+            "optionsAndValues": [
+              {"option": "switch", "value": true}
+            ]
+          }
+        ]
+      }
+    ]
+
   ]

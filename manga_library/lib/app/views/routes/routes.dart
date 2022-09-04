@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/views/components/configurations/config_options.dart';
+import 'package:manga_library/app/views/components/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/home/library.dart';
-import 'package:manga_library/app/views/home/my_settings.dart';
+import 'package:manga_library/app/views/home/others.dart';
 import 'package:manga_library/app/views/home/search.dart';
 import 'package:manga_library/app/views/leitor.dart';
 import 'package:manga_library/app/views/manga_info.dart';
@@ -20,8 +22,20 @@ final routes = GoRouter(initialLocation: '/home', routes: [
     builder: (context, state) => const SearchPage(),
   ),
   GoRoute(
+    path: '/others',
+    builder: (context, state) => const OthersPage(),
+  ),
+  GoRoute(
     path: '/settings',
-    builder: (context, state) => const MySettingsPage(),
+    builder: (context, state) => const ConfigurationsTypes(),
+  ),
+  GoRoute(
+    path: '/settingoptions/:type',
+    builder: (context, state) {
+      String type = state.params['type'].toString();
+      print(type);
+      return ConfigOptionsPage(type: type);
+    },
   ),
   GoRoute(
     path: '/info/:link',

@@ -45,7 +45,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                       onPressed: () => GoRouter.of(context).push('/library'), icon: const Icon(Icons.local_library)),
                   IconButton(onPressed: () => GoRouter.of(context).push('/search'), icon: const Icon(Icons.explore)),
                   IconButton(
-                      onPressed: () => GoRouter.of(context).push('/settings'), icon: const Icon(Icons.more_horiz)),
+                      onPressed: () => GoRouter.of(context).push('/others'), icon: const Icon(Icons.more_horiz)),
                 ],
               ),
             ),

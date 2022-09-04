@@ -7,7 +7,7 @@ class SearchController {
   List<SearchModel> result = [];
   static bool finalized = false;
   String lastSearch = "";
-  List<dynamic> extensions = [ExtensionMangaYabu()];
+  List<dynamic> extensions = [ExtensionMangaYabu(), ExtensionMangaYabuAdimin()];
 
   ValueNotifier<SearchStates> state = ValueNotifier(SearchStates.start);
   void start() {

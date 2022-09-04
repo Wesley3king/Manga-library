@@ -27,4 +27,13 @@ void main() {
     SearchModel data = await extensionManga.search('one');
     print(data.books[0].name);
   });
+
+  // ExtensionMangaYabu Adimin
+  final ExtensionMangaYabuAdimin mangaYabuAdimin = ExtensionMangaYabuAdimin();
+  test('deve retornar um SearchModel com os mangas ainda indisponiveis',
+      () async {
+    var data = await mangaYabuAdimin.search("tail");
+    print(data);
+    expect(data.books.isNotEmpty, true);
+  });
 }
