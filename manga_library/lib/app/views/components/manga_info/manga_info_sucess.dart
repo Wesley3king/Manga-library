@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
@@ -24,11 +25,16 @@ class SucessMangaInfo extends StatefulWidget {
 
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
   Widget _showAdiminAtualizationBanner() {
+    final MangaInfoController _mangaInfoController = MangaInfoController();
     // print(
     //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
     if (GlobalData.showAdiminAtualizationBanner) {
       return TextButton(
-          onPressed: () {}, child: const Text('Adicionar/Atualizar'));
+          onPressed: () {
+            _mangaInfoController.addOrUpadteBook(
+                name: widget.dados.chapterName, link: 'https://mangayabu.top/manga/${widget.link}');
+          },
+          child: const Text('Adicionar/Atualizar'));
     } else {
       return Container();
     }
@@ -117,7 +123,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                 nameImageLink: {
                   "name": widget.dados.chapterName,
                   "img": widget.dados.cover,
-                  "link": widget.link
+                  "link": widget.link,
                 },
               )
             : const CircularProgressIndicator(),

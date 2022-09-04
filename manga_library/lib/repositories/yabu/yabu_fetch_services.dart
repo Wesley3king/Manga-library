@@ -39,9 +39,19 @@ class YabuFetchServices {
       print('error no search! $e');
       print(s);
       return {
-            "font": "MangaYabu",
-            "data": [],
-          };
+        "font": "MangaYabu",
+        "data": [],
+      };
     }
+  }
+
+  addOrUpdateBook(Map<String, String> book) async {
+    var data = await dio.get('https://vast-falls-98079.herokuapp.com/server');
+    String url = data.data['url'];
+    print(url);
+    var response =
+        await dio.post('$url/adicionar', data: {"nome": book['name'], "link": book['link']});
+
+    return response;
   }
 }

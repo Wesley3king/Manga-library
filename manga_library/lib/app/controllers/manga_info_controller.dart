@@ -56,6 +56,10 @@ class MangaInfoController {
       state.value = MangaInfoStates.error;
     }
   }
+
+  addOrUpadteBook({required String name, required String link}) async {
+    await yabuFetchServices.addOrUpdateBook({"name": name, "link": link});
+  }
 }
 
 enum MangaInfoStates { start, loading, sucess1, sucess2, error }

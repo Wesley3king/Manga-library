@@ -23,4 +23,10 @@ void main() async {
     print("fim valor ---------");
     expect(valor['data'].length != 0, true);
   });
+
+  test('deve setornar true para adicionar/atualizar o manga',
+      () async {
+    var data = await yabuFtechServices.addOrUpdateBook({"name": "Eleceed", "link": "https://mangayabu.top/manga/eleceed/"});
+    print(data);
+  });
 }
