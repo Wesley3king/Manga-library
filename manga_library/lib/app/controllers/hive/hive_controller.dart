@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/models/seetings_model.dart';
 
 class HiveController {
   static Box? clientData;
@@ -133,6 +134,51 @@ class HiveController {
       return true;
     } catch (e) {
       print('erro no updateLibraries: $e');
+      return false;
+    }
+  }
+
+  Future<List<Map<String, Object>>> writeSettings() async {
+    var model = [
+        {"name": "Ordenação", "value": "oldtonew"},
+        {"name": "Tamanho dos quadros", "value": "normal"},
+        {"name": "Atualizar as Capas", "value": false},
+        {"name": "Tema", "value": "auto"},
+        {"name": "Cor da Interface", "value": "blue"},
+        {"name": "Idioma", "value": "ptbr"},
+        {"name": "Rolar a Barra", "value": true},
+        {"name": "Tipo do Leitor", "value": "vertical"},
+        {"name": "Cor de fundo", "value": "auto"},
+        {"name": "Tela cheia", "value": true},
+        {"name": "Local de armazenamento", "value": "intern"},
+        {"name": "Autenticação", "value": false},
+        {"name": "Tipo de Autenticação", "value": "text"},
+        {"name": "Senha de Autenticação", "value": ""},
+        {"name": "Multiplas Pesquisas", "value": false},
+        {"name": "Conteudo NSFW", "value": false},
+        {"name": "Mostrar na Lista", "value": true},
+        {"name": "Limpar o Cache", "value": false},
+        {"name": "Restaurar", "value": false},
+      ];
+    clientData?.put("settings", model);
+    return model;
+  }
+
+  Future<List<Map<String, Object>>> getSettings() async {
+    var data = await clientData?.get("settings");
+    if (data == null) {
+      return data;
+    } else {
+      return await writeSettings();
+    }
+  }
+
+  Future<bool> updateSettings(SettingsModel data) async {
+    try {
+      await clientData?.put("settings", data.toJson());
+      return true;
+    } catch (e) {
+      print('erro no HiveController - updateSettings: $e');
       return false;
     }
   }

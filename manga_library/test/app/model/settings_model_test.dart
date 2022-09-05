@@ -1,4 +1,9 @@
-[
+import 'package:flutter_test/flutter_test.dart';
+import 'package:manga_library/app/models/seetings_model.dart';
+
+void main() {
+  test("deve retornar um SettingsModel", () {
+    var instance = SettingsModel.fromJson({"data": [
   {
     "type": "library",
     "nameOptions": "Biblioteca",
@@ -159,8 +164,8 @@
           ]
         },
         {
-        "nameConfig": "Tipo de Autenticação",
-        "description": "Define o tipo autenticação",
+        "nameConfig": "Autenticação",
+        "description": "Define se havera autenticação ao entrar",
         "inputType": "radio",
         "value": "text",
         "optionsAndValues": [
@@ -169,7 +174,7 @@
           ]
         },
         {
-        "nameConfig": "Senha de Autenticação",
+        "nameConfig": "Autenticação",
         "description": "Define se havera autenticação ao entrar",
         "inputType": "input",
         "value": "",
@@ -239,4 +244,6 @@
         }
     ]
     }
-]
+]});
+  });
+}
