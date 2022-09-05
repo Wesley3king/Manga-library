@@ -12,6 +12,7 @@ class HiveController {
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ClientDataModelHiveAdapter());
     }
+    print("hive enabled");
     clientData = await Hive.openBox('clientData');
     libraries = await Hive.openBox('libraries');
   }
@@ -138,35 +139,35 @@ class HiveController {
     }
   }
 
-  Future<List<Map<String, Object>>> writeSettings() async {
-    var model = [
-        {"name": "Ordenação", "value": "oldtonew"},
-        {"name": "Tamanho dos quadros", "value": "normal"},
-        {"name": "Atualizar as Capas", "value": false},
-        {"name": "Tema", "value": "auto"},
-        {"name": "Cor da Interface", "value": "blue"},
-        {"name": "Idioma", "value": "ptbr"},
-        {"name": "Rolar a Barra", "value": true},
-        {"name": "Tipo do Leitor", "value": "vertical"},
-        {"name": "Cor de fundo", "value": "auto"},
-        {"name": "Tela cheia", "value": true},
-        {"name": "Local de armazenamento", "value": "intern"},
-        {"name": "Autenticação", "value": false},
-        {"name": "Tipo de Autenticação", "value": "text"},
-        {"name": "Senha de Autenticação", "value": ""},
-        {"name": "Multiplas Pesquisas", "value": false},
-        {"name": "Conteudo NSFW", "value": false},
-        {"name": "Mostrar na Lista", "value": true},
-        {"name": "Limpar o Cache", "value": false},
-        {"name": "Restaurar", "value": false},
-      ];
+  Future<Map<String, dynamic>> writeSettings() async {
+    Map<String, dynamic> model = {
+      "Ordenação": "oldtonew",
+      "Tamanho dos quadros": "normal",
+      "Atualizar as Capas": false,
+      "Tema": "auto",
+      "Cor da Interface": "blue",
+      "Idioma": "ptbr",
+      "Rolar a Barra": true,
+      "Tipo do Leitor": "vertical",
+      "Cor de fundo": "auto",
+      "Tela cheia": true,
+      "Local de armazenamento": "intern",
+      "Autenticação": false,
+      "Tipo de Autenticação": "text",
+      "Senha de Autenticação": "",
+      "Multiplas Pesquisas": false,
+      "Conteudo NSFW": false,
+      "Mostrar na Lista": true,
+      "Limpar o Cache": false,
+      "Restaurar": false,
+    };
     clientData?.put("settings", model);
     return model;
   }
 
-  Future<List<Map<String, Object>>> getSettings() async {
+  Future<Map<String, dynamic>> getSettings() async {
     var data = await clientData?.get("settings");
-    if (data == null) {
+    if (data != null) {
       return data;
     } else {
       return await writeSettings();

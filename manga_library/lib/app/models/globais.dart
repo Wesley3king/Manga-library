@@ -8,4 +8,6 @@ class GlobalData {
   static bool showAdiminAtualizationBanner = false;
 
   static SettingsModel settingsApp = SettingsModel(data: []);
+
+  static Map<String, dynamic> settings = {};
 }

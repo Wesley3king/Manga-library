@@ -15,12 +15,16 @@ class ConfigurationsTypes extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.local_library),
             title: const Text('Biblioteca'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push('/settingoptions/library');
+            },
           ),
           ListTile(
             leading: const Icon(Icons.chrome_reader_mode),
             title: const Text('Leitor'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push('/settingoptions/leitor');
+            },
           ),
           ListTile(
             leading: const Icon(Icons.lightbulb),
@@ -32,22 +36,30 @@ class ConfigurationsTypes extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.download),
             title: const Text('Downloads'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push('/settingoptions/downloads');
+            },
           ),
           ListTile(
             leading: const Icon(Icons.security),
             title: const Text('Segurança'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push('/settingoptions/security');
+            },
           ),
           ListTile(
             leading: const Icon(Icons.explore),
             title: const Text('Extensões e Pesquisa'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push('/settingoptions/extension');
+            },
           ),
           ListTile(
             leading: const Icon(Icons.report_problem),
             title: const Text('Avançado'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push('/settingoptions/advanced');
+            },
           ),
         ],
       ),

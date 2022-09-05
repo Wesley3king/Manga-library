@@ -15,8 +15,6 @@ class HomePageController {
 
   Future<List<ModelHomePage>> start() async {
     state.value = HomeStates.loading;
-    // inicializar o Hive
-    await _hiveController.start();
     //_hiveController.writeClientData();
     List? dados = await mangaYabu.homePage();
 

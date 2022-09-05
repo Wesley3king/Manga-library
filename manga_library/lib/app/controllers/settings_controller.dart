@@ -1,258 +1,261 @@
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/seetings_model.dart';
 
 class SettingsController {
   final HiveController hiveController = HiveController();
   SettingsModel settings = SettingsModel(data: []);
 
-  start() async {
-    List<Map<String, Object>> data = await hiveController.getSettings();
-
+  Future start() async {
+    Map<String, dynamic> data = await hiveController.getSettings();
+    GlobalData.settings = data;
+    GlobalData.settingsApp = buildSettingsModel(data);
   }
 
-  buildSettingsModel(List<Map<String, Object>> data) {
+  buildSettingsModel(Map<String, dynamic> data) {
     return SettingsModel.fromJson({
-      "data" : [
+      "data": [
         {
           "type": "library",
           "nameOptions": "Biblioteca",
-          "settings" : [
-              {
+          "settings": [
+            {
               "nameConfig": "Ordenação",
               "description": "A ordem em que os mangas serão exibidos",
               "inputType": "radio",
-              "value": "oldtonew",
+              "value": data['Ordenação'],
               "optionsAndValues": [
-                  {"option": "Velhos até Novos", "value": "oldtonew"},
-                  {"option": "Novos até Velhos", "value": "newtoold"},
-                  {"option": "Alfabética", "value": "alfabetic"}
-                ]
-              },
-              {
+                {"option": "Velhos até Novos", "value": "oldtonew"},
+                {"option": "Novos até Velhos", "value": "newtoold"},
+                {"option": "Alfabética", "value": "alfabetic"}
+              ]
+            },
+            {
               "nameConfig": "Tamanho dos quadros",
               "description": "Configura o tamanho das capas",
-              "inputType": "switch",
-              "value": "normal",
+              "inputType": "radio",
+              "value": data['Tamanho dos quadros'],
               "optionsAndValues": [
-                  {"option": "Pequenos", "value": "small"},
-                  {"option": "Normal", "value": "normal"},
-                  {"option": "Grandes", "value": "big"}
-                ]
-              },
-              {
+                {"option": "Pequenos", "value": "small"},
+                {"option": "Normal", "value": "normal"},
+                {"option": "Grandes", "value": "big"}
+              ]
+            },
+            {
               "nameConfig": "Atualizar as Capas",
               "description": "Atualiza as capas da Biblioteca",
               "inputType": "confirm",
-              "value": false,
+              "value": ['Atualizar as Capa'],
               "optionsAndValues": [
-                  {"option": "Cancelar", "value": false},
-                  {"option": "Confirmar", "value": true}
-                ]
-              }
+                {"option": "Cancelar", "value": false},
+                {"option": "Confirmar", "value": true}
+              ]
+            }
           ]
-          },
-          {
-          "type": "theme",
-          "nameOptions": "Thema e Idioma",
-          "settings" : [
-              {
-              "nameConfig": "Tema",
-              "description": "Define o tema do aplicativo",
-              "inputType": "radio",
-              "value": "auto",
-              "optionsAndValues": [
-                  {"option": "Automatico", "value": "auto"},
-                  {"option": "Light", "value": "light"},
-                  {"option": "Dark", "value": "dark"}
-                ]
-              },
-              {
-              "nameConfig": "Cor da Interface",
-              "description": "Define a cor dos icones e cabechalhos",
-              "inputType": "radio",
-              "value": "blue",
-              "optionsAndValues": [
-                  {"option": "Azul", "value": "blue"},
-                  {"option": "Verde", "value": "green"},
-                  {"option": "Lime", "value": "lime"},
-                  {"option": "Roxo", "value": "purple"},
-                  {"option": "Rosa", "value": "pink"},
-                  {"option": "Laranja", "value": "orange"},
-                  {"option": "Vermelho", "value": "red"},
-                  {"option": "Preto", "value": "black"},
-                  {"option": "Branco", "value": "white"},
-                  {"option": "Cinza", "value": "grey"}
-                ]
-              },
-              {
-              "nameConfig": "Idioma",
-              "description": "Define o linguagem do aplicativo",
-              "inputType": "radio",
-              "value": "ptbr",
-              "optionsAndValues": [
-                  {"option": "Português(Br)", "value": "ptbr"}
-                ]
-              },
-              {
-              "nameConfig": "Rolar a Barra",
-              "description": "retira a barra ao rolar para baixo",
-              "inputType": "switch",
-              "value": true,
-              "optionsAndValues": [
-                  {"option": "switch", "value": true}
-                ]
-              }
-          ]
-          },
-          {
+        },
+        {
           "type": "leitor",
           "nameOptions": "Leitor",
-          "settings" : [
-              {
+          "settings": [
+            {
               "nameConfig": "Tipo do Leitor",
               "description": "O modo como as paginas disponibilizadas",
               "inputType": "radio",
-              "value": "vertical",
+              "value": data['Tipo do Leitor'],
               "optionsAndValues": [
-                  {"option": "Vertical", "value": "vertical"},
-                  {"option": "Esquerda para Direita", "value": "ltr"},
-                  {"option": "Direita para esquerda", "value": "rtl"}
-                ]
-              },
-              {
+                {"option": "Vertical", "value": "vertical"},
+                {"option": "Esquerda para Direita", "value": "ltr"},
+                {"option": "Direita para esquerda", "value": "rtl"}
+              ]
+            },
+            {
               "nameConfig": "Cor de fundo",
               "description": "A cor para o fundo do Leitor",
               "inputType": "radio",
-              "value": "auto",
+              "value": data['Cor de fundo'],
               "optionsAndValues": [
-                  {"option": "Automatico", "value": "auto"},
-                  {"option": "Dark", "value": "dark"},
-                  {"option": "Preto", "value": "black"},
-                  {"option": "Branco", "value": "white"}
-                ]
-              },
-              {
+                {"option": "Automatico", "value": "auto"},
+                {"option": "Dark", "value": "dark"},
+                {"option": "Preto", "value": "black"},
+                {"option": "Branco", "value": "white"}
+              ]
+            },
+            {
               "nameConfig": "Tela cheia",
               "description": "Se o Leitor será exibido em tela cheia",
               "inputType": "switch",
-              "value": true,
+              "value": data['Tela cheia'],
               "optionsAndValues": [
-                  {"option": "switch", "value": true}
-                ]
-              }
+                {"option": "switch", "value": true}
+              ]
+            }
           ]
-          },
-          {
+        },
+        {
+          "type": "theme",
+          "nameOptions": "Thema e Idioma",
+          "settings": [
+            {
+              "nameConfig": "Tema",
+              "description": "Define o tema do aplicativo",
+              "inputType": "radio",
+              "value": data['Tema'],
+              "optionsAndValues": [
+                {"option": "Automatico", "value": "auto"},
+                {"option": "Light", "value": "light"},
+                {"option": "Dark", "value": "dark"}
+              ]
+            },
+            {
+              "nameConfig": "Cor da Interface",
+              "description": "Define a cor dos icones e cabechalhos",
+              "inputType": "radio",
+              "value": data['Cor da Interface'],
+              "optionsAndValues": [
+                {"option": "Azul", "value": "blue"},
+                {"option": "Verde", "value": "green"},
+                {"option": "Lime", "value": "lime"},
+                {"option": "Roxo", "value": "purple"},
+                {"option": "Rosa", "value": "pink"},
+                {"option": "Laranja", "value": "orange"},
+                {"option": "Vermelho", "value": "red"},
+                {"option": "Preto", "value": "black"},
+                {"option": "Branco", "value": "white"},
+                {"option": "Cinza", "value": "grey"}
+              ]
+            },
+            {
+              "nameConfig": "Idioma",
+              "description": "Define o linguagem do aplicativo",
+              "inputType": "radio",
+              "value": data['Idioma'],
+              "optionsAndValues": [
+                {"option": "Português(Br)", "value": "ptbr"}
+              ]
+            },
+            {
+              "nameConfig": "Rolar a Barra",
+              "description": "retira a barra ao rolar para baixo",
+              "inputType": "switch",
+              "value": data['Rolar a Barra'],
+              "optionsAndValues": [
+                {"option": "switch", "value": true}
+              ]
+            }
+          ]
+        },
+        {
           "type": "downloads",
           "nameOptions": "Downloads",
-          "settings" : [
-              {
+          "settings": [
+            {
               "nameConfig": "Local de armazenamento",
               "description": "Define o local que fivaram os downloads",
               "inputType": "radio",
-              "value": "intern",
+              "value": data['Local de armazenamento'],
               "optionsAndValues": [
-                  {"option": "Interno", "value": "intern"},
-                  {"option": "Externo", "value": "extern"},
-                  {"option": "Externo oculto", "value": "externocult"}
-                ]
-              }
+                {"option": "Interno", "value": "intern"},
+                {"option": "Externo", "value": "extern"},
+                {"option": "Externo oculto", "value": "externocult"}
+              ]
+            }
           ]
-          },
-          {
+        },
+        {
           "type": "security",
           "nameOptions": "Segurança",
-          "settings" : [
-              {
+          "settings": [
+            {
               "nameConfig": "Autenticação",
               "description": "Define se havera autenticação ao entrar",
               "inputType": "switch",
-              "value": false,
+              "value": data['Autenticação'],
               "optionsAndValues": [
-                  {"option": "switch", "value": false}
-                ]
-              },
-              {
+                {"option": "switch", "value": false}
+              ]
+            },
+            {
               "nameConfig": "Tipo de Autenticação",
               "description": "Define o tipo autenticação",
               "inputType": "radio",
-              "value": "text",
+              "value": data['Tipo de Autenticação'],
               "optionsAndValues": [
-                  {"option": "Caracteres", "value": "text"},
-                  {"option": "Numeros", "value": "number"}
-                ]
-              },
-              {
+                {"option": "Caracteres", "value": "text"},
+                {"option": "Numeros", "value": "number"}
+              ]
+            },
+            {
               "nameConfig": "Senha de Autenticação",
               "description": "Define se havera autenticação ao entrar",
               "inputType": "input",
-              "value": "",
+              "value": data['Senha de Autenticação'],
               "optionsAndValues": [
-                  {"option": "Caracteres", "value": ""},
-                  {"option": "Numeros", "value": ""}
-                ]
-              }
+                {"option": "Caracteres", "value": ""},
+                {"option": "Numeros", "value": ""}
+              ]
+            }
           ]
-          },
-          {
+        },
+        {
           "type": "extension",
           "nameOptions": "Exetensões e e Pesquisa",
-          "settings" : [
-              {
+          "settings": [
+            {
               "nameConfig": "Multiplas Pesquisas",
-              "description": "Define se pode fazer mais de uma pesquisa por vez",
+              "description":
+                  "Define se pode fazer mais de uma pesquisa por vez",
               "inputType": "switch",
-              "value": false,
+              "value": data['Multiplas Pesquisas'],
               "optionsAndValues": [
-                  {"option": "switch", "value": false}
-                ]
-              },
-              {
+                {"option": "switch", "value": false}
+              ]
+            },
+            {
               "nameConfig": "Conteudo NSFW",
               "description": "Define se havera extesões +18",
               "inputType": "switch",
-              "value": false,
+              "value": data['Conteudo NSFW'],
               "optionsAndValues": [
-                  {"option": "switch", "value": false}
-                ]
-              },
-              {
+                {"option": "switch", "value": false}
+              ]
+            },
+            {
               "nameConfig": "Mostrar na Lista",
               "description": "Exibe estas extensões na Lista de Extensões",
               "inputType": "switch",
-              "value": true,
+              "value": data['Mostrar na Lista'],
               "optionsAndValues": [
-                  {"option": "switch", "value": true}
-                ]
-              }
+                {"option": "switch", "value": true}
+              ]
+            }
           ]
-          },
-          {
+        },
+        {
           "type": "advanced",
           "nameOptions": "Avançado",
-          "settings" : [
-              {
+          "settings": [
+            {
               "nameConfig": "Limpar o Cache",
               "description": "Remove dados substituiveis",
               "inputType": "confirm",
-              "value": false,
+              "value": data['Limpar o Cache'],
               "optionsAndValues": [
-                  {"option": "Cancelar", "value": false},
-                  {"option": "Confirmar", "value": true}
-                ]
-              },
-              {
+                {"option": "Cancelar", "value": false},
+                {"option": "Confirmar", "value": true}
+              ]
+            },
+            {
               "nameConfig": "Restaurar",
               "description": "Remove todos os dados do aplicativo",
               "inputType": "confirm",
-              "value": false,
+              "value": data['Restaurar'],
               "optionsAndValues": [
-                  {"option": "Cancelar", "value": false},
-                  {"option": "Confirmar", "value": true}
-                ]
-              }
+                {"option": "Cancelar", "value": false},
+                {"option": "Confirmar", "value": true}
+              ]
+            }
           ]
-          }
+        }
       ]
     });
   }
