@@ -1,0 +1,108 @@
+[
+    {
+    "type": "theme",
+    "nameOptions": "Thema e Idioma",
+    "settings" : [
+        {
+        "nameConfig": "Tema",
+        "description": "Define o tema do aplicativo",
+        "inputType": "radio",
+        "value": "auto",
+        "optionsAndValues": [
+            {"option": "Automatico", "value": "auto"},
+            {"option": "Light", "value": "light"},
+            {"option": "Dark", "value": "dark"}
+          ]
+        },
+        {
+        "nameConfig": "Cor da Interface",
+        "description": "Define a cor dos icones e cabechalhos",
+        "inputType": "radio",
+        "value": "blue",
+        "optionsAndValues": [
+            {"option": "Azul", "value": "blue"},
+            {"option": "Verde", "value": "green"},
+            {"option": "Lime", "value": "lime"},
+            {"option": "Roxo", "value": "purple"},
+            {"option": "Rosa", "value": "pink"},
+            {"option": "Laranja", "value": "orange"},
+            {"option": "Vermelho", "value": "red"},
+            {"option": "Preto", "value": "black"},
+            {"option": "Branco", "value": "white"},
+            {"option": "Cinza", "value": "grey"}
+          ]
+        },
+        {
+        "nameConfig": "Idioma",
+        "description": "Define o linguagem do aplicativo",
+        "inputType": "radio",
+        "value": "ptbr",
+        "optionsAndValues": [
+            {"option": "Português(Br)", "value": "ptbr"}
+          ]
+        }
+    ]
+    },
+    {
+    "type": "leitor",
+    "nameOptions": "Leitor",
+    "settings" : [
+        {
+        "nameConfig": "Tipo do Leitor",
+        "description": "O modo como as paginas disponibilizadas",
+        "inputType": "radio",
+        "value": "vertical",
+        "optionsAndValues": [
+            {"option": "Vertical", "value": "vertical"},
+            {"option": "Esquerda para Direita", "value": "ltr"},
+            {"option": "Direita para esquerda", "value": "rtl"}
+          ]
+        },
+        {
+        "nameConfig": "Cor de fundo",
+        "description": "A cor para o fundo do Leitor",
+        "inputType": "radio",
+        "value": "auto",
+        "optionsAndValues": [
+            {"option": "Automatico", "value": "auto"},
+            {"option": "Dark", "value": "dark"},
+            {"option": "Preto", "value": "black"},
+            {"option": "Branco", "value": "white"}
+          ]
+        },
+        {
+        "nameConfig": "Tela cheia",
+        "description": "Se o Leitor será exibido em tela cheia",
+        "inputType": "switch",
+        "value": true,
+        "optionsAndValues": [
+            {"option": "switch", "value": true}
+          ]
+        }
+    ]
+    },
+    {
+    "type": "geral",
+    "nameOptions": "Geral",
+    "settings" : [
+        {
+        "nameConfig": "Rolar a Barra",
+        "description": "retira a barra ao rolar para baixo",
+        "inputType": "switch",
+        "value": true,
+        "optionsAndValues": [
+            {"option": "switch", "value": true}
+          ]
+        },
+        {
+        "nameConfig": "Rolar a Barra",
+        "description": "retira a barra ao rolar para baixo",
+        "inputType": "switch",
+        "value": false,
+        "optionsAndValues": [
+            {"option": "switch", "value": false}
+          ]
+        }
+    ]
+    }
+]
