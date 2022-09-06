@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/routes/routes.dart';
@@ -7,7 +8,6 @@ ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
 );
 ThemeData lightTheme = ThemeData(
-  primarySwatch: Colors.blue,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   brightness: Brightness.light,
 );
@@ -37,8 +37,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         print("theme automatic");
         return theme;
       case "light":
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.white,
+          systemNavigationBarDividerColor: Colors.black12,
+          systemNavigationBarIconBrightness: Brightness.dark));
         return lightTheme;
       case "dark":
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          systemNavigationBarColor:Color.fromARGB(255, 27, 27, 27),
+          systemNavigationBarDividerColor: Colors.black87,
+          systemNavigationBarIconBrightness: Brightness.light));
         return darkTheme;
       default:
         print("auto default");

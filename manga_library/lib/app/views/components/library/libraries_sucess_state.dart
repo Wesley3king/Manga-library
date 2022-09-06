@@ -1,6 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/components/library/library_grid.dart';
+
+import '../../../controllers/system_config.dart';
+import '../../../models/globais.dart';
 
 class LibrarrySucessState extends StatefulWidget {
   final List<LibraryModel> dados;
@@ -13,6 +19,7 @@ class LibrarrySucessState extends StatefulWidget {
 
 class _LibrarrySucessStateState extends State<LibrarrySucessState>
     with SingleTickerProviderStateMixin {
+  final ConfigSystemController configSystemController = ConfigSystemController();
   late TabController tabController;
   List<Widget> _getPages(List<LibraryModel> lista) {
     List<Widget> pages = [];
@@ -50,11 +57,14 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           title: const Text('Biblioteca'),
-          backgroundColor: Colors.blueAccent,
+          //toolbarTextStyle: TextStyle(),
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          //backgroundColor: _setAppBarColor(),
           snap: true,
           floating: true,
           bottom: TabBar(
             controller: tabController,
+            indicatorColor: configSystemController.colorManagement(),
             tabs: _getTabs(widget.dados),
           ),
         )

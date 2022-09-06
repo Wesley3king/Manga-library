@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 
-import '../../../models/globais.dart';
-
 class ConfigurationsTypes extends StatefulWidget {
   const ConfigurationsTypes({super.key});
 
@@ -12,32 +10,7 @@ class ConfigurationsTypes extends StatefulWidget {
 }
 
 class _ConfigurationsTypesState extends State<ConfigurationsTypes> {
-  Color _colorManagement() {
-    switch (GlobalData.settings['Cor da Interface']) {
-      case "blue":
-        return Colors.blue;
-      case "green":
-        return Colors.green;
-      case "lime":
-        return Colors.lime;
-      case "purple":
-        return Colors.purple;
-      case "pink":
-        return Colors.pink;
-      case "orange":
-        return Colors.orange;
-      case "red":
-        return Colors.red;
-      case "black":
-        return Colors.black;
-      case "white":
-        return Colors.white;
-      case "grey":
-        return Colors.grey;
-      default:
-        return Colors.blue;
-    }
-  }
+  final ConfigSystemController configSystemController = ConfigSystemController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +21,7 @@ class _ConfigurationsTypesState extends State<ConfigurationsTypes> {
       body: AnimatedBuilder(
         animation: ConfigSystemController.instance,
         builder: (context, child) => IconTheme(
-          data: IconThemeData(color: _colorManagement()),
+          data: IconThemeData(color: configSystemController.colorManagement()),
           child: ListView(
             children: [
               ListTile(

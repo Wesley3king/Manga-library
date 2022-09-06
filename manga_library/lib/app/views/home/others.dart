@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/views/bottom_navigation_bar.dart';
 
-import '../../models/globais.dart';
-
 class OthersPage extends StatefulWidget {
   const OthersPage({super.key});
 
@@ -14,34 +12,8 @@ class OthersPage extends StatefulWidget {
 }
 
 class _OthersPageState extends State<OthersPage> {
+  final ConfigSystemController configSystemController = ConfigSystemController();
   ScrollController controller = ScrollController();
-
-  Color _colorManagement() {
-    switch (GlobalData.settings['Cor da Interface']) {
-      case "blue":
-        return Colors.blue;
-      case "green":
-        return Colors.green;
-      case "lime":
-        return Colors.lime;
-      case "purple":
-        return Colors.purple;
-      case "pink":
-        return Colors.pink;
-      case "orange":
-        return Colors.orange;
-      case "red":
-        return Colors.red;
-      case "black":
-        return Colors.black;
-      case "white":
-        return Colors.white;
-      case "grey":
-        return Colors.grey;
-      default:
-        return Colors.blue;
-    }
-  }
 
   @override
   void dispose() {
@@ -58,7 +30,7 @@ class _OthersPageState extends State<OthersPage> {
       body: AnimatedBuilder(
         animation: ConfigSystemController.instance,
         builder: (context, child) => IconTheme(
-          data: IconThemeData(color: _colorManagement()),
+          data: IconThemeData(color: configSystemController.colorManagement()),
           child: ListView(
             children: [
               Stack(

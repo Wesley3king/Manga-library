@@ -1,6 +1,5 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 
@@ -56,16 +55,52 @@ class SearchResultsPage extends StatelessWidget {
     );
   }
 
-  Widget resultList(SearchModel model) {
-    return SizedBox(
-      height: 220,
-      child: ListView.builder(
-        itemCount: model.books.length,
-        cacheExtent: 1000,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => item(model.books[index], context),
-      ),
-    );
+  Widget resultList(SearchModel model, BuildContext context) {
+    if (model.books.isEmpty) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 95,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
+          child: Column(
+            children: [
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: SizedBox(
+                  height: 18,
+                  child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
+              ),
+              const Center(child: Text("Nenhum resultado encontrado"),),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 255,
+        child: Column(
+          children: [
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: SizedBox(
+                height: 18,
+                child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: model.books.length,
+                cacheExtent: 1000,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => item(model.books[index], context),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -89,7 +124,7 @@ class SearchResultsPage extends StatelessWidget {
             } else if (SearchController.finalized && index == results.length) {
               return Container();
             } else {
-              return resultList(results[index]);
+              return resultList(results[index], context);
             }
           },
         ));

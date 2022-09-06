@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manga_library/app/models/globais.dart';
 
 import '../controllers/system_config.dart';
 
@@ -15,6 +14,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  final ConfigSystemController configSystemController =
+      ConfigSystemController();
   // ScrollController controller = widget.controller;
 
   // @override
@@ -28,32 +29,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   //   super.dispose();
   //   controller.dispose();
   // }
-  Color _colorManagement() {
-    switch (GlobalData.settings['Cor da Interface']) {
-      case "blue":
-        return Colors.blue;
-      case "green":
-        return Colors.green;
-      case "lime":
-        return Colors.lime;
-      case "purple":
-        return Colors.purple;
-      case "pink":
-        return Colors.pink;
-      case "orange":
-        return Colors.orange;
-      case "red":
-        return Colors.red;
-      case "black":
-        return Colors.black;
-      case "white":
-        return Colors.white;
-      case "grey":
-        return Colors.grey;
-      default:
-        return Colors.blue;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +40,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           child: AnimatedBuilder(
             animation: ConfigSystemController.instance,
             builder: (context, child) => IconTheme(
-              data: IconThemeData(color: _colorManagement()),
+              data: IconThemeData(
+                  color: configSystemController.colorManagement()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [

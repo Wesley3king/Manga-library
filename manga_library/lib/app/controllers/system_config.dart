@@ -32,4 +32,34 @@ class ConfigSystemController extends ChangeNotifier {
     bool response = await _hiveController.updateSettings(data);
     if (response) systemController.updateConfig();
   }
+
+  Color colorManagement() {
+    // print(GlobalData.settings['Cor da Interface']);
+    switch (GlobalData.settings['Cor da Interface']) {
+      case "blue":
+        return const Color.fromARGB(255, 40, 152, 243);
+      case "green":
+        return const Color.fromARGB(255, 87, 223, 91);
+      case "lime":
+        return Colors.lime;
+      case "purple":
+        return const Color.fromARGB(255, 169, 47, 190);
+      case "pink":
+        return Colors.pink;
+      case "cleanpink":
+        return const Color.fromARGB(255, 213, 91, 235);
+      case "orange":
+        return Colors.orange;
+      case "red":
+        return Colors.red;
+      case "black":
+        return Colors.black;
+      case "white":
+        return Colors.white;
+      case "grey":
+        return Colors.grey;
+      default:
+        return Colors.blue;
+    }
+  }
 }

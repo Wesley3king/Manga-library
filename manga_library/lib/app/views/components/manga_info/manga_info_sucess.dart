@@ -7,6 +7,8 @@ import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_list.dart';
 
+import '../../../controllers/system_config.dart';
+
 class SucessMangaInfo extends StatefulWidget {
   final ModelMangaInfo dados;
   final bool sucess2;
@@ -24,6 +26,7 @@ class SucessMangaInfo extends StatefulWidget {
 }
 
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
+  final ConfigSystemController configSystemController = ConfigSystemController();
   Widget _showAdiminAtualizationBanner() {
     final MangaInfoController mangaInfoController = MangaInfoController();
     // print(
@@ -37,32 +40,6 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
           child: const Text('Adicionar/Atualizar'));
     } else {
       return Container();
-    }
-  }
-  Color _colorManagement() {
-    switch (GlobalData.settings['Cor da Interface']) {
-      case "blue":
-        return Colors.blue;
-      case "green":
-        return Colors.green;
-      case "lime":
-        return Colors.lime;
-      case "purple":
-        return Colors.purple;
-      case "pink":
-        return Colors.pink;
-      case "orange":
-        return Colors.orange;
-      case "red":
-        return Colors.red;
-      case "black":
-        return Colors.black;
-      case "white":
-        return Colors.white;
-      case "grey":
-        return Colors.grey;
-      default:
-        return Colors.blue;
     }
   }
 
@@ -108,8 +85,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  width: 150,
-                  height: 225,
+                  width: 210,
+                  height: 315,
                   child: Image(
                     image: CachedNetworkImageProvider(
                       widget.dados.cover,
@@ -126,12 +103,13 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AddToLibrary(
               link: 'https://mangayabu.top/manga/${widget.link}',
               dados: widget.dados,
             ),
-            Expanded(
+            Flexible(
               child: Text(
                 widget.dados.chapterName,
                 // maxLines: 4,
@@ -153,7 +131,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   "link": widget.link,
                 },
               )
-            : CircularProgressIndicator(color: _colorManagement()),
+            : CircularProgressIndicator(color: configSystemController.colorManagement()),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Row(
@@ -179,7 +157,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: _colorManagement(), width: 1),
+                  border: Border.all(color: configSystemController.colorManagement(), width: 1),
                 ),
                 child: Padding(
                   padding:

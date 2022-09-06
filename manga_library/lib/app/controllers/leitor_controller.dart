@@ -29,22 +29,23 @@ class LeitorController {
 }
 
 class PagesController {
-  int maxPages = 0;
+  int maxPages = 1;
   ValueNotifier<int> state = ValueNotifier<int>(1);
   // start() {
   //   state.value++;
   //   print('iniciou!');
   // }
-  set setMaxPages(int max) {
-    maxPages = max;
+  set setPage(int max) {
+    print(max);
+    state.value = max;
   }
 
-  startNextPage() {
-    if (state.value < maxPages) {
-      state.value++;
-    }
-    print('state = ${state.value}');
-    print('max = $maxPages');
+  // startNextPage() {
+  //   if (state.value < maxPages) {
+  //     state.value++;
+  //   }
+  //   print('state = ${state.value}');
+  //   print('max = $maxPages');
 
-  }
+  // }
 }
