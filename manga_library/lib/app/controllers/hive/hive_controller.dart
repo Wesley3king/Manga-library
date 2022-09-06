@@ -165,18 +165,24 @@ class HiveController {
     return model;
   }
 
-  Future<Map<String, dynamic>> getSettings() async {
+  Future<Map> getSettings() async {
     var data = await clientData?.get("settings");
-    if (data != null) {
+    print(data is Map<String, dynamic>
+        ? "é Map<String, dynamic>"
+        : "não é Map<String, dynamic>");
+    if (data != null && data is Map) {
       return data;
     } else {
       return await writeSettings();
     }
   }
 
-  Future<bool> updateSettings(SettingsModel data) async {
+  Future<bool> updateSettings(Map data) async {
     try {
-      await clientData?.put("settings", data.toJson());
+      print(data['Tema']);
+      await clientData?.put("settings", data);
+      // var data2 = await clientData?.get("settings");
+      // print(data2);
       return true;
     } catch (e) {
       print('erro no HiveController - updateSettings: $e');

@@ -5,6 +5,8 @@ import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_states.dart';
 
+import '../../../models/globais.dart';
+
 class ButtomBottomSheetChapterList extends StatefulWidget {
   final List<Allposts> listaCapitulos;
   final List<ModelLeitor>? listaCapitulosDisponiveis;
@@ -71,6 +73,32 @@ class _ButtomBottomSheetChapterListState
         return const ErrorHomePage();
     }
   }
+  Color _colorManagement() {
+    switch (GlobalData.settings['Cor da Interface']) {
+      case "blue":
+        return Colors.blue;
+      case "green":
+        return Colors.green;
+      case "lime":
+        return Colors.lime;
+      case "purple":
+        return Colors.purple;
+      case "pink":
+        return Colors.pink;
+      case "orange":
+        return Colors.orange;
+      case "red":
+        return Colors.red;
+      case "black":
+        return Colors.black;
+      case "white":
+        return Colors.white;
+      case "grey":
+        return Colors.grey;
+      default:
+        return Colors.blue;
+    }
+  }
 
   @override
   void initState() {
@@ -88,7 +116,7 @@ class _ButtomBottomSheetChapterListState
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.green),
+          backgroundColor: MaterialStateProperty.all(_colorManagement()),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(21),
           )),
@@ -121,9 +149,9 @@ class _ButtomBottomSheetChapterListState
                   Container(
                     height: 35,
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                        color: _colorManagement(),
+                        borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(bottomSheetRadius),
                             topRight: Radius.circular(bottomSheetRadius))),
                     alignment: Alignment.topRight,

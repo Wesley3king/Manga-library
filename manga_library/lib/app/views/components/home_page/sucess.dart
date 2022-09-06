@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/views/components/horizontal_list.dart';
 
+import '../../../models/globais.dart';
+
 class Sucess extends StatelessWidget {
   final List<ModelHomePage> dados;
   final ScrollController controllerScroll;
@@ -54,34 +56,37 @@ class Sucess extends StatelessWidget {
                         stops: [0.1, 1]),
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 150,
-                        height: 240,
-                        child: CachedNetworkImage(
-                          imageUrl: dados[0].img,
-                          placeholder: (context, url) => Container(color: Colors.grey,),
-                          errorWidget: (context, url, error) => const Center(child: Icon(Icons.report_problem),),
-                          fit: BoxFit.fill,
-                        )
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(dados[0].name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          )),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () => print(GlobalData.settings["Tema"]),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          height: 240,
+                          child: CachedNetworkImage(
+                            imageUrl: dados[0].img,
+                            placeholder: (context, url) => Container(color: Colors.grey,),
+                            errorWidget: (context, url, error) => const Center(child: Icon(Icons.report_problem),),
+                            fit: BoxFit.fill,
+                          )
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(dados[0].name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],

@@ -11,16 +11,16 @@ class ConfigOptionsPage extends StatefulWidget {
 }
 
 class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
-  final SettingsOptionsController _settingsOptionsController =
+  final SettingsOptionsController settingsOptionsController =
       SettingsOptionsController();
   final InputTypes inputTypes = InputTypes();
 
   Widget _buidInput(Settings data, BuildContext context) {
     switch (data.inputType) {
       case "switch":
-        return inputTypes.onOff(data);
+        return inputTypes.onOff(data, settingsOptionsController);
       case "radio":
-        return inputTypes.radio(data, context);
+        return inputTypes.radio(data, context, settingsOptionsController);
       case "confirm":
         return inputTypes.confirm(data);
       case "input":
@@ -32,8 +32,8 @@ class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
 
   List<Widget> buildAllInputs(BuildContext context) {
     List<Widget> widgets = [];
-    for (int i = 0; i < _settingsOptionsController.settings.length; ++i) {
-      widgets.add(_buidInput(_settingsOptionsController.settings[i], context));
+    for (int i = 0; i < settingsOptionsController.settings.length; ++i) {
+      widgets.add(_buidInput(settingsOptionsController.settings[i], context));
     }
     return widgets;
   }
@@ -66,7 +66,7 @@ class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
   Widget _buildAppBar(SettingsOptionsStates state) {
     switch (state) {
       case SettingsOptionsStates.sucess:
-        return Text(_settingsOptionsController.titleType);
+        return Text(settingsOptionsController.titleType);
       default:
         return const Text('Configurações');
     }
@@ -75,7 +75,7 @@ class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
   @override
   void initState() {
     super.initState();
-    _settingsOptionsController.start(widget.type);
+    settingsOptionsController.start(widget.type);
   }
 
   @override
@@ -83,31 +83,34 @@ class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
     return Scaffold(
         appBar: AppBar(
           title: AnimatedBuilder(
-            animation: _settingsOptionsController.state,
+            animation: settingsOptionsController.state,
             builder: (context, child) =>
-                _buildAppBar(_settingsOptionsController.state.value),
+                _buildAppBar(settingsOptionsController.state.value),
           ),
         ),
         body: AnimatedBuilder(
-          animation: _settingsOptionsController.state,
+          animation: settingsOptionsController.state,
           builder: (context, child) =>
-              _stateManagement(_settingsOptionsController.state.value, context),
+              _stateManagement(settingsOptionsController.state.value, context),
         ));
   }
 }
 
 class InputTypes {
-  Widget onOff(Settings data) {
+  Widget onOff(Settings data, SettingsOptionsController controller) {
     print(data.value);
     return SwitchListTile(
       title: Text(data.nameConfig),
       subtitle: Text(data.description),
       value: data.value,
-      onChanged: (value) {},
+      onChanged: (value) {
+        data.function(value, controller);
+      },
     );
   }
 
-  Widget radio(Settings data, BuildContext context) {
+  Widget radio(Settings data, BuildContext context,
+      SettingsOptionsController controller) {
     return ListTile(
       title: Text(data.nameConfig),
       subtitle: Text(data.description),
@@ -122,7 +125,10 @@ class InputTypes {
                 title: Text(data.optionsAndValues[i].option),
                 value: data.optionsAndValues[i].value,
                 groupValue: data.value,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  data.function(value, controller);
+                  Navigator.of(context).pop();
+                },
               ));
             }
             return SimpleDialog(

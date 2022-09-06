@@ -25,18 +25,44 @@ class SucessMangaInfo extends StatefulWidget {
 
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
   Widget _showAdiminAtualizationBanner() {
-    final MangaInfoController _mangaInfoController = MangaInfoController();
+    final MangaInfoController mangaInfoController = MangaInfoController();
     // print(
     //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
     if (GlobalData.showAdiminAtualizationBanner) {
       return TextButton(
           onPressed: () {
-            _mangaInfoController.addOrUpadteBook(
+            mangaInfoController.addOrUpadteBook(
                 name: widget.dados.chapterName, link: 'https://mangayabu.top/manga/${widget.link}');
           },
           child: const Text('Adicionar/Atualizar'));
     } else {
       return Container();
+    }
+  }
+  Color _colorManagement() {
+    switch (GlobalData.settings['Cor da Interface']) {
+      case "blue":
+        return Colors.blue;
+      case "green":
+        return Colors.green;
+      case "lime":
+        return Colors.lime;
+      case "purple":
+        return Colors.purple;
+      case "pink":
+        return Colors.pink;
+      case "orange":
+        return Colors.orange;
+      case "red":
+        return Colors.red;
+      case "black":
+        return Colors.black;
+      case "white":
+        return Colors.white;
+      case "grey":
+        return Colors.grey;
+      default:
+        return Colors.blue;
     }
   }
 
@@ -99,6 +125,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
           width: 12,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AddToLibrary(
               link: 'https://mangayabu.top/manga/${widget.link}',
@@ -126,7 +153,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   "link": widget.link,
                 },
               )
-            : const CircularProgressIndicator(),
+            : CircularProgressIndicator(color: _colorManagement()),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Row(
@@ -152,7 +179,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.green, width: 1),
+                  border: Border.all(color: _colorManagement(), width: 1),
                 ),
                 child: Padding(
                   padding:

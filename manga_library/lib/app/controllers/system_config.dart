@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 
 import '../models/globais.dart';
@@ -7,7 +8,28 @@ class SystemController {
   Future start() async {
     // inicializar o Hive
     await _hiveController.start();
-    Map<String, dynamic> data = await _hiveController.getSettings();
+    updateConfig();
+  }
+
+  Future updateConfig() async {
+    Map data = await _hiveController.getSettings();
+    print(data);
     GlobalData.settings = data;
+    ConfigSystemController.instance.start();
+  }
+}
+
+class ConfigSystemController extends ChangeNotifier {
+  final HiveController _hiveController = HiveController();
+  static ConfigSystemController instance = ConfigSystemController();
+
+  start() {
+    notifyListeners();
+  }
+
+  update(Map data) async {
+    final SystemController systemController = SystemController();
+    bool response = await _hiveController.updateSettings(data);
+    if (response) systemController.updateConfig();
   }
 }

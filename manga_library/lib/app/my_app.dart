@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/views/home/home_page.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/routes/routes.dart';
 
 ThemeData darkTheme = ThemeData(
@@ -19,6 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  final SystemController systemController = SystemController();
   ThemeData theme = darkTheme;
 
   void detectTheme() {
@@ -29,11 +31,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
+  ThemeData themeSetter() {
+    switch (GlobalData.settings["Tema"]) {
+      case "auto":
+        print("theme automatic");
+        return theme;
+      case "light":
+        return lightTheme;
+      case "dark":
+        return darkTheme;
+      default:
+        print("auto default");
+        print(GlobalData.settings["Tema"]);
+        return theme;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     detectTheme();
+    systemController.start();
   }
 
   @override
@@ -44,12 +63,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: theme,
-      debugShowCheckedModeBanner: false,
-      routerDelegate: routes.routerDelegate,
-      routeInformationParser: routes.routeInformationParser,
-      routeInformationProvider: routes.routeInformationProvider,
+    return AnimatedBuilder(
+      animation: ConfigSystemController.instance,
+      builder: (context, child) => MaterialApp.router(
+        theme: themeSetter(),
+        debugShowCheckedModeBanner: false,
+        routerDelegate: routes.routerDelegate,
+        routeInformationParser: routes.routeInformationParser,
+        routeInformationProvider: routes.routeInformationProvider,
+      ),
     );
   }
 }

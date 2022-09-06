@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/models/globais.dart';
+
+import '../controllers/system_config.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final ScrollController controller;
@@ -25,27 +28,59 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   //   super.dispose();
   //   controller.dispose();
   // }
+  Color _colorManagement() {
+    switch (GlobalData.settings['Cor da Interface']) {
+      case "blue":
+        return Colors.blue;
+      case "green":
+        return Colors.green;
+      case "lime":
+        return Colors.lime;
+      case "purple":
+        return Colors.purple;
+      case "pink":
+        return Colors.pink;
+      case "orange":
+        return Colors.orange;
+      case "red":
+        return Colors.red;
+      case "black":
+        return Colors.black;
+      case "white":
+        return Colors.white;
+      case "grey":
+        return Colors.grey;
+      default:
+        return Colors.blue;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScrollHideWidget(
       controller: widget.controller,
       child: BottomAppBar(
-        child: IconTheme(
-          data: const IconThemeData(color: Colors.white),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconTheme(
-              data: const IconThemeData(color: Colors.grey),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AnimatedBuilder(
+            animation: ConfigSystemController.instance,
+            builder: (context, child) => IconTheme(
+              data: IconThemeData(color: _colorManagement()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  IconButton(onPressed: () => GoRouter.of(context).push('/home'), icon: const Icon(Icons.home)),
                   IconButton(
-                      onPressed: () => GoRouter.of(context).push('/library'), icon: const Icon(Icons.local_library)),
-                  IconButton(onPressed: () => GoRouter.of(context).push('/search'), icon: const Icon(Icons.explore)),
+                      onPressed: () => GoRouter.of(context).push('/home'),
+                      icon: const Icon(Icons.home)),
                   IconButton(
-                      onPressed: () => GoRouter.of(context).push('/others'), icon: const Icon(Icons.more_horiz)),
+                      onPressed: () => GoRouter.of(context).push('/library'),
+                      icon: const Icon(Icons.local_library)),
+                  IconButton(
+                      onPressed: () => GoRouter.of(context).push('/search'),
+                      icon: const Icon(Icons.explore)),
+                  IconButton(
+                      onPressed: () => GoRouter.of(context).push('/others'),
+                      icon: const Icon(Icons.more_horiz)),
                 ],
               ),
             ),
