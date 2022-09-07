@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
@@ -130,11 +128,20 @@ src,
     return Stack(
       children: [
         InteractiveViewer(
+        clipBehavior: Clip.none,
         maxScale: 4.0,
-        child: ListView(
-          cacheExtent: 100000.0,
+        child: ListView.builder(
+          itemCount: capitulos[0].pages.length,
+          cacheExtent: 10000.0,
           addAutomaticKeepAlives: true,
-          children: builderList(capitulos[0], controller),
+          itemBuilder: (context, index) => GestureDetector(
+        onTap: () => controller.setPage = index,
+        child: IntrinsicHeight(
+            child: CachedNetworkImage(
+              imageUrl: capitulos[0].pages[index],
+              placeholder: (context, url) =>_loading(),
+              errorWidget: (context, url, error) => _error(capitulos[0].pages[index]),)),
+      ),
         ),
       ),
       SizedBox(
@@ -155,3 +162,19 @@ src,
     );
   }
 }
+/*
+Image.network(
+          capitulos[0].pages[index],
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 500,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) => _error(capitulos[0].pages[index]),
+        )
+        */

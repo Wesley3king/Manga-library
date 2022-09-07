@@ -30,7 +30,7 @@ class LeitorController {
 
 class PagesController {
   int maxPages = 1;
-  ValueNotifier<int> state = ValueNotifier<int>(1);
+  ValueNotifier<int> state = ValueNotifier<int>(0);
   // start() {
   //   state.value++;
   //   print('iniciou!');
