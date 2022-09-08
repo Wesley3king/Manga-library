@@ -25,17 +25,17 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget loading() {
     return const SizedBox(
       width: double.infinity,
-      height: 450,
+      height: double.infinity,
       child: Center(
         child: CircularProgressIndicator(),
       ),
     );
   }
 
-  Widget error(String src) {
+  Widget error([String src = "erro no carregamento dos capitulos"]) {
     return SizedBox(
       width: double.infinity,
-      height: 350,
+      height: double.infinity,
       child: Center(
         child: Column(
           children: [
@@ -61,9 +61,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
       wantKeepAlive: true,
       builder: (context, index) => PhotoViewGalleryPageOptions(
         imageProvider:
-            NetworkImage(
-              _leitorController.capitulosEmCarga[0].pages[index]),
-       // filterQuality: 
+            NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]),
+        // filterQuality:
       ),
     );
   }
@@ -73,11 +72,17 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       cacheExtent: 8000.0,
       itemBuilder: (context, index) =>
-          MyPageImage(url: _leitorController.capitulosEmCarga[0].pages[index]),
+          GestureDetector(
+            onTap: () => controller.setPage = index,
+            child: MyPageImage(
+              url: _leitorController.capitulosEmCarga[0].pages[index],
+              filterQuality: FilterQuality.low,
+            ),
+          ),
     );
   }
 
-  Widget leitorType(LeitorTypes type) {
+  Widget _leitorType(LeitorTypes type) {
     switch (type) {
       case LeitorTypes.vertical:
         return photoViewLeitor(Axis.vertical, false);
@@ -88,7 +93,24 @@ class _PagesLeitorState extends State<PagesLeitor> {
       case LeitorTypes.webtoon:
         return listViewLeitor();
       default:
-        return photoViewLeitor(Axis.horizontal, false);
+        return photoViewLeitor(Axis.horizontal, false,);
+    }
+  }
+
+  Widget _stateManagement(LeitorStates state) {
+    switch (state) {
+      case LeitorStates.start:
+        return loading();
+      case LeitorStates.loading:
+        return loading();
+      case LeitorStates.sucess:
+        return AnimatedBuilder(
+          animation: _leitorController.leitorTypeState,
+          builder: (context, child) =>
+              _leitorType(_leitorController.leitorTypeState.value),
+        );
+      case LeitorStates.error:
+        return error();
     }
   }
 
@@ -111,7 +133,11 @@ class _PagesLeitorState extends State<PagesLeitor> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      leitorType(LeitorTypes.rtl),
+      AnimatedBuilder(
+        animation: _leitorController.state,
+        builder: (context, child) =>
+            _stateManagement(_leitorController.state.value),
+      ),
       SizedBox(
         width: double.infinity,
         height: double.infinity,
@@ -136,7 +162,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
 class MyPageImage extends StatefulWidget {
   final String url;
-  const MyPageImage({super.key, required this.url});
+  final FilterQuality filterQuality;
+  const MyPageImage({super.key, required this.url, required this.filterQuality});
 
   @override
   State<MyPageImage> createState() => _MyPageImageState();
@@ -149,7 +176,7 @@ class _MyPageImageState extends State<MyPageImage>
     return IntrinsicHeight(
       child: Image.network(
         widget.url,
-        filterQuality: FilterQuality.low,
+        filterQuality: widget.filterQuality,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return SizedBox(

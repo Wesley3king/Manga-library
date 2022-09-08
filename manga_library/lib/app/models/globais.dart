@@ -35,7 +35,13 @@ class GlobalData {
     },
     "Idioma": (dynamic value, SettingsOptionsController controller) {},
     "Rolar a Barra": (dynamic value, SettingsOptionsController controller) {},
-    "Tipo do Leitor": (dynamic value, SettingsOptionsController controller) {},
+    "Tipo do Leitor": (dynamic value, SettingsOptionsController controller) {
+      print("alterar o valor = $value");
+      GlobalData.settings['Tipo do Leitor'] = value;
+      final ConfigSystemController configSystemController = ConfigSystemController();
+      configSystemController.update(settings);
+      controller.updateSetting();
+    },
     "Cor de fundo": (dynamic value, SettingsOptionsController controller) {},
     "Tela cheia": (dynamic value, SettingsOptionsController controller) {},
     "Local de armazenamento": (dynamic value, SettingsOptionsController controller) {},

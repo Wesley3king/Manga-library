@@ -6,21 +6,25 @@ import '../models/leitor_model.dart';
 class LeitorController {
   List<ModelLeitor> capitulos = [];
   List<ModelLeitor> capitulosEmCarga = [];
-  ValueNotifier<LeitorTypes> leitorTypeState =
-      ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
+  ValueNotifier<LeitorStates> state = ValueNotifier<LeitorStates>(LeitorStates.start);
+  ValueNotifier<LeitorTypes> leitorTypeState = ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
 
   void start(String link, String id) {
+    state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
 
-      identificarCapitulo(capitulos, id);
+      _identificarCapitulo(capitulos, id);
+      _identificarLeitor();
+      state.value = LeitorStates.sucess;
     } catch (e) {
       print('erro em start LeitorController');
       print(e);
+      state.value = LeitorStates.error;
     }
   }
 
-  identificarCapitulo(List<ModelLeitor> capitulos, String id) {
+  void _identificarCapitulo(List<ModelLeitor> capitulos, String id) {
     // List pages = [];
     for (int i = 0; i < capitulos.length; ++i) {
       if ((capitulos[i].id).toString() == id) {
@@ -29,7 +33,7 @@ class LeitorController {
     }
   }
 
-  identificarLeitor() {
+  void _identificarLeitor() {
     final String type = GlobalData.settings['Tipo do Leitor'];
     print('tipo do leitor: $type');
     switch (type) {
@@ -37,26 +41,29 @@ class LeitorController {
         leitorTypeState.value = LeitorTypes.vertical;
         break;
       case "ltr":
-        leitorTypeState.value = LeitorTypes.vertical;
+        leitorTypeState.value = LeitorTypes.ltr;
         break;
       case "rtl":
-        leitorTypeState.value = LeitorTypes.vertical;
+        leitorTypeState.value = LeitorTypes.rtl;
         break;
       case "webtoon":
-        leitorTypeState.value = LeitorTypes.vertical;
+        leitorTypeState.value = LeitorTypes.webtoon;
         break;
       default:
+        print("default do leitor acionado!");
         leitorTypeState.value = LeitorTypes.vertical;
         break;
     }
   }
 }
 
+enum LeitorStates { start, loading, sucess, error }
+
 enum LeitorTypes { vertical, ltr, rtl, webtoon }
 
 class PagesController {
-  int maxPages = 1;
-  ValueNotifier<int> state = ValueNotifier<int>(0);
+  // int maxPages = 1;
+  ValueNotifier<int> state = ValueNotifier<int>(1);
   // start() {
   //   state.value++;
   //   print('iniciou!');
