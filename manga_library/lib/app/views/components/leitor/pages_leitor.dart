@@ -70,16 +70,21 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-      PhotoViewGallery.builder(
+      // PhotoViewGallery.builder(
+      //   itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      //   gaplessPlayback: true,
+      //   scrollDirection: Axis.vertical,
+      //   onPageChanged: (index) => controller.setPage = (index+1),
+      //   wantKeepAlive: true,
+      //    builder: (context, index) => PhotoViewGalleryPageOptions(
+      //     imageProvider: NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]),
+      //   ),
+      // ),
+      ListView.builder(
         itemCount: _leitorController.capitulosEmCarga[0].pages.length,
-        gaplessPlayback: true,
-        scrollDirection: Axis.vertical,
-        onPageChanged: (index) => controller.setPage = (index+1),
-        wantKeepAlive: true,
-         builder: (context, index) => PhotoViewGalleryPageOptions(
-          imageProvider: NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]),
-        ),
-      ),
+        // cacheExtent: 10000.0,
+
+        itemBuilder: (context, index) => MyPageImage(url: _leitorController.capitulosEmCarga[0].pages[index]),),
       SizedBox(
         width: double.infinity,
         height: double.infinity,
@@ -100,4 +105,54 @@ class _PagesLeitorState extends State<PagesLeitor> {
       )
     ]);
   }
+}
+
+class MyPageImage extends StatefulWidget {
+  final String url;
+  const MyPageImage({super.key, required this.url});
+
+  @override
+  State<MyPageImage> createState() => _MyPageImageState();
+}
+
+class _MyPageImageState extends State<MyPageImage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: Image.network(
+        widget.url,
+        filterQuality: FilterQuality.low,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 4.0,
+                  value: loadingProgress.expectedTotalBytes == null
+                      ? null
+                      : loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!,
+                ),
+              ),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) => SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 250,
+          child: Center(child: Text("Error! - img: ${widget.url}"),),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
