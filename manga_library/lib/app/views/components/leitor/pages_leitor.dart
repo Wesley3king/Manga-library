@@ -14,14 +14,15 @@ class PagesLeitor extends StatefulWidget {
   @override
   State<PagesLeitor> createState() => _PagesLeitorState();
 }
-// with AutomaticKeepAliveClientMixin 
+
+// with AutomaticKeepAliveClientMixin
 class _PagesLeitorState extends State<PagesLeitor> {
   final LeitorController _leitorController = LeitorController();
   final PagesController controller = PagesController();
   // final PagesStates _pagesStates = PagesStates();
   final FullScreenController screenController = FullScreenController();
 
-  Widget _loading() {
+  Widget loading() {
     return const SizedBox(
       width: double.infinity,
       height: 450,
@@ -31,7 +32,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget _error(String src) {
+  Widget error(String src) {
     return SizedBox(
       width: double.infinity,
       height: 350,
@@ -48,6 +49,47 @@ class _PagesLeitorState extends State<PagesLeitor> {
         ),
       ),
     );
+  }
+
+  Widget photoViewLeitor(Axis scrollDirection, bool reverse) {
+    return PhotoViewGallery.builder(
+      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      gaplessPlayback: true,
+      scrollDirection: scrollDirection,
+      reverse: reverse,
+      onPageChanged: (index) => controller.setPage = (index + 1),
+      wantKeepAlive: true,
+      builder: (context, index) => PhotoViewGalleryPageOptions(
+        imageProvider:
+            NetworkImage(
+              _leitorController.capitulosEmCarga[0].pages[index]),
+       // filterQuality: 
+      ),
+    );
+  }
+
+  Widget listViewLeitor() {
+    return ListView.builder(
+      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      cacheExtent: 8000.0,
+      itemBuilder: (context, index) =>
+          MyPageImage(url: _leitorController.capitulosEmCarga[0].pages[index]),
+    );
+  }
+
+  Widget leitorType(LeitorTypes type) {
+    switch (type) {
+      case LeitorTypes.vertical:
+        return photoViewLeitor(Axis.vertical, false);
+      case LeitorTypes.ltr:
+        return photoViewLeitor(Axis.horizontal, false);
+      case LeitorTypes.rtl:
+        return photoViewLeitor(Axis.horizontal, true);
+      case LeitorTypes.webtoon:
+        return listViewLeitor();
+      default:
+        return photoViewLeitor(Axis.horizontal, false);
+    }
   }
 
   @override
@@ -68,23 +110,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-      // PhotoViewGallery.builder(
-      //   itemCount: _leitorController.capitulosEmCarga[0].pages.length,
-      //   gaplessPlayback: true,
-      //   scrollDirection: Axis.vertical,
-      //   onPageChanged: (index) => controller.setPage = (index+1),
-      //   wantKeepAlive: true,
-      //    builder: (context, index) => PhotoViewGalleryPageOptions(
-      //     imageProvider: NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]),
-      //   ),
-      // ),
-      ListView.builder(
-        itemCount: _leitorController.capitulosEmCarga[0].pages.length,
-        // cacheExtent: 10000.0,
-
-        itemBuilder: (context, index) => MyPageImage(url: _leitorController.capitulosEmCarga[0].pages[index]),),
+    return Stack(children: [
+      leitorType(LeitorTypes.rtl),
       SizedBox(
         width: double.infinity,
         height: double.infinity,
@@ -125,7 +152,6 @@ class _MyPageImageState extends State<MyPageImage>
         filterQuality: FilterQuality.low,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-
           return SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -147,7 +173,9 @@ class _MyPageImageState extends State<MyPageImage>
         errorBuilder: (context, error, stackTrace) => SizedBox(
           width: MediaQuery.of(context).size.width,
           height: 250,
-          child: Center(child: Text("Error! - img: ${widget.url}"),),
+          child: Center(
+            child: Text("Error! \n - img: ${widget.url}"),
+          ),
         ),
       ),
     );

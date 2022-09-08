@@ -80,7 +80,8 @@ class SettingsController {
               "optionsAndValues": [
                 {"option": "Vertical", "value": "vertical"},
                 {"option": "Esquerda para Direita", "value": "ltr"},
-                {"option": "Direita para esquerda", "value": "rtl"}
+                {"option": "Direita para esquerda", "value": "rtl"},
+                {"option": "Webtoon", "value": "webtoon"}
               ]
             },
             {

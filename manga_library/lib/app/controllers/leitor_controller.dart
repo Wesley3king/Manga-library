@@ -6,6 +6,8 @@ import '../models/leitor_model.dart';
 class LeitorController {
   List<ModelLeitor> capitulos = [];
   List<ModelLeitor> capitulosEmCarga = [];
+  ValueNotifier<LeitorTypes> leitorTypeState =
+      ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
 
   void start(String link, String id) {
     try {
@@ -26,7 +28,31 @@ class LeitorController {
       }
     }
   }
+
+  identificarLeitor() {
+    final String type = GlobalData.settings['Tipo do Leitor'];
+    print('tipo do leitor: $type');
+    switch (type) {
+      case "vertical":
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+      case "ltr":
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+      case "rtl":
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+      case "webtoon":
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+      default:
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+    }
+  }
 }
+
+enum LeitorTypes { vertical, ltr, rtl, webtoon }
 
 class PagesController {
   int maxPages = 1;
