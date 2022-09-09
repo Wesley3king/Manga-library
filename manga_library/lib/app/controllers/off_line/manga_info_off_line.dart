@@ -1,4 +1,5 @@
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 
 import '../../models/manga_info_offline_model.dart';
@@ -54,16 +55,72 @@ class MangaInfoOffLineController {
 
   // add an offline book
 
-  Future<bool> addBook(ModelMangaInfo model) async {
+  Future<bool> addBook(
+      {required ModelMangaInfo model,
+      required String link,
+      required List<ModelLeitor> capitulos,
+      required List<ModelCapitulosCorrelacionados> capitulosCorrelacionados}) async {
     try {
       // implement this method! List<MangaInfoOffLineModel>
       var data = await _hiveController.getBooks();
-      
+      var mangaInfoOffLineModel = MangaInfoOffLineModel(
+        name: model.chapterName,
+        chapters: model.chapters,
+        description: model.description,
+        img: model.cover,
+        link: link,
+        genres: model.genres.map((e) => "$e").toList(),
+        alternativeName: model.chapterList,
+        capitulos: _correlacionarCapitulosOffLine(
+            todos: model.allposts,
+            capitulos: capitulos,
+            capitulosCorrelacionados: capitulosCorrelacionados),
+      );
+      data!.add(mangaInfoOffLineModel);
+      await _hiveController.updateBook(data);
       return true;
     } catch (e) {
       print("erro no addBook at MangaInfoOffLineController: $e");
       return false;
     }
+  }
+
+  List<Capitulos> _correlacionarCapitulosOffLine(
+      {required List<Allposts> todos,
+      required List<ModelLeitor> capitulos,
+      required List<ModelCapitulosCorrelacionados> capitulosCorrelacionados}) {
+    List<Capitulos> listaResultado = [];
+    for (int i = 0; i < todos.length; ++i) {
+      bool adicionado = false;
+      for (int d = 0; d < capitulos.length; ++i) {
+        if (todos[i].id == capitulos[d].id) {
+          listaResultado.add(Capitulos(
+            id: todos[i].id,
+            capitulo: todos[i].num,
+            download: false,
+            readed: capitulosCorrelacionados[i].readed,
+            disponivel: capitulosCorrelacionados[i].disponivel,
+            downloadPages: [],
+            pages: capitulos[d].pages,
+          ));
+          adicionado = true;
+          break;
+        }
+      }
+      if (!adicionado) {
+        listaResultado.add(Capitulos(
+            id: todos[i].id,
+            capitulo: todos[i].num,
+            download: false,
+            readed: capitulosCorrelacionados[i].readed,
+            disponivel: capitulosCorrelacionados[i].disponivel,
+            downloadPages: [],
+            pages: [],
+          ));
+      }
+    }
+
+    return listaResultado;
   }
 
   // update an offline book

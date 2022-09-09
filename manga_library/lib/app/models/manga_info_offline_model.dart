@@ -17,15 +17,16 @@ class MangaInfoOffLineModel {
   late final dynamic alternativeName;
   late final int chapters;
   late final List<Capitulos> capitulos;
-  
-  MangaInfoOffLineModel.fromJson(Map<String, dynamic> json){
+
+  MangaInfoOffLineModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     description = json['description'];
     img = json['img'];
     genres = List.castFrom<dynamic, String>(json['genres']);
     alternativeName = json['alternativeName'];
     chapters = json['chapters'];
-    capitulos = List.from(json['capitulos']).map((e)=>Capitulos.fromJson(e)).toList();
+    capitulos =
+        List.from(json['capitulos']).map((e) => Capitulos.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -36,7 +37,7 @@ class MangaInfoOffLineModel {
     _data['genres'] = genres;
     _data['alternativeName'] = alternativeName;
     _data['chapters'] = chapters;
-    _data['capitulos'] = capitulos.map((e)=>e.toJson()).toList();
+    _data['capitulos'] = capitulos.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -46,19 +47,25 @@ class Capitulos {
     required this.id,
     required this.capitulo,
     required this.download,
+    required this.readed,
+    required this.disponivel,
     required this.downloadPages,
     required this.pages,
   });
   late final int id;
   late final String capitulo;
   late final bool download;
+  late final bool readed;
+  late final bool disponivel;
   late final List<String> downloadPages;
   late final List<String> pages;
-  
-  Capitulos.fromJson(Map<String, dynamic> json){
+
+  Capitulos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     capitulo = json['capitulo'];
     download = json['download'];
+    disponivel = json['disponivel'];
+    readed = json['readed'];
     downloadPages = List.castFrom<dynamic, String>(json['downloadPages']);
     pages = List.castFrom<dynamic, String>(json['pages']);
   }
@@ -68,6 +75,8 @@ class Capitulos {
     _data['id'] = id;
     _data['capitulo'] = capitulo;
     _data['download'] = download;
+    _data['disponivel'] = disponivel;
+    _data['readed'] = readed;
     _data['downloadPages'] = downloadPages;
     _data['pages'] = pages;
     return _data;
