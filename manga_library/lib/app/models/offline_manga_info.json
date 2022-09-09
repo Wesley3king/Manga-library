@@ -1,0 +1,33 @@
+[
+    {
+        "name": "",
+        "description": "",
+        "img": "",
+        "link": "",
+        "genres": ["", ""],
+        "alternativeName": "dynamic",
+        "chapters": 50,
+        "capitulos": [
+            {
+                "id": 1,
+                "capitulo": "",
+                "download": true,
+                "downloadPages": [
+                    "/name paste/img.png"
+                ],
+                "pages": [
+                    "https://www.games.com/ggizi.png"
+                ]
+            },
+            {
+                "id": 2,
+                "capitulo": "s",
+                "download": false,
+                "downloadPages": [],
+                "pages": [
+                    "https://www.games.com/ggizi_2.png"
+                ]
+            }
+        ]
+    }
+]

@@ -81,6 +81,8 @@ class SettingsController {
                 {"option": "Vertical", "value": "vertical"},
                 {"option": "Esquerda para Direita", "value": "ltr"},
                 {"option": "Direita para esquerda", "value": "rtl"},
+                {"option": "Lista ltr", "value": "ltrlist"},
+                {"option": "Lista rtl", "value": "rtllist"},
                 {"option": "Webtoon", "value": "webtoon"}
               ]
             },

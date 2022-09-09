@@ -15,7 +15,7 @@ class ModelMangaInfo {
   late final String cover;
   late final List<dynamic> genres;
   late final String chapterList;
-  late final alternativeName;
+  late final dynamic alternativeName;
   late final List<Allposts> allposts;
 
   ModelMangaInfo.fromJson(Map<String, dynamic> json) {

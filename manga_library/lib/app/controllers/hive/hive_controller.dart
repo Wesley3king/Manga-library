@@ -2,11 +2,12 @@ import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
-import 'package:manga_library/app/models/seetings_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 class HiveController {
   static Box? clientData;
   static Box? libraries;
+  static LazyBox? books;
 
   Future<void> start() async {
     if (!Hive.isAdapterRegistered(0)) {
@@ -15,10 +16,13 @@ class HiveController {
     print("hive enabled");
     clientData = await Hive.openBox('clientData');
     libraries = await Hive.openBox('libraries');
+    books = await Hive.openLazyBox('books');
   }
 
   void end() {
     clientData?.close();
+    libraries?.close();
+    books?.close();
   }
 
   Future<dynamic> getClientData() async {
@@ -187,6 +191,44 @@ class HiveController {
     } catch (e) {
       print('erro no HiveController - updateSettings: $e');
       return false;
+    }
+  }
+
+  // OffLine database operations
+
+  Future<bool> writeBook() async {
+    try {
+      await books?.put("allbooks", []);
+      return true;
+    } catch (e) {
+      print('erro no writeBook, at HiveController: $e');
+      return false;
+    }
+  }
+
+  Future updateBook(List<MangaInfoOffLineModel> data) async {
+    try {
+      var jsonModel = data.map((model) => model.toJson());
+      await books?.put("allbooks", jsonModel);
+      return true;
+    } catch (e) {
+      print('erro no updateBook, at HiveController: $e');
+      return false;
+    }
+  }
+
+  Future<List<MangaInfoOffLineModel>?> getBooks() async {
+    try {
+      List<Map<String, dynamic>>? data = await books?.get("allbooks");
+      if (data == null) {
+        writeBook();
+        return [];
+      } else {
+        return data.map((book) => MangaInfoOffLineModel.fromJson(book)).toList();
+      }
+    } catch (e) {
+      print('erro no getBooks, at HiveController: $e');
+      return null;
     }
   }
 }

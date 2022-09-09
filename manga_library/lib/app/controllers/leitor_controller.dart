@@ -46,6 +46,12 @@ class LeitorController {
       case "rtl":
         leitorTypeState.value = LeitorTypes.rtl;
         break;
+      case "ltrlist":
+        leitorTypeState.value = LeitorTypes.ltrlist;
+        break;
+      case "rtllist":
+        leitorTypeState.value = LeitorTypes.rtllist;
+        break;
       case "webtoon":
         leitorTypeState.value = LeitorTypes.webtoon;
         break;
@@ -59,7 +65,7 @@ class LeitorController {
 
 enum LeitorStates { start, loading, sucess, error }
 
-enum LeitorTypes { vertical, ltr, rtl, webtoon }
+enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon }
 
 class PagesController {
   // int maxPages = 1;

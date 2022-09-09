@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:chaleno/chaleno.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';

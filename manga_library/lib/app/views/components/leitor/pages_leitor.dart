@@ -81,6 +81,18 @@ class _PagesLeitorState extends State<PagesLeitor> {
           ),
     );
   }
+  Widget pageListViewLeitor([bool rtl = false]) {
+    return PageView.builder(
+      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      scrollDirection: Axis.horizontal,
+      onPageChanged: (index) => controller.setPage = (index + 1),
+      reverse: rtl,
+      itemBuilder: (context, index) => ListView(
+        children: [
+          MyPageImage(url: _leitorController.capitulosEmCarga[0].pages[index], filterQuality: FilterQuality.medium,)
+        ],
+      ),);
+  }
 
   Widget _leitorType(LeitorTypes type) {
     switch (type) {
@@ -92,6 +104,10 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return photoViewLeitor(Axis.horizontal, true);
       case LeitorTypes.webtoon:
         return listViewLeitor();
+      case LeitorTypes.ltrlist:
+        return pageListViewLeitor();
+      case LeitorTypes.rtllist:
+        return pageListViewLeitor(true);
       default:
         return photoViewLeitor(Axis.horizontal, false,);
     }
