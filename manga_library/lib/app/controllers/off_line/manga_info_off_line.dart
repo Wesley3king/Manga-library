@@ -59,9 +59,9 @@ class MangaInfoOffLineController {
       {required ModelMangaInfo model,
       required String link,
       required List<ModelLeitor> capitulos,
-      required List<ModelCapitulosCorrelacionados> capitulosCorrelacionados}) async {
+      required List<ModelCapitulosCorrelacionados>
+          capitulosCorrelacionados}) async {
     try {
-      // implement this method! List<MangaInfoOffLineModel>
       var data = await _hiveController.getBooks();
       var mangaInfoOffLineModel = MangaInfoOffLineModel(
         name: model.chapterName,
@@ -71,7 +71,7 @@ class MangaInfoOffLineController {
         link: link,
         genres: model.genres.map((e) => "$e").toList(),
         alternativeName: model.chapterList,
-        capitulos: _correlacionarCapitulosOffLine(
+        capitulos: _correlacionarCapitulosOffLineForFirstTime(
             todos: model.allposts,
             capitulos: capitulos,
             capitulosCorrelacionados: capitulosCorrelacionados),
@@ -85,7 +85,40 @@ class MangaInfoOffLineController {
     }
   }
 
-  List<Capitulos> _correlacionarCapitulosOffLine(
+  // update an offline book
+
+  Future<bool> updateBook(
+      {required ModelMangaInfo model,
+      required String link,
+      required List<ModelLeitor> capitulos,
+      required List<ModelCapitulosCorrelacionados>
+          capitulosCorrelacionados}) async {
+    try {
+      var data = await _hiveController.getBooks();
+      var mangaInfoOffLineModel = MangaInfoOffLineModel(
+        name: model.chapterName,
+        chapters: model.chapters,
+        description: model.description,
+        img: model.cover,
+        link: link,
+        genres: model.genres.map((e) => "$e").toList(),
+        alternativeName: model.chapterList,
+        capitulos: _correlacionarCapitulosOffLineForFirstTime(
+            todos: model.allposts,
+            capitulos: capitulos,
+            capitulosCorrelacionados: capitulosCorrelacionados),
+      );
+
+      data!.add(mangaInfoOffLineModel);
+      await _hiveController.updateBook(data);
+      return true;
+    } catch (e) {
+      print("erro no updateBook at MangaInfoOffLineController: $e");
+      return false;
+    }
+  }
+
+  List<Capitulos> _correlacionarCapitulosOffLineForFirstTime(
       {required List<Allposts> todos,
       required List<ModelLeitor> capitulos,
       required List<ModelCapitulosCorrelacionados> capitulosCorrelacionados}) {
@@ -109,27 +142,99 @@ class MangaInfoOffLineController {
       }
       if (!adicionado) {
         listaResultado.add(Capitulos(
-            id: todos[i].id,
-            capitulo: todos[i].num,
-            download: false,
-            readed: capitulosCorrelacionados[i].readed,
-            disponivel: capitulosCorrelacionados[i].disponivel,
-            downloadPages: [],
-            pages: [],
-          ));
+          id: todos[i].id,
+          capitulo: todos[i].num,
+          download: false,
+          readed: capitulosCorrelacionados[i].readed,
+          disponivel: capitulosCorrelacionados[i].disponivel,
+          downloadPages: [],
+          pages: [],
+        ));
       }
     }
 
     return listaResultado;
   }
+}
 
-  // update an offline book
+class UpdateBook {
+  final HiveController _hiveController = HiveController();
 
-  Future<ModelMangaInfo?> updateBook() async {
+  Future<bool?> updateImg(
+      {required String link, required ModelMangaInfo model}) async {
     try {
-      // implement this method!
+      RegExp regex = RegExp(link, caseSensitive: false);
+      List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
+
+      if (data != null) {
+        bool modificated = false;
+        for (int i = 0; i < data.length; ++i) {
+          if (data[i].link.contains(regex)) {
+            data[i].img = model.cover;
+            modificated = true;
+            break;
+          }
+        }
+        if (modificated) {
+          await _hiveController.updateBook(data);
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     } catch (e) {
-      print("erro no updateBook at MangaInfoOffLineController: $e");
+      print("error no UpdateBook at MangaInfoOffLineController: $e");
+      return false;
+    }
+  }
+
+  Future updateChapters(
+      {required String link,
+      required List<Allposts> todos,
+      required List<ModelLeitor> capitulos,
+      required List<ModelCapitulosCorrelacionados>
+          capitulosCorrelacionados}) async {}
+
+  Future<List<Capitulos>?> _correlacionarCapitulosOffLineForUpdate(
+      {required String link,
+      required List<ModelLeitor> capitulos,
+      required List<ModelCapitulosCorrelacionados>
+          capitulosCorrelacionados}) async {
+    List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
+    RegExp regex = RegExp(link, caseSensitive: false);
+    MangaInfoOffLineModel? model;
+    if (data != null) {
+      for (int i = 0; i < data.length; ++i) {
+        if (data[i].link.contains(regex)) {
+          model = data[i];
+          break;
+        }
+      }
+      List<Capitulos> listaResultado = [];
+      for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
+        bool adicionado = false;
+        for (int d = 0; d < capitulos.length; ++i) {
+          if (capitulosCorrelacionados[i].id == capitulos[d].id) {
+            adicionado = true;
+            break;
+          }
+        }
+        if (!adicionado) {
+          listaResultado.add(Capitulos(
+            id: capitulosCorrelacionados[i].id,
+            capitulo: capitulosCorrelacionados[i].capitulo,
+            download: false,
+            readed: false,
+            disponivel: capitulosCorrelacionados[i].disponivel,
+            downloadPages: [],
+            pages: [],
+          ));
+        }
+      }
+      return listaResultado;
+    } else {
       return null;
     }
   }
