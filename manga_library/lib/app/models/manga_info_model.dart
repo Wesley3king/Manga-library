@@ -48,19 +48,23 @@ class Allposts {
   Allposts({
     required this.id,
     required this.num,
+    required this.disponivel,
   });
   late final int id;
   late final String num;
+  late final bool disponivel;
 
   Allposts.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     num = json['num'];
+    disponivel = json['disponivel'] ?? true;
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['num'] = num;
+    _data['disponivel'] = disponivel;
     return _data;
   }
 }

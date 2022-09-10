@@ -32,9 +32,7 @@ class MangaInfoOffLineController {
     RegExp regex = RegExp(link, caseSensitive: false);
     for (int i = 0; i < lista.length; ++i) {
       print("iniciar!");
-      print("link = ${lista[i]}");
-      print(
-          "achar na memória: l= $i / ${lista.length} | ${lista[i].link} - $link : ${lista[i].link.contains(regex)}");
+      print("quantidade de mangas = ${lista.length}");
       if (lista[i].link.contains(regex)) {
         print("achado na memória!");
         return lista[i];
@@ -55,7 +53,8 @@ class MangaInfoOffLineController {
       chapterList: "off line doesn't have this",
       alternativeName: model.alternativeName,
       allposts: model.capitulos
-          .map((cap) => Allposts(id: cap.id, num: cap.capitulo))
+          .map((cap) => Allposts(
+              id: cap.id, num: cap.capitulo, disponivel: cap.disponivel))
           .toList(),
     );
   }
@@ -71,13 +70,18 @@ class MangaInfoOffLineController {
   // monta e retorna um List<ModelCapitulosCorrelacionados>
   List<ModelCapitulosCorrelacionados> buildModelCapitulosCorrelacionados(
       MangaInfoOffLineModel model) {
-    return model.capitulos
-        .map((Capitulos cap) => ModelCapitulosCorrelacionados(
-            id: cap.id,
-            capitulo: cap.capitulo,
-            disponivel: cap.disponivel,
-            readed: cap.readed))
-        .toList();
+    var lista = model.capitulos.map((Capitulos cap) {
+      print("mt1 - ${cap.disponivel ? "T" : "F"}");
+      var md = ModelCapitulosCorrelacionados(
+          id: cap.id,
+          capitulo: cap.capitulo,
+          disponivel: cap.disponivel,
+          readed: cap.readed);
+      print("mt2 - ${md.disponivel ? "T" : "F"}");
+      return md;
+    }).toList();
+
+    return lista;
   }
 
   // add an offline book
@@ -113,6 +117,18 @@ class MangaInfoOffLineController {
     } catch (e) {
       print("erro no addBook at MangaInfoOffLineController: $e");
       return false;
+    }
+  }
+
+  // delete an offline book
+
+  Future deleteBook({required String link}) async {
+    List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
+    if (data != null) {
+      RegExp regex = RegExp(link, caseSensitive: false);
+      data.removeWhere(
+          (MangaInfoOffLineModel element) => element.link.contains(regex));
+      await _hiveController.updateBook(data);
     }
   }
 
@@ -174,12 +190,14 @@ class MangaInfoOffLineController {
       {required List<Allposts> todos,
       required List<ModelLeitor> capitulos,
       required List<ModelCapitulosCorrelacionados> capitulosCorrelacionados}) {
-    print("correlacionando os capitulos: ${capitulosCorrelacionados.length} / ${capitulos.length}");
+    print(
+        "correlacionando os capitulos: ${capitulosCorrelacionados.length} / ${capitulos.length}");
     List<Capitulos> listaResultado = [];
     for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
       bool adicionado = false;
       for (int d = 0; d < capitulos.length; ++d) {
-        print("first: ${todos[i].id} == ${capitulos[d].id} / ${todos[i].id == capitulos[d].id ? "T" : "F"}");
+        print(
+            "first: ${todos[i].id} == ${capitulos[d].id} / ${todos[i].id == capitulos[d].id ? "T" : "F"}");
         if (capitulosCorrelacionados[i].id == capitulos[d].id) {
           listaResultado.add(Capitulos(
             id: todos[i].id,
@@ -188,7 +206,10 @@ class MangaInfoOffLineController {
             readed: capitulosCorrelacionados[i].readed,
             disponivel: capitulosCorrelacionados[i].disponivel,
             downloadPages: [],
-            pages: capitulos[d].pages.map<String>((dynamic e) => e.toString()).toList(),
+            pages: capitulos[d]
+                .pages
+                .map<String>((dynamic e) => e.toString())
+                .toList(),
           ));
           adicionado = true;
           break;

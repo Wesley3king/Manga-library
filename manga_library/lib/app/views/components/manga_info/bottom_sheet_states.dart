@@ -18,6 +18,7 @@ class BottomSheetStatesPages {
         itemBuilder: (context, index) {
           final ModelCapitulosCorrelacionados capitulo = capitulos[index];
           print(capitulo.readed ? "true" : "false");
+          print(capitulo.disponivel ? " d - true" : "d - false");
           return ListTile(
             title: Text(
               'Capitulo ${capitulo.capitulo}',

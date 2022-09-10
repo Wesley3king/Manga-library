@@ -44,7 +44,6 @@ class MangaInfoController {
         capitulosDisponiveis =
             _mangaInfoOffLineController.buildModelLeitor(localData);
         GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
-
         state.value = MangaInfoStates.sucess2;
       } else {
         // operação OnLine
@@ -95,11 +94,8 @@ class BottomSheetController {
       print('start');
       await correlacionarCapitulos(
           listaCapitulosDisponiveis ?? [], listaCapitulos, link);
-      // print('------- end');
-      // print(capitulosCorrelacionados); // disponibilizar os capitulos correlacionados
+      // disponibilizar os capitulos correlacionados
       MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
-      print(
-          "MangaInfoController.capitulosCorrelacionados : ${MangaInfoController.capitulosCorrelacionados.length}");
       state.value = BottomSheetStates.sucess;
     } catch (e) {
       HomePageController.errorMessage =
@@ -195,6 +191,7 @@ class BottomSheetController {
     capitulosCorrelacionados = [];
 
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
+      //print("disponivel = ${listaCapitulosDisponiveis[indice]}");
       bool adicionado = false;
       for (int alreadyIndice = 0;
           alreadyIndice < listaCapitulosDisponiveis.length;
@@ -204,7 +201,7 @@ class BottomSheetController {
           capitulosCorrelacionados.add(ModelCapitulosCorrelacionados(
             id: idCapituloDisponivel,
             capitulo: listaCapitulosDisponiveis[alreadyIndice].capitulo,
-            disponivel: true,
+            disponivel: listaCapitulos[indice].disponivel,
             readed: false,
           ));
           adicionado = true;
@@ -220,10 +217,10 @@ class BottomSheetController {
         ));
       }
     }
-    print('--- teste reload 1 --- ');
-    for (int i = 0; i < 2; ++i) {
-      print(capitulosCorrelacionados[i].readed);
-    }
+    // print('--- teste reload 1 --- ');
+    // for (int i = 0; i < 2; ++i) {
+    //   print(capitulosCorrelacionados[i].readed);
+    // }
     // correlacionar os capitulos lidos
     print(capitulosLidos);
     if (capitulosLidos.isNotEmpty) {
@@ -251,10 +248,10 @@ class BottomSheetController {
           adicionado = true;
         }
       }
-      print('--- teste reload 2 --- ');
-      for (int i = 0; i < 2; ++i) {
-        print(listaCapitulosCorrelacionadosLidos[i].readed);
-      }
+      // print('--- teste reload 2 --- ');
+      // for (int i = 0; i < 2; ++i) {
+      //   print(listaCapitulosCorrelacionadosLidos[i].readed);
+      // }
       capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       print('-- final = ${capitulosCorrelacionados.length}');
     }
@@ -292,19 +289,16 @@ class DialogController {
     print('inicio do processo de atualização da library');
     bool haveError = false;
     dataLibrary = await hiveController.getLibraries();
+    bool offLine = false;
 
     for (int i = 0; i < lista.length; ++i) {
       bool existe = false;
       bool executed = false;
       for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-        print(
-            "teste 1 = ${dataLibrary[i].library} - ${lista[i]['library']} == ${dataLibrary[i].library == lista[i]['library'] ? "true" : "false"}");
-        print(
-            "teste 2 = ${dataLibrary[i].books[iBook].link} - ${book['link']} == ${dataLibrary[i].books[iBook].link == book['link'] ? "true" : "false"}");
-
         if (dataLibrary[i].library == lista[i]['library'] &&
             dataLibrary[i].books[iBook].link == book['link']) {
           print("achei o manga na library");
+          offLine = true;
           if (!lista[i]['selected']) {
             print('remover da library');
             dataLibrary[i]
@@ -328,13 +322,16 @@ class DialogController {
             : haveError = true;
       }
     }
-    await _addOffLineManga(
-            link: link,
-            model: model,
-            capitulos: capitulos,
-            capitulosCorrelacionados: MangaInfoController.capitulosCorrelacionados)
-        ? haveError = false
-        : haveError = true;
+    if (!offLine) {
+      await _addOffLineManga(
+              link: link,
+              model: model,
+              capitulos: capitulos,
+              capitulosCorrelacionados:
+                  MangaInfoController.capitulosCorrelacionados)
+          ? haveError = false
+          : haveError = true;
+    }
     return !haveError;
   }
 
@@ -352,6 +349,22 @@ class DialogController {
         link: link,
         capitulos: capitulos,
         capitulosCorrelacionados: capitulosCorrelacionados);
+  }
+
+  // remove um manga OffLine
+  // disponibilizar um manga OffLine
+  Future<bool> _removeOffLineManga({
+    required String link,
+  }) async {
+    final MangaInfoOffLineController mangaInfoOffLineController =
+        MangaInfoOffLineController();
+    try {
+      mangaInfoOffLineController.deleteBook(link: link);
+      return true;
+    } catch (e) {
+      print("erro no _removeOffLineManga at DialogController: $e");
+      return false;
+    }
   }
 }
 
