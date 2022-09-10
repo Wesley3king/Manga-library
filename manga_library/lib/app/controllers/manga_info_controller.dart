@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 import '../models/leitor_model.dart';
@@ -13,6 +14,8 @@ import 'home_page_controller.dart';
 
 class MangaInfoController {
   final mangaYabu = ExtensionMangaYabu();
+  final MangaInfoOffLineController _mangaInfoOffLineController =
+      MangaInfoOffLineController();
   final YabuFetchServices yabuFetchServices = YabuFetchServices();
   ModelMangaInfo data = ModelMangaInfo(
     chapterName: '',
@@ -25,29 +28,44 @@ class MangaInfoController {
     allposts: [],
   );
   List<ModelLeitor>? capitulosDisponiveis = [];
+  static List<ModelCapitulosCorrelacionados> capitulosCorrelacionados = [];
 
   ValueNotifier state = ValueNotifier<MangaInfoStates>(MangaInfoStates.start);
 
   Future start(String url) async {
     state.value = MangaInfoStates.loading;
     try {
-      print('------------');
-      final ModelMangaInfo? _dados = await mangaYabu.mangaInfo(url);
-      if (_dados != null) {
-        data = _dados;
-        state.value = MangaInfoStates.sucess1;
-      } else {
-        state.value = MangaInfoStates.error;
-      }
-      capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
-      GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
-      // print(_capitulosDisponiveis);
+      // operação OffLine
+      MangaInfoOffLineModel? localData =
+          await _mangaInfoOffLineController.verifyDatabase(url);
+      if (localData != null) {
+        print("existe na base de dados!");
+        data = _mangaInfoOffLineController.buildMangaInfoModel(localData);
+        capitulosDisponiveis =
+            _mangaInfoOffLineController.buildModelLeitor(localData);
+        GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
 
-      if (state.value != MangaInfoStates.error) {
         state.value = MangaInfoStates.sucess2;
       } else {
-        HomePageController.errorMessage = 'erro no null 2';
-        state.value = MangaInfoStates.error;
+        // operação OnLine
+        print("iniciando o fetch!");
+        final ModelMangaInfo? _dados = await mangaYabu.mangaInfo(url);
+        if (_dados != null) {
+          data = _dados;
+          state.value = MangaInfoStates.sucess1;
+        } else {
+          state.value = MangaInfoStates.error;
+        }
+        capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
+        GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+        // print(_capitulosDisponiveis);
+
+        if (state.value != MangaInfoStates.error) {
+          state.value = MangaInfoStates.sucess2;
+        } else {
+          HomePageController.errorMessage = 'erro no null 2';
+          state.value = MangaInfoStates.error;
+        }
       }
     } catch (e) {
       print(e);
@@ -77,8 +95,11 @@ class BottomSheetController {
       print('start');
       await correlacionarCapitulos(
           listaCapitulosDisponiveis ?? [], listaCapitulos, link);
-      print('------- end');
-      print(capitulosCorrelacionados);
+      // print('------- end');
+      // print(capitulosCorrelacionados); // disponibilizar os capitulos correlacionados
+      MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
+      print(
+          "MangaInfoController.capitulosCorrelacionados : ${MangaInfoController.capitulosCorrelacionados.length}");
       state.value = BottomSheetStates.sucess;
     } catch (e) {
       HomePageController.errorMessage =
@@ -264,8 +285,10 @@ class DialogController {
   }
 
   // adicionar e remover da library
-  Future<bool> addOrRemoveFromLibrary(
-      List<Map> lista, Map<String, String> book) async {
+  Future<bool> addOrRemoveFromLibrary(List<Map> lista, Map<String, String> book,
+      {required String link,
+      required ModelMangaInfo model,
+      required List<ModelLeitor> capitulos}) async {
     print('inicio do processo de atualização da library');
     bool haveError = false;
     dataLibrary = await hiveController.getLibraries();
@@ -305,8 +328,30 @@ class DialogController {
             : haveError = true;
       }
     }
-
+    await _addOffLineManga(
+            link: link,
+            model: model,
+            capitulos: capitulos,
+            capitulosCorrelacionados: MangaInfoController.capitulosCorrelacionados)
+        ? haveError = false
+        : haveError = true;
     return !haveError;
+  }
+
+  // disponibilizar um manga OffLine
+  Future<bool> _addOffLineManga(
+      {required String link,
+      required ModelMangaInfo model,
+      required List<ModelLeitor> capitulos,
+      required List<ModelCapitulosCorrelacionados>
+          capitulosCorrelacionados}) async {
+    final MangaInfoOffLineController mangaInfoOffLineController =
+        MangaInfoOffLineController();
+    return await mangaInfoOffLineController.addBook(
+        model: model,
+        link: link,
+        capitulos: capitulos,
+        capitulosCorrelacionados: capitulosCorrelacionados);
   }
 }
 

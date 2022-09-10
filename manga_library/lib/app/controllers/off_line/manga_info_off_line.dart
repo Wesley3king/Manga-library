@@ -6,7 +6,9 @@ import '../../models/manga_info_offline_model.dart';
 
 class MangaInfoOffLineController {
   final HiveController _hiveController = HiveController();
-  Future<ModelMangaInfo?> verifyDatabase(String link) async {
+  final UpdateBook _updateBookController = UpdateBook();
+
+  Future<MangaInfoOffLineModel?> verifyDatabase(String link) async {
     try {
       List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
       if (data != null) {
@@ -14,7 +16,7 @@ class MangaInfoOffLineController {
         if (model == null) {
           return null;
         } else {
-          return _buildMangaInfoModel(model);
+          return model;
         }
       } else {
         throw Error();
@@ -29,7 +31,11 @@ class MangaInfoOffLineController {
       {required String link, required List<MangaInfoOffLineModel> lista}) {
     RegExp regex = RegExp(link, caseSensitive: false);
     for (int i = 0; i < lista.length; ++i) {
-      if (lista[i].name.contains(regex)) {
+      print("iniciar!");
+      print("link = ${lista[i]}");
+      print(
+          "achar na memória: l= $i / ${lista.length} | ${lista[i].link} - $link : ${lista[i].link.contains(regex)}");
+      if (lista[i].link.contains(regex)) {
         print("achado na memória!");
         return lista[i];
       }
@@ -38,7 +44,8 @@ class MangaInfoOffLineController {
     return null;
   }
 
-  ModelMangaInfo _buildMangaInfoModel(MangaInfoOffLineModel model) {
+  // monta e retorna um ModelMangaInfo
+  ModelMangaInfo buildMangaInfoModel(MangaInfoOffLineModel model) {
     return ModelMangaInfo(
       chapterName: model.name,
       chapters: model.chapters,
@@ -53,6 +60,26 @@ class MangaInfoOffLineController {
     );
   }
 
+  // monta e  retorna um List<ModelLeitor>
+  List<ModelLeitor> buildModelLeitor(MangaInfoOffLineModel model) {
+    return model.capitulos
+        .map((Capitulos cap) =>
+            ModelLeitor(capitulo: cap.capitulo, id: cap.id, pages: cap.pages))
+        .toList();
+  }
+
+  // monta e retorna um List<ModelCapitulosCorrelacionados>
+  List<ModelCapitulosCorrelacionados> buildModelCapitulosCorrelacionados(
+      MangaInfoOffLineModel model) {
+    return model.capitulos
+        .map((Capitulos cap) => ModelCapitulosCorrelacionados(
+            id: cap.id,
+            capitulo: cap.capitulo,
+            disponivel: cap.disponivel,
+            readed: cap.readed))
+        .toList();
+  }
+
   // add an offline book
 
   Future<bool> addBook(
@@ -62,22 +89,26 @@ class MangaInfoOffLineController {
       required List<ModelCapitulosCorrelacionados>
           capitulosCorrelacionados}) async {
     try {
-      var data = await _hiveController.getBooks();
+      print("criando o model!");
       var mangaInfoOffLineModel = MangaInfoOffLineModel(
         name: model.chapterName,
         chapters: model.chapters,
         description: model.description,
         img: model.cover,
         link: link,
-        genres: model.genres.map((e) => "$e").toList(),
+        genres: model.genres.map((e) => e.toString()).toList(),
         alternativeName: model.chapterList,
         capitulos: _correlacionarCapitulosOffLineForFirstTime(
-            todos: model.allposts,
-            capitulos: capitulos,
-            capitulosCorrelacionados: capitulosCorrelacionados),
+          todos: model.allposts,
+          capitulos: capitulos,
+          capitulosCorrelacionados: capitulosCorrelacionados,
+        ),
       );
+      print("terminado o model!");
+      var data = await _hiveController.getBooks();
       data!.add(mangaInfoOffLineModel);
       await _hiveController.updateBook(data);
+      print("terinado!");
       return true;
     } catch (e) {
       print("erro no addBook at MangaInfoOffLineController: $e");
@@ -87,34 +118,55 @@ class MangaInfoOffLineController {
 
   // update an offline book
 
-  Future<bool> updateBook(
+  Future<MangaInfoOffLineModel?> updateBook(
       {required ModelMangaInfo model,
       required String link,
       required List<ModelLeitor> capitulos,
       required List<ModelCapitulosCorrelacionados>
           capitulosCorrelacionados}) async {
     try {
-      var data = await _hiveController.getBooks();
-      var mangaInfoOffLineModel = MangaInfoOffLineModel(
-        name: model.chapterName,
-        chapters: model.chapters,
-        description: model.description,
-        img: model.cover,
+      List<Capitulos> listaCapitulosAtualizados =
+          await _updateBookController.updateChapters(
         link: link,
-        genres: model.genres.map((e) => "$e").toList(),
-        alternativeName: model.chapterList,
-        capitulos: _correlacionarCapitulosOffLineForFirstTime(
-            todos: model.allposts,
-            capitulos: capitulos,
-            capitulosCorrelacionados: capitulosCorrelacionados),
+        capitulos: capitulos,
+        capitulosCorrelacionados: capitulosCorrelacionados,
       );
 
-      data!.add(mangaInfoOffLineModel);
-      await _hiveController.updateBook(data);
-      return true;
+      RegExp regex = RegExp(link, caseSensitive: false);
+      List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
+      MangaInfoOffLineModel atualModel = MangaInfoOffLineModel(
+          name: "",
+          description: "",
+          img: "",
+          link: "",
+          genres: [],
+          alternativeName: false,
+          chapters: 0,
+          capitulos: []);
+
+      if (data != null) {
+        bool modificated = false;
+        for (int i = 0; i < data.length; ++i) {
+          if (data[i].link.contains(regex)) {
+            data[i].img = model.cover;
+            data[i].capitulos = listaCapitulosAtualizados;
+            atualModel = data[i];
+            modificated = true;
+            break;
+          }
+        }
+        if (modificated) {
+          await _hiveController.updateBook(data);
+          return atualModel;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
     } catch (e) {
       print("erro no updateBook at MangaInfoOffLineController: $e");
-      return false;
+      return null;
     }
   }
 
@@ -122,19 +174,21 @@ class MangaInfoOffLineController {
       {required List<Allposts> todos,
       required List<ModelLeitor> capitulos,
       required List<ModelCapitulosCorrelacionados> capitulosCorrelacionados}) {
+    print("correlacionando os capitulos: ${capitulosCorrelacionados.length} / ${capitulos.length}");
     List<Capitulos> listaResultado = [];
-    for (int i = 0; i < todos.length; ++i) {
+    for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
       bool adicionado = false;
-      for (int d = 0; d < capitulos.length; ++i) {
-        if (todos[i].id == capitulos[d].id) {
+      for (int d = 0; d < capitulos.length; ++d) {
+        print("first: ${todos[i].id} == ${capitulos[d].id} / ${todos[i].id == capitulos[d].id ? "T" : "F"}");
+        if (capitulosCorrelacionados[i].id == capitulos[d].id) {
           listaResultado.add(Capitulos(
             id: todos[i].id,
-            capitulo: todos[i].num,
+            capitulo: capitulosCorrelacionados[i].capitulo,
             download: false,
             readed: capitulosCorrelacionados[i].readed,
             disponivel: capitulosCorrelacionados[i].disponivel,
             downloadPages: [],
-            pages: capitulos[d].pages,
+            pages: capitulos[d].pages.map<String>((dynamic e) => e.toString()).toList(),
           ));
           adicionado = true;
           break;
@@ -152,7 +206,7 @@ class MangaInfoOffLineController {
         ));
       }
     }
-
+    print("listaResultado: ${listaResultado.length}");
     return listaResultado;
   }
 }
@@ -192,7 +246,6 @@ class UpdateBook {
 
   Future updateChapters(
       {required String link,
-      required List<Allposts> todos,
       required List<ModelLeitor> capitulos,
       required List<ModelCapitulosCorrelacionados>
           capitulosCorrelacionados}) async {}
@@ -204,37 +257,88 @@ class UpdateBook {
           capitulosCorrelacionados}) async {
     List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
     RegExp regex = RegExp(link, caseSensitive: false);
-    MangaInfoOffLineModel? model;
+    MangaInfoOffLineModel model = MangaInfoOffLineModel(
+        name: "",
+        description: "",
+        img: "",
+        link: "",
+        genres: [],
+        alternativeName: false,
+        chapters: 0,
+        capitulos: []);
+
     if (data != null) {
+      List<Capitulos> listaResultado = [];
+      // indentifica o manga
       for (int i = 0; i < data.length; ++i) {
         if (data[i].link.contains(regex)) {
           model = data[i];
+
+          // inicia o processo de atualização
+          for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
+            bool existeInDB = false;
+            // verifica se ele existe na Db
+            for (int d = 0; d < model.capitulos.length; ++d) {
+              if (capitulosCorrelacionados[i].id == model.capitulos[d].id) {
+                existeInDB = true;
+                // verifica se tem as paginas, caso não tenha as adicionara as paginas
+                if (model.capitulos[d].pages.isEmpty) {
+                  for (int e = 0; e < capitulos.length; ++e) {
+                    if (model.capitulos[d].id == capitulos[e].id) {
+                      model.capitulos[d].pages = capitulos[e].pages;
+                      break;
+                    }
+                  }
+                }
+                break;
+              }
+            }
+
+            if (!existeInDB) {
+              // caso o capitulos não exista, o adicionara:
+              bool adicinado = false;
+              for (int n = 0; n < capitulos.length; ++n) {
+                if (capitulosCorrelacionados[i].id == capitulos[n].id) {
+                  listaResultado.add(Capitulos(
+                    id: capitulosCorrelacionados[i].id,
+                    capitulo: capitulosCorrelacionados[i].capitulo,
+                    download: false,
+                    readed: false,
+                    disponivel: capitulosCorrelacionados[i].disponivel,
+                    downloadPages: [],
+                    pages: capitulos[n].pages,
+                  ));
+                  adicinado = true;
+                  break;
+                }
+              }
+              // caso não tenhamos as paginas do capitulo
+              if (!adicinado) {
+                listaResultado.add(Capitulos(
+                  id: capitulosCorrelacionados[i].id,
+                  capitulo: capitulosCorrelacionados[i].capitulo,
+                  download: false,
+                  readed: false,
+                  disponivel: capitulosCorrelacionados[i].disponivel,
+                  downloadPages: [],
+                  pages: [],
+                ));
+              }
+            }
+          }
           break;
         }
       }
-      List<Capitulos> listaResultado = [];
-      for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
-        bool adicionado = false;
-        for (int d = 0; d < capitulos.length; ++i) {
-          if (capitulosCorrelacionados[i].id == capitulos[d].id) {
-            adicionado = true;
-            break;
-          }
-        }
-        if (!adicionado) {
-          listaResultado.add(Capitulos(
-            id: capitulosCorrelacionados[i].id,
-            capitulo: capitulosCorrelacionados[i].capitulo,
-            download: false,
-            readed: false,
-            disponivel: capitulosCorrelacionados[i].disponivel,
-            downloadPages: [],
-            pages: [],
-          ));
-        }
+      // caso não tenha achado o manga deve adiciona-lo:
+      if (model.link == "") {
+        print("falha ao achar o manga no updateChapters at UpdateBook");
+        return null;
       }
+
       return listaResultado;
     } else {
+      print(
+          "falha ao achar a lista de manga do db no updateChapters at UpdateBook");
       return null;
     }
   }

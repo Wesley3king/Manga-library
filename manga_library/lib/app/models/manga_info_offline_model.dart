@@ -18,15 +18,17 @@ class MangaInfoOffLineModel {
   late final int chapters;
   late final List<Capitulos> capitulos;
 
-  MangaInfoOffLineModel.fromJson(Map<String, dynamic> json) {
+  MangaInfoOffLineModel.fromJson(Map<dynamic, dynamic> json) {
     name = json['name'];
     description = json['description'];
     img = json['img'];
+    link = json['link'];
     genres = List.castFrom<dynamic, String>(json['genres']);
     alternativeName = json['alternativeName'];
     chapters = json['chapters'];
-    capitulos =
-        List.from(json['capitulos']).map((e) => Capitulos.fromJson(e)).toList();
+    capitulos = List.from(json['capitulos'])
+        .map((e) => Capitulos.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -34,6 +36,7 @@ class MangaInfoOffLineModel {
     _data['name'] = name;
     _data['description'] = description;
     _data['img'] = img;
+    _data['link'] = link;
     _data['genres'] = genres;
     _data['alternativeName'] = alternativeName;
     _data['chapters'] = chapters;
@@ -67,7 +70,7 @@ class Capitulos {
     disponivel = json['disponivel'];
     readed = json['readed'];
     downloadPages = List.castFrom<dynamic, String>(json['downloadPages']);
-    pages = List.castFrom<dynamic, String>(json['pages']);
+    pages = List.castFrom<dynamic, String>(json['pages'] ?? []);
   }
 
   Map<String, dynamic> toJson() {

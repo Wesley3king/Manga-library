@@ -108,6 +108,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             AddToLibrary(
               link: 'https://mangayabu.top/manga/${widget.link}',
               dados: widget.dados,
+              capitulos: widget.capitulosDisponiveis ?? [],
             ),
             Flexible(
               child: Text(

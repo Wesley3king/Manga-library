@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 
+import '../../../models/leitor_model.dart';
 import '../../../models/libraries_model.dart';
 
 class AddToLibrary extends StatefulWidget {
   final String link;
   final ModelMangaInfo dados;
-  const AddToLibrary({super.key, required this.link, required this.dados});
+  final List<ModelLeitor> capitulos;
+  const AddToLibrary(
+      {super.key,
+      required this.link,
+      required this.dados,
+      required this.capitulos,
+    });
 
   @override
   State<AddToLibrary> createState() => _AddToLibraryState();
@@ -104,11 +111,17 @@ class _AddToLibraryState extends State<AddToLibrary> {
             child: const Text('cancelar')),
         TextButton(
             onPressed: () {
-              _dialogController.addOrRemoveFromLibrary(resultado, {
-                "name": widget.dados.chapterName,
-                "link": '${widget.link}/',
-                "img": widget.dados.cover,
-              });
+              _dialogController.addOrRemoveFromLibrary(
+                resultado,
+                {
+                  "name": widget.dados.chapterName,
+                  "link": '${widget.link}/',
+                  "img": widget.dados.cover,
+                },
+                link: widget.link,
+                capitulos: widget.capitulos,
+                model: widget.dados,
+              );
               Navigator.of(context).pop();
             },
             child: const Text('confirmar')),

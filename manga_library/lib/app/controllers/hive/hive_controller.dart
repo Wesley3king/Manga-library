@@ -208,7 +208,8 @@ class HiveController {
 
   Future updateBook(List<MangaInfoOffLineModel> data) async {
     try {
-      var jsonModel = data.map((model) => model.toJson());
+      List<Map<String, dynamic>> jsonModel =
+          data.map((model) => model.toJson()).toList();
       await books?.put("allbooks", jsonModel);
       return true;
     } catch (e) {
@@ -219,12 +220,16 @@ class HiveController {
 
   Future<List<MangaInfoOffLineModel>?> getBooks() async {
     try {
-      List<Map<String, dynamic>>? data = await books?.get("allbooks");
+      List<dynamic>? data = await books?.get("allbooks");
       if (data == null) {
         writeBook();
         return [];
       } else {
-        return data.map((book) => MangaInfoOffLineModel.fromJson(book)).toList();
+        print(" - dados do Hive:");
+        print(data);
+        return data
+            .map((book) => MangaInfoOffLineModel.fromJson(book))
+            .toList();
       }
     } catch (e) {
       print('erro no getBooks, at HiveController: $e');
