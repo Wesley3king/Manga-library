@@ -290,6 +290,7 @@ class DialogController {
     bool haveError = false;
     dataLibrary = await hiveController.getLibraries();
     bool offLine = false;
+    bool removerDB = true;
 
     for (int i = 0; i < lista.length; ++i) {
       bool existe = false;
@@ -310,6 +311,7 @@ class DialogController {
             executed = true;
             break;
           } else {
+            removerDB = false;
             existe = true;
           }
         }
@@ -331,6 +333,10 @@ class DialogController {
                   MangaInfoController.capitulosCorrelacionados)
           ? haveError = false
           : haveError = true;
+    } else if (removerDB) {
+      await _removeOffLineManga(link: link)
+        ? haveError = false
+        : haveError = true;
     }
     return !haveError;
   }

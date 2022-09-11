@@ -5,6 +5,7 @@ import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_states.dart';
 
+import '../../../controllers/system_config.dart';
 import '../../../models/globais.dart';
 
 class ButtomBottomSheetChapterList extends StatefulWidget {
@@ -25,7 +26,7 @@ class ButtomBottomSheetChapterList extends StatefulWidget {
 class _ButtomBottomSheetChapterListState
     extends State<ButtomBottomSheetChapterList> {
   final BottomSheetController bottomSheetController = BottomSheetController();
-
+  final ConfigSystemController _configSystemController = ConfigSystemController();
   final BottomSheetStatesPages statePages = BottomSheetStatesPages();
 
   // trailings
@@ -73,33 +74,7 @@ class _ButtomBottomSheetChapterListState
         return const ErrorHomePage();
     }
   }
-  Color _colorManagement() {
-    switch (GlobalData.settings['Cor da Interface']) {
-      case "blue":
-        return Colors.blue;
-      case "green":
-        return Colors.green;
-      case "lime":
-        return Colors.lime;
-      case "purple":
-        return Colors.purple;
-      case "pink":
-        return Colors.pink;
-      case "orange":
-        return Colors.orange;
-      case "red":
-        return Colors.red;
-      case "black":
-        return Colors.black;
-      case "white":
-        return Colors.white;
-      case "grey":
-        return Colors.grey;
-      default:
-        return Colors.blue;
-    }
-  }
-
+  
   @override
   void initState() {
     super.initState();
@@ -116,7 +91,7 @@ class _ButtomBottomSheetChapterListState
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_colorManagement()),
+          backgroundColor: MaterialStateProperty.all(_configSystemController.colorManagement()),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(21),
           )),
@@ -150,7 +125,7 @@ class _ButtomBottomSheetChapterListState
                     height: 35,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                        color: _colorManagement(),
+                        color: _configSystemController.colorManagement(),
                         borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(bottomSheetRadius),
                             topRight: Radius.circular(bottomSheetRadius))),
