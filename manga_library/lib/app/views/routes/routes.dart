@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/views/components/configurations/config_options.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/config_options_page.dart';
+import 'package:manga_library/app/views/components/configurations/library_config/library_config.dart';
 import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/home/library.dart';
 import 'package:manga_library/app/views/home/others.dart';
@@ -53,5 +54,9 @@ final routes = GoRouter(initialLocation: '/home', routes: [
 
       return Leitor(link: url,id: id,);
     },
-  )
+  ),
+  GoRoute(
+    path: '/configlibrary',
+    builder: (context, state) => const LibraryConfig(),
+  ),
 ]);

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
@@ -12,7 +11,8 @@ class OthersPage extends StatefulWidget {
 }
 
 class _OthersPageState extends State<OthersPage> {
-  final ConfigSystemController configSystemController = ConfigSystemController();
+  final ConfigSystemController configSystemController =
+      ConfigSystemController();
   ScrollController controller = ScrollController();
 
   @override
@@ -38,7 +38,10 @@ class _OthersPageState extends State<OthersPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 200,
-                    child: Image.asset('assests/imgs/grid-image-ready.png', fit: BoxFit.cover,),
+                    child: Image.asset(
+                      'assests/imgs/grid-image-ready.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -49,7 +52,10 @@ class _OthersPageState extends State<OthersPage> {
                     child: SizedBox(
                       width: 200,
                       height: 200,
-                      child: Image.asset('assests/imgs/new-icon-manga-mini.png', fit: BoxFit.contain,),
+                      child: Image.asset(
+                        'assests/imgs/new-icon-manga-mini.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   )
                 ],
@@ -57,33 +63,35 @@ class _OthersPageState extends State<OthersPage> {
               ListTile(
                 leading: const Icon(Icons.download),
                 title: const Text('Fila de Downloads'),
-                onTap: (){},
+                onTap: () {},
               ),
               ListTile(
                 leading: const Icon(Icons.download_done),
                 title: const Text('Downloads'),
-                onTap: (){},
+                onTap: () {},
               ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.history),
                 title: const Text('Historico'),
-                onTap: (){},
+                onTap: () {},
               ),
               ListTile(
                 leading: const Icon(Icons.bookmark),
                 title: const Text('Biblioteca'),
-                onTap: (){},
+                onTap: () {
+                  GoRouter.of(context).push('/configlibrary');
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.account_circle),
                 title: const Text('Conta e Sincronização'),
-                onTap: (){},
+                onTap: () {},
               ),
               ListTile(
                 leading: const Icon(Icons.download_done),
                 title: const Text('Backup e restauração local'),
-                onTap: (){},
+                onTap: () {},
               ),
               const Divider(),
               ListTile(
@@ -94,14 +102,15 @@ class _OthersPageState extends State<OthersPage> {
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: const Text('Sobre e Manual de Istruções'),
-                onTap: (){},
+                onTap: () {},
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(controller: controller,),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        controller: controller,
+      ),
     );
-
   }
 }
