@@ -100,28 +100,32 @@ class ExtensionMangaYabu {
         // faz um decode para json e processa os capitulos
         var decoded = json.decode(corteHtml2[0]);
         List capitulos = decoded['allposts'];
-        List<Capitulos> listCapitulos = capitulos.map((element) => Capitulos(
-          id: element['id'],
-          capitulo: element['num'],
-          download: false,
-          readed: false,
-          disponivel: false,
-          downloadPages: [],
-          pages: [],
-        )).toList();
-
+        List<Capitulos> listCapitulos = capitulos
+            .map((element) => Capitulos(
+                  id: element['id'],
+                  capitulo: element['num'],
+                  download: false,
+                  readed: false,
+                  disponivel: false,
+                  downloadPages: [],
+                  pages: [],
+                ))
+            .toList();
+        print("passou pelo model]!");
         return MangaInfoOffLineModel(
             name: decoded['chapter_name'],
             description: decoded['description'],
             img: decoded['cover'],
             link: 'https://mangayabu.top/manga/$link/',
-            genres: decoded['genres'],
+            genres: decoded['genres']
+                .map<String>((dynamic genre) => genre.toString())
+                .toList(),
             alternativeName: decoded['alternative_name'],
-            chapters:  decoded['chapters'],
+            chapters: decoded['chapters'],
             capitulos: listCapitulos);
       }
     } catch (e) {
-      print(e);
+      print("erro no mangaInfo at MangaYabu Extension: $e");
       return null;
     }
   }
