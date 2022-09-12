@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 
 void main() {
@@ -16,11 +17,10 @@ void main() {
   });
 
   test('deve retornar uma instancia do model com os dados do manga', () async {
-    ModelMangaInfo? result =
+    MangaInfoOffLineModel? result =
         await extensionManga.mangaInfo('dragon-ball-super');
 
-    log(result!.allposts[1].num);
-    //expect(result is ModelMangaInfo, true);
+    log(result!.name);
   });
 
   test('deve retornar um SearchModel', () async {

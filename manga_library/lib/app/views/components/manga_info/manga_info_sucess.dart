@@ -4,13 +4,14 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_list.dart';
 
 import '../../../controllers/system_config.dart';
 
 class SucessMangaInfo extends StatefulWidget {
-  final ModelMangaInfo dados;
+  final MangaInfoOffLineModel dados;
   final bool sucess2;
   final List<ModelLeitor>? capitulosDisponiveis;
   final String link;
@@ -35,7 +36,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       return TextButton(
           onPressed: () {
             mangaInfoController.addOrUpadteBook(
-                name: widget.dados.chapterName, link: 'https://mangayabu.top/manga/${widget.link}');
+                name: widget.dados.name, link: 'https://mangayabu.top/manga/${widget.link}');
           },
           child: const Text('Adicionar/Atualizar'));
     } else {
@@ -59,7 +60,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                 height: 400,
                 child: Image(
                   image: CachedNetworkImageProvider(
-                    widget.dados.cover,
+                    widget.dados.img,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -89,7 +90,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   height: 315,
                   child: Image(
                     image: CachedNetworkImageProvider(
-                      widget.dados.cover,
+                      widget.dados.img,
                     ),
                     fit: BoxFit.fill,
                   ),
@@ -112,7 +113,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             ),
             Flexible(
               child: Text(
-                widget.dados.chapterName,
+                widget.dados.name,
                 // maxLines: 4,
                 softWrap: true,
                 style: const TextStyle(
@@ -124,11 +125,11 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         ),
         widget.sucess2
             ? ButtomBottomSheetChapterList(
-                listaCapitulos: widget.dados.allposts,
+                listaCapitulos: widget.dados.capitulos,
                 listaCapitulosDisponiveis: widget.capitulosDisponiveis,
                 nameImageLink: {
-                  "name": widget.dados.chapterName,
-                  "img": widget.dados.cover,
+                  "name": widget.dados.name,
+                  "img": widget.dados.img,
                   "link": widget.link,
                 },
               )

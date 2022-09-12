@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_states.dart';
 
@@ -9,7 +10,7 @@ import '../../../controllers/system_config.dart';
 import '../../../models/globais.dart';
 
 class ButtomBottomSheetChapterList extends StatefulWidget {
-  final List<Allposts> listaCapitulos;
+  final List<Capitulos> listaCapitulos;
   final List<ModelLeitor>? listaCapitulosDisponiveis;
   final Map<String, String> nameImageLink;
   const ButtomBottomSheetChapterList(
@@ -26,14 +27,16 @@ class ButtomBottomSheetChapterList extends StatefulWidget {
 class _ButtomBottomSheetChapterListState
     extends State<ButtomBottomSheetChapterList> {
   final BottomSheetController bottomSheetController = BottomSheetController();
-  final ConfigSystemController _configSystemController = ConfigSystemController();
+  final ConfigSystemController _configSystemController =
+      ConfigSystemController();
   final BottomSheetStatesPages statePages = BottomSheetStatesPages();
 
   // trailings
   GestureDetector naoLido(String id, String link) {
     return GestureDetector(
       onTap: () async {
-        await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        await bottomSheetController.marcarDesmarcar(
+            id, link, widget.nameImageLink);
         bottomSheetController.update(widget.listaCapitulosDisponiveis,
             widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
@@ -47,7 +50,8 @@ class _ButtomBottomSheetChapterListState
         // await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
         // bottomSheetController.update(widget.listaCapitulosDisponiveis,
         //     widget.listaCapitulos, widget.nameImageLink["link"]!);
-        await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        await bottomSheetController.marcarDesmarcar(
+            id, link, widget.nameImageLink);
         bottomSheetController.update(widget.listaCapitulosDisponiveis,
             widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
@@ -74,24 +78,26 @@ class _ButtomBottomSheetChapterListState
         return const ErrorHomePage();
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
     print('iniciou ------');
-    bottomSheetController.start(
-        widget.listaCapitulosDisponiveis, widget.listaCapitulos, widget.nameImageLink["link"]!);
+    bottomSheetController.start(widget.listaCapitulosDisponiveis,
+        widget.listaCapitulos, widget.nameImageLink["link"]!);
   }
 
   @override
   Widget build(BuildContext context) {
     const double bottomSheetRadius = 25.0;
-
+    final double heightTotal = MediaQuery.of(context).size.height;
+    print("height: $heightTotal");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_configSystemController.colorManagement()),
+          backgroundColor: MaterialStateProperty.all(
+              _configSystemController.colorManagement()),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(21),
           )),
@@ -118,7 +124,7 @@ class _ButtomBottomSheetChapterListState
                     topRight: Radius.circular(bottomSheetRadius))),
             context: context,
             builder: (context) => SizedBox(
-              height: 500,
+              height: heightTotal,
               child: Column(
                 children: [
                   Container(

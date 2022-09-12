@@ -17,18 +17,18 @@ class MangaInfoController {
   final MangaInfoOffLineController _mangaInfoOffLineController =
       MangaInfoOffLineController();
   final YabuFetchServices yabuFetchServices = YabuFetchServices();
-  ModelMangaInfo data = ModelMangaInfo(
-    chapterName: '',
-    chapters: 0,
-    description: '',
-    cover: '',
+  
+  MangaInfoOffLineModel data = MangaInfoOffLineModel(
+    name: "",
+    description: "",
+    img: "",
+    link: "",
     genres: [],
-    chapterList: '',
     alternativeName: false,
-    allposts: [],
-  );
+    chapters: 0,
+    capitulos: [],
+    );
   List<ModelLeitor>? capitulosDisponiveis = [];
-  static List<ModelCapitulosCorrelacionados> capitulosCorrelacionados = [];
 
   ValueNotifier state = ValueNotifier<MangaInfoStates>(MangaInfoStates.start);
 
@@ -36,11 +36,11 @@ class MangaInfoController {
     state.value = MangaInfoStates.loading;
     try {
       // operação OffLine
-      MangaInfoOffLineModel? localData =
-          await _mangaInfoOffLineController.verifyDatabase(url);
+      MangaInfoOffLineModel? localData = await _mangaInfoOffLineController.verifyDatabase(url);
       if (localData != null) {
         print("existe na base de dados!");
-        data = _mangaInfoOffLineController.buildMangaInfoModel(localData);
+        /// here [--------------]
+        data = localData;
         capitulosDisponiveis =
             _mangaInfoOffLineController.buildModelLeitor(localData);
         GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
@@ -48,7 +48,8 @@ class MangaInfoController {
       } else {
         // operação OnLine
         print("iniciando o fetch!");
-        final ModelMangaInfo? _dados = await mangaYabu.mangaInfo(url);
+        
+        final MangaInfoOffLineModel? _dados = await mangaYabu.mangaInfo(url);
         if (_dados != null) {
           data = _dados;
           state.value = MangaInfoStates.sucess1;
@@ -82,20 +83,21 @@ enum MangaInfoStates { start, loading, sucess1, sucess2, error }
 
 class BottomSheetController {
   final HiveController _hiveController = HiveController();
-  List<ModelCapitulosCorrelacionados> capitulosCorrelacionados = [];
+  List<Capitulos> capitulosCorrelacionados = [];
 
   ValueNotifier<BottomSheetStates> state =
       ValueNotifier<BottomSheetStates>(BottomSheetStates.start);
 
   start(List<ModelLeitor>? listaCapitulosDisponiveis,
-      List<Allposts> listaCapitulos, String link) async {
+      List<Capitulos> listaCapitulos, String link) async {
     state.value = BottomSheetStates.loading;
     try {
       print('start');
       await correlacionarCapitulos(
           listaCapitulosDisponiveis ?? [], listaCapitulos, link);
       // disponibilizar os capitulos correlacionados
-      MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
+
+      // MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
       state.value = BottomSheetStates.sucess;
     } catch (e) {
       HomePageController.errorMessage =
@@ -107,7 +109,7 @@ class BottomSheetController {
   }
 
   update(List<ModelLeitor>? listaCapitulosDisponiveis,
-      List<Allposts> listaCapitulos, String link) async {
+      List<Capitulos> listaCapitulos, String link) async {
     state.value = BottomSheetStates.loading;
     try {
       print('restart');
@@ -122,8 +124,7 @@ class BottomSheetController {
     }
   }
 
-  marcarDesmarcar(
-      String id, String link, Map<String, String> nameAndImage) async {
+  marcarDesmarcar( String id, String link, Map<String, String> nameAndImage) async {
     ClientDataModel clientData = await _hiveController.getClientData();
     print(clientData.capitulosLidos);
 
@@ -164,22 +165,16 @@ class BottomSheetController {
     print('marcar desmarcar concluido!');
   }
 
-  correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis,
-      List<Allposts> listaCapitulos, String link) async {
+  correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis, List<Capitulos> listaCapitulos, String link) async {
     print('parte 0 erro');
     ClientDataModel clientData = await _hiveController.getClientData();
     print('parte 0.1 erro');
     // aqui verificamos se podemos exibir o botão de atualizar/adicionar no servidor
-    // print(
-    //     'old: ${GlobalData.showAdiminAtualizationBanner ? "T" : "F"} / ${clientData.isAdimin ? "T" : "F"}');
     GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
-    // achar o manga pelo link
 
+    // achar os capitulos lidos do manga pelo link
     List<dynamic> capitulosLidos = [];
-    RegExp regex = RegExp('https://mangayabu.top/manga/$link',
-        dotAll: true, caseSensitive: false);
-    // print(clientData.capitulosLidos);
-    // print(clientData.capitulosLidos.length);
+    RegExp regex = RegExp('https://mangayabu.top/manga/$link', dotAll: true, caseSensitive: false);
 
     for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
       if (clientData.capitulosLidos[i]['link'].contains(regex)) {
@@ -192,54 +187,76 @@ class BottomSheetController {
 
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
       //print("disponivel = ${listaCapitulosDisponiveis[indice]}");
+      // CAPITULOS
+      // late final int id;
+      // late final String capitulo;
+      // late final bool download;
+      // late final bool readed;
+      // late final bool disponivel;
+      // late final List<String> downloadPages;
+      // late final List<String> pages;
       bool adicionado = false;
-      for (int alreadyIndice = 0;
-          alreadyIndice < listaCapitulosDisponiveis.length;
-          ++alreadyIndice) {
+      for (int alreadyIndice = 0; alreadyIndice < listaCapitulosDisponiveis.length; ++alreadyIndice) {
         int idCapituloDisponivel = listaCapitulosDisponiveis[alreadyIndice].id;
         if (listaCapitulos[indice].id == idCapituloDisponivel) {
-          capitulosCorrelacionados.add(ModelCapitulosCorrelacionados(
-            id: idCapituloDisponivel,
-            capitulo: listaCapitulosDisponiveis[alreadyIndice].capitulo,
-            disponivel: listaCapitulos[indice].disponivel,
-            readed: false,
-          ));
+          capitulosCorrelacionados.add(
+            Capitulos(
+              id: idCapituloDisponivel,
+              capitulo: listaCapitulos[indice].capitulo,
+              download: listaCapitulos[indice].download,
+              readed: false,
+              disponivel: true,
+              downloadPages: listaCapitulos[indice].downloadPages,
+              pages: listaCapitulosDisponiveis[alreadyIndice].pages,
+            )
+          );
           adicionado = true;
           break;
         }
       }
       if (!adicionado) {
-        capitulosCorrelacionados.add(ModelCapitulosCorrelacionados(
+        /*ModelCapitulosCorrelacionados(
           id: listaCapitulos[indice].id,
-          capitulo: listaCapitulos[indice].num,
+          capitulo: listaCapitulos[indice].capitulo,
           disponivel: false,
           readed: false,
-        ));
+        )*/
+        capitulosCorrelacionados.add(
+          Capitulos(
+              id: listaCapitulos[indice].id,
+              capitulo: listaCapitulos[indice].capitulo,
+              download: false,
+              readed: false,
+              disponivel: false,
+              downloadPages: [],
+              pages: [],
+            )
+        );
       }
     }
-    // print('--- teste reload 1 --- ');
-    // for (int i = 0; i < 2; ++i) {
-    //   print(capitulosCorrelacionados[i].readed);
-    // }
+    
     // correlacionar os capitulos lidos
     print(capitulosLidos);
     if (capitulosLidos.isNotEmpty) {
       print('inicio = ${capitulosCorrelacionados.length}');
-      List<ModelCapitulosCorrelacionados> listaCapitulosCorrelacionadosLidos =
+      List<Capitulos> listaCapitulosCorrelacionadosLidos =
           [];
       for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
         var item = capitulosCorrelacionados[i];
         bool adicionado = false;
         for (int cap = 0; cap < capitulosLidos.length; ++cap) {
-          if ((capitulosCorrelacionados[i].id).toString() ==
-              capitulosLidos[cap]) {
-            listaCapitulosCorrelacionadosLidos
-                .add(ModelCapitulosCorrelacionados(
-              id: item.id,
-              capitulo: item.capitulo,
-              disponivel: item.disponivel,
-              readed: true,
-            ));
+          if ((capitulosCorrelacionados[i].id).toString() == capitulosLidos[cap]) {
+            listaCapitulosCorrelacionadosLidos.add(
+                Capitulos(
+                  id: listaCapitulos[i].id,
+                  capitulo: listaCapitulos[i].capitulo,
+                  download: false,
+                  readed: true,
+                  disponivel: listaCapitulos[i].disponivel,
+                  downloadPages: [],
+                  pages: [],
+                )
+              );
             adicionado = true;
           }
         }
@@ -248,10 +265,7 @@ class BottomSheetController {
           adicionado = true;
         }
       }
-      // print('--- teste reload 2 --- ');
-      // for (int i = 0; i < 2; ++i) {
-      //   print(listaCapitulosCorrelacionadosLidos[i].readed);
-      // }
+     
       capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       print('-- final = ${capitulosCorrelacionados.length}');
     }
@@ -284,7 +298,7 @@ class DialogController {
   // adicionar e remover da library
   Future<bool> addOrRemoveFromLibrary(List<Map> lista, Map<String, String> book,
       {required String link,
-      required ModelMangaInfo model,
+      required MangaInfoOffLineModel model,
       required List<ModelLeitor> capitulos}) async {
     print('inicio do processo de atualização da library');
     bool haveError = false;
@@ -328,11 +342,7 @@ class DialogController {
       await _addOffLineManga(
               link: link,
               model: model,
-              capitulos: capitulos,
-              capitulosCorrelacionados:
-                  MangaInfoController.capitulosCorrelacionados)
-          ? haveError = false
-          : haveError = true;
+            ) ? haveError = false : haveError = true;
     } else if (removerDB) {
       await _removeOffLineManga(link: link)
         ? haveError = false
@@ -342,26 +352,16 @@ class DialogController {
   }
 
   // disponibilizar um manga OffLine
-  Future<bool> _addOffLineManga(
-      {required String link,
-      required ModelMangaInfo model,
-      required List<ModelLeitor> capitulos,
-      required List<ModelCapitulosCorrelacionados>
-          capitulosCorrelacionados}) async {
-    final MangaInfoOffLineController mangaInfoOffLineController =
-        MangaInfoOffLineController();
+  Future<bool> _addOffLineManga({required String link, required MangaInfoOffLineModel model}) async {
+    final MangaInfoOffLineController mangaInfoOffLineController = MangaInfoOffLineController();
     return await mangaInfoOffLineController.addBook(
         model: model,
-        link: link,
-        capitulos: capitulos,
-        capitulosCorrelacionados: capitulosCorrelacionados);
+      );
   }
 
   // remove um manga OffLine
   // disponibilizar um manga OffLine
-  Future<bool> _removeOffLineManga({
-    required String link,
-  }) async {
+  Future<bool> _removeOffLineManga({required String link,}) async {
     final MangaInfoOffLineController mangaInfoOffLineController =
         MangaInfoOffLineController();
     try {

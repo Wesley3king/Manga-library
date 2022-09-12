@@ -215,6 +215,8 @@ class _LibraryConfigState extends State<LibraryConfig> {
         return _loading();
       case LibraryConfigStates.loading:
         return _loading();
+      case LibraryConfigStates.restarting:
+        return _loading();
       case LibraryConfigStates.sucess:
         return _sucess();
       case LibraryConfigStates.error:

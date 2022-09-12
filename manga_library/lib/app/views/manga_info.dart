@@ -34,7 +34,6 @@ class _MangaInfoState extends State<MangaInfo> {
           sucess2: false,
           capitulosDisponiveis: const [],
           link: widget.link,
-          
         );
       case MangaInfoStates.sucess2:
         return SucessMangaInfo(

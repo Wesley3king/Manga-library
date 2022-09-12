@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:chaleno/chaleno.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
@@ -85,7 +86,7 @@ class ExtensionMangaYabu {
     }
   }
 
-  Future<ModelMangaInfo?> mangaInfo(String link) async {
+  Future<MangaInfoOffLineModel?> mangaInfo(String link) async {
     try {
       var parser = await Chaleno().load('https://mangayabu.top/manga/$link/');
 
@@ -99,22 +100,25 @@ class ExtensionMangaYabu {
         // faz um decode para json e processa os capitulos
         var decoded = json.decode(corteHtml2[0]);
         List capitulos = decoded['allposts'];
-        List<Allposts> capitulosAllposts = capitulos
-            .map(
-              (element) => Allposts.fromJson(element),
-            )
-            .toList();
+        List<Capitulos> listCapitulos = capitulos.map((element) => Capitulos(
+          id: element['id'],
+          capitulo: element['num'],
+          download: false,
+          readed: false,
+          disponivel: false,
+          downloadPages: [],
+          pages: [],
+        )).toList();
 
-        return ModelMangaInfo(
-          chapterName: decoded['chapter_name'],
-          chapters: decoded['chapters'],
-          description: decoded['description'],
-          cover: decoded['cover'],
-          genres: decoded['genres'],
-          chapterList: decoded['chapter_list'],
-          alternativeName: decoded['alternative_name'],
-          allposts: capitulosAllposts,
-        );
+        return MangaInfoOffLineModel(
+            name: decoded['chapter_name'],
+            description: decoded['description'],
+            img: decoded['cover'],
+            link: 'https://mangayabu.top/manga/$link/',
+            genres: decoded['genres'],
+            alternativeName: decoded['alternative_name'],
+            chapters:  decoded['chapters'],
+            capitulos: listCapitulos);
       }
     } catch (e) {
       print(e);

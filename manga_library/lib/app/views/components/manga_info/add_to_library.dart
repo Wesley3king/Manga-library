@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
-import 'package:manga_library/app/models/manga_info_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 import '../../../models/leitor_model.dart';
 import '../../../models/libraries_model.dart';
 
 class AddToLibrary extends StatefulWidget {
   final String link;
-  final ModelMangaInfo dados;
+  final MangaInfoOffLineModel dados;
   final List<ModelLeitor> capitulos;
   const AddToLibrary(
       {super.key,
@@ -114,9 +114,9 @@ class _AddToLibraryState extends State<AddToLibrary> {
               _dialogController.addOrRemoveFromLibrary(
                 resultado,
                 {
-                  "name": widget.dados.chapterName,
+                  "name": widget.dados.name,
                   "link": '${widget.link}/',
-                  "img": widget.dados.cover,
+                  "img": widget.dados.img,
                 },
                 link: widget.link,
                 capitulos: widget.capitulos,

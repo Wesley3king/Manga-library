@@ -19,11 +19,23 @@ class LibraryConfigController {
     }
   }
 
+  void restart() async {
+    state.value = LibraryConfigStates.restarting;
+    try {
+      libraries = await _hiveController.getLibraries();
+      state.value = LibraryConfigStates.sucess;
+    } catch (e) {
+      print("erro no restart at LibraryConfigController: $e");
+      state.value = LibraryConfigStates.error;
+    }
+  }
+
   Future<void> addLibrary(String library) async {
     LibraryModel model = LibraryModel(library: library, books: []);
     try {
       List<LibraryModel> libraries = await _hiveController.getLibraries();
       await _hiveController.updateLibraries([...libraries, model]);
+      restart();
     } catch (e) {
       print("erro no addLibrary at LibraryConfigController: $e");
     }
@@ -33,6 +45,7 @@ class LibraryConfigController {
     try {
       libraries.removeWhere((LibraryModel model) => model.library == library);
       await _hiveController.updateLibraries(libraries);
+      restart();
     } catch (e) {
       print("erro no removeLibrary at LibraryConfigController: $e");
     }
@@ -48,6 +61,7 @@ class LibraryConfigController {
           break;
         }
       }
+      restart();
     } catch (e) {
       print("erro no renameLibrary at LibraryConfigController: $e");
     }
@@ -62,4 +76,4 @@ class LibraryConfigController {
   }
 }
 
-enum LibraryConfigStates { start, loading, sucess, error }
+enum LibraryConfigStates { start, loading, restarting, sucess, error }
