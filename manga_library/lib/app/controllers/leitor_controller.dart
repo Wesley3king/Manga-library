@@ -6,8 +6,10 @@ import '../models/leitor_model.dart';
 class LeitorController {
   List<ModelLeitor> capitulos = [];
   List<ModelLeitor> capitulosEmCarga = [];
-  ValueNotifier<LeitorStates> state = ValueNotifier<LeitorStates>(LeitorStates.start);
-  ValueNotifier<LeitorTypes> leitorTypeState = ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
+  ValueNotifier<LeitorStates> state =
+      ValueNotifier<LeitorStates>(LeitorStates.start);
+  ValueNotifier<LeitorTypes> leitorTypeState =
+      ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
 
   void start(String link, String id) {
     state.value = LeitorStates.loading;
@@ -26,10 +28,15 @@ class LeitorController {
 
   void _identificarCapitulo(List<ModelLeitor> capitulos, String id) {
     // List pages = [];
+    bool adicionated = false;
     for (int i = 0; i < capitulos.length; ++i) {
       if ((capitulos[i].id).toString() == id) {
         capitulosEmCarga.add(capitulos[i]);
+        adicionated = true;
       }
+    }
+    if (!adicionated) {
+      capitulosEmCarga.add(ModelLeitor(capitulo: "", id: 0, pages: []));
     }
   }
 

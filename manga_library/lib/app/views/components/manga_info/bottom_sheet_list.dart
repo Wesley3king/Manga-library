@@ -32,33 +32,23 @@ class _ButtomBottomSheetChapterListState
   final BottomSheetStatesPages statePages = BottomSheetStatesPages();
 
   // trailings
-  GestureDetector naoLido(String id, String link) {
-    return GestureDetector(
-      onTap: () async {
-        await bottomSheetController.marcarDesmarcar(
-            id, link, widget.nameImageLink);
-        bottomSheetController.update(widget.listaCapitulosDisponiveis,
-            widget.listaCapitulos, widget.nameImageLink["link"]!);
+   IconButton naoLido(String id, String link) {
+    return IconButton(
+      onPressed: () async {
+        await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        bottomSheetController.update(widget.listaCapitulosDisponiveis,widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
-      child: const Icon(Icons.check),
+      icon: const Icon(Icons.check),
     );
   }
 
-  GestureDetector lido(String id, String link) {
-    return GestureDetector(
-      onTap: () async {
-        // await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
-        // bottomSheetController.update(widget.listaCapitulosDisponiveis,
-        //     widget.listaCapitulos, widget.nameImageLink["link"]!);
-        await bottomSheetController.marcarDesmarcar(
-            id, link, widget.nameImageLink);
-        bottomSheetController.update(widget.listaCapitulosDisponiveis,
-            widget.listaCapitulos, widget.nameImageLink["link"]!);
+  IconButton lido(String id, String link) {
+    return IconButton(
+      onPressed: () async {
+        await bottomSheetController.marcarDesmarcar(id, link, widget.nameImageLink);
+        bottomSheetController.update(widget.listaCapitulosDisponiveis, widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
-      child: const Icon(
-        Icons.check,
-        color: Colors.green,
-      ),
+      icon: const Icon(Icons.check, color: Colors.green,),
     );
   }
 

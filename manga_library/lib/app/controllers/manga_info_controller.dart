@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
@@ -115,8 +117,64 @@ class BottomSheetController {
     state.value = BottomSheetStates.loading;
     try {
       print('restart');
-      await correlacionarCapitulos(
-          listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+      // conseguir os dados
+      ClientDataModel clientData = await _hiveController.getClientData();
+      // achar os capitulos lidos do manga pelo link
+      List<dynamic> capitulosLidos = [];
+      RegExp regex = RegExp('https://mangayabu.top/manga/$link',
+          dotAll: true, caseSensitive: false);
+
+      for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
+        if (clientData.capitulosLidos[i]['link'].contains(regex)) {
+          capitulosLidos = clientData.capitulosLidos[i]['capitulos'];
+        }
+      }
+      print(capitulosLidos);
+      // await correlacionarCapitulos(
+      //     listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+      // faz o recorrelacionamento
+      //  if (capitulosLidos.isNotEmpty) {
+      // print('inicio = ${capitulosCorrelacionados.length}');
+      List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
+
+      for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
+        var item = capitulosCorrelacionados[i];
+        print(
+            "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
+        bool adicionado = false;
+        for (int cap = 0; cap < capitulosLidos.length; ++cap) {
+          if ((capitulosCorrelacionados[i].id).toString() ==
+              capitulosLidos[cap]) {
+            log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
+            listaCapitulosCorrelacionadosLidos.add(Capitulos(
+              id: capitulosCorrelacionados[i].id,
+              capitulo: capitulosCorrelacionados[i].capitulo,
+              download: false,
+              readed: true,
+              disponivel: capitulosCorrelacionados[i].disponivel,
+              downloadPages: [],
+              pages: [],
+            ));
+            adicionado = true;
+          }
+        }
+        if (!adicionado) {
+          listaCapitulosCorrelacionadosLidos.add(
+            Capitulos(
+              id: capitulosCorrelacionados[i].id,
+              capitulo: capitulosCorrelacionados[i].capitulo,
+              download: false,
+              readed: false,
+              disponivel: capitulosCorrelacionados[i].disponivel,
+              downloadPages: [],
+              pages: [],
+            )
+          );
+          adicionado = true;
+        }
+      }
+      capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
+      // }
       print('- restart - end');
       state.value = BottomSheetStates.sucess;
     } catch (e) {
@@ -139,7 +197,8 @@ class BottomSheetController {
     for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
       if (clientData.capitulosLidos[i]['link'].contains(regex)) {
         existe = true;
-        List<dynamic> capitulosLidos = clientData.capitulosLidos[i]['capitulos'];
+        List<dynamic> capitulosLidos =
+            clientData.capitulosLidos[i]['capitulos'];
         if (capitulosLidos.contains(id)) {
           print('temos o capitulo. removendo...');
           capitulosLidos.removeWhere((element) => element == id);
@@ -169,9 +228,8 @@ class BottomSheetController {
 
   correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos, String link) async {
-    print('parte 0 erro');
     ClientDataModel clientData = await _hiveController.getClientData();
-    print('parte 0.1 erro');
+
     // aqui verificamos se podemos exibir o botão de atualizar/adicionar no servidor
     GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
 
@@ -186,7 +244,7 @@ class BottomSheetController {
       }
     }
 
-    print('parte 1 erro');
+    print('parte 1 sem erro');
     capitulosCorrelacionados = [];
 
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
@@ -212,19 +270,16 @@ class BottomSheetController {
             readed: false,
             disponivel: true,
             downloadPages: listaCapitulos[indice].downloadPages,
-            pages: listaCapitulosDisponiveis[alreadyIndice].pages.map<String>((dynamic page) => page.toString()).toList(),
+            pages: listaCapitulosDisponiveis[alreadyIndice]
+                .pages
+                .map<String>((dynamic page) => page.toString())
+                .toList(),
           ));
           adicionado = true;
           break;
         }
       }
       if (!adicionado) {
-        /*ModelCapitulosCorrelacionados(
-          id: listaCapitulos[indice].id,
-          capitulo: listaCapitulos[indice].capitulo,
-          disponivel: false,
-          readed: false,
-        )*/
         capitulosCorrelacionados.add(Capitulos(
           id: listaCapitulos[indice].id,
           capitulo: listaCapitulos[indice].capitulo,
@@ -236,25 +291,27 @@ class BottomSheetController {
         ));
       }
     }
-    print("correlacionamento 1 - sucess");
+    log("lido! - ${listaCapitulos[0].capitulo} / d = ${listaCapitulos[0].disponivel ? "true" : "false"}");
+        log("lido! - ${listaCapitulos[1].capitulo} / d = ${listaCapitulos[1].disponivel ? "true" : "false"}");
 
     // correlacionar os capitulos lidos
     print(capitulosLidos);
     if (capitulosLidos.isNotEmpty) {
-      print('inicio = ${capitulosCorrelacionados.length}');
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
+
       for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
         var item = capitulosCorrelacionados[i];
         bool adicionado = false;
         for (int cap = 0; cap < capitulosLidos.length; ++cap) {
           if ((capitulosCorrelacionados[i].id).toString() ==
               capitulosLidos[cap]) {
+            log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
-              id: listaCapitulos[i].id,
-              capitulo: listaCapitulos[i].capitulo,
+              id: capitulosCorrelacionados[i].id,
+              capitulo: capitulosCorrelacionados[i].capitulo,
               download: false,
               readed: true,
-              disponivel: listaCapitulos[i].disponivel,
+              disponivel: capitulosCorrelacionados[i].disponivel,
               downloadPages: [],
               pages: [],
             ));
