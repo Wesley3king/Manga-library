@@ -16,6 +16,8 @@ class _LibraryConfigState extends State<LibraryConfig> {
       ConfigSystemController();
   final LibraryConfigController _libraryConfigController =
       LibraryConfigController();
+  // guarda a ordem da biblioteca
+  List<LibraryModel> lista = [];
   Widget _loading() {
     return const Center(
       child: CircularProgressIndicator(),
@@ -39,7 +41,10 @@ class _LibraryConfigState extends State<LibraryConfig> {
       builder: (context) => SimpleDialog(
         title: const Text("Remover Biblioteca?"),
         children: [
-          Text("Deseja remover a Biblioteca $libraryName", textAlign: TextAlign.center,),
+          Text(
+            "Deseja remover a Biblioteca $libraryName",
+            textAlign: TextAlign.center,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -61,28 +66,34 @@ class _LibraryConfigState extends State<LibraryConfig> {
 
   void _rename(String name) {
     TextEditingController textController = TextEditingController();
-    textController.text = name;
+    textController.value = TextEditingValue(text: name);
+    String valor = name;
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
-        title: const Text("Adicionar Biblioteca"),
+        title: const Text("Renomear Biblioteca"),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               autofocus: true,
               controller: textController,
-              onChanged: (value) => textController.text = value,
+              onChanged: (value) => valor = value,
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Cancelar")),
-              TextButton(onPressed: () {
-                // implement this
-                 Navigator.of(context).pop();
-              }, child: const Text("Adicionar")),
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancelar")),
+              TextButton(
+                  onPressed: () {
+                    _libraryConfigController.renameLibrary(
+                        oldName: name, newName: textController.text);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Renomear")),
             ],
           )
         ],
@@ -102,10 +113,10 @@ class _LibraryConfigState extends State<LibraryConfig> {
                 child: const Text("Renomear"),
                 onTap: () {
                   Navigator.of(context).pop();
-                    Future.delayed(
-                        const Duration(milliseconds: 100),
-                        () => _rename(
-                            _libraryConfigController.libraries[i].library));
+                  Future.delayed(
+                      const Duration(milliseconds: 100),
+                      () => _rename(
+                          _libraryConfigController.libraries[i].library));
                 },
               ),
               PopupMenuItem(
@@ -159,6 +170,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
                 */
 
   Widget _sucess() {
+    lista = _libraryConfigController.libraries;
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
@@ -172,7 +184,6 @@ class _LibraryConfigState extends State<LibraryConfig> {
           onReorder: (oldIndex, newIndex) {
             // aqui temos o sistema para mudar a ordem
             if (oldIndex != newIndex) {
-              List<LibraryModel> lista = _libraryConfigController.libraries;
               LibraryModel item = lista[oldIndex];
               if (oldIndex > newIndex) {
                 // bottom to top
@@ -225,7 +236,11 @@ class _LibraryConfigState extends State<LibraryConfig> {
         actions: [
           IconButton(
               tooltip: "Salvar Ordem",
-              onPressed: () {},
+              onPressed: () {
+                if (lista.isNotEmpty) {
+                  _libraryConfigController.sortLibrary(lista);
+                }
+              },
               icon: const Icon(Icons.checklist_rounded)),
           IconButton(
               tooltip: "Editar",
@@ -253,6 +268,8 @@ class _LibraryConfigState extends State<LibraryConfig> {
                       horizontal: 15.0, vertical: 6.0),
                   child: TextField(
                     autofocus: true,
+                    decoration: const InputDecoration(
+                        label: Text("Nome da Biblioteca")),
                     onChanged: (value) => libraryName = value,
                   ),
                 ),

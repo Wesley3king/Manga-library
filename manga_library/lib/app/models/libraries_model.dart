@@ -3,7 +3,7 @@ class LibraryModel {
     required this.library,
     required this.books,
   });
-  late final String library;
+  late String library;
   late final List<Books> books;
 
   LibraryModel.fromJson(Map<String, dynamic> json) {

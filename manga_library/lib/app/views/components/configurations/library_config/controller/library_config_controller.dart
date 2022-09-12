@@ -8,7 +8,7 @@ class LibraryConfigController {
   ValueNotifier<LibraryConfigStates> state =
       ValueNotifier<LibraryConfigStates>(LibraryConfigStates.start);
   List<LibraryModel> libraries = [];
-  start() async {
+  void start() async {
     state.value = LibraryConfigStates.loading;
     try {
       libraries = await _hiveController.getLibraries();
@@ -19,7 +19,7 @@ class LibraryConfigController {
     }
   }
 
-  Future addLibrary(String library) async {
+  Future<void> addLibrary(String library) async {
     LibraryModel model = LibraryModel(library: library, books: []);
     try {
       List<LibraryModel> libraries = await _hiveController.getLibraries();
@@ -29,10 +29,33 @@ class LibraryConfigController {
     }
   }
 
-  Future removeLibrary(String library) async {
+  Future<void> removeLibrary(String library) async {
     try {
       libraries.removeWhere((LibraryModel model) => model.library == library);
       await _hiveController.updateLibraries(libraries);
+    } catch (e) {
+      print("erro no removeLibrary at LibraryConfigController: $e");
+    }
+  }
+
+  Future<void> renameLibrary(
+      {required String oldName, required String newName}) async {
+    try {
+      for (var model in libraries) {
+        if (model.library == oldName) {
+          model.library = newName;
+          await _hiveController.updateLibraries(libraries);
+          break;
+        }
+      }
+    } catch (e) {
+      print("erro no renameLibrary at LibraryConfigController: $e");
+    }
+  }
+
+  Future<void> sortLibrary(List<LibraryModel> listOfModels) async {
+    try {
+      await _hiveController.updateLibraries(listOfModels);
     } catch (e) {
       print("erro no removeLibrary at LibraryConfigController: $e");
     }

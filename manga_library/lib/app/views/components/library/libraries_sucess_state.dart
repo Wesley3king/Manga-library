@@ -6,7 +6,6 @@ import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/components/library/library_grid.dart';
 
 import '../../../controllers/system_config.dart';
-import '../../../models/globais.dart';
 
 class LibrarrySucessState extends StatefulWidget {
   final List<LibraryModel> dados;
@@ -63,6 +62,7 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
           snap: true,
           floating: true,
           bottom: TabBar(
+            isScrollable: true,
             controller: tabController,
             indicatorColor: configSystemController.colorManagement(),
             tabs: _getTabs(widget.dados),
