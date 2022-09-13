@@ -60,7 +60,7 @@ class _ButtomBottomSheetChapterListState
         return statePages.loading();
       case BottomSheetStates.sucess:
         return statePages.sucess(
-          bottomSheetController.capitulosCorrelacionados,
+          BottomSheetController.capitulosCorrelacionados,
           widget.nameImageLink["link"]!,
           {"lido": lido, "naoLido": naoLido},
         );

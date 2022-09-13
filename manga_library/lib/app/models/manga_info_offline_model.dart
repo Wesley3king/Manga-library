@@ -16,7 +16,7 @@ class MangaInfoOffLineModel {
   late final List<String> genres;
   late final dynamic alternativeName;
   late final int chapters;
-  late final List<Capitulos> capitulos;
+  late List<Capitulos> capitulos;
 
   MangaInfoOffLineModel.fromJson(Map<dynamic, dynamic> json) {
     name = json['name'];
@@ -57,9 +57,9 @@ class Capitulos {
   });
   late final int id;
   late final String capitulo;
-  late final bool download;
-  late final bool readed;
-  late final bool disponivel;
+  late bool download;
+  late bool readed;
+  late bool disponivel;
   late final List<String> downloadPages;
   late final List<String> pages;
 

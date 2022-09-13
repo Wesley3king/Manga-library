@@ -87,22 +87,24 @@ class MangaInfoOffLineController {
   // add an offline book
 
   Future<bool> addBook(
-      {required MangaInfoOffLineModel model}) async {
+      {required MangaInfoOffLineModel model,
+      required List<Capitulos> capitulos}) async {
     try {
-      // print("criando o model!");
-      // var mangaInfoOffLineModel = MangaInfoOffLineModel(
-      //   name: model.name,
-      //   chapters: model.chapters,
-      //   description: model.description,
-      //   img: model.img,
-      //   link: link,
-      //   genres: model.genres.map((e) => e.toString()).toList(),
-      //   alternativeName: model.capitulos,
-      //   capitulos: model.capitulos
-      // );
-      // print("terminado o model!");
       var data = await _hiveController.getBooks();
-      data!.add(model);
+      MangaInfoOffLineModel newModel = MangaInfoOffLineModel(
+        name: model.name,
+        link: model.link,
+        img: model.img,
+        description: model.description,
+        chapters: model.chapters,
+        alternativeName: model.alternativeName,
+        genres: model.genres,
+        capitulos: capitulos,
+      );
+      data!.add(newModel);
+      for (Capitulos element in newModel.capitulos) {
+        print("capitulo addbook:  ${element.capitulo} / ${element.disponivel}");
+      }
       await _hiveController.updateBook(data);
       print("terinado!");
       return true;

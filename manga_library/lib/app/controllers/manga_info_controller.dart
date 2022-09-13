@@ -43,10 +43,12 @@ class MangaInfoController {
       if (localData != null) {
         print("existe na base de dados!");
 
-        /// here [--------------]
         data = localData;
         capitulosDisponiveis =
             _mangaInfoOffLineController.buildModelLeitor(localData);
+        for (Capitulos element in data.capitulos) {
+          print("capitulo ${element.capitulo} / ${element.disponivel}");
+        }
         GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
         state.value = MangaInfoStates.sucess2;
       } else {
@@ -87,7 +89,7 @@ enum MangaInfoStates { start, loading, sucess1, sucess2, error }
 
 class BottomSheetController {
   final HiveController _hiveController = HiveController();
-  List<Capitulos> capitulosCorrelacionados = [];
+  static List<Capitulos> capitulosCorrelacionados = [];
 
   ValueNotifier<BottomSheetStates> state =
       ValueNotifier<BottomSheetStates>(BottomSheetStates.start);
@@ -159,17 +161,15 @@ class BottomSheetController {
           }
         }
         if (!adicionado) {
-          listaCapitulosCorrelacionadosLidos.add(
-            Capitulos(
-              id: capitulosCorrelacionados[i].id,
-              capitulo: capitulosCorrelacionados[i].capitulo,
-              download: false,
-              readed: false,
-              disponivel: capitulosCorrelacionados[i].disponivel,
-              downloadPages: [],
-              pages: [],
-            )
-          );
+          listaCapitulosCorrelacionadosLidos.add(Capitulos(
+            id: capitulosCorrelacionados[i].id,
+            capitulo: capitulosCorrelacionados[i].capitulo,
+            download: false,
+            readed: false,
+            disponivel: capitulosCorrelacionados[i].disponivel,
+            downloadPages: [],
+            pages: [],
+          ));
           adicionado = true;
         }
       }
@@ -292,7 +292,7 @@ class BottomSheetController {
       }
     }
     log("lido! - ${listaCapitulos[0].capitulo} / d = ${listaCapitulos[0].disponivel ? "true" : "false"}");
-        log("lido! - ${listaCapitulos[1].capitulo} / d = ${listaCapitulos[1].disponivel ? "true" : "false"}");
+    log("lido! - ${listaCapitulos[1].capitulo} / d = ${listaCapitulos[1].disponivel ? "true" : "false"}");
 
     // correlacionar os capitulos lidos
     print(capitulosLidos);
@@ -397,6 +397,9 @@ class DialogController {
       }
     }
     if (!offLine) {
+      for (Capitulos element in model.capitulos) {
+        print("capitulo ${element.capitulo} / ${element.disponivel}");
+      }
       await _addOffLineManga(
         link: link,
         model: model,
@@ -414,10 +417,14 @@ class DialogController {
   // disponibilizar um manga OffLine
   Future<bool> _addOffLineManga(
       {required String link, required MangaInfoOffLineModel model}) async {
+    print(
+        "addBook: ${model.capitulos[0].capitulo} / ${model.capitulos[0].disponivel}");
     final MangaInfoOffLineController mangaInfoOffLineController =
         MangaInfoOffLineController();
+
     return await mangaInfoOffLineController.addBook(
       model: model,
+      capitulos: BottomSheetController.capitulosCorrelacionados
     );
   }
 
