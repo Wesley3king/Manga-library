@@ -4,15 +4,16 @@ class ModelLeitor {
     required this.id,
     required this.pages,
   });
-  late final int id;
+  late final dynamic id;
   late final String capitulo;
   late final dynamic pages;
 
   ModelLeitor.fromJson(List<dynamic> lista) {
     try {
+      print("lista: ${lista[1]}");
       List<String> corte = lista[0].split('#');
       try {
-        id = int.parse(lista[1]);
+        id = lista[1];
       } catch (e) {
         print('erro id');
       }

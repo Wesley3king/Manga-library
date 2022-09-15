@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manga_library/app/views/components/manga_info/off_line/off_line_widget.dart';
 
 import '../../../models/manga_info_offline_model.dart';
+import 'off_line/off_line_widget.dart';
 
-class BottomSheetStatesPages {
-  // BottomSheetController bottomSheetController = BottomSheetController();
-  Widget loading() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
+class MyChaptersListSucess extends StatelessWidget {
+  final List<Capitulos> capitulos;
+  final String link;
+  final Map<String, Function> metodos;
+  const MyChaptersListSucess({super.key, required this.link, required this.capitulos, required this.metodos});
+  // colors
+  final TextStyle indisponivel = const TextStyle(color: Colors.red);
 
-  Widget sucess(
-      List<Capitulos> capitulos, String link, Map<String, Function> metodos) {
+  @override
+  Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: capitulos.length,
-        itemBuilder: (context, index) {
-          final Capitulos capitulo = capitulos[index];
+      itemCount: capitulos.length,
+      itemBuilder: (context, index) {
+        final Capitulos capitulo = capitulos[index];
           late dynamic id;
           try {
             id = int.parse(capitulo.id);
@@ -44,32 +44,6 @@ class BottomSheetStatesPages {
             ),
             onTap: () => GoRouter.of(context).push('/leitor/$link/$id'),
           );
-        });
+      } ,);
   }
-
-  // colors
-  TextStyle indisponivel = const TextStyle(color: Colors.red);
-  //TextStyle lido = const TextStyle(color: Colors.red);
-
-  // trailings
-  // GestureDetector naoLido(String id, String link) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       bottomSheetController.marcarDesmarcar(id, link);
-  //     },
-  //     child: const Icon(Icons.check),
-  //   );
-  // }
-
-  // GestureDetector lido(String id, String link) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       bottomSheetController.marcarDesmarcar(id, link);
-  //     },
-  //     child: const Icon(
-  //       Icons.check,
-  //       color: Colors.green,
-  //     ),
-  //   );
-  // }
 }

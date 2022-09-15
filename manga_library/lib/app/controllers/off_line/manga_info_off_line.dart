@@ -190,8 +190,8 @@ class MangaInfoOffLineController {
     for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
       bool adicionado = false;
       for (int d = 0; d < capitulos.length; ++d) {
-        print(
-            "first: ${todos[i].id} == ${capitulos[d].id} / ${todos[i].id == capitulos[d].id ? "T" : "F"}");
+        // print(
+        //     "first: ${todos[i].id} == ${capitulos[d].id} / ${todos[i].id == capitulos[d].id ? "T" : "F"}");
         if (capitulosCorrelacionados[i].id == capitulos[d].id) {
           listaResultado.add(Capitulos(
             id: todos[i].id,

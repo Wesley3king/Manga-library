@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class OffLineWidget extends StatefulWidget {
-  final int id;
+  final dynamic id;
   const OffLineWidget({super.key, required this.id});
 
   @override

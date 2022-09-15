@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
@@ -71,16 +72,29 @@ class _PagesLeitorState extends State<PagesLeitor> {
     return ListView.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       cacheExtent: 8000.0,
-      itemBuilder: (context, index) =>
-          GestureDetector(
-            onTap: () => controller.setPage = index,
-            child: MyPageImage(
-              url: _leitorController.capitulosEmCarga[0].pages[index],
-              filterQuality: FilterQuality.low,
-            ),
-          ),
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () => controller.setPage = index,
+        child: MyPageImage(
+          url: _leitorController.capitulosEmCarga[0].pages[index],
+          filterQuality: FilterQuality.low,
+        ),
+      ),
     );
   }
+
+  // teste de leitor
+  Widget newLeitor() {
+    return ListView.builder(
+      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      itemBuilder: (context, index) => ExtendedImage.network(
+        _leitorController.capitulosEmCarga[0].pages[index],
+         clearMemoryCacheWhenDispose: true,
+         maxBytes: 30,
+         compressionRatio: 0.9,
+        ),
+      );
+  }
+
   Widget pageListViewLeitor([bool rtl = false]) {
     return PageView.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
@@ -89,9 +103,13 @@ class _PagesLeitorState extends State<PagesLeitor> {
       reverse: rtl,
       itemBuilder: (context, index) => ListView(
         children: [
-          MyPageImage(url: _leitorController.capitulosEmCarga[0].pages[index], filterQuality: FilterQuality.medium,)
+          MyPageImage(
+            url: _leitorController.capitulosEmCarga[0].pages[index],
+            filterQuality: FilterQuality.medium,
+          )
         ],
-      ),);
+      ),
+    );
   }
 
   Widget _leitorType(LeitorTypes type) {
@@ -103,13 +121,16 @@ class _PagesLeitorState extends State<PagesLeitor> {
       case LeitorTypes.rtl:
         return photoViewLeitor(Axis.horizontal, true);
       case LeitorTypes.webtoon:
-        return listViewLeitor();
+        return newLeitor();
       case LeitorTypes.ltrlist:
         return pageListViewLeitor();
       case LeitorTypes.rtllist:
         return pageListViewLeitor(true);
       default:
-        return photoViewLeitor(Axis.horizontal, false,);
+        return photoViewLeitor(
+          Axis.horizontal,
+          false,
+        );
     }
   }
 
@@ -179,7 +200,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
 class MyPageImage extends StatefulWidget {
   final String url;
   final FilterQuality filterQuality;
-  const MyPageImage({super.key, required this.url, required this.filterQuality});
+  const MyPageImage(
+      {super.key, required this.url, required this.filterQuality});
 
   @override
   State<MyPageImage> createState() => _MyPageImageState();

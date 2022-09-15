@@ -51,7 +51,6 @@ final routes = GoRouter(initialLocation: '/home', routes: [
     builder: (context, state) {
       String url = state.params['link'].toString();
       String id = state.params['id'].toString();
-
       return Leitor(link: url,id: id,);
     },
   ),

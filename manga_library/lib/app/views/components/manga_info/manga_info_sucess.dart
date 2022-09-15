@@ -7,6 +7,7 @@ import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
 import 'package:manga_library/app/views/components/manga_info/bottom_sheet_list.dart';
+import 'package:manga_library/app/views/components/manga_info/chapters_list_states.dart';
 
 import '../../../controllers/system_config.dart';
 
@@ -123,17 +124,6 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             ),
           ],
         ),
-        widget.sucess2
-            ? ButtomBottomSheetChapterList(
-                listaCapitulos: widget.dados.capitulos,
-                listaCapitulosDisponiveis: widget.capitulosDisponiveis,
-                nameImageLink: {
-                  "name": widget.dados.name,
-                  "img": widget.dados.img,
-                  "link": widget.link,
-                },
-              )
-            : CircularProgressIndicator(color: configSystemController.colorManagement()),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Row(
@@ -178,6 +168,16 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             style: const TextStyle(fontSize: 16),
           ),
         ),
+        widget.sucess2
+            ? ChaptersListState(
+              listaCapitulos: widget.dados.capitulos,
+              listaCapitulosDisponiveis: widget.capitulosDisponiveis, nameImageLink: {
+                  "name": widget.dados.name,
+                  "img": widget.dados.img,
+                  "link": widget.link,
+                }
+            ) : LinearProgressIndicator(color: configSystemController.colorManagement()),
+            //LinearProgressIndicator()
         const SizedBox(
           height: 20,
         ),
@@ -185,3 +185,16 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     ));
   }
 }
+/*
+widget.sucess2
+            ? ButtomBottomSheetChapterList(
+                listaCapitulos: widget.dados.capitulos,
+                listaCapitulosDisponiveis: widget.capitulosDisponiveis,
+                nameImageLink: {
+                  "name": widget.dados.name,
+                  "img": widget.dados.img,
+                  "link": widget.link,
+                },
+              )
+            : CircularProgressIndicator(color: configSystemController.colorManagement()),
+            */

@@ -100,6 +100,8 @@ class ExtensionMangaYabu {
         // faz um decode para json e processa os capitulos
         var decoded = json.decode(corteHtml2[0]);
         List capitulos = decoded['allposts'];
+        // print("passou pelo model pt 1!");
+        // log("num value: ${capitulos}");
         List<Capitulos> listCapitulos = capitulos
             .map((element) => Capitulos(
                   id: element['id'],

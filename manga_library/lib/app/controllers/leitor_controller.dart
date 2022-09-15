@@ -15,7 +15,8 @@ class LeitorController {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
-
+      print(
+          "--------------------------- \n id leitor: $id \n ------------------------");
       _identificarCapitulo(capitulos, id);
       _identificarLeitor();
       state.value = LeitorStates.sucess;
@@ -29,10 +30,26 @@ class LeitorController {
   void _identificarCapitulo(List<ModelLeitor> capitulos, String id) {
     // List pages = [];
     bool adicionated = false;
-    for (int i = 0; i < capitulos.length; ++i) {
-      if ((capitulos[i].id).toString() == id) {
-        capitulosEmCarga.add(capitulos[i]);
-        adicionated = true;
+    try {
+      for (int i = 0; i < capitulos.length; ++i) {
+        if (int.parse(capitulos[i].id) == int.parse(id)) {
+          capitulosEmCarga.add(capitulos[i]);
+          adicionated = true;
+          break;
+        }
+      }
+    } catch (e) {
+      print("não é de numero");
+      RegExp regex = RegExp(id, caseSensitive: false);
+      for (int i = 0; i < capitulos.length; ++i) {
+        print(
+            "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
+        if (capitulos[i].id.toString().contains(regex)) {
+          print("achei o capitulo!");
+          capitulosEmCarga.add(capitulos[i]);
+          adicionated = true;
+          break;
+        }
       }
     }
     if (!adicionated) {

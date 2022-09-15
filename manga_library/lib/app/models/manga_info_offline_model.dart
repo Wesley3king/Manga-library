@@ -55,7 +55,7 @@ class Capitulos {
     required this.downloadPages,
     required this.pages,
   });
-  late final int id;
+  late final dynamic id;
   late final String capitulo;
   late bool download;
   late bool readed;

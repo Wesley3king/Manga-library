@@ -5,7 +5,6 @@ import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/globais.dart';
-import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
@@ -31,7 +30,7 @@ class MangaInfoController {
     capitulos: [],
   );
   List<ModelLeitor>? capitulosDisponiveis = [];
-
+  static bool isAnOffLineBook = false;
   ValueNotifier state = ValueNotifier<MangaInfoStates>(MangaInfoStates.start);
 
   Future start(String url) async {
@@ -46,10 +45,17 @@ class MangaInfoController {
         data = localData;
         capitulosDisponiveis =
             _mangaInfoOffLineController.buildModelLeitor(localData);
+        // if (capitulosDisponiveis != null) {
+        //   List<ModelLeitor> cap = capitulosDisponiveis ?? [];
+        //   for (ModelLeitor element in cap) {
+        //     print("capitulo ${element.capitulo} / ${element.capitulo}");
+        //   }
+        // }
         for (Capitulos element in data.capitulos) {
           print("capitulo ${element.capitulo} / ${element.disponivel}");
         }
         GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+        isAnOffLineBook = true;
         state.value = MangaInfoStates.sucess2;
       } else {
         // operação OnLine
@@ -229,7 +235,16 @@ class BottomSheetController {
   correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos, String link) async {
     ClientDataModel clientData = await _hiveController.getClientData();
+    // for (Capitulos element in listaCapitulos) {
+    //   print("model crr: ${element.capitulo} / ${element.disponivel}");
+    // }
 
+    /// if it is an offline book, it will not do the correlation, it will only return the [ Capitulos ] model
+    if (MangaInfoController.isAnOffLineBook) {
+      capitulosCorrelacionados = listaCapitulos;
+      print("is off line!");
+      return;
+    }
     // aqui verificamos se podemos exibir o botão de atualizar/adicionar no servidor
     GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
 
@@ -250,7 +265,7 @@ class BottomSheetController {
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
       //print("disponivel = ${listaCapitulosDisponiveis[indice]}");
       // CAPITULOS
-      // late final int id;
+      // late final dynamic id;
       // late final String capitulo;
       // late final bool download;
       // late final bool readed;
@@ -261,10 +276,10 @@ class BottomSheetController {
       for (int alreadyIndice = 0;
           alreadyIndice < listaCapitulosDisponiveis.length;
           ++alreadyIndice) {
-        int idCapituloDisponivel = listaCapitulosDisponiveis[alreadyIndice].id;
-        if (listaCapitulos[indice].id == idCapituloDisponivel) {
+        RegExp idCapituloDisponivel = RegExp(listaCapitulosDisponiveis[alreadyIndice].id, caseSensitive: false);
+        if (listaCapitulos[indice].id.contains(idCapituloDisponivel)) {
           capitulosCorrelacionados.add(Capitulos(
-            id: idCapituloDisponivel,
+            id: listaCapitulos[indice].id,
             capitulo: listaCapitulos[indice].capitulo,
             download: listaCapitulos[indice].download,
             readed: false,
@@ -291,10 +306,13 @@ class BottomSheetController {
         ));
       }
     }
-    log("lido! - ${listaCapitulos[0].capitulo} / d = ${listaCapitulos[0].disponivel ? "true" : "false"}");
-    log("lido! - ${listaCapitulos[1].capitulo} / d = ${listaCapitulos[1].disponivel ? "true" : "false"}");
+    // log("lido! - ${listaCapitulos[0].capitulo} / d = ${listaCapitulos[0].disponivel ? "true" : "false"}");
+    // log("lido! - ${listaCapitulos[1].capitulo} / d = ${listaCapitulos[1].disponivel ? "true" : "false"}");
 
     // correlacionar os capitulos lidos
+    // for (Capitulos element in capitulosCorrelacionados) {
+    //   print("model crr 2: ${element.capitulo} / ${element.disponivel}");
+    // }
     print(capitulosLidos);
     if (capitulosLidos.isNotEmpty) {
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
@@ -303,7 +321,7 @@ class BottomSheetController {
         var item = capitulosCorrelacionados[i];
         bool adicionado = false;
         for (int cap = 0; cap < capitulosLidos.length; ++cap) {
-          if ((capitulosCorrelacionados[i].id).toString() ==
+          if (capitulosCorrelacionados[i].id ==
               capitulosLidos[cap]) {
             log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
@@ -397,9 +415,9 @@ class DialogController {
       }
     }
     if (!offLine) {
-      for (Capitulos element in model.capitulos) {
-        print("capitulo ${element.capitulo} / ${element.disponivel}");
-      }
+      // for (Capitulos element in model.capitulos) {
+      //   print("capitulo ${element.capitulo} / ${element.disponivel}");
+      // }
       await _addOffLineManga(
         link: link,
         model: model,
@@ -417,15 +435,12 @@ class DialogController {
   // disponibilizar um manga OffLine
   Future<bool> _addOffLineManga(
       {required String link, required MangaInfoOffLineModel model}) async {
-    print(
-        "addBook: ${model.capitulos[0].capitulo} / ${model.capitulos[0].disponivel}");
     final MangaInfoOffLineController mangaInfoOffLineController =
         MangaInfoOffLineController();
 
     return await mangaInfoOffLineController.addBook(
-      model: model,
-      capitulos: BottomSheetController.capitulosCorrelacionados
-    );
+        model: model,
+        capitulos: BottomSheetController.capitulosCorrelacionados);
   }
 
   // remove um manga OffLine
