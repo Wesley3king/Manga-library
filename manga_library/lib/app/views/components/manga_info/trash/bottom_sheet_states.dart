@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/views/components/manga_info/off_line/off_line_widget.dart';
 
-import '../../../models/manga_info_offline_model.dart';
+import '../../../../models/manga_info_offline_model.dart';
 
 class BottomSheetStatesPages {
   // BottomSheetController bottomSheetController = BottomSheetController();

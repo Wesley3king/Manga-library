@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/views/components/manga_info/bottom_sheet_states.dart';
-import 'package:manga_library/app/views/components/manga_info/chapters_list.dart';
+import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/views/components/manga_info/trash/bottom_sheet_states.dart';
 
 import '../../../controllers/manga_info_controller.dart';
-import '../../../controllers/system_config.dart';
+// import '../../../controllers/system_config.dart';
 import '../../../models/leitor_model.dart';
 import '../../../models/manga_info_offline_model.dart';
+import 'off_line/off_line_widget.dart';
 
 class ChaptersListState extends StatefulWidget {
   final List<Capitulos> listaCapitulos;
   final List<ModelLeitor>? listaCapitulosDisponiveis;
   final Map<String, String> nameImageLink;
-  const ChaptersListState(
-      {super.key,
-      required this.listaCapitulos,
-      required this.listaCapitulosDisponiveis,
-      required this.nameImageLink});
+  
+  const ChaptersListState({
+    super.key,
+    required this.listaCapitulos,
+    required this.listaCapitulosDisponiveis,
+    required this.nameImageLink,
+  });
 
   @override
   State<ChaptersListState> createState() => _ChaptersListStateState();
 }
 
 class _ChaptersListStateState extends State<ChaptersListState> {
-  final BottomSheetController bottomSheetController = BottomSheetController();
-  final ConfigSystemController _configSystemController =
-      ConfigSystemController();
+  // final ConfigSystemController _configSystemController =
+  //     ConfigSystemController();
+  final ChaptersController chaptersController = ChaptersController();
   final BottomSheetStatesPages statePages = BottomSheetStatesPages();
 
   // trailings
   IconButton naoLido(String id, String link) {
     return IconButton(
       onPressed: () async {
-        await bottomSheetController.marcarDesmarcar(
+        await chaptersController.marcarDesmarcar(
             id, link, widget.nameImageLink);
-        bottomSheetController.update(widget.listaCapitulosDisponiveis,
+        chaptersController.update(widget.listaCapitulosDisponiveis,
             widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
       icon: const Icon(Icons.check),
@@ -43,9 +46,9 @@ class _ChaptersListStateState extends State<ChaptersListState> {
   IconButton lido(String id, String link) {
     return IconButton(
       onPressed: () async {
-        await bottomSheetController.marcarDesmarcar(
+        await chaptersController.marcarDesmarcar(
             id, link, widget.nameImageLink);
-        bottomSheetController.update(widget.listaCapitulosDisponiveis,
+        chaptersController.update(widget.listaCapitulosDisponiveis,
             widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
       icon: const Icon(
@@ -61,6 +64,7 @@ class _ChaptersListStateState extends State<ChaptersListState> {
       child: CircularProgressIndicator(),
     );
   }
+
   Widget _error() {
     return Center(
       child: Column(
@@ -72,20 +76,51 @@ class _ChaptersListStateState extends State<ChaptersListState> {
     );
   }
 
-  Widget _stateManagement(BottomSheetStates state) {
+  // colors
+  final TextStyle indisponivel = const TextStyle(color: Colors.red);
+
+  List<Widget> _chapterList() {
+    List<Widget> lista = [];
+    for (int index = 0; index < widget.listaCapitulos.length; ++index) {
+      final Capitulos capitulo = ChaptersController.capitulosCorrelacionados[index];
+      late dynamic id;
+      try {
+        id = int.parse(capitulo.id);
+      } catch (e) {
+        //print("não é um numero!");
+        id = capitulo.id.split("-my");
+        id = id[1];
+        id.toString().replaceAll("/", "");
+      }
+      lista.add(ListTile(
+        title: Text(
+          'Capitulo ${capitulo.capitulo}',
+          style: capitulo.disponivel ? const TextStyle() : indisponivel,
+        ),
+        subtitle: Text(capitulo.readed ? "lido" : "não lido"),
+        leading: capitulo.readed
+            ? lido(capitulo.id.toString(), widget.nameImageLink['link']!)
+            : naoLido(capitulo.id.toString(), widget.nameImageLink['link']!),
+        trailing: OffLineWidget(
+          id: capitulo.id,
+        ),
+        onTap: () => GoRouter.of(context)
+            .push('/leitor/${widget.nameImageLink['link']}/$id'),
+      ));
+    }
+    return lista;
+  }
+
+  List<Widget> _stateManagement(ChaptersStates state) {
     switch (state) {
-      case BottomSheetStates.start:
-        return _loading();
-      case BottomSheetStates.loading:
-        return _loading();
-      case BottomSheetStates.sucess:
-        return MyChaptersListSucess(
-          link: widget.nameImageLink["link"]!,
-          capitulos: BottomSheetController.capitulosCorrelacionados,
-          metodos: {"lido": lido, "naoLido": naoLido},
-        );
-      case BottomSheetStates.error:
-        return _error();
+      case ChaptersStates.start:
+        return [_loading()];
+      case ChaptersStates.loading:
+        return [_loading()];
+      case ChaptersStates.sucess:
+        return _chapterList();
+      case ChaptersStates.error:
+        return [_error()];
     }
   }
 
@@ -93,16 +128,17 @@ class _ChaptersListStateState extends State<ChaptersListState> {
   void initState() {
     super.initState();
     print('iniciou ------');
-    bottomSheetController.start(widget.listaCapitulosDisponiveis,
+    chaptersController.start(widget.listaCapitulosDisponiveis,
         widget.listaCapitulos, widget.nameImageLink["link"]!);
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: bottomSheetController.state,
-      builder: (context, child) =>
-          _stateManagement(bottomSheetController.state.value),
+      animation: chaptersController.state,
+      builder: (context, child) => Column(
+        children: _stateManagement(chaptersController.state.value),
+      ),
     );
   }
 }

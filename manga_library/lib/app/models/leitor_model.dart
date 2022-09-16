@@ -10,7 +10,7 @@ class ModelLeitor {
 
   ModelLeitor.fromJson(List<dynamic> lista) {
     try {
-      print("lista: ${lista[1]}");
+      // print("lista: ${lista[1]}");
       List<String> corte = lista[0].split('#');
       try {
         id = lista[1];
@@ -31,7 +31,6 @@ class ModelLeitor {
     } catch (e) {
       print('erro aqui! $e');
     }
-    print('feito sem Erro!');
   }
 
   Map<String, dynamic> toJson() {
