@@ -108,7 +108,7 @@ class ChaptersController {
       List<Capitulos> listaCapitulos, String link) async {
     state.value = ChaptersStates.loading;
     try {
-      print('start // link: $link');
+      //print('start // link: $link');
       print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
@@ -272,27 +272,27 @@ class ChaptersController {
       }
     }
 
-    print('parte 1 sem erro');
+    print('iniciando a parte pessada do correlacionamento!!!');
     capitulosCorrelacionados = [];
+    //print("disponivel = ${listaCapitulosDisponiveis[indice]}");
+    // CAPITULOS
+    // late final dynamic id;
+    // late final String capitulo;
+    // late final bool download;
+    // late final bool readed;
+    // late final bool disponivel;
+    // late final List<String> downloadPages;
+    // late final List<String> pages;
+    List<ModelLeitor> fakeListDisponiveis = listaCapitulosDisponiveis;
 
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
-      //print("disponivel = ${listaCapitulosDisponiveis[indice]}");
-      // CAPITULOS
-      // late final dynamic id;
-      // late final String capitulo;
-      // late final bool download;
-      // late final bool readed;
-      // late final bool disponivel;
-      // late final List<String> downloadPages;
-      // late final List<String> pages;
       bool adicionado = false;
       for (int alreadyIndice = 0;
-          alreadyIndice < listaCapitulosDisponiveis.length;
+          alreadyIndice < fakeListDisponiveis.length;
           ++alreadyIndice) {
-        RegExp idCapituloDisponivel = RegExp(
-            listaCapitulosDisponiveis[alreadyIndice].id,
-            caseSensitive: false);
+        RegExp idCapituloDisponivel = RegExp(fakeListDisponiveis[alreadyIndice].id, caseSensitive: false);
         if (listaCapitulos[indice].id.contains(idCapituloDisponivel)) {
+          print("capitulo correlacionado!: ${listaCapitulos[indice].capitulo}");
           capitulosCorrelacionados.add(Capitulos(
             id: listaCapitulos[indice].id,
             capitulo: listaCapitulos[indice].capitulo,
@@ -300,16 +300,18 @@ class ChaptersController {
             readed: false,
             disponivel: true,
             downloadPages: listaCapitulos[indice].downloadPages,
-            pages: listaCapitulosDisponiveis[alreadyIndice]
+            pages: fakeListDisponiveis[alreadyIndice]
                 .pages
                 .map<String>((dynamic page) => page.toString())
                 .toList(),
           ));
           adicionado = true;
+          fakeListDisponiveis.removeAt(alreadyIndice);
           break;
         }
       }
       if (!adicionado) {
+        print("capitulo correlacionado como indisponivel!: ${listaCapitulos[indice].capitulo}");
         capitulosCorrelacionados.add(Capitulos(
           id: listaCapitulos[indice].id,
           capitulo: listaCapitulos[indice].capitulo,
@@ -322,11 +324,9 @@ class ChaptersController {
       }
     }
 
-    for (Capitulos model in capitulosCorrelacionados) {
-      log("correlacionados: ${model.capitulo} - ${model.disponivel}");
-    }
-    // log("lido! - ${listaCapitulos[0].capitulo} / d = ${listaCapitulos[0].disponivel ? "true" : "false"}");
-    // log("lido! - ${listaCapitulos[1].capitulo} / d = ${listaCapitulos[1].disponivel ? "true" : "false"}");
+    // for (Capitulos model in capitulosCorrelacionados) {
+    //   log("correlacionados: ${model.capitulo} - ${model.disponivel}");
+    // }
 
     // correlacionar os capitulos lidos
 
@@ -341,7 +341,7 @@ class ChaptersController {
         bool adicionado = false;
         for (int cap = 0; cap < capitulosLidos.length; ++cap) {
           if (capitulosCorrelacionados[i].id == capitulosLidos[cap]) {
-            log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
+            //log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
               id: capitulosCorrelacionados[i].id,
               capitulo: capitulosCorrelacionados[i].capitulo,

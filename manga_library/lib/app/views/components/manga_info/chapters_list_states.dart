@@ -12,7 +12,7 @@ class ChaptersListState extends StatefulWidget {
   final List<Capitulos> listaCapitulos;
   final List<ModelLeitor>? listaCapitulosDisponiveis;
   final Map<String, String> nameImageLink;
-  
+
   const ChaptersListState({
     super.key,
     required this.listaCapitulos,
@@ -25,8 +25,7 @@ class ChaptersListState extends StatefulWidget {
 }
 
 class _ChaptersListStateState extends State<ChaptersListState> {
-  // final ConfigSystemController _configSystemController =
-  //     ConfigSystemController();
+  int itemCount = 1;
   final ChaptersController chaptersController = ChaptersController();
   final BottomSheetStatesPages statePages = BottomSheetStatesPages();
 
@@ -79,48 +78,83 @@ class _ChaptersListStateState extends State<ChaptersListState> {
   // colors
   final TextStyle indisponivel = const TextStyle(color: Colors.red);
 
-  List<Widget> _chapterList() {
-    List<Widget> lista = [];
-    for (int index = 0; index < widget.listaCapitulos.length; ++index) {
-      final Capitulos capitulo = ChaptersController.capitulosCorrelacionados[index];
-      late dynamic id;
-      try {
-        id = int.parse(capitulo.id);
-      } catch (e) {
-        //print("não é um numero!");
-        id = capitulo.id.split("-my");
-        id = id[1];
-        id.toString().replaceAll("/", "");
-      }
-      lista.add(ListTile(
-        title: Text(
-          'Capitulo ${capitulo.capitulo}',
-          style: capitulo.disponivel ? const TextStyle() : indisponivel,
-        ),
-        subtitle: Text(capitulo.readed ? "lido" : "não lido"),
-        leading: capitulo.readed
-            ? lido(capitulo.id.toString(), widget.nameImageLink['link']!)
-            : naoLido(capitulo.id.toString(), widget.nameImageLink['link']!),
-        trailing: OffLineWidget(
-          id: capitulo.id,
-        ),
-        onTap: () => GoRouter.of(context)
-            .push('/leitor/${widget.nameImageLink['link']}/$id'),
-      ));
-    }
-    return lista;
+  Widget _chapterList() {
+    // List<Widget> lista = [];
+    // for (int index = 0; index < widget.listaCapitulos.length; ++index) {
+    //   final Capitulos capitulo =
+    //       ChaptersController.capitulosCorrelacionados[index];
+    //   late dynamic id;
+    //   try {
+    //     id = int.parse(capitulo.id);
+    //   } catch (e) {
+    //     //print("não é um numero!");
+    //     id = capitulo.id.split("-my");
+    //     id = id[1];
+    //     id.toString().replaceAll("/", "");
+    //   }
+    //   lista.add(ListTile(
+    //     title: Text(
+    //       'Capitulo ${capitulo.capitulo}',
+    //       style: capitulo.disponivel ? const TextStyle() : indisponivel,
+    //     ),
+    //     subtitle: Text(capitulo.readed ? "lido" : "não lido"),
+    //     leading: capitulo.readed
+    //         ? lido(capitulo.id.toString(), widget.nameImageLink['link']!)
+    //         : naoLido(capitulo.id.toString(), widget.nameImageLink['link']!),
+    //     trailing: OffLineWidget(
+    //       id: capitulo.id,
+    //     ),
+    //     onTap: () => GoRouter.of(context)
+    //         .push('/leitor/${widget.nameImageLink['link']}/$id'),
+    //   ));
+    // }
+    return ListView.builder(
+      itemCount: widget.listaCapitulos.length,
+      itemBuilder: (context, index) {
+        final Capitulos capitulo =
+            ChaptersController.capitulosCorrelacionados[index];
+        late dynamic id;
+        try {
+          id = int.parse(capitulo.id);
+        } catch (e) {
+          //print("não é um numero!");
+          id = capitulo.id.split("-my");
+          id = id[1];
+          id.toString().replaceAll("/", "");
+        }
+        return ListTile(
+          title: Text(
+            'Capitulo ${capitulo.capitulo}',
+            style: capitulo.disponivel ? const TextStyle() : indisponivel,
+          ),
+          subtitle: Text(capitulo.readed ? "lido" : "não lido"),
+          leading: capitulo.readed
+              ? lido(capitulo.id.toString(), widget.nameImageLink['link']!)
+              : naoLido(capitulo.id.toString(), widget.nameImageLink['link']!),
+          trailing: OffLineWidget(
+            id: capitulo.id,
+          ),
+          onTap: () => GoRouter.of(context)
+              .push('/leitor/${widget.nameImageLink['link']}/$id'),
+        );
+      },
+    );
   }
 
-  List<Widget> _stateManagement(ChaptersStates state) {
+  Widget _stateManagement(ChaptersStates state) {
     switch (state) {
       case ChaptersStates.start:
-        return [_loading()];
+        itemCount = 1;
+        return _loading();
       case ChaptersStates.loading:
-        return [_loading()];
+        itemCount = 1;
+        return _loading();
       case ChaptersStates.sucess:
+        itemCount = widget.listaCapitulos.length;
         return _chapterList();
       case ChaptersStates.error:
-        return [_error()];
+        itemCount = 1;
+        return _error();
     }
   }
 
@@ -136,9 +170,7 @@ class _ChaptersListStateState extends State<ChaptersListState> {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: chaptersController.state,
-      builder: (context, child) => Column(
-        children: _stateManagement(chaptersController.state.value),
-      ),
+      builder: (context, child) => _stateManagement(chaptersController.state.value),
     );
   }
 }

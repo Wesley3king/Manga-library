@@ -1,13 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
 import 'package:manga_library/app/views/components/manga_info/chapters_list_states.dart';
+import 'package:manga_library/app/views/components/manga_info/manga_details.dart';
 
 import '../../../controllers/system_config.dart';
+import 'off_line/off_line_widget.dart';
 
 class SucessMangaInfo extends StatefulWidget {
   final MangaInfoOffLineModel dados;
@@ -15,14 +18,14 @@ class SucessMangaInfo extends StatefulWidget {
   final List<ModelLeitor>? capitulosDisponiveis;
   final String link;
   final MangaInfoController controller;
-  const SucessMangaInfo(
-      {super.key,
-      required this.dados,
-      required this.sucess2,
-      required this.link,
-      required this.capitulosDisponiveis,
-      required this.controller,
-      });
+  const SucessMangaInfo({
+    super.key,
+    required this.dados,
+    required this.sucess2,
+    required this.link,
+    required this.capitulosDisponiveis,
+    required this.controller,
+  });
 
   @override
   State<SucessMangaInfo> createState() => _SucessMangaInfoState();
@@ -31,169 +34,248 @@ class SucessMangaInfo extends StatefulWidget {
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  Widget _showAdiminAtualizationBanner() {
-    //final MangaInfoController mangaInfoController = MangaInfoController();
+  final ChaptersController chaptersController = ChaptersController();
+
+  int itemCount = 2;
+  // colors
+  final TextStyle indisponivel = const TextStyle(color: Colors.red);
+  // final List<Capitulos> listaCapitulos;
+  //   final List<ModelLeitor>? listaCapitulosDisponiveis;
+  // trailings
+  IconButton naoLido(String id, String link) {
+    Map<String, String> nameImageLink = {
+      "name": widget.dados.name,
+      "img": widget.dados.img,
+      "link": widget.link
+    };
+    return IconButton(
+      onPressed: () async {
+        await chaptersController.marcarDesmarcar(id, link, nameImageLink);
+        chaptersController.update(
+            widget.controller.capitulosDisponiveis,
+            ChaptersController.capitulosCorrelacionados,
+            nameImageLink["link"]!);
+      },
+      icon: const Icon(Icons.check),
+    );
+  }
+
+  IconButton lido(String id, String link) {
+    Map<String, String> nameImageLink = {
+      "name": widget.dados.name,
+      "img": widget.dados.img,
+      "link": widget.link
+    };
+    return IconButton(
+      onPressed: () async {
+        await chaptersController.marcarDesmarcar(id, link, nameImageLink);
+        chaptersController.update(
+            widget.controller.capitulosDisponiveis,
+            ChaptersController.capitulosCorrelacionados,
+            nameImageLink["link"]!);
+      },
+      icon: const Icon(
+        Icons.check,
+        color: Colors.green,
+      ),
+    );
+  }
+
+  // states
+  Widget _error() {
+    return SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: Center(
+        child: Column(
+          children: const <Widget>[
+            Icon(Icons.report_problem),
+            Text('Error!'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChapter(BuildContext context, int index) {
+    final Capitulos capitulo =
+        ChaptersController.capitulosCorrelacionados[index - 1];
     // print(
-    //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
-    if (GlobalData.showAdiminAtualizationBanner) {
-      return TextButton(
-          onPressed: () {
-            widget.controller.addOrUpadteBook(
-                name: widget.dados.name,
-                link: 'https://mangayabu.top/manga/${widget.link}');
-          },
-          child: const Text('Adicionar/Atualizar'));
-    } else {
-      return Container();
+    //     "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
+    late dynamic id;
+    try {
+      id = int.parse(capitulo.id);
+    } catch (e) {
+      //print("não é um numero!");
+      id = capitulo.id.split("-my");
+      id = id[1];
+      id.toString().replaceAll("/", "");
     }
+    return ListTile(
+      title: Text(
+        'Capitulo ${capitulo.capitulo}',
+        style: capitulo.disponivel ? const TextStyle() : indisponivel,
+      ),
+      subtitle: Text(capitulo.readed ? "lido" : "não lido"),
+      leading: capitulo.readed
+          ? lido(capitulo.id.toString(), widget.link)
+          : naoLido(capitulo.id.toString(), widget.link),
+      trailing: OffLineWidget(
+        id: capitulo.id,
+      ),
+      onTap: () => GoRouter.of(context).push('/leitor/${widget.link}/$id'),
+    );
   }
 
   @override
+  void initState() {
+    super.initState();
+    //print("link: ${widget.link}");
+  }
+
+  // Widget _stateManagement(
+  //     BuildContext context, ChaptersStates state, int index) {
+  //   switch (state) {
+  //     case ChaptersStates.start:
+  //       return _loading();
+  //     case ChaptersStates.loading:
+  //       return _loading();
+  //     case ChaptersStates.sucess:
+  //       return _buildChapter(context, index);
+  //     case ChaptersStates.error:
+  //       return _error();
+  //   }
+  // }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Column(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 400,
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 400,
-                    child: Image(
-                      image: CachedNetworkImageProvider(
-                        widget.dados.img,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 400,
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            stops: [
-                          0.1,
-                          0.2,
-                          1
+    
+    if (widget.sucess2) {
+      chaptersController.start(widget.capitulosDisponiveis, widget.dados.capitulos, widget.link);
+      return AnimatedBuilder(
+            animation: chaptersController.state,
+            builder: (context, child) {
+              chaptersController.state.value == ChaptersStates.sucess
+                  ? itemCount =
+                      (ChaptersController.capitulosCorrelacionados.length + 1)
+                  : itemCount = 2;
+              switch (chaptersController.state.value) {
+                case ChaptersStates.start:
+                  return ListView(
+                    children: [
+                      MangaDetails(
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                          capitulosDisponiveis: widget.capitulosDisponiveis),
+                      Column(
+                        children: [
+                          LinearProgressIndicator(
+                              color: configSystemController.colorManagement()),
+                          const Text(
+                            "Carregando os Capitulos",
+                            textAlign: TextAlign.center,
+                          ),
                         ],
-                            colors: [
-                          Color.fromARGB(255, 48, 48, 48),
-                          Color.fromARGB(237, 49, 49, 49),
-                          Colors.transparent
-                        ])),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 210,
-                      height: 315,
-                      child: Image(
-                        image: CachedNetworkImageProvider(
-                          widget.dados.img,
-                        ),
-                        fit: BoxFit.fill,
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                AddToLibrary(
-                  link: 'https://mangayabu.top/manga/${widget.link}',
-                  dados: widget.dados,
-                  capitulos: widget.capitulosDisponiveis ?? [],
-                ),
-                Flexible(
-                  child: Text(
-                    widget.dados.name,
-                    // maxLines: 4,
-                    softWrap: true,
-                    style: const TextStyle(
-                      fontSize: 22,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Capítulos: ${widget.dados.chapters}',
-                        textAlign: TextAlign.start,
+                    ],
+                  );
+                case ChaptersStates.loading:
+                  return ListView(
+                    children: [
+                      MangaDetails(
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                          capitulosDisponiveis: widget.capitulosDisponiveis),
+                      const SizedBox(
+                        height: 3.0,
                       ),
-                    ),
-                    _showAdiminAtualizationBanner(),
-                  ],
-                )),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 37,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.dados.genres.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                          color: configSystemController.colorManagement(),
-                          width: 1),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 6.0, right: 7.0, left: 7.0),
-                      child: Text(widget.dados.genres[index]),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.dados.description,
-                textAlign: TextAlign.justify,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
-            const Divider(),
-            widget.sucess2
-                ? ChaptersListState(
-                    listaCapitulos: widget.dados.capitulos,
-                    listaCapitulosDisponiveis: widget.capitulosDisponiveis,
-                    nameImageLink: {
-                      "name": widget.dados.name,
-                      "img": widget.dados.img,
-                      "link": widget.link,
+                      Column(
+                        children: [
+                          LinearProgressIndicator(
+                              color: configSystemController.colorManagement()),
+                          const Text(
+                            "Carregando os Capitulos",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                    ],
+                  );
+                case ChaptersStates.sucess:
+                  return ListView.builder(
+                    itemCount:
+                        ChaptersController.capitulosCorrelacionados.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return MangaDetails(
+                            link: widget.link,
+                            dados: widget.dados,
+                            controller: widget.controller,
+                            capitulosDisponiveis: widget.capitulosDisponiveis);
+                      } else {
+                        return _buildChapter(context, index);
+                      }
                     },
-                  )
-                : LinearProgressIndicator(
-                    color: configSystemController.colorManagement()),
-            //LinearProgressIndicator()
-            const SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
-      ],
-    );
+                  );
+                case ChaptersStates.error:
+                  return ListView(
+                    children: [
+                      MangaDetails(
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                          capitulosDisponiveis: widget.capitulosDisponiveis),
+                      _error(),
+                    ],
+                  );
+              }
+            });
+    } else {
+      return ListView(
+        children: [
+          MangaDetails(
+              link: widget.link,
+              dados: widget.dados,
+              controller: widget.controller,
+              capitulosDisponiveis: widget.capitulosDisponiveis),
+          const SizedBox(
+            height: 3.0,
+          ),
+          Column(
+            children: [
+              LinearProgressIndicator(
+                  color: configSystemController.colorManagement()),
+              const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  "Carregando os Capítulos",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+        ],
+      );
+    }
   }
 }
+/*
+if (ChaptersController.capitulosCorrelacionados.isEmpty) {
+                    return Column(
+                      children: [
+                        LinearProgressIndicator(color: configSystemController.colorManagement()),
+                        const Text("Carregando os Capitulos", textAlign: TextAlign.center,),
+                      ],
+                    );
+                  } else {
+                    return _buildChapter(context, index);
+                  }
+*/
