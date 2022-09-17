@@ -79,16 +79,40 @@ class MangaInfoController {
       }
     } catch (e) {
       print(e);
-      HomePageController.errorMessage = 'erro no catch do MangaInfo: $e';
+      HomePageController.errorMessage = 'erro no MangaInfo: $e';
       state.value = MangaInfoStates.error;
     }
   }
 
-  // updateChapters(List<ModelLeitor>? listaCapitulosDisponiveis,
-  //     List<Capitulos> listaCapitulos, String link) async {
-  //   _chaptersController.update(
-  //       listaCapitulosDisponiveis, listaCapitulos, link, state);
-  // }
+  Future updateBook(String url, ChaptersController chaptersController) async {
+    try {
+      print("atualizando... / l= $url");
+
+      final MangaInfoOffLineModel? _dados = await mangaYabu.mangaInfo(url);
+      if (_dados != null) {
+        data = _dados;
+        state.value = MangaInfoStates.sucess1;
+      } else {
+        state.value = MangaInfoStates.error;
+      }
+      capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
+      GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+
+      state.value = MangaInfoStates.sucess1;
+      if (isAnOffLineBook) {
+        // is an off line book
+        
+      } else {
+        // isn't an off ine book
+        final List<Capitulos> capitulosFromOriginalServer = _dados == null? _dados!.capitulos : [];
+        await chaptersController.start(capitulosDisponiveis, capitulosFromOriginalServer, url);
+      }
+      state.value = MangaInfoStates.sucess2;
+    } catch (e) {
+      print("erro no update book at mangaInfoController: $e");
+      state.value = MangaInfoStates.error;
+    }
+  }
 
   addOrUpadteBook({required String name, required String link}) async {
     await yabuFetchServices.addOrUpdateBook({"name": name, "link": link});
@@ -104,7 +128,7 @@ class ChaptersController {
       ValueNotifier<ChaptersStates>(ChaptersStates.start);
   static List<Capitulos> capitulosCorrelacionados = [];
 
-  void start(List<ModelLeitor>? listaCapitulosDisponiveis,
+  start(List<ModelLeitor>? listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos, String link) async {
     state.value = ChaptersStates.loading;
     try {
@@ -112,7 +136,7 @@ class ChaptersController {
       print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
-        await update(listaCapitulosDisponiveis, listaCapitulos, link);
+        await updateChapters(listaCapitulosDisponiveis, listaCapitulos, link);
       } else {
         await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link);
@@ -130,7 +154,7 @@ class ChaptersController {
     }
   }
 
-  update(
+  updateChapters(
     List<ModelLeitor>? listaCapitulosDisponiveis,
     List<Capitulos> listaCapitulos,
     String link,
@@ -290,7 +314,8 @@ class ChaptersController {
       for (int alreadyIndice = 0;
           alreadyIndice < fakeListDisponiveis.length;
           ++alreadyIndice) {
-        RegExp idCapituloDisponivel = RegExp(fakeListDisponiveis[alreadyIndice].id, caseSensitive: false);
+        RegExp idCapituloDisponivel =
+            RegExp(fakeListDisponiveis[alreadyIndice].id, caseSensitive: false);
         if (listaCapitulos[indice].id.contains(idCapituloDisponivel)) {
           print("capitulo correlacionado!: ${listaCapitulos[indice].capitulo}");
           capitulosCorrelacionados.add(Capitulos(
@@ -311,7 +336,8 @@ class ChaptersController {
         }
       }
       if (!adicionado) {
-        print("capitulo correlacionado como indisponivel!: ${listaCapitulos[indice].capitulo}");
+        print(
+            "capitulo correlacionado como indisponivel!: ${listaCapitulos[indice].capitulo}");
         capitulosCorrelacionados.add(Capitulos(
           id: listaCapitulos[indice].id,
           capitulo: listaCapitulos[indice].capitulo,

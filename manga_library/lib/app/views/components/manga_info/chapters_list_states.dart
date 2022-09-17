@@ -35,7 +35,7 @@ class _ChaptersListStateState extends State<ChaptersListState> {
       onPressed: () async {
         await chaptersController.marcarDesmarcar(
             id, link, widget.nameImageLink);
-        chaptersController.update(widget.listaCapitulosDisponiveis,
+        chaptersController.updateChapters(widget.listaCapitulosDisponiveis,
             widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
       icon: const Icon(Icons.check),
@@ -47,7 +47,7 @@ class _ChaptersListStateState extends State<ChaptersListState> {
       onPressed: () async {
         await chaptersController.marcarDesmarcar(
             id, link, widget.nameImageLink);
-        chaptersController.update(widget.listaCapitulosDisponiveis,
+        chaptersController.updateChapters(widget.listaCapitulosDisponiveis,
             widget.listaCapitulos, widget.nameImageLink["link"]!);
       },
       icon: const Icon(

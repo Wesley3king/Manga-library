@@ -128,21 +128,16 @@ class MangaInfoOffLineController {
 
   // update an offline book
 
-  Future<MangaInfoOffLineModel?> updateBook(
-      {required ModelMangaInfo model,
-      required String link,
-      required List<ModelLeitor> capitulos,
-      required List<ModelCapitulosCorrelacionados>
-          capitulosCorrelacionados}) async {
+  Future<void> updateBook({required MangaInfoOffLineModel model}) async {
     try {
-      List<Capitulos> listaCapitulosAtualizados =
-          await _updateBookController.updateChapters(
-        link: link,
-        capitulos: capitulos,
-        capitulosCorrelacionados: capitulosCorrelacionados,
-      );
+      // List<Capitulos> listaCapitulosAtualizados =
+      //     await _updateBookController.updateChapters(
+      //   link: link,
+      //   capitulos: capitulos,
+      //   capitulosCorrelacionados: capitulosCorrelacionados,
+      // );
 
-      RegExp regex = RegExp(link, caseSensitive: false);
+      RegExp regex = RegExp(model.link, caseSensitive: false);
       List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
       MangaInfoOffLineModel atualModel = MangaInfoOffLineModel(
           name: "",
@@ -259,11 +254,12 @@ class UpdateBook {
     }
   }
 
-  Future updateChapters(
-      {required String link,
+  Future updateChapters({required String link,
       required List<ModelLeitor> capitulos,
       required List<ModelCapitulosCorrelacionados>
-          capitulosCorrelacionados}) async {}
+          capitulosCorrelacionados}) async {
+
+          }
 
   Future<List<Capitulos>?> _correlacionarCapitulosOffLineForUpdate(
       {required String link,
