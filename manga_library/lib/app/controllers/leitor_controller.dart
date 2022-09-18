@@ -16,7 +16,7 @@ class LeitorController {
     try {
       capitulos = GlobalData.capitulosDisponiveis;
       print(
-          "--------------------------- \n id leitor: $id \n ------------------------");
+          "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n ------------------------");
       _identificarCapitulo(capitulos, id);
       _identificarLeitor();
       state.value = LeitorStates.sucess;
@@ -32,6 +32,7 @@ class LeitorController {
     bool adicionated = false;
     try {
       for (int i = 0; i < capitulos.length; ++i) {
+        //print("teste: num cap: ${capitulos[i].id} $id, id: $id / ${int.parse(capitulos[i].id) == int.parse(id)}");
         if (int.parse(capitulos[i].id) == int.parse(id)) {
           capitulosEmCarga.add(capitulos[i]);
           adicionated = true;
@@ -53,6 +54,7 @@ class LeitorController {
       }
     }
     if (!adicionated) {
+      print("não achei o capitulo");
       capitulosEmCarga.add(ModelLeitor(capitulo: "", id: 0, pages: []));
     }
   }

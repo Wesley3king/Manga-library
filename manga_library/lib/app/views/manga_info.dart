@@ -3,6 +3,8 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/manga_info/manga_info_sucess.dart';
 
+import '../models/leitor_model.dart';
+
 class MangaInfo extends StatefulWidget {
   final String link;
   const MangaInfo({super.key, required this.link});
@@ -35,6 +37,9 @@ class _MangaInfoState extends State<MangaInfo> {
           controller: mangaInfoController,
         );
       case MangaInfoStates.sucess2:
+      //  for (ModelLeitor element in mangaInfoController.capitulosDisponiveis!) {
+      //   print("mangainfo cap: ${element.capitulo} / ${element.pages.length}");
+      // }
         return SucessMangaInfo(
           dados: mangaInfoController.data,
           sucess2: true,

@@ -113,6 +113,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
   }
 
   Widget _leitorType(LeitorTypes type) {
+    // for (ModelLeitor element in fakeListDisponiveis) {
+    //   print("leitor model cap: ${element.capitulo} / ${element.pages.length}");
+    // }
     switch (type) {
       case LeitorTypes.vertical:
         return photoViewLeitor(Axis.vertical, false);

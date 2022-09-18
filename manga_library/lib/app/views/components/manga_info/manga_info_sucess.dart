@@ -10,6 +10,7 @@ import 'package:manga_library/app/views/components/manga_info/chapters_list_stat
 import 'package:manga_library/app/views/components/manga_info/manga_details.dart';
 
 import '../../../controllers/system_config.dart';
+import '../../../models/globais.dart';
 import 'off_line/off_line_widget.dart';
 
 class SucessMangaInfo extends StatefulWidget {
@@ -100,8 +101,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   Widget _buildChapter(BuildContext context, int index) {
     final Capitulos capitulo =
         ChaptersController.capitulosCorrelacionados[index - 1];
+    //GlobalData.capitulosDisponiveis;
     // print(
     //     "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
+    // print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
     late dynamic id;
     try {
       id = int.parse(capitulo.id);
@@ -150,8 +153,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   @override
   Widget build(BuildContext context) {
     if (widget.sucess2) {
-      chaptersController.start(
-          widget.capitulosDisponiveis, widget.dados.capitulos, widget.link);
+      if (chaptersController.state.value == ChaptersStates.start) {
+        chaptersController.start(
+            widget.capitulosDisponiveis, widget.dados.capitulos, widget.link);
+      }
       return RefreshIndicator(
         color: configSystemController.colorManagement(),
         onRefresh: () async {
