@@ -88,24 +88,34 @@ class MangaInfoController {
     try {
       print("atualizando... / l= $url");
 
-      final MangaInfoOffLineModel? _dados = await mangaYabu.mangaInfo(url);
-      if (_dados != null) {
-        data = _dados;
-        state.value = MangaInfoStates.sucess1;
+      final MangaInfoOffLineModel? dados = await mangaYabu.mangaInfo(url);
+      if (dados != null) {
+        data = dados;
       } else {
         state.value = MangaInfoStates.error;
       }
       capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
       GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
 
-      state.value = MangaInfoStates.sucess1;
+      // state.value = MangaInfoStates.sucess1;
+      /*
+      aqui temos um erro ao atualizar os capitulos (eles nã são mostrados na tela)
+      */
       if (isAnOffLineBook) {
         // is an off line book
-        
+        final List<Capitulos> capitulosFromOriginalServer =
+            dados == null ? dados!.capitulos : [];
+        await chaptersController.update(capitulosDisponiveis, capitulosFromOriginalServer, url);
+        final MangaInfoOffLineController mangaInfoOffLineController =
+            MangaInfoOffLineController();
+        await mangaInfoOffLineController.updateBook(
+            model: data,
+            capitulos: ChaptersController.capitulosCorrelacionados);
       } else {
         // isn't an off ine book
-        final List<Capitulos> capitulosFromOriginalServer = _dados == null? _dados!.capitulos : [];
-        await chaptersController.start(capitulosDisponiveis, capitulosFromOriginalServer, url);
+        final List<Capitulos> capitulosFromOriginalServer =
+            dados == null ? dados!.capitulos : [];
+        await chaptersController.update(capitulosDisponiveis, capitulosFromOriginalServer, url);
       }
       state.value = MangaInfoStates.sucess2;
     } catch (e) {
@@ -146,11 +156,34 @@ class ChaptersController {
       // MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
       state.value = ChaptersStates.sucess;
     } catch (e) {
-      HomePageController.errorMessage =
-          'erro no catch BottomSheetController: $e';
-      print('erro no start BottomSheetController');
+      HomePageController.errorMessage = 'erro no catch ChapterController: $e';
+      print('erro no start ChapterController');
       print(e);
       state.value = ChaptersStates.error;
+    }
+  }
+
+  Future<bool> update(List<ModelLeitor>? listaCapitulosDisponiveis,
+      List<Capitulos> listaCapitulos, String link) async {
+    try {
+      print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
+      if (MangaInfoController.isAnOffLineBook) {
+        capitulosCorrelacionados = listaCapitulos;
+        await updateChapters(listaCapitulosDisponiveis, listaCapitulos, link);
+      } else {
+        await correlacionarCapitulos(listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+      }
+      state.value = ChaptersStates.loading;
+      log("atualizando a view!");
+      state.value = ChaptersStates.sucess;
+      return true;
+    } catch (e) {
+      HomePageController.errorMessage =
+          'erro no update at ChapterController: $e';
+      print('erro no start ChapterController');
+      print(e);
+      state.value = ChaptersStates.error;
+      return false;
     }
   }
 

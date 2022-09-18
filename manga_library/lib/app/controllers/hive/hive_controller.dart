@@ -206,7 +206,7 @@ class HiveController {
     }
   }
 
-  Future updateBook(List<MangaInfoOffLineModel> data) async {
+  Future<bool> updateBook(List<MangaInfoOffLineModel> data) async {
     try {
       List<Map<String, dynamic>> jsonModel =
           data.map((model) => model.toJson()).toList();
