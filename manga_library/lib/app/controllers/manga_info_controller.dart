@@ -48,7 +48,8 @@ class MangaInfoController {
         capitulosDisponiveis =
             _mangaInfoOffLineController.buildModelLeitor(localData);
         log("at offline start: ${capitulosDisponiveis!.length}");
-        GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+        GlobalData.capitulosDisponiveis =
+            List.unmodifiable(capitulosDisponiveis ?? []);
         isAnOffLineBook = true;
         // await _chaptersController.correlacionarCapitulos(
         //     capitulosDisponiveis ?? [], data.capitulos, url);
@@ -66,7 +67,8 @@ class MangaInfoController {
         }
         capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
         log("at online start: ${capitulosDisponiveis!.length}");
-        GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+        GlobalData.capitulosDisponiveis =
+            List.unmodifiable(capitulosDisponiveis ?? []);
         // await _chaptersController.correlacionarCapitulos(
         //     capitulosDisponiveis ?? [], data.capitulos, url);
         // print(_capitulosDisponiveis);
@@ -97,7 +99,8 @@ class MangaInfoController {
       }
       capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
       log("at updatebook: ${capitulosDisponiveis!.length}");
-      GlobalData.capitulosDisponiveis = capitulosDisponiveis ?? [];
+      GlobalData.capitulosDisponiveis =
+          List.unmodifiable(capitulosDisponiveis ?? []);
 
       // state.value = MangaInfoStates.sucess1;
       /*
@@ -106,7 +109,7 @@ class MangaInfoController {
       if (isAnOffLineBook) {
         // is an off line book
         final List<Capitulos> capitulosFromOriginalServer =
-            dados == null ? dados!.capitulos : [];
+            dados == null ? [] : dados.capitulos;
         await chaptersController.update(
             capitulosDisponiveis, capitulosFromOriginalServer, url);
         final MangaInfoOffLineController mangaInfoOffLineController =
@@ -116,8 +119,16 @@ class MangaInfoController {
             capitulos: ChaptersController.capitulosCorrelacionados);
       } else {
         // isn't an off ine book
-        final List<Capitulos> capitulosFromOriginalServer =
-            dados == null ? dados!.capitulos : [];
+        print("is null? = ${dados == null}");
+        List<Capitulos> capitulosFromOriginalServer =
+            dados == null ? [] : dados.capitulos;
+        if (dados == null) {
+          print("dd true");
+          capitulosFromOriginalServer = [];
+        } else {
+          print("dd false");
+          capitulosFromOriginalServer = dados.capitulos;
+        }
         await chaptersController.update(
             capitulosDisponiveis, capitulosFromOriginalServer, url);
       }
@@ -147,6 +158,7 @@ class ChaptersController {
   start(List<ModelLeitor>? listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos, String link) async {
     state.value = ChaptersStates.loading;
+    // GlobalData.capitulosDisponiveis;
     try {
       print('start // link: $link');
       print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
@@ -160,6 +172,8 @@ class ChaptersController {
       // disponibilizar os capitulos correlacionados
 
       // MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
+      // GlobalData.capitulosDisponiveis;
+      // print("");
       state.value = ChaptersStates.sucess;
     } catch (e) {
       HomePageController.errorMessage = 'erro no catch ChapterController: $e';
@@ -348,6 +362,10 @@ class ChaptersController {
     // late final bool disponivel;
     // late final List<String> downloadPages;
     // late final List<String> pages;
+
+    // List<ModelLeitor> allDisponibleChapters =
+    //     List.unmodifiable(GlobalData.capitulosDisponiveis);
+
     List<ModelLeitor> fakeListDisponiveis = listaCapitulosDisponiveis;
     // for (ModelLeitor element in fakeListDisponiveis) {
     //   print("leitor model cap: ${element.capitulo} / ${element.pages.length}");
@@ -355,6 +373,10 @@ class ChaptersController {
 
     for (int indice = 0; indice < listaCapitulos.length; ++indice) {
       bool adicionado = false;
+      // if (<int>[40, 120, 300, 600].contains(indice)) {
+      //   GlobalData.capitulosDisponiveis;
+      //   print("parada!");
+      // }
       for (int alreadyIndice = 0;
           alreadyIndice < fakeListDisponiveis.length;
           ++alreadyIndice) {
@@ -398,12 +420,14 @@ class ChaptersController {
       }
     }
 
+    // GlobalData.capitulosDisponiveis = allDisponibleChapters;
+
     // for (Capitulos model in capitulosCorrelacionados) {
     //   log("correlacionados: ${model.capitulo} - ${model.pages.length}");
     // }
 
     // correlacionar os capitulos lidos
-
+    // GlobalData.capitulosDisponiveis;
     print(capitulosLidos);
     // print(" ----  capitulos correlacionados ----");
     // print(capitulosCorrelacionados);
@@ -434,7 +458,6 @@ class ChaptersController {
           adicionado = true;
         }
       }
-
       capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       // print('-- final = ${capitulosCorrelacionados.length}');
     }

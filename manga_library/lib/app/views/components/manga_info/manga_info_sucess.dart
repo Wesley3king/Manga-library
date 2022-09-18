@@ -107,9 +107,13 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     // print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
     late dynamic id;
     try {
-      id = int.parse(capitulo.id);
+      if (capitulo.id is int) {
+        id = capitulo.id;
+      } else {
+        id = int.parse(capitulo.id);
+      }
     } catch (e) {
-      //print("não é um numero!");
+      //print("não é um numero! $e");
       id = capitulo.id.split("-my");
       id = id[1];
       id.toString().replaceAll("/", "");
