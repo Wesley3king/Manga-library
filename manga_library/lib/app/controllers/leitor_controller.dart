@@ -46,6 +46,7 @@ class LeitorController {
         print(
             "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
         if (capitulos[i].id.toString().contains(regex)) {
+          // if (capitulos[i].)
           print("achei o capitulo!");
           capitulosEmCarga.add(capitulos[i]);
           adicionated = true;

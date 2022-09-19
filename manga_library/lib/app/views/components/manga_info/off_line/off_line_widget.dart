@@ -1,58 +1,66 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/components/manga_info/off_line/controller/off_line_widget_controller.dart';
 
 class OffLineWidget extends StatefulWidget {
-  final dynamic id;
-  const OffLineWidget({super.key, required this.id});
+  // final dynamic id;
+  final MangaInfoOffLineModel model;
+  final Capitulos capitulo;
+  const OffLineWidget({super.key, required this.capitulo, required this.model});
 
   @override
   State<OffLineWidget> createState() => _OffLineWidgetState();
 }
 
 class _OffLineWidgetState extends State<OffLineWidget> {
+  final OffLineWidgetController _offLineWidgetController = OffLineWidgetController();
   Widget download() {
-    return GestureDetector(
-      onTap: () {},
-      child: IconButton(
-        onPressed: () => log("download!"),
-        icon: const Icon(Icons.download)),
-    );
+    return IconButton(
+        onPressed: () =>  _offLineWidgetController.download(capitulo: widget.capitulo, mangaModel: widget.model), icon: const Icon(Icons.download));
   }
 
   Widget cancel() {
-    return GestureDetector(
-      onTap: () {},
-      child: Stack(
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 8, left: 9),
-            child: SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.0,
-                )),
-          ),
-          IconButton(
-              onPressed: () => log("download!"),
-              icon: const Icon(Icons.close))
-        ],
-      ),
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, left: 9),
+          child: SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0,
+                value: _offLineWidgetController.downloadProgress.value['progress'] == null ? null : double.parse('${_offLineWidgetController.downloadProgress.value['total']! / _offLineWidgetController.downloadProgress.value['progress']!}'),
+              )),
+        ),
+        IconButton(
+            onPressed: () => _offLineWidgetController.cancel(widget.capitulo), icon: const Icon(Icons.close))
+      ],
     );
   }
 
   Widget delete() {
-    return GestureDetector(
-      onTap: () {},
-      child: IconButton(
-        onPressed: () => log("download!"),
-        icon: const Icon(Icons.delete_outline)),
-    );
+    return IconButton(
+        onPressed: () => print("need to implement DELETE!"),
+        icon: const Icon(Icons.delete_outline));
+  }
+
+  Widget _stateManagement(DownloadStates state) {
+    switch (state) {
+      case DownloadStates.download:
+        return download();
+      case DownloadStates.downloading:
+        return cancel();
+      case DownloadStates.delete:
+        return delete();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return download();
+    return AnimatedBuilder(
+      animation: _offLineWidgetController.state,
+      builder: (context, child) => _stateManagement(_offLineWidgetController.state.value),);
   }
 }

@@ -128,7 +128,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
           ? lido(capitulo.id.toString(), widget.link)
           : naoLido(capitulo.id.toString(), widget.link),
       trailing: OffLineWidget(
-        id: capitulo.id,
+        capitulo: capitulo,
+        model: widget.dados,
       ),
       onTap: () => GoRouter.of(context).push('/leitor/${widget.link}/$id'),
     );
