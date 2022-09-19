@@ -102,14 +102,17 @@ class MangaInfoController {
       GlobalData.capitulosDisponiveis =
           List.unmodifiable(capitulosDisponiveis ?? []);
 
-      // state.value = MangaInfoStates.sucess1;
-      /*
-      aqui temos um erro ao atualizar os capitulos (eles nã são mostrados na tela)
-      */
       if (isAnOffLineBook) {
         // is an off line book
-        final List<Capitulos> capitulosFromOriginalServer =
+        List<Capitulos> capitulosFromOriginalServer =
             dados == null ? [] : dados.capitulos;
+        if (dados == null) {
+          print("dd off-line true");
+          capitulosFromOriginalServer = [];
+        } else {
+          print("dd off-line false");
+          capitulosFromOriginalServer = dados.capitulos;
+        }
         await chaptersController.update(
             capitulosDisponiveis, capitulosFromOriginalServer, url);
         final MangaInfoOffLineController mangaInfoOffLineController =
@@ -186,22 +189,26 @@ class ChaptersController {
   Future<bool> update(List<ModelLeitor>? listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos, String link) async {
     try {
-      print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
-      if (MangaInfoController.isAnOffLineBook) {
-        capitulosCorrelacionados = listaCapitulos;
-        await updateChapters(listaCapitulosDisponiveis, listaCapitulos, link);
-      } else {
-        await correlacionarCapitulos(
+      // print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
+      // if (MangaInfoController.isAnOffLineBook) {
+      //   print("preparando para iniciar o correlacionamento!!!");
+      //   await correlacionarCapitulos(
+      //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+      // } else {
+      //   await correlacionarCapitulos(
+      //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+      // }
+      await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link);
-      }
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
+      // print(capitulosCorrelacionados);
       state.value = ChaptersStates.sucess;
       return true;
     } catch (e) {
       HomePageController.errorMessage =
           'erro no update at ChapterController: $e';
-      print('erro no start ChapterController');
+      print('erro no update ChapterController');
       print(e);
       state.value = ChaptersStates.error;
       return false;
@@ -323,8 +330,10 @@ class ChaptersController {
     print('marcar desmarcar concluido!');
   }
 
-  correlacionarCapitulos(List<ModelLeitor> listaCapitulosDisponiveis,
-      List<Capitulos> listaCapitulos, String link) async {
+  Future<void> correlacionarCapitulos(
+      List<ModelLeitor> listaCapitulosDisponiveis,
+      List<Capitulos> listaCapitulos,
+      String link, {bool isAnUpdate = false}) async {
     ClientDataModel clientData = await _hiveController.getClientData();
     // for (Capitulos element in listaCapitulos) {
     //   print("model cap: ${element.capitulo} / ${element.pages.length}");
@@ -332,7 +341,7 @@ class ChaptersController {
     log("disponiveis: ${listaCapitulosDisponiveis.length}, todos ${listaCapitulos.length}");
 
     /// if it is an offline book, it will not do the correlation, it will only return the [ Capitulos ] model
-    if (MangaInfoController.isAnOffLineBook) {
+    if (MangaInfoController.isAnOffLineBook && !isAnUpdate) {
       capitulosCorrelacionados = listaCapitulos;
       print("is off line!");
       return;
@@ -365,7 +374,7 @@ class ChaptersController {
 
     // List<ModelLeitor> allDisponibleChapters =
     //     List.unmodifiable(GlobalData.capitulosDisponiveis);
-
+    // log("disponiveis: ${listaCapitulosDisponiveis.length}, todos ${listaCapitulos.length}");
     List<ModelLeitor> fakeListDisponiveis = listaCapitulosDisponiveis;
     // for (ModelLeitor element in fakeListDisponiveis) {
     //   print("leitor model cap: ${element.capitulo} / ${element.pages.length}");
@@ -383,7 +392,7 @@ class ChaptersController {
         RegExp idCapituloDisponivel =
             RegExp(fakeListDisponiveis[alreadyIndice].id, caseSensitive: false);
         if (listaCapitulos[indice].id.contains(idCapituloDisponivel)) {
-          //print("capitulo correlacionado!: ${listaCapitulos[indice].capitulo}");
+          // print("capitulo correlacionado!: ${listaCapitulos[indice].capitulo}");
           capitulosCorrelacionados.add(Capitulos(
             id: listaCapitulos[indice].id,
             capitulo: listaCapitulos[indice].capitulo,
