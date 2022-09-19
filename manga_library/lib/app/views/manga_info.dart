@@ -51,7 +51,29 @@ class _MangaInfoState extends State<MangaInfo> {
         return const ErrorHomePage();
     }
   }
-
+  // void getWritePermission() async {
+  //   _permissionWriteStatus = await Permission.manageExternalStorage.status;
+  //   // print(_permissionWriteStatus.isDenied ? "não TEM PERMISÃO" : "ta ok");
+  //   if (_permissionWriteStatus != PermissionStatus.granted) {
+  //     print("fazendo a requisição do write");
+  //     PermissionStatus permissionStatus =
+  //         await Permission.manageExternalStorage.request();
+  //     setState(() {
+  //       _permissionWriteStatus = permissionStatus;
+  //     });
+  //   }
+  // }
+  // void getReadPermission() async {
+  //   _permissionReadStatus = await Permission.storage.status;
+  //   // print(_permissionReadStatus.isDenied ? "não TEM PERMISÃO" : "ta ok");
+  //   if (_permissionReadStatus != PermissionStatus.granted) {
+  //     print("fazendo a requisição do read");
+  //     PermissionStatus permissionStatus = await Permission.storage.request();
+  //     setState(() {
+  //       _permissionReadStatus = permissionStatus;
+  //     });
+  //   }
+  // }
   @override
   void initState() {
     super.initState();
