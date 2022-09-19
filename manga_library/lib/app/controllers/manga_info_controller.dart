@@ -89,7 +89,7 @@ class MangaInfoController {
 
   Future updateBook(String url, ChaptersController chaptersController) async {
     try {
-      print("atualizando... / l= $url");
+      print("l= $url  - atualizando...");
 
       final MangaInfoOffLineModel? dados = await mangaYabu.mangaInfo(url);
       if (dados != null) {
@@ -98,7 +98,7 @@ class MangaInfoController {
         state.value = MangaInfoStates.error;
       }
       capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
-      log("at updatebook: ${capitulosDisponiveis!.length}");
+      // log("at updatebook: ${capitulosDisponiveis!.length}");
       GlobalData.capitulosDisponiveis =
           List.unmodifiable(capitulosDisponiveis ?? []);
 
@@ -199,7 +199,8 @@ class ChaptersController {
       //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
       // }
       await correlacionarCapitulos(
-            listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+          listaCapitulosDisponiveis ?? [], listaCapitulos, link,
+          isAnUpdate: true);
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
       // print(capitulosCorrelacionados);
@@ -333,19 +334,22 @@ class ChaptersController {
   Future<void> correlacionarCapitulos(
       List<ModelLeitor> listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos,
-      String link, {bool isAnUpdate = false}) async {
+      String link,
+      {bool isAnUpdate = false}) async {
     ClientDataModel clientData = await _hiveController.getClientData();
     // for (Capitulos element in listaCapitulos) {
     //   print("model cap: ${element.capitulo} / ${element.pages.length}");
     // }
-    log("disponiveis: ${listaCapitulosDisponiveis.length}, todos ${listaCapitulos.length}");
+    //log("disponiveis: ${listaCapitulosDisponiveis.length}, todos ${listaCapitulos.length}");
 
     /// if it is an offline book, it will not do the correlation, it will only return the [ Capitulos ] model
+    //print("HORA DO TESTE!");
     if (MangaInfoController.isAnOffLineBook && !isAnUpdate) {
       capitulosCorrelacionados = listaCapitulos;
-      print("is off line!");
+      print("is off line!, returning...");
       return;
     }
+    print("NÃO RETORNOU!!!");
     // aqui verificamos se podemos exibir o botão de atualizar/adicionar no servidor
     GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
 
