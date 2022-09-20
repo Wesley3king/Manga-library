@@ -256,11 +256,11 @@ class ChaptersController {
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
               id: capitulosCorrelacionados[i].id,
               capitulo: capitulosCorrelacionados[i].capitulo,
-              download: false,
+              download: capitulosCorrelacionados[i].download,
               readed: true,
               disponivel: capitulosCorrelacionados[i].disponivel,
-              downloadPages: [],
-              pages: [],
+              downloadPages: capitulosCorrelacionados[i].downloadPages,
+              pages: capitulosCorrelacionados[i].pages,
             ));
             adicionado = true;
           }
@@ -269,11 +269,11 @@ class ChaptersController {
           listaCapitulosCorrelacionadosLidos.add(Capitulos(
             id: capitulosCorrelacionados[i].id,
             capitulo: capitulosCorrelacionados[i].capitulo,
-            download: false,
+            download: capitulosCorrelacionados[i].download,
             readed: false,
             disponivel: capitulosCorrelacionados[i].disponivel,
-            downloadPages: [],
-            pages: [],
+            downloadPages: capitulosCorrelacionados[i].downloadPages,
+            pages: capitulosCorrelacionados[i].pages,
           ));
           adicionado = true;
         }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/views/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/home_page/sucess.dart';
@@ -76,13 +77,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    SystemController().getSystemPermissions();
     _homePageController.start();
   }
 
   @override
   void dispose() {
-    super.dispose();
     controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,7 +95,9 @@ class _HomePageState extends State<HomePage> {
         builder: (context, child) =>
             stateManagement(_homePageController.state.value),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(controller: controller,),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        controller: controller,
+      ),
     );
   }
 }

@@ -60,7 +60,7 @@ class Capitulos {
   late bool download;
   late bool readed;
   late bool disponivel;
-  late final List<String> downloadPages;
+  late List<String> downloadPages;
   late final List<String> pages;
 
   Capitulos.fromJson(Map<String, dynamic> json) {

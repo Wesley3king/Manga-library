@@ -29,9 +29,12 @@ class _OffLineWidgetState extends State<OffLineWidget> {
           child: SizedBox(
               width: 30,
               height: 30,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.0,
-                value: _offLineWidgetController.downloadProgress.value['progress'] == null ? null : double.parse('${_offLineWidgetController.downloadProgress.value['total']! / _offLineWidgetController.downloadProgress.value['progress']!}'),
+              child: AnimatedBuilder(
+                animation: _offLineWidgetController.downloadProgress,
+                builder: (context, child) => CircularProgressIndicator(
+                  strokeWidth: 2.0,
+                  value: _offLineWidgetController.downloadProgress.value['progress'] == null ? null : double.parse('${_offLineWidgetController.downloadProgress.value['total']! / _offLineWidgetController.downloadProgress.value['progress']!}'),
+                ),
               )),
         ),
         IconButton(

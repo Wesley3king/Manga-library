@@ -33,14 +33,20 @@ class DownloadController {
     final DownloadController downloadController = DownloadController();
 
     try {
+      List<DownloadModel> filaDeDownloadModifiable = [...filaDeDownload];
       for (DownloadModel model in filaDeDownload) {
-        await downloadController.processOneChapter(
+        bool result = await downloadController.processOneChapter(
             capitulo: model.capitulo,
             model: model.model,
             downloadProgress: model.valueNotifier);
+        if (result) {
+          filaDeDownloadModifiable.removeWhere((DownloadModel downloadModel) =>
+              downloadModel.capitulo.id == model.capitulo.id);
+        }
       }
       // caso ainda tenha downloads
-      if (filaDeDownload.isNotEmpty) downloadMachine();
+      filaDeDownload = filaDeDownloadModifiable;
+      if (filaDeDownloadModifiable.isNotEmpty) downloadMachine();
       isDownloading = false;
     } catch (e) {
       print("erro fatal no downloadMachine at DownloadController: $e");
@@ -50,22 +56,19 @@ class DownloadController {
 
   Future<bool> processOneChapter(
       {required Capitulos capitulo,
-      // required String link,
-      // required String name
       required MangaInfoOffLineModel model,
       ValueNotifier<Map<String, int?>>? downloadProgress}) async {
     final MangaInfoOffLineController _mangaInfoOffLineController =
         MangaInfoOffLineController();
-    // ValueNotifier<Map<String, int>> downloadProgress =
-    //     ValueNotifier<Map<String, int?>>(
-    //         {"total": capitulo.pages.length, "progress": 0});
     try {
+      log("process - pages = ${capitulo.pages.length}");
       List<String> downloadedPagesPath = await download(
         capitulo: capitulo,
         link: model.link,
         name: model.name,
         downloadProgress: downloadProgress,
       );
+      //print(downloadedPagesPath);
       for (Capitulos chapter in model.capitulos) {
         if (chapter.id == capitulo.id) {
           chapter.downloadPages = downloadedPagesPath;
@@ -91,15 +94,16 @@ class DownloadController {
       ValueNotifier<Map<String, int?>>? downloadProgress}) async {
     try {
       // constroi o sub caminho das paginas baixadas
-      List<RegExp> listOfRegExp = [
-        RegExp(r" ", caseSensitive: false, dotAll: true),
+      List<dynamic> listOfRegExp = [
+        // RegExp(r"( )", caseSensitive: false, dotAll: true),
+        " ",
         RegExp(r'/', caseSensitive: false, dotAll: true),
         // RegExp(r'\[', caseSensitive: false, dotAll: true),
         // RegExp(r'\[', caseSensitive: false, dotAll: true),
         RegExp(r'~', caseSensitive: false, dotAll: true),
       ];
-      final String chapterPath = "$name/${capitulo.capitulo}";
-      for (RegExp regex in listOfRegExp) {
+      final String chapterPath = "Manga_Library/$name/cap_${capitulo.capitulo}";
+      for (dynamic regex in listOfRegExp) {
         chapterPath.replaceAll(regex, "_");
       }
 
@@ -108,13 +112,15 @@ class DownloadController {
       // indica a quantidade de downloads a ser executado.
 
       // inicia os downloads de capitulo
+      log("quantidade de paginas : ${capitulo.pages.length}");
       for (int i = 0; i < capitulo.pages.length; ++i) {
         String imagePath = "";
         List<String> exe = capitulo.pages[i].split(".");
+        exe = exe.reversed.toList();
         var imageId = await ImageDownloader.downloadImage(capitulo.pages[i],
                 destination: AndroidDestinationType.directoryPictures
                   ..inExternalFilesDir()
-                  ..subDirectory("$chapterPath/$i.${exe[1]}"))
+                  ..subDirectory("$chapterPath/$i.${exe[0]}"))
             .catchError((error) {
           if (error is PlatformException) {
             if (error.code == "404") {
@@ -126,10 +132,13 @@ class DownloadController {
             }
           }
         });
-        if (imageId == null) return [];
+        if (imageId == null) {
+          log("SEM PERMISSÃO!");
+          return [];
+        }
 
         imagePath = await ImageDownloader.findPath(imageId) ?? imagePath;
-        print(imagePath);
+        log(imagePath);
         pagesPath.add(imagePath);
         Map<String, int?> progressData = {
           "total": capitulo.pages.length,
