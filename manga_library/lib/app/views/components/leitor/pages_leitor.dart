@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'dart:core';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 // import 'package:manga_library/app/views/components/leitor/pages_states.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class PagesLeitor extends StatefulWidget {
@@ -61,8 +64,10 @@ class _PagesLeitorState extends State<PagesLeitor> {
       onPageChanged: (index) => controller.setPage = (index + 1),
       wantKeepAlive: true,
       builder: (context, index) => PhotoViewGalleryPageOptions(
-        imageProvider:
-            NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]),
+        imageProvider: NetworkImage(
+            _leitorController.capitulosEmCarga[0].download
+                ? _leitorController.capitulosEmCarga[0].downloadPages[index]
+                : _leitorController.capitulosEmCarga[0].pages[index]),
         // filterQuality:
       ),
     );
@@ -75,7 +80,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemBuilder: (context, index) => GestureDetector(
         onTap: () => controller.setPage = index,
         child: MyPageImage(
-          url: _leitorController.capitulosEmCarga[0].pages[index],
+          capitulo: _leitorController.capitulosEmCarga[0],
+          index: index,
           filterQuality: FilterQuality.low,
         ),
       ),
@@ -84,16 +90,29 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   // teste de leitor
   Widget newLeitor() {
-    return ListView.builder(
+    return _leitorController.capitulosEmCarga[0].download ?
+    ListView.builder(
+      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      itemBuilder: (context, index) => ExtendedImage.file(
+        File(_leitorController.capitulosEmCarga[0].downloadPages[index]),
+        clearMemoryCacheWhenDispose: true,
+        maxBytes: 30,
+        compressionRatio: 0.9,
+      ),
+    )
+    : ListView.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       itemBuilder: (context, index) => ExtendedImage.network(
         _leitorController.capitulosEmCarga[0].pages[index],
-         clearMemoryCacheWhenDispose: true,
-         maxBytes: 30,
-         compressionRatio: 0.9,
-        ),
-      );
+        clearMemoryCacheWhenDispose: true,
+        maxBytes: 30,
+        compressionRatio: 0.9,
+      ),
+    );
   }
+  // _leitorController.capitulosEmCarga[0].download
+  //               ? _leitorController.capitulosEmCarga[0].downloadPages[index]
+  //               : _leitorController.capitulosEmCarga[0].pages[index]
 
   Widget pageListViewLeitor([bool rtl = false]) {
     return PageView.builder(
@@ -104,7 +123,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemBuilder: (context, index) => ListView(
         children: [
           MyPageImage(
-            url: _leitorController.capitulosEmCarga[0].pages[index],
+            capitulo: _leitorController.capitulosEmCarga[0],
+            index: index,
             filterQuality: FilterQuality.medium,
           )
         ],
@@ -201,10 +221,12 @@ class _PagesLeitorState extends State<PagesLeitor> {
 }
 
 class MyPageImage extends StatefulWidget {
-  final String url;
+  //final String url;
+  final Capitulos capitulo;
+  final int index;
   final FilterQuality filterQuality;
   const MyPageImage(
-      {super.key, required this.url, required this.filterQuality});
+      {super.key, required this.capitulo, required this.index, required this.filterQuality});
 
   @override
   State<MyPageImage> createState() => _MyPageImageState();
@@ -216,7 +238,7 @@ class _MyPageImageState extends State<MyPageImage>
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Image.network(
-        widget.url,
+        widget.capitulo.pages[widget.index],
         filterQuality: widget.filterQuality,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
@@ -242,7 +264,7 @@ class _MyPageImageState extends State<MyPageImage>
           width: MediaQuery.of(context).size.width,
           height: 250,
           child: Center(
-            child: Text("Error! \n - img: ${widget.url}"),
+            child: Text("Error! \n - img: ${widget.capitulo.pages[widget.index]}"),
           ),
         ),
       ),

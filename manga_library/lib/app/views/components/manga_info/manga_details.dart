@@ -4,7 +4,7 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 
 import '../../../controllers/system_config.dart';
 import '../../../models/globais.dart';
-import '../../../models/leitor_model.dart';
+// import '../../../models/leitor_pages.dart';
 import '../../../models/manga_info_offline_model.dart';
 import 'add_to_library.dart';
 
@@ -12,7 +12,7 @@ class MangaDetails extends StatefulWidget {
   final String link;
   final MangaInfoOffLineModel dados;
   final MangaInfoController controller;
-  final List<ModelLeitor>? capitulosDisponiveis;
+  final List<Capitulos>? capitulosDisponiveis;
   const MangaDetails(
       {super.key,
       required this.link,
@@ -34,7 +34,7 @@ class _MangaDetailsState extends State<MangaDetails> {
     if (GlobalData.showAdiminAtualizationBanner) {
       return TextButton(
           onPressed: () {
-            widget.controller.addOrUpadteBook(
+            widget.controller.addOrUpdateBook(
                 name: widget.dados.name,
                 link: 'https://mangayabu.top/manga/${widget.link}');
           },

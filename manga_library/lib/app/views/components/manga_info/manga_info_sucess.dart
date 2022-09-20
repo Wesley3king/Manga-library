@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
-import 'package:manga_library/app/models/leitor_model.dart';
+import 'package:manga_library/app/models/leitor_pages.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
-import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
-import 'package:manga_library/app/views/components/manga_info/chapters_list_states.dart';
+// import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
+// import 'package:manga_library/app/views/components/manga_info/chapters_list_states.dart';
 import 'package:manga_library/app/views/components/manga_info/manga_details.dart';
 
 import '../../../controllers/system_config.dart';
@@ -16,7 +16,7 @@ import 'off_line/off_line_widget.dart';
 class SucessMangaInfo extends StatefulWidget {
   final MangaInfoOffLineModel dados;
   final bool sucess2;
-  final List<ModelLeitor>? capitulosDisponiveis;
+  final List<Capitulos>? capitulosDisponiveis;
   final String link;
   final MangaInfoController controller;
   const SucessMangaInfo({

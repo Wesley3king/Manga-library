@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 
-import '../../../models/leitor_model.dart';
+import '../../../models/leitor_pages.dart';
 
 class PagesStates {
   ScrollController scrollController = ScrollController();
@@ -99,7 +99,7 @@ src,
         },
         errorBuilder: (context, error, stackTrace) => _error(src),
 */
-  List<Widget> builderList(ModelLeitor data, PagesController controller) {
+  List<Widget> builderList(ModelPages data, PagesController controller) {
     List<Widget> lista = [];
     for (int i = 0; i < data.pages.length; ++i) {
       lista.add(GestureDetector(
@@ -124,7 +124,7 @@ src,
     return lista;
   }
 
-  Widget pages(List<ModelLeitor> capitulos, PagesController controller) {
+  Widget pages(List<ModelPages> capitulos, PagesController controller) {
     return Stack(
       children: [
         InteractiveViewer(

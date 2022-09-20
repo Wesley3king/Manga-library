@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
-import '../../../models/leitor_model.dart';
+import '../../../models/leitor_pages.dart';
 import '../../../models/libraries_model.dart';
 
 class AddToLibrary extends StatefulWidget {
   final String link;
   final MangaInfoOffLineModel dados;
-  final List<ModelLeitor> capitulos;
+  final List<Capitulos> capitulos;
   const AddToLibrary(
       {super.key,
       required this.link,

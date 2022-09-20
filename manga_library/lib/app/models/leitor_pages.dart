@@ -1,5 +1,5 @@
-class ModelLeitor {
-  ModelLeitor({
+class ModelPages {
+  ModelPages({
     required this.capitulo,
     required this.id,
     required this.pages,
@@ -8,7 +8,7 @@ class ModelLeitor {
   late final String capitulo;
   late final dynamic pages;
 
-  ModelLeitor.fromJson(List<dynamic> lista) {
+  ModelPages.fromJson(List<dynamic> lista) {
     try {
       // print("lista: ${lista[1]}");
       List<String> corte = lista[0].split('#');

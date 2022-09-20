@@ -1,25 +1,63 @@
 import 'package:dio/dio.dart';
-import 'package:manga_library/app/models/leitor_model.dart';
+import 'package:flutter/rendering.dart';
+import 'package:manga_library/app/models/leitor_pages.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 class YabuFetchServices {
   final Dio dio = Dio(BaseOptions(
     connectTimeout: 40000,
     sendTimeout: 40000,
   ));
+/*
+ModelPages.fromJson(List<dynamic> lista) {
+    try {
+      // print("lista: ${lista[1]}");
+      List<String> corte = lista[0].split('#');
+      try {
+        id = lista[1];
+      } catch (e) {
+        print('erro id');
+      }
 
-  Future<List<ModelLeitor>?> fetchCapitulos(String url) async {
+      try {
+        capitulo = corte[1];
+      } catch (e) {
+        print('erro capitulo');
+      }
+      try {
+        pages = lista[4];
+      } catch (e) {
+        print('here');
+      }
+    } catch (e) {
+      print('erro aqui! $e');
+    }
+  }
+*/
+  Future<List<Capitulos>?> fetchCapitulos(String url) async {
     try {
       var data = await dio.post('https://vast-falls-98079.herokuapp.com/manga',
           data: {"url": 'https://mangayabu.top/manga/$url'});
 
       var dadosManga = data.data as Map<String, dynamic>;
-      List<ModelLeitor> listaCapitulos = dadosManga['data']['capitulos']
-          .map<ModelLeitor>((lista) => ModelLeitor.fromJson(lista))
+      List<Capitulos> listaCapitulos = dadosManga['data']['capitulos']
+          .map<Capitulos>((dynamic lista) {
+             List<String> corte = lista[0].split('#');
+            return Capitulos(
+              id: lista[1],
+              capitulo: corte[1],
+              pages: lista[4].map<String>((dynamic str)=> str.toString()).toList(),
+              disponivel: true,
+              readed: false,
+              download: false,
+              downloadPages: [],
+            );
+          })
           .toList();
 
       return listaCapitulos;
     } catch (e) {
-      print(e);
+      debugPrint('$e');
       return null;
     }
   }

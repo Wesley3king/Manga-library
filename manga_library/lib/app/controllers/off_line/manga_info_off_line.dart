@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
-import 'package:manga_library/app/models/leitor_model.dart';
+import 'package:manga_library/app/models/leitor_pages.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 
 import '../../models/manga_info_offline_model.dart';
@@ -61,11 +61,11 @@ class MangaInfoOffLineController {
   //   );
   // }
 
-  // monta e  retorna um List<ModelLeitor>
-  List<ModelLeitor> buildModelLeitor(MangaInfoOffLineModel model) {
+  // monta e  retorna um List<ModelPages>
+  List<ModelPages> buildModelLeitor(MangaInfoOffLineModel model) {
     return model.capitulos
         .map((Capitulos cap) =>
-            ModelLeitor(capitulo: cap.capitulo, id: cap.id, pages: cap.pages))
+            ModelPages(capitulo: cap.capitulo, id: cap.id, pages: cap.pages))
         .toList();
   }
 

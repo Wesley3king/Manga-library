@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/globais.dart';
 
-import '../models/leitor_model.dart';
+import '../models/leitor_pages.dart';
+import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
-  List<ModelLeitor> capitulos = [];
-  List<ModelLeitor> capitulosEmCarga = [];
+  List<Capitulos> capitulos = [];
+  List<Capitulos> capitulosEmCarga = [];
   ValueNotifier<LeitorStates> state =
       ValueNotifier<LeitorStates>(LeitorStates.start);
   ValueNotifier<LeitorTypes> leitorTypeState =
@@ -27,7 +28,7 @@ class LeitorController {
     }
   }
 
-  void _identificarCapitulo(List<ModelLeitor> capitulos, String id) {
+  void _identificarCapitulo(List<Capitulos> capitulos, String id) {
     // List pages = [];
     bool adicionated = false;
     try {
@@ -46,7 +47,11 @@ class LeitorController {
         print(
             "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
         if (capitulos[i].id.toString().contains(regex)) {
-          // if (capitulos[i].)
+          // if (capitulos[i].download) {
+          //   capitulosEmCarga.add(capitulos[i]);
+          //   adicionated = true;
+          //   break;
+          // }
           print("achei o capitulo!");
           capitulosEmCarga.add(capitulos[i]);
           adicionated = true;
@@ -56,7 +61,15 @@ class LeitorController {
     }
     if (!adicionated) {
       print("não achei o capitulo");
-      capitulosEmCarga.add(ModelLeitor(capitulo: "", id: 0, pages: []));
+      capitulosEmCarga.add(Capitulos(
+       capitulo: "",
+       id: 0,
+       pages: [],
+       disponivel: false,
+       download: false,
+       readed: false,
+       downloadPages: []
+      ));
     }
   }
 
