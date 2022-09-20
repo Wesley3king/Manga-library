@@ -54,8 +54,17 @@ class _PagesLeitorState extends State<PagesLeitor> {
       ),
     );
   }
-
+  
+  
   Widget photoViewLeitor(Axis scrollDirection, bool reverse) {
+    /// esta função determina o tipo de image privider ao decodificar as imagens
+    ImageProvider<Object> returnAnImageProvider(int index) {
+      if (_leitorController.capitulosEmCarga[0].download) {
+        return FileImage(File(_leitorController.capitulosEmCarga[0].downloadPages[index]));
+      } else {
+        return NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]);
+      }
+    }
     return PhotoViewGallery.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       gaplessPlayback: true,
@@ -64,10 +73,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       onPageChanged: (index) => controller.setPage = (index + 1),
       wantKeepAlive: true,
       builder: (context, index) => PhotoViewGalleryPageOptions(
-        imageProvider: NetworkImage(
-            _leitorController.capitulosEmCarga[0].download
-                ? _leitorController.capitulosEmCarga[0].downloadPages[index]
-                : _leitorController.capitulosEmCarga[0].pages[index]),
+        imageProvider: returnAnImageProvider(index),
         // filterQuality:
       ),
     );
@@ -110,10 +116,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       ),
     );
   }
-  // _leitorController.capitulosEmCarga[0].download
-  //               ? _leitorController.capitulosEmCarga[0].downloadPages[index]
-  //               : _leitorController.capitulosEmCarga[0].pages[index]
-
+  
   Widget pageListViewLeitor([bool rtl = false]) {
     return PageView.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
@@ -237,7 +240,19 @@ class _MyPageImageState extends State<MyPageImage>
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
-      child: Image.network(
+      child: widget.capitulo.download ?
+      Image.file(
+        File(widget.capitulo.downloadPages[widget.index]),
+        filterQuality: widget.filterQuality,
+        errorBuilder: (context, error, stackTrace) => SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 150,
+          child: Center(
+            child: Text("Error! \n - file img: ${widget.capitulo.pages[widget.index]}"),
+          ),
+        ),
+      ) :
+      Image.network(
         widget.capitulo.pages[widget.index],
         filterQuality: widget.filterQuality,
         loadingBuilder: (context, child, loadingProgress) {
@@ -262,7 +277,7 @@ class _MyPageImageState extends State<MyPageImage>
         },
         errorBuilder: (context, error, stackTrace) => SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 250,
+          height: 150,
           child: Center(
             child: Text("Error! \n - img: ${widget.capitulo.pages[widget.index]}"),
           ),

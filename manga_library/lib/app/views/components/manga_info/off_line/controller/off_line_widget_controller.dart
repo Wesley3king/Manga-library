@@ -18,13 +18,12 @@ class OffLineWidgetController {
     //print("init length: ${capitulo.pages.length}");
     final DownloadModel model = DownloadModel(
         model: mangaModel, capitulo: capitulo, valueNotifier: downloadProgress);
-    Map<String, int?> progressData = {
-      "total": model.capitulo.pages.length,
-      "progress": null
-    };
+    // int lengthChapter =
+    //     model.capitulo.pages.isEmpty ? 0 : (model.capitulo.pages.length - 1);
+    Map<String, int?> progressData = {"total": model.capitulo.pages.length, "progress": null};
     downloadProgress.value = progressData;
     DownloadController.addDownload(model);
-   // state.value = DownloadStates.delete;
+    // state.value = DownloadStates.delete;
   }
 
   void cancel(Capitulos capitulo) async {

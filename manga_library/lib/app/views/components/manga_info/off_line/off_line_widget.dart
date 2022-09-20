@@ -15,10 +15,13 @@ class OffLineWidget extends StatefulWidget {
 }
 
 class _OffLineWidgetState extends State<OffLineWidget> {
-  final OffLineWidgetController _offLineWidgetController = OffLineWidgetController();
+  final OffLineWidgetController _offLineWidgetController =
+      OffLineWidgetController();
   Widget download() {
     return IconButton(
-        onPressed: () =>  _offLineWidgetController.download(capitulo: widget.capitulo, mangaModel: widget.model), icon: const Icon(Icons.download));
+        onPressed: () => _offLineWidgetController.download(
+            capitulo: widget.capitulo, mangaModel: widget.model),
+        icon: const Icon(Icons.download));
   }
 
   Widget cancel() {
@@ -31,14 +34,43 @@ class _OffLineWidgetState extends State<OffLineWidget> {
               height: 30,
               child: AnimatedBuilder(
                 animation: _offLineWidgetController.downloadProgress,
-                builder: (context, child) => CircularProgressIndicator(
-                  strokeWidth: 2.0,
-                  value: _offLineWidgetController.downloadProgress.value['progress'] == null ? null : double.parse('${_offLineWidgetController.downloadProgress.value['total']! / _offLineWidgetController.downloadProgress.value['progress']!}'),
-                ),
+                builder: (context, child) {
+                  if (_offLineWidgetController
+                          .downloadProgress.value['progress'] !=
+                      null) {
+                    int first = _offLineWidgetController
+                            .downloadProgress.value['progress']! *
+                        100;
+                    double second = first /
+                        _offLineWidgetController
+                            .downloadProgress.value['total']!;
+                    log("valor de 2: $second");
+                    if (_offLineWidgetController
+                            .downloadProgress.value['progress']! ==
+                        (_offLineWidgetController
+                                .downloadProgress.value['total']! -
+                            1)) {
+                      Future.delayed(
+                        const Duration(milliseconds: 100),
+                        () => _offLineWidgetController.state.value =
+                            DownloadStates.delete,
+                      );
+                    }
+                    return CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      value: second / 100,
+                    );
+                  }
+
+                  return const CircularProgressIndicator(
+                    strokeWidth: 2.0,
+                  );
+                },
               )),
         ),
         IconButton(
-            onPressed: () => _offLineWidgetController.cancel(widget.capitulo), icon: const Icon(Icons.close))
+            onPressed: () => _offLineWidgetController.cancel(widget.capitulo),
+            icon: const Icon(Icons.close))
       ],
     );
   }
@@ -64,6 +96,8 @@ class _OffLineWidgetState extends State<OffLineWidget> {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _offLineWidgetController.state,
-      builder: (context, child) => _stateManagement(_offLineWidgetController.state.value),);
+      builder: (context, child) =>
+          _stateManagement(_offLineWidgetController.state.value),
+    );
   }
 }

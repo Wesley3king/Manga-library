@@ -33,20 +33,20 @@ class DownloadController {
     final DownloadController downloadController = DownloadController();
 
     try {
-      List<DownloadModel> filaDeDownloadModifiable = [...filaDeDownload];
-      for (DownloadModel model in filaDeDownload) {
+      List<DownloadModel> filaDeDownloadUnmodifiable =  List.unmodifiable(filaDeDownload);
+      for (DownloadModel model in filaDeDownloadUnmodifiable) {
         bool result = await downloadController.processOneChapter(
             capitulo: model.capitulo,
             model: model.model,
             downloadProgress: model.valueNotifier);
         if (result) {
-          filaDeDownloadModifiable.removeWhere((DownloadModel downloadModel) =>
+          filaDeDownload.removeWhere((DownloadModel downloadModel) =>
               downloadModel.capitulo.id == model.capitulo.id);
         }
       }
       // caso ainda tenha downloads
-      filaDeDownload = filaDeDownloadModifiable;
-      if (filaDeDownloadModifiable.isNotEmpty) downloadMachine();
+      // filaDeDownload = filaDeDownloadUnmodifiable;
+      if (filaDeDownload.isNotEmpty) downloadMachine();
       isDownloading = false;
     } catch (e) {
       print("erro fatal no downloadMachine at DownloadController: $e");
@@ -79,7 +79,7 @@ class DownloadController {
           break;
         }
       }
-      log("caṕitulo baixado com sucesso!!!");
+      log("capitulo ${capitulo.capitulo} baixado com sucesso!!!");
       return true;
     } catch (e) {
       print("erro no processOneChapter at DownloadController: $e");
