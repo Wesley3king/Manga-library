@@ -31,7 +31,7 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
   List<Tab> _getTabs(List<LibraryModel> lista) {
     List<Tab> tabs = [];
     for (int i = 0; i < lista.length; ++i) {
-      tabs.add(Tab(text: lista[i].library));
+      tabs.add(Tab(text: lista[i].library,height: 30,));
     }
     return tabs;
   }
@@ -56,16 +56,20 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           title: const Text('Biblioteca'),
-          //toolbarTextStyle: TextStyle(),
           systemOverlayStyle: SystemUiOverlayStyle.dark,
-          //backgroundColor: _setAppBarColor(),
+          pinned: true,
           snap: true,
           floating: true,
-          bottom: TabBar(
-            isScrollable: true,
-            controller: tabController,
-            indicatorColor: configSystemController.colorManagement(),
-            tabs: _getTabs(widget.dados),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(35),
+            child: TabBar(
+              isScrollable: true,
+              // indicatorSize: TabBarIndicatorSize.tab,
+              indicatorWeight: 2.5,
+              controller: tabController,
+              indicatorColor: configSystemController.colorManagement(),
+              tabs: _getTabs(widget.dados),
+            ),
           ),
         )
       ],
