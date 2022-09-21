@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 
-import '../../../models/leitor_pages.dart';
+import '../../../../models/leitor_pages.dart';
 
 class PagesStates {
   ScrollController scrollController = ScrollController();

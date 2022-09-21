@@ -11,9 +11,14 @@ import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class PagesLeitor extends StatefulWidget {
+  final Function showOrHideInfo;
   final String link;
   final String id;
-  const PagesLeitor({super.key, required this.link, required this.id});
+  const PagesLeitor(
+      {super.key,
+      required this.link,
+      required this.id,
+      required this.showOrHideInfo});
 
   @override
   State<PagesLeitor> createState() => _PagesLeitorState();
@@ -54,17 +59,18 @@ class _PagesLeitorState extends State<PagesLeitor> {
       ),
     );
   }
-  
-  
+
   Widget photoViewLeitor(Axis scrollDirection, bool reverse) {
     /// esta função determina o tipo de image privider ao decodificar as imagens
     ImageProvider<Object> returnAnImageProvider(int index) {
       if (_leitorController.capitulosEmCarga[0].download) {
-        return FileImage(File(_leitorController.capitulosEmCarga[0].downloadPages[index]));
+        return FileImage(
+            File(_leitorController.capitulosEmCarga[0].downloadPages[index]));
       } else {
         return NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]);
       }
     }
+
     return PhotoViewGallery.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       gaplessPlayback: true,
@@ -74,6 +80,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       wantKeepAlive: true,
       builder: (context, index) => PhotoViewGalleryPageOptions(
         imageProvider: returnAnImageProvider(index),
+        onTapUp: (context, details, controllerValue) => widget.showOrHideInfo(),
         // filterQuality:
       ),
     );
@@ -84,7 +91,10 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       cacheExtent: 8000.0,
       itemBuilder: (context, index) => GestureDetector(
-        onTap: () => controller.setPage = index,
+        onTap: () {
+          controller.setPage = index;
+          widget.showOrHideInfo();
+        },
         child: MyPageImage(
           capitulo: _leitorController.capitulosEmCarga[0],
           index: index,
@@ -96,41 +106,47 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   // teste de leitor
   Widget newLeitor() {
-    return _leitorController.capitulosEmCarga[0].download ?
-    ListView.builder(
-      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
-      itemBuilder: (context, index) => ExtendedImage.file(
-        File(_leitorController.capitulosEmCarga[0].downloadPages[index]),
-        clearMemoryCacheWhenDispose: true,
-        maxBytes: 30,
-        compressionRatio: 0.9,
-      ),
-    )
-    : ListView.builder(
-      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
-      itemBuilder: (context, index) => ExtendedImage.network(
-        _leitorController.capitulosEmCarga[0].pages[index],
-        clearMemoryCacheWhenDispose: true,
-        maxBytes: 30,
-        compressionRatio: 0.9,
-      ),
+    return GestureDetector(
+      onTap: () => widget.showOrHideInfo(),
+      child: _leitorController.capitulosEmCarga[0].download
+          ? ListView.builder(
+              itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+              itemBuilder: (context, index) => ExtendedImage.file(
+                File(_leitorController.capitulosEmCarga[0].downloadPages[index]),
+                clearMemoryCacheWhenDispose: true,
+                maxBytes: 30,
+                compressionRatio: 0.9,
+              ),
+            )
+          : ListView.builder(
+              itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+              itemBuilder: (context, index) => ExtendedImage.network(
+                _leitorController.capitulosEmCarga[0].pages[index],
+                clearMemoryCacheWhenDispose: true,
+                maxBytes: 30,
+                compressionRatio: 0.9,
+              ),
+            ),
     );
   }
-  
+
   Widget pageListViewLeitor([bool rtl = false]) {
     return PageView.builder(
       itemCount: _leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
       onPageChanged: (index) => controller.setPage = (index + 1),
       reverse: rtl,
-      itemBuilder: (context, index) => ListView(
-        children: [
-          MyPageImage(
-            capitulo: _leitorController.capitulosEmCarga[0],
-            index: index,
-            filterQuality: FilterQuality.medium,
-          )
-        ],
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () => widget.showOrHideInfo(),
+        child: ListView(
+          children: [
+            MyPageImage(
+              capitulo: _leitorController.capitulosEmCarga[0],
+              index: index,
+              filterQuality: FilterQuality.medium,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -222,6 +238,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
     ]);
   }
 }
+// ------------------------------------------------
+//            ===== IMAGE =====
+// ------------------------------------------------
 
 class MyPageImage extends StatefulWidget {
   //final String url;
@@ -229,7 +248,10 @@ class MyPageImage extends StatefulWidget {
   final int index;
   final FilterQuality filterQuality;
   const MyPageImage(
-      {super.key, required this.capitulo, required this.index, required this.filterQuality});
+      {super.key,
+      required this.capitulo,
+      required this.index,
+      required this.filterQuality});
 
   @override
   State<MyPageImage> createState() => _MyPageImageState();
@@ -240,49 +262,51 @@ class _MyPageImageState extends State<MyPageImage>
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
-      child: widget.capitulo.download ?
-      Image.file(
-        File(widget.capitulo.downloadPages[widget.index]),
-        filterQuality: widget.filterQuality,
-        errorBuilder: (context, error, stackTrace) => SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 150,
-          child: Center(
-            child: Text("Error! \n - file img: ${widget.capitulo.pages[widget.index]}"),
-          ),
-        ),
-      ) :
-      Image.network(
-        widget.capitulo.pages[widget.index],
-        filterQuality: widget.filterQuality,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 4.0,
-                  value: loadingProgress.expectedTotalBytes == null
-                      ? null
-                      : loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!,
+      child: widget.capitulo.download
+          ? Image.file(
+              File(widget.capitulo.downloadPages[widget.index]),
+              filterQuality: widget.filterQuality,
+              errorBuilder: (context, error, stackTrace) => SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 150,
+                child: Center(
+                  child: Text(
+                      "Error! \n - file img: ${widget.capitulo.pages[widget.index]}"),
+                ),
+              ),
+            )
+          : Image.network(
+              widget.capitulo.pages[widget.index],
+              filterQuality: widget.filterQuality,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4.0,
+                        value: loadingProgress.expectedTotalBytes == null
+                            ? null
+                            : loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) => SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 150,
+                child: Center(
+                  child: Text(
+                      "Error! \n - img: ${widget.capitulo.pages[widget.index]}"),
                 ),
               ),
             ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) => SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 150,
-          child: Center(
-            child: Text("Error! \n - img: ${widget.capitulo.pages[widget.index]}"),
-          ),
-        ),
-      ),
     );
   }
 
