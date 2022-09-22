@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/views/components/leitor/config_components.dart';
 // import 'package:flutter/services.dart';
 import 'package:manga_library/app/views/components/leitor/pages_leitor.dart';
+
+import '../controllers/leitor_controller.dart';
 
 class Leitor extends StatefulWidget {
   final String link;
@@ -12,16 +15,33 @@ class Leitor extends StatefulWidget {
 }
 
 class _LeitorState extends State<Leitor> {
-    final Color appBarAndBottomAppBarColor = const Color.fromARGB(146, 0, 0, 0);
-    final double sizeOfButtons = 25.0;
-    bool isVisible = true;
+  final LeitorController leitorController = LeitorController();
+  final Color appBarAndBottomAppBarColor = const Color.fromARGB(146, 0, 0, 0);
+  final double sizeOfButtons = 25.0;
+  bool isVisible = true;
 
-    // colocar e remover o appbar e bottomNavigation
-    void removeOrAddInfo() {
-      setState(() {
-        isVisible = !isVisible;
-      });
-    }
+  // colocar e remover o appbar e bottomNavigation
+  void removeOrAddInfo() {
+    setState(() {
+      isVisible = !isVisible;
+    });
+  }
+
+  // icons
+  Map<String, Widget> readerType = {
+    "vertical": const Icon(Icons.system_security_update_outlined),
+    "ltr": const Icon(Icons.send_to_mobile),
+    "rtl": const Icon(Icons.smartphone),
+    "ltrlist": const Icon(Icons.install_mobile_rounded),
+    "rtllist": const Icon(Icons.no_cell_outlined),
+    "webtoon": const Icon(Icons.system_security_update),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    leitorController.start(widget.link, widget.id);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +49,7 @@ class _LeitorState extends State<Leitor> {
         extendBodyBehindAppBar: true,
         appBar: isVisible
             ? AppBar(
-                title: const Text("Hide app Bar"),
+                title: Text("Capítulo ${leitorController.capitulosEmCarga.isEmpty ? "..." : leitorController.capitulosEmCarga[0].capitulo}"),
                 backgroundColor: appBarAndBottomAppBarColor,
                 actions: [
                   IconButton(
@@ -54,6 +74,7 @@ class _LeitorState extends State<Leitor> {
               height: MediaQuery.of(context).size.height,
               child: PagesLeitor(
                 showOrHideInfo: removeOrAddInfo,
+                leitorController: leitorController,
                 link: widget.link,
                 id: widget.id,
               ),
@@ -67,12 +88,10 @@ class _LeitorState extends State<Leitor> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.system_security_update_outlined,
-                        size: sizeOfButtons,
-                      )),
+                  AnimatedBuilder(
+                    animation: leitorController.leitorTypeState,
+                    builder: (context, child) => buildSetLeitorType(leitorController),
+                  ),
                   IconButton(
                       onPressed: () {},
                       icon: Icon(

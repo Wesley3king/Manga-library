@@ -100,6 +100,19 @@ class SettingsController {
               ]
             },
             {
+              "nameConfig": "Qualidade",
+              "description": "A qualidade das imagens (pode afetar o desempenho)",
+              "inputType": "radio",
+              "value": data['Cor de fundo'],
+              "function": functions['Cor de fundo'],
+              "optionsAndValues": [
+                {"option": "Baixo", "value": "low"},
+                {"option": "Médio", "value": "medium"},
+                {"option": "Alto", "value": "hight"},
+                {"option": "Nenhum", "value": "none"},
+              ]
+            },
+            {
               "nameConfig": "Tela cheia",
               "description": "Se o Leitor será exibido em tela cheia",
               "inputType": "switch",

@@ -12,12 +12,14 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class PagesLeitor extends StatefulWidget {
   final Function showOrHideInfo;
+  final LeitorController leitorController;
   final String link;
   final String id;
   const PagesLeitor(
       {super.key,
       required this.link,
       required this.id,
+      required this.leitorController,
       required this.showOrHideInfo});
 
   @override
@@ -26,7 +28,6 @@ class PagesLeitor extends StatefulWidget {
 
 // with AutomaticKeepAliveClientMixin
 class _PagesLeitorState extends State<PagesLeitor> {
-  final LeitorController _leitorController = LeitorController();
   final PagesController controller = PagesController();
   // final PagesStates _pagesStates = PagesStates();
   final FullScreenController screenController = FullScreenController();
@@ -63,16 +64,16 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget photoViewLeitor(Axis scrollDirection, bool reverse) {
     /// esta função determina o tipo de image privider ao decodificar as imagens
     ImageProvider<Object> returnAnImageProvider(int index) {
-      if (_leitorController.capitulosEmCarga[0].download) {
+      if (widget.leitorController.capitulosEmCarga[0].download) {
         return FileImage(
-            File(_leitorController.capitulosEmCarga[0].downloadPages[index]));
+            File(widget.leitorController.capitulosEmCarga[0].downloadPages[index]));
       } else {
-        return NetworkImage(_leitorController.capitulosEmCarga[0].pages[index]);
+        return NetworkImage(widget.leitorController.capitulosEmCarga[0].pages[index]);
       }
     }
 
     return PhotoViewGallery.builder(
-      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       gaplessPlayback: true,
       scrollDirection: scrollDirection,
       reverse: reverse,
@@ -88,7 +89,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   Widget listViewLeitor() {
     return ListView.builder(
-      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       cacheExtent: 8000.0,
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
@@ -96,7 +97,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
           widget.showOrHideInfo();
         },
         child: MyPageImage(
-          capitulo: _leitorController.capitulosEmCarga[0],
+          capitulo: widget.leitorController.capitulosEmCarga[0],
           index: index,
           filterQuality: FilterQuality.low,
         ),
@@ -108,20 +109,21 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget newLeitor() {
     return GestureDetector(
       onTap: () => widget.showOrHideInfo(),
-      child: _leitorController.capitulosEmCarga[0].download
+      child: widget.leitorController.capitulosEmCarga[0].download
           ? ListView.builder(
-              itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+              itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
               itemBuilder: (context, index) => ExtendedImage.file(
-                File(_leitorController.capitulosEmCarga[0].downloadPages[index]),
+                File(
+                    widget.leitorController.capitulosEmCarga[0].downloadPages[index]),
                 clearMemoryCacheWhenDispose: true,
                 maxBytes: 30,
                 compressionRatio: 0.9,
               ),
             )
           : ListView.builder(
-              itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+              itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
               itemBuilder: (context, index) => ExtendedImage.network(
-                _leitorController.capitulosEmCarga[0].pages[index],
+                widget.leitorController.capitulosEmCarga[0].pages[index],
                 clearMemoryCacheWhenDispose: true,
                 maxBytes: 30,
                 compressionRatio: 0.9,
@@ -132,7 +134,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   Widget pageListViewLeitor([bool rtl = false]) {
     return PageView.builder(
-      itemCount: _leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
       onPageChanged: (index) => controller.setPage = (index + 1),
       reverse: rtl,
@@ -141,7 +143,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
         child: ListView(
           children: [
             MyPageImage(
-              capitulo: _leitorController.capitulosEmCarga[0],
+              capitulo: widget.leitorController.capitulosEmCarga[0],
               index: index,
               filterQuality: FilterQuality.medium,
             )
@@ -184,9 +186,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return loading();
       case LeitorStates.sucess:
         return AnimatedBuilder(
-          animation: _leitorController.leitorTypeState,
+          animation: widget.leitorController.leitorTypeState,
           builder: (context, child) =>
-              _leitorType(_leitorController.leitorTypeState.value),
+              _leitorType(widget.leitorController.leitorTypeState.value),
         );
       case LeitorStates.error:
         return error();
@@ -196,7 +198,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
   @override
   void initState() {
     super.initState();
-    _leitorController.start(widget.link, widget.id);
+    // widget.leitorController.start(widget.link, widget.id);
     screenController.enterFullScreen();
   }
 
@@ -213,9 +215,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget build(BuildContext context) {
     return Stack(children: [
       AnimatedBuilder(
-        animation: _leitorController.state,
+        animation: widget.leitorController.state,
         builder: (context, child) =>
-            _stateManagement(_leitorController.state.value),
+            _stateManagement(widget.leitorController.state.value),
       ),
       SizedBox(
         width: double.infinity,
@@ -226,7 +228,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
             AnimatedBuilder(
               animation: controller.state,
               builder: (context, child) => Text(
-                "${controller.state.value}/${_leitorController.capitulosEmCarga[0].pages.length}",
+                "${controller.state.value}/${widget.leitorController.capitulosEmCarga[0].pages.length}",
                 style: const TextStyle(shadows: [
                   Shadow(color: Colors.black45, offset: Offset(1, 1))
                 ]),

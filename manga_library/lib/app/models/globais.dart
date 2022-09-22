@@ -44,6 +44,12 @@ class GlobalData {
       controller.updateSetting();
     },
     "Cor de fundo": (dynamic value, SettingsOptionsController controller) {},
+    "Qualidade" : (dynamic value, SettingsOptionsController controller) {
+      GlobalData.settings['Qualidade'] = value;
+      final ConfigSystemController configSystemController = ConfigSystemController();
+      configSystemController.update(settings);
+      controller.updateSetting();
+    },
     "Tela cheia": (dynamic value, SettingsOptionsController controller) {},
     "Local de armazenamento": (dynamic value, SettingsOptionsController controller) {},
     "Autenticação": (dynamic value, SettingsOptionsController controller) {},

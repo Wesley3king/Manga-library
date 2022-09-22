@@ -101,6 +101,33 @@ class LeitorController {
         break;
     }
   }
+
+  void setManualReaderType(String type) {
+    switch (type) {
+      case "vertical":
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+      case "ltr":
+        leitorTypeState.value = LeitorTypes.ltr;
+        break;
+      case "rtl":
+        leitorTypeState.value = LeitorTypes.rtl;
+        break;
+      case "ltrlist":
+        leitorTypeState.value = LeitorTypes.ltrlist;
+        break;
+      case "rtllist":
+        leitorTypeState.value = LeitorTypes.rtllist;
+        break;
+      case "webtoon":
+        leitorTypeState.value = LeitorTypes.webtoon;
+        break;
+      default:
+        print("default do leitor acionado!");
+        leitorTypeState.value = LeitorTypes.vertical;
+        break;
+    }
+  }
 }
 
 enum LeitorStates { start, loading, sucess, error }
