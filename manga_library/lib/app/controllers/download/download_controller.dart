@@ -9,7 +9,6 @@ import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 class DownloadController {
-  // final HiveController _hiveController = HiveController();
   static List<DownloadModel> filaDeDownload = [];
   static bool isDownloading = false;
 
@@ -33,7 +32,8 @@ class DownloadController {
     final DownloadController downloadController = DownloadController();
 
     try {
-      List<DownloadModel> filaDeDownloadUnmodifiable =  List.unmodifiable(filaDeDownload);
+      List<DownloadModel> filaDeDownloadUnmodifiable =
+          List.unmodifiable(filaDeDownload);
       for (DownloadModel model in filaDeDownloadUnmodifiable) {
         bool result = await downloadController.processOneChapter(
             capitulo: model.capitulo,
@@ -60,22 +60,30 @@ class DownloadController {
       ValueNotifier<Map<String, int?>>? downloadProgress}) async {
     final MangaInfoOffLineController _mangaInfoOffLineController =
         MangaInfoOffLineController();
+    final HiveController _hiveController = HiveController();
     try {
       log("process - pages = ${capitulo.pages.length}");
+
+      /// pega os daddos atuais do banco
+      MangaInfoOffLineModel? atualBook =
+          await _mangaInfoOffLineController.verifyDatabase(model.link);
+      if (atualBook == null) return false;
+      // start the download
       List<String> downloadedPagesPath = await download(
         capitulo: capitulo,
         link: model.link,
         name: model.name,
         downloadProgress: downloadProgress,
       );
-      //print(downloadedPagesPath);
-      for (Capitulos chapter in model.capitulos) {
+      // procura na memória até achar o capitulo
+      for (Capitulos chapter in atualBook.capitulos) {
         if (chapter.id == capitulo.id) {
           chapter.downloadPages = downloadedPagesPath;
           chapter.download = true;
           bool saveResult = await _mangaInfoOffLineController.updateBook(
-              model: model, capitulos: model.capitulos);
+              model: atualBook, capitulos: atualBook.capitulos);
           print("salvo na memória! : $saveResult");
+          if (saveResult == false) return false;
           break;
         }
       }

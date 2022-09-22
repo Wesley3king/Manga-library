@@ -9,7 +9,14 @@ class OffLineWidgetController {
   ValueNotifier<Map<String, int?>> downloadProgress =
       ValueNotifier<Map<String, int?>>({});
 
-  // start() async {}
+  start(Capitulos capitulo) {
+    if (capitulo.download) {
+      state.value = DownloadStates.delete;
+    } else {
+      // implement downloading verify
+      state.value = DownloadStates.download;
+    }
+  }
 
   void download(
       {required MangaInfoOffLineModel mangaModel,
@@ -20,7 +27,10 @@ class OffLineWidgetController {
         model: mangaModel, capitulo: capitulo, valueNotifier: downloadProgress);
     // int lengthChapter =
     //     model.capitulo.pages.isEmpty ? 0 : (model.capitulo.pages.length - 1);
-    Map<String, int?> progressData = {"total": model.capitulo.pages.length, "progress": null};
+    Map<String, int?> progressData = {
+      "total": model.capitulo.pages.length,
+      "progress": null
+    };
     downloadProgress.value = progressData;
     DownloadController.addDownload(model);
     // state.value = DownloadStates.delete;

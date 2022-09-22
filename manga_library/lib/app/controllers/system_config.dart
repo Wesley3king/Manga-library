@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,27 +23,27 @@ class SystemController {
   }
 
   getSystemPermissions() async {
-    PermissionStatus _permissionWriteStatus = PermissionStatus.denied;
-    PermissionStatus _permissionReadStatus = PermissionStatus.denied;
+    final FileManager fileManager = FileManager();
+    PermissionStatus permissionStorageStatus = PermissionStatus.denied;
+    PermissionStatus permissionManageStatus = PermissionStatus.denied;
     // storage permission
-    _permissionReadStatus = await Permission.storage.status;
+    permissionStorageStatus = await Permission.storage.status;
     // print(_permissionReadStatus.isDenied ? "não TEM PERMISÃO" : "ta ok");
-    if (_permissionReadStatus != PermissionStatus.granted) {
+    if (permissionStorageStatus != PermissionStatus.granted) {
       log("fazendo a requisição do read");
-      await Permission.storage.request(); // PermissionStatus permissionStatus = 
-      // setState(() {
-      //   _permissionReadStatus = permissionStatus;
-      // });
+      permissionStorageStatus = await Permission.storage.request();
     }
     // storage management android 11
-    _permissionWriteStatus = await Permission.manageExternalStorage.status;
-    // print(_permissionWriteStatus.isDenied ? "não TEM PERMISÃO" : "ta ok");
-    if (_permissionWriteStatus != PermissionStatus.granted) {
-     log("fazendo a requisição do write");
-     await Permission.manageExternalStorage.request(); // PermissionStatus permissionStatus =  
-      // setState(() {
-      //   _permissionWriteStatus = permissionStatus;
-      // });
+    permissionManageStatus = await Permission.manageExternalStorage.status;
+    if (permissionManageStatus != PermissionStatus.granted) {
+      log("fazendo a requisição do write");
+      permissionManageStatus = await Permission.manageExternalStorage.request();
+    }
+    
+    // cria a estrutra de pastas do aplicativo
+    if (permissionStorageStatus == PermissionStatus.granted ||
+        permissionManageStatus == PermissionStatus.granted) {
+      await fileManager.verifyIfIsFirstTime();
     }
   }
 }

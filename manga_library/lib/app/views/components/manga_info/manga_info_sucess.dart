@@ -127,10 +127,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       leading: capitulo.readed
           ? lido(capitulo.id.toString(), widget.link)
           : naoLido(capitulo.id.toString(), widget.link),
-      trailing: OffLineWidget(
+      trailing: MangaInfoController.isAnOffLineBook ? OffLineWidget(
         capitulo: capitulo,
         model: widget.dados,
-      ),
+      ) : const SizedBox(width: 1, height: 1,),
       onTap: () => GoRouter.of(context).push('/leitor/${widget.link}/$id'),
     );
   }
