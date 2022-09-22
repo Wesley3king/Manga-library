@@ -6,7 +6,7 @@ import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/home/library.dart';
 import 'package:manga_library/app/views/home/others.dart';
 import 'package:manga_library/app/views/home/search.dart';
-import 'package:manga_library/app/views/leitor.dart';
+import 'package:manga_library/app/views/components/leitor/leitor.dart';
 import 'package:manga_library/app/views/manga_info.dart';
 
 final routes = GoRouter(initialLocation: '/home', routes: [

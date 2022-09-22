@@ -7,10 +7,15 @@ import '../models/manga_info_offline_model.dart';
 class LeitorController {
   List<Capitulos> capitulos = [];
   List<Capitulos> capitulosEmCarga = [];
+  // ===== State =====
   ValueNotifier<LeitorStates> state =
       ValueNotifier<LeitorStates>(LeitorStates.start);
+  // ===== Reader Type =====
   ValueNotifier<LeitorTypes> leitorTypeState =
       ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
+  // ===== Filter Quality =====
+  ValueNotifier<LeitorFilterQuality> filterQualityState =
+      ValueNotifier<LeitorFilterQuality>(LeitorFilterQuality.none);
 
   void start(String link, String id) {
     state.value = LeitorStates.loading;
@@ -19,7 +24,8 @@ class LeitorController {
       print(
           "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n ------------------------");
       _identificarCapitulo(capitulos, id);
-      _identificarLeitor();
+      setFilterQuality();
+      setReaderType();
       state.value = LeitorStates.sucess;
     } catch (e) {
       print('erro em start LeitorController');
@@ -47,11 +53,6 @@ class LeitorController {
         print(
             "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
         if (capitulos[i].id.toString().contains(regex)) {
-          // if (capitulos[i].download) {
-          //   capitulosEmCarga.add(capitulos[i]);
-          //   adicionated = true;
-          //   break;
-          // }
           print("achei o capitulo!");
           capitulosEmCarga.add(capitulos[i]);
           adicionated = true;
@@ -62,20 +63,47 @@ class LeitorController {
     if (!adicionated) {
       print("não achei o capitulo");
       capitulosEmCarga.add(Capitulos(
-       capitulo: "",
-       id: 0,
-       pages: [],
-       disponivel: false,
-       download: false,
-       readed: false,
-       downloadPages: []
-      ));
+          capitulo: "",
+          id: 0,
+          pages: [],
+          disponivel: false,
+          download: false,
+          readed: false,
+          downloadPages: []));
     }
   }
 
-  void _identificarLeitor() {
-    final String type = GlobalData.settings['Tipo do Leitor'];
-    print('tipo do leitor: $type');
+  // void _identificarLeitor() {
+  //   final String type = GlobalData.settings['Tipo do Leitor'];
+  //   print('tipo do leitor: $type');
+  //   switch (type) {
+  //     case "vertical":
+  //       leitorTypeState.value = LeitorTypes.vertical;
+  //       break;
+  //     case "ltr":
+  //       leitorTypeState.value = LeitorTypes.ltr;
+  //       break;
+  //     case "rtl":
+  //       leitorTypeState.value = LeitorTypes.rtl;
+  //       break;
+  //     case "ltrlist":
+  //       leitorTypeState.value = LeitorTypes.ltrlist;
+  //       break;
+  //     case "rtllist":
+  //       leitorTypeState.value = LeitorTypes.rtllist;
+  //       break;
+  //     case "webtoon":
+  //       leitorTypeState.value = LeitorTypes.webtoon;
+  //       break;
+  //     default:
+  //       print("default do leitor acionado!");
+  //       leitorTypeState.value = LeitorTypes.vertical;
+  //       break;
+  //   }
+  // }
+
+  void setReaderType([String? type]) {
+    type ??= GlobalData.settings['Tipo do Leitor'];
     switch (type) {
       case "vertical":
         leitorTypeState.value = LeitorTypes.vertical;
@@ -102,29 +130,20 @@ class LeitorController {
     }
   }
 
-  void setManualReaderType(String type) {
+  void setFilterQuality([String? type]) {
+    type ??= GlobalData.settings['Qualidade'];
     switch (type) {
-      case "vertical":
-        leitorTypeState.value = LeitorTypes.vertical;
+      case "none":
+        filterQualityState.value = LeitorFilterQuality.none;
         break;
-      case "ltr":
-        leitorTypeState.value = LeitorTypes.ltr;
+      case "low":
+        filterQualityState.value = LeitorFilterQuality.low;
         break;
-      case "rtl":
-        leitorTypeState.value = LeitorTypes.rtl;
+      case "medium":
+        filterQualityState.value = LeitorFilterQuality.medium;
         break;
-      case "ltrlist":
-        leitorTypeState.value = LeitorTypes.ltrlist;
-        break;
-      case "rtllist":
-        leitorTypeState.value = LeitorTypes.rtllist;
-        break;
-      case "webtoon":
-        leitorTypeState.value = LeitorTypes.webtoon;
-        break;
-      default:
-        print("default do leitor acionado!");
-        leitorTypeState.value = LeitorTypes.vertical;
+      case "hight":
+        filterQualityState.value = LeitorFilterQuality.hight;
         break;
     }
   }
@@ -133,6 +152,8 @@ class LeitorController {
 enum LeitorStates { start, loading, sucess, error }
 
 enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon }
+
+enum LeitorFilterQuality { none, low, medium, hight }
 
 class PagesController {
   // int maxPages = 1;

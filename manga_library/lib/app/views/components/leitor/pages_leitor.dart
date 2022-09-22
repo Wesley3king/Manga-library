@@ -61,14 +61,16 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget photoViewLeitor(Axis scrollDirection, bool reverse) {
+  Widget photoViewLeitor(
+      Axis scrollDirection, bool reverse, FilterQuality filterQuality) {
     /// esta função determina o tipo de image privider ao decodificar as imagens
     ImageProvider<Object> returnAnImageProvider(int index) {
       if (widget.leitorController.capitulosEmCarga[0].download) {
-        return FileImage(
-            File(widget.leitorController.capitulosEmCarga[0].downloadPages[index]));
+        return FileImage(File(
+            widget.leitorController.capitulosEmCarga[0].downloadPages[index]));
       } else {
-        return NetworkImage(widget.leitorController.capitulosEmCarga[0].pages[index]);
+        return NetworkImage(
+            widget.leitorController.capitulosEmCarga[0].pages[index]);
       }
     }
 
@@ -81,13 +83,14 @@ class _PagesLeitorState extends State<PagesLeitor> {
       wantKeepAlive: true,
       builder: (context, index) => PhotoViewGalleryPageOptions(
         imageProvider: returnAnImageProvider(index),
+        filterQuality: filterQuality,
         onTapUp: (context, details, controllerValue) => widget.showOrHideInfo(),
         // filterQuality:
       ),
     );
   }
 
-  Widget listViewLeitor() {
+  Widget listViewLeitor(FilterQuality filterQuality) {
     return ListView.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       cacheExtent: 8000.0,
@@ -99,32 +102,36 @@ class _PagesLeitorState extends State<PagesLeitor> {
         child: MyPageImage(
           capitulo: widget.leitorController.capitulosEmCarga[0],
           index: index,
-          filterQuality: FilterQuality.low,
+          filterQuality: filterQuality,
         ),
       ),
     );
   }
 
   // teste de leitor
-  Widget newLeitor() {
+  Widget newLeitor(FilterQuality filterQuality) {
     return GestureDetector(
       onTap: () => widget.showOrHideInfo(),
       child: widget.leitorController.capitulosEmCarga[0].download
           ? ListView.builder(
-              itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
+              itemCount:
+                  widget.leitorController.capitulosEmCarga[0].pages.length,
               itemBuilder: (context, index) => ExtendedImage.file(
-                File(
-                    widget.leitorController.capitulosEmCarga[0].downloadPages[index]),
+                File(widget
+                    .leitorController.capitulosEmCarga[0].downloadPages[index]),
                 clearMemoryCacheWhenDispose: true,
+                filterQuality: filterQuality,
                 maxBytes: 30,
                 compressionRatio: 0.9,
               ),
             )
           : ListView.builder(
-              itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
+              itemCount:
+                  widget.leitorController.capitulosEmCarga[0].pages.length,
               itemBuilder: (context, index) => ExtendedImage.network(
                 widget.leitorController.capitulosEmCarga[0].pages[index],
                 clearMemoryCacheWhenDispose: true,
+                filterQuality: filterQuality,
                 maxBytes: 30,
                 compressionRatio: 0.9,
               ),
@@ -132,7 +139,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget pageListViewLeitor([bool rtl = false]) {
+  Widget pageListViewLeitor({bool rtl = false, required FilterQuality filterQuality}) {
     return PageView.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
@@ -145,7 +152,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
             MyPageImage(
               capitulo: widget.leitorController.capitulosEmCarga[0],
               index: index,
-              filterQuality: FilterQuality.medium,
+              filterQuality: filterQuality,
             )
           ],
         ),
@@ -153,28 +160,44 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget _leitorType(LeitorTypes type) {
-    // for (ModelLeitor element in fakeListDisponiveis) {
-    //   print("leitor model cap: ${element.capitulo} / ${element.pages.length}");
-    // }
+  Widget _filterQuality(LeitorTypes type) {
+    FilterQuality filterQuality = FilterQuality.none;
+    switch (widget.leitorController.filterQualityState.value) {
+      case LeitorFilterQuality.none:
+        // return _leitorType(type, FilterQuality.none);
+        filterQuality = FilterQuality.none;
+        break;
+      case LeitorFilterQuality.low:
+        filterQuality = FilterQuality.low;
+        break;
+      case LeitorFilterQuality.medium:
+        filterQuality = FilterQuality.medium;
+        break;
+      case LeitorFilterQuality.hight:
+        filterQuality = FilterQuality.high;
+        break;
+    }
+    return AnimatedBuilder(
+      animation: widget.leitorController.leitorTypeState,
+      builder: (context, child) => _leitorType(
+          widget.leitorController.leitorTypeState.value, filterQuality),
+    );
+  }
+
+  Widget _leitorType(LeitorTypes type, FilterQuality filterQuality) {
     switch (type) {
       case LeitorTypes.vertical:
-        return photoViewLeitor(Axis.vertical, false);
+        return photoViewLeitor(Axis.vertical, false, filterQuality);
       case LeitorTypes.ltr:
-        return photoViewLeitor(Axis.horizontal, false);
+        return photoViewLeitor(Axis.horizontal, false, filterQuality);
       case LeitorTypes.rtl:
-        return photoViewLeitor(Axis.horizontal, true);
+        return photoViewLeitor(Axis.horizontal, true, filterQuality);
       case LeitorTypes.webtoon:
-        return newLeitor();
+        return newLeitor(filterQuality);
       case LeitorTypes.ltrlist:
-        return pageListViewLeitor();
+        return pageListViewLeitor(filterQuality: filterQuality);
       case LeitorTypes.rtllist:
-        return pageListViewLeitor(true);
-      default:
-        return photoViewLeitor(
-          Axis.horizontal,
-          false,
-        );
+        return pageListViewLeitor(rtl: true, filterQuality: filterQuality);
     }
   }
 
@@ -186,9 +209,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return loading();
       case LeitorStates.sucess:
         return AnimatedBuilder(
-          animation: widget.leitorController.leitorTypeState,
+          animation: widget.leitorController.filterQualityState,
           builder: (context, child) =>
-              _leitorType(widget.leitorController.leitorTypeState.value),
+              _filterQuality(widget.leitorController.leitorTypeState.value),
         );
       case LeitorStates.error:
         return error();

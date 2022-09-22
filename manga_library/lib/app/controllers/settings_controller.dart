@@ -103,8 +103,8 @@ class SettingsController {
               "nameConfig": "Qualidade",
               "description": "A qualidade das imagens (pode afetar o desempenho)",
               "inputType": "radio",
-              "value": data['Cor de fundo'],
-              "function": functions['Cor de fundo'],
+              "value": data['Qualidade'],
+              "function": functions['Qualidade'],
               "optionsAndValues": [
                 {"option": "Baixo", "value": "low"},
                 {"option": "Médio", "value": "medium"},

@@ -26,7 +26,7 @@ Widget buildSetLeitorType(LeitorController controller) {
   for (Map<String, String> option in options) {
     popUpMenuItens.add(PopupMenuItem(
       child: Text(option['option']!),
-      onTap: () => controller.setManualReaderType(option['value']!)
+      onTap: () => controller.setReaderType(option['value']!)
     ));
   }
   String type = "";
@@ -51,18 +51,18 @@ Widget buildSetLeitorType(LeitorController controller) {
         break;
     }
   return PopupMenuButton<String>(
-    icon: readerTypeIcons[type]!,
+    icon: readerTypeIcons[type],
     itemBuilder: (context) => popUpMenuItens,
   );
 }
 // -----------------------------------------------------------------
-//             ========= Filter Quality ============
+//             ========= Filter Quality ==========
 // -----------------------------------------------------------------
 
 Map<String, Icon> filterQualityIcons = {
   "low": const Icon(Icons.filter_alt_outlined),
   "medium": const Icon(Icons.filter_alt_rounded),
-  "hight": const Icon(Icons.smartphone),
+  "hight": const Icon(Icons.filter_alt_sharp),
   "none": const Icon(Icons.filter_alt_off_outlined)
 };
 
@@ -79,33 +79,27 @@ final List<Map<String, String>> options = [
   for (Map<String, String> option in options) {
     popUpMenuItens.add(PopupMenuItem(
       child: Text(option['option']!),
-      onTap: () => controller.setManualReaderType(option['value']!)
+      onTap: () => controller.setFilterQuality(option['value']!)
     ));
   }
 
 String type = "";
-  switch (controller.leitorTypeState.value) {
-    case LeitorTypes.vertical:
-      type = "vertical";
+  switch (controller.filterQualityState.value) {
+    case LeitorFilterQuality.none:
+      type = "none";
       break;
-    case LeitorTypes.ltr:
-      type = "ltr";
+    case LeitorFilterQuality.low:
+      type = "low";
       break;
-    case LeitorTypes.rtl:
-      type = "rtl";
+    case LeitorFilterQuality.medium:
+      type = "medium";
       break;
-    case LeitorTypes.ltrlist:
-      type = "ltrlist";
-      break;
-    case LeitorTypes.rtllist:
-      type = "rtllist";
-      break;
-    case LeitorTypes.webtoon:
-      type = "webtoon";
+    case LeitorFilterQuality.hight:
+      type = "hight";
       break;
   }
 return PopupMenuButton<String>(
-    icon: readerTypeIcons[type]!,
+    icon: filterQualityIcons[type],
     itemBuilder: (context) => popUpMenuItens,
   );
 }

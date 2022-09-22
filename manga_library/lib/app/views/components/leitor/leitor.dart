@@ -3,7 +3,7 @@ import 'package:manga_library/app/views/components/leitor/config_components.dart
 // import 'package:flutter/services.dart';
 import 'package:manga_library/app/views/components/leitor/pages_leitor.dart';
 
-import '../controllers/leitor_controller.dart';
+import '../../../controllers/leitor_controller.dart';
 
 class Leitor extends StatefulWidget {
   final String link;
@@ -92,12 +92,10 @@ class _LeitorState extends State<Leitor> {
                     animation: leitorController.leitorTypeState,
                     builder: (context, child) => buildSetLeitorType(leitorController),
                   ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.filter_alt,
-                        size: sizeOfButtons,
-                      )),
+                  AnimatedBuilder(
+                    animation: leitorController.filterQualityState,
+                    builder: (context, child) => buildFilterQuality(leitorController),
+                  ),
                   IconButton(
                       onPressed: () {},
                       icon: Icon(
