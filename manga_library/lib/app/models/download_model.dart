@@ -13,7 +13,7 @@ class DownloadModel {
   DownloadModel({
     required this.model,
     required this.capitulo,
-    required attempts,
+    required this.attempts,
     this.state,
     this.valueNotifier
   });

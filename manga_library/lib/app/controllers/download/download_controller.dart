@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 // import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
 // import 'package:manga_library/app/controllers/hive/hive_controller.dart';
@@ -39,12 +40,14 @@ class DownloadController {
       //     List.unmodifiable(filaDeDownload);
 
       // esta gurada o indice do download a ser removida da fila
+      
       List<int> indexToRemove = [];
       final List<DownloadModel> filaModificable =
           List<DownloadModel>.from(filaDeDownload);
       // laço
       for (int i = 0; i < filaModificable.length; ++i) {
         final DownloadModel model = filaModificable[i];
+        debugPrint("attemps: ${model.attempts}");
         bool result = await downloadController.processOneChapter(
           capitulo: model.capitulo,
           index: i,
