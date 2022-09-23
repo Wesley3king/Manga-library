@@ -29,63 +29,75 @@ class FileManager {
       debugPrint("erro no startForFirstTime at FileManager: $e");
     }
   }
-}
 
-void deleteFile() async {
-  // is working = true
-  try {
-    File file = File("/storage/emulated/0/image.jpg");
-
-    var res = await file.delete(recursive: false);
-    debugPrint("$res");
-  } catch (e) {
-    print('erro no delete file: $e');
+  /// passe a imagem de indice 0 para funcionar :
+  /// ex: [/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/Manga_Library/The Beginning After The End/cap_152/0.jpg]
+  Future<bool> deleteDownloads(String imagePath) async {
+    // /storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/Manga_Library/The Beginning After The End/cap_152/8.jpg  /storage/emulated/0/Manga Libray/Downloads/
+    try {
+      // aqui cortamos o caminho da imagem para pegar seu path e deletar o directório
+      List<String> paths = imagePath.split("/0.");
+      debugPrint("path delete: ${paths[0]}");
+      Directory dir = Directory(paths[0]);
+      await dir.delete(recursive: true);
+      return true;
+    } catch (e) {
+      debugPrint("erro no delete Directory: $e");
+      return false;
+    }
   }
 }
 
-void deleteDirectory() async {
-  try {
-    Directory dir = Directory("/storage/emulated/0/Manga Libray");
-    dir.delete(recursive: false).whenComplete(() => print("deletado!"));
-  } catch (e) {
-    debugPrint("erro no delete Directory: $e");
-  }
-}
+// void deleteFile() async {
+//   // is working = true
+//   try {
+//     File file = File("/storage/emulated/0/image.jpg");
 
-void createFileBackup() async {
+//     var res = await file.delete(recursive: false);
+//     debugPrint("$res");
+//   } catch (e) {
+//     print('erro no delete file: $e');
+//   }
+// }
+
+void createGzFile() async {
   try {
-    File file = File("/storage/emulated/0/Manga Libray/backup5_bynary.bin");
+    File file = File("/storage/emulated/0/Manga Libray/manga/backup2.gz");
     if (file.existsSync()) {
       debugPrint("este arquivo existe!");
     } else {
       Map<String, dynamic> data = {
         "tipo": "vertical",
         "exists": true,
-        "num": [1, 3, 6]
+        "num": [1, 3, 6],
       };
       debugPrint("este arquivo não existe!");
       var resArchive = await file.create(recursive: false);
-      debugPrint("archive: $resArchive");
+      // debugPrint("archive: $resArchive");
 
       var jsonData = json.encode(data);
-      var bynary = utf8.encode(jsonData);
+      var bytes = utf8.encode(jsonData);
+      var gzBytes = GZipCodec(dictionary: bytes);
+      var decode = gzBytes.encoder;
       resArchive
-          .writeAsBytes(bynary)
+          .writeAsBytes(decode.convert(bytes))
           .whenComplete(() => debugPrint("file escrita!"));
     }
   } catch (e) {
-    debugPrint("erro no createFile: $e");
+    debugPrint("erro no createGZFile: $e");
   }
 }
 
-void readArchive() async {
+void readGzArchive() async {
   try {
-    File file = File("/storage/emulated/0/Manga Libray/backup5_bynary.bin");
+    File file = File("/storage/emulated/0/Manga Libray/manga/backup2.gz");
     var bin = await file.readAsBytes();
-    print(bin);
-    var data = utf8.decode(bin);
+    // print(bin);
+    var decode = GZipCodec(dictionary: bin);
+    var bytes = decode.decoder;
+    var data = utf8.decode(bytes.convert(bin));
     print(data);
   } catch (e) {
-    debugPrint("erro no readArchive: $e");
+    debugPrint("erro no readGzArchive: $e");
   }
 }

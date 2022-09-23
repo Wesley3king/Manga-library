@@ -44,18 +44,18 @@ class _OffLineWidgetState extends State<OffLineWidget> {
                     double second = first /
                         _offLineWidgetController
                             .downloadProgress.value['total']!;
-                    log("valor de 2: $second");
-                    if (_offLineWidgetController
-                            .downloadProgress.value['progress']! ==
-                        (_offLineWidgetController
-                                .downloadProgress.value['total']! -
-                            1)) {
-                      Future.delayed(
-                        const Duration(milliseconds: 100),
-                        () => _offLineWidgetController.state.value =
-                            DownloadStates.delete,
-                      );
-                    }
+                    log("valor de second: $second");
+                    // if (_offLineWidgetController
+                    //         .downloadProgress.value['progress']! ==
+                    //     (_offLineWidgetController
+                    //             .downloadProgress.value['total']! -
+                    //         1)) {
+                    //   Future.delayed(
+                    //     const Duration(milliseconds: 100),
+                    //     () => _offLineWidgetController.state.value =
+                    //         DownloadStates.delete,
+                    //   );
+                    // }
                     return CircularProgressIndicator(
                       strokeWidth: 2.0,
                       value: second / 100,
@@ -77,8 +77,18 @@ class _OffLineWidgetState extends State<OffLineWidget> {
 
   Widget delete() {
     return IconButton(
-        onPressed: () => print("need to implement DELETE!"),
+        onPressed: () => _offLineWidgetController.delete(mangaModel: widget.model, capitulo: widget.capitulo),
         icon: const Icon(Icons.delete_outline));
+  }
+
+  Widget error() {
+    return IconButton(
+        onPressed: () => _offLineWidgetController.state.value = DownloadStates.download,
+        tooltip: "FALHA no download!",
+        icon: const Icon(
+          Icons.info_outline,
+          color: Colors.red,
+        ));
   }
 
   Widget _stateManagement(DownloadStates state) {
@@ -89,7 +99,15 @@ class _OffLineWidgetState extends State<OffLineWidget> {
         return cancel();
       case DownloadStates.delete:
         return delete();
+      case DownloadStates.error:
+        return error();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _offLineWidgetController.start(widget.capitulo);
   }
 
   @override
