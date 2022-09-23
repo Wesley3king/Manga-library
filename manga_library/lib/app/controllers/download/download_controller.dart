@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
 // import 'package:manga_library/app/controllers/hive/hive_controller.dart';
@@ -25,38 +25,57 @@ class DownloadController {
         (DownloadModel model) => model.capitulo.id == capitulos.id);
   }
 
-  static deleteDownload(Capitulos capitulos) async {
-    // implement this
-  }
+  // static deleteDownload(Capitulos capitulos) async {
+  //   // implement this
+  // }
+
   // este gerencia todos os downloads
   static Future<void> downloadMachine() async {
     isDownloading = true;
     final DownloadController downloadController = DownloadController();
 
     try {
-      List<DownloadModel> filaDeDownloadUnmodifiable =
-          List.unmodifiable(filaDeDownload);
-      for (DownloadModel model in filaDeDownloadUnmodifiable) {
+      // final List<DownloadModel> filaDeDownloadUnmodifiable =
+      //     List.unmodifiable(filaDeDownload);
+
+      // esta gurada o indice do download a ser removida da fila
+      List<int> indexToRemove = [];
+      final List<DownloadModel> filaModificable =
+          List<DownloadModel>.from(filaDeDownload);
+      // laço
+      for (int i = 0; i < filaModificable.length; ++i) {
+        final DownloadModel model = filaModificable[i];
         bool result = await downloadController.processOneChapter(
-            capitulo: model.capitulo,
-            model: model.model,
-            // state: model.state,
-            downloadProgress: model.valueNotifier);
+          capitulo: model.capitulo,
+          index: i,
+          model: model.model,
+          // state: model.state,
+          //downloadProgress: model.valueNotifier
+        );
         if (result) {
-          filaDeDownload.removeWhere((DownloadModel downloadModel) =>
-              downloadModel.capitulo.id == model.capitulo.id);
+          // filaDeDownload.removeWhere((DownloadModel downloadModel) =>
+          //     downloadModel.capitulo.id == model.capitulo.id);
+          indexToRemove.add(i);
           model.state?.value = DownloadStates.delete;
         } else {
           ++model.attempts;
           if (model.attempts >= 3) {
             model.state?.value = DownloadStates.error;
-            filaDeDownload.removeWhere((DownloadModel downloadModel) =>
-                downloadModel.capitulo.id == model.capitulo.id);
+            // filaDeDownload.removeWhere((DownloadModel downloadModel) =>
+            //     downloadModel.capitulo.id == model.capitulo.id);
+            indexToRemove.add(i);
           }
         }
       }
       // caso ainda tenha downloads
       // filaDeDownload = filaDeDownloadUnmodifiable;
+      for (int index in indexToRemove) {
+        filaDeDownload.removeAt(index);
+        //removeWhere((DownloadModel downloadModel) =>
+        //  downloadModel.capitulo.id == model.capitulo.id
+        //);
+        //model.state?.value = DownloadStates.delete;
+      }
       if (filaDeDownload.isNotEmpty) downloadMachine();
       isDownloading = false;
     } catch (e) {
@@ -65,11 +84,12 @@ class DownloadController {
     }
   }
 
-  Future<bool> processOneChapter(
-      {required Capitulos capitulo,
-      required MangaInfoOffLineModel model,
-      // ValueNotifier<DownloadStates>? state,
-      ValueNotifier<Map<String, int?>>? downloadProgress}) async {
+  Future<bool> processOneChapter({
+    required Capitulos capitulo,
+    required MangaInfoOffLineModel model,
+    required int index,
+    // ValueNotifier<Map<String, int?>>? downloadProgress
+  }) async {
     final MangaInfoOffLineController mangaInfoOffLineController =
         MangaInfoOffLineController();
     // final HiveController _hiveController = HiveController();
@@ -85,7 +105,8 @@ class DownloadController {
         capitulo: capitulo,
         link: model.link,
         name: model.name,
-        downloadProgress: downloadProgress,
+        index: index,
+        // downloadProgress: downloadProgress,
       );
       // caso seja null deu um erro!
       if (downloadedPagesPath == null) return false;
@@ -109,11 +130,13 @@ class DownloadController {
     }
   }
 
-  Future<List<String>?> download(
-      {required Capitulos capitulo,
-      required String link,
-      required String name,
-      ValueNotifier<Map<String, int?>>? downloadProgress}) async {
+  Future<List<String>?> download({
+    required Capitulos capitulo,
+    required String link,
+    required String name,
+    required int index,
+    //ValueNotifier<Map<String, int?>>? downloadProgress
+  }) async {
     try {
       // constroi o sub caminho das paginas baixadas
       List<dynamic> listOfRegExp = [
@@ -168,7 +191,7 @@ class DownloadController {
           "total": capitulo.pages.length,
           "progress": i
         };
-        downloadProgress?.value = progressData;
+        filaDeDownload[index].valueNotifier?.value = progressData;
       }
 
       return pagesPath;
