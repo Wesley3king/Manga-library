@@ -7,14 +7,15 @@ class DownloadModel {
   late final MangaInfoOffLineModel model;
   late final Capitulos capitulo;
   late int attempts;
+  late bool cancel;
   late ValueNotifier<DownloadStates>? state;
   late ValueNotifier<Map<String, int?>>? valueNotifier;
 
-  DownloadModel({
-    required this.model,
-    required this.capitulo,
-    required this.attempts,
-    this.state,
-    this.valueNotifier
-  });
+  DownloadModel(
+      {required this.model,
+      required this.capitulo,
+      required this.attempts,
+      required this.cancel,
+      this.state,
+      this.valueNotifier});
 }

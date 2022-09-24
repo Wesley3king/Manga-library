@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/views/components/error.dart';
 import 'package:manga_library/app/views/components/manga_info/manga_info_sucess.dart';
@@ -37,9 +38,9 @@ class _MangaInfoState extends State<MangaInfo> {
           controller: mangaInfoController,
         );
       case MangaInfoStates.sucess2:
-      //  for (ModelLeitor element in mangaInfoController.capitulosDisponiveis!) {
-      //   print("mangainfo cap: ${element.capitulo} / ${element.pages.length}");
-      // }
+        //  for (ModelLeitor element in mangaInfoController.capitulosDisponiveis!) {
+        //   print("mangainfo cap: ${element.capitulo} / ${element.pages.length}");
+        // }
         return SucessMangaInfo(
           dados: mangaInfoController.data,
           sucess2: true,
@@ -51,34 +52,19 @@ class _MangaInfoState extends State<MangaInfo> {
         return const ErrorHomePage();
     }
   }
-  // void getWritePermission() async {
-  //   _permissionWriteStatus = await Permission.manageExternalStorage.status;
-  //   // print(_permissionWriteStatus.isDenied ? "não TEM PERMISÃO" : "ta ok");
-  //   if (_permissionWriteStatus != PermissionStatus.granted) {
-  //     print("fazendo a requisição do write");
-  //     PermissionStatus permissionStatus =
-  //         await Permission.manageExternalStorage.request();
-  //     setState(() {
-  //       _permissionWriteStatus = permissionStatus;
-  //     });
-  //   }
-  // }
-  // void getReadPermission() async {
-  //   _permissionReadStatus = await Permission.storage.status;
-  //   // print(_permissionReadStatus.isDenied ? "não TEM PERMISÃO" : "ta ok");
-  //   if (_permissionReadStatus != PermissionStatus.granted) {
-  //     print("fazendo a requisição do read");
-  //     PermissionStatus permissionStatus = await Permission.storage.request();
-  //     setState(() {
-  //       _permissionReadStatus = permissionStatus;
-  //     });
-  //   }
-  // }
+
+  void initialStart() async {
+    await mangaInfoController.start(widget.link);
+    if (MangaInfoController.isAnOffLineBook) {
+      DownloadController.mangaInfoController = mangaInfoController;
+    }
+    //FullScreenController().exitFullScreen();
+  }
+
   @override
   void initState() {
     super.initState();
-    mangaInfoController.start(widget.link);
-    //FullScreenController().exitFullScreen();
+    initialStart();
   }
 
   @override

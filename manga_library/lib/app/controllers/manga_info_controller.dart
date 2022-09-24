@@ -18,6 +18,7 @@ class MangaInfoController {
   final MangaInfoOffLineController _mangaInfoOffLineController =
       MangaInfoOffLineController();
   final YabuFetchServices yabuFetchServices = YabuFetchServices();
+  static ChaptersController? chaptersController;
   // final ChaptersController _chaptersController = ChaptersController();
 
   MangaInfoOffLineModel data = MangaInfoOffLineModel(
@@ -53,7 +54,8 @@ class MangaInfoController {
             List.unmodifiable(capitulosDisponiveis ?? []);
         isAnOffLineBook = true;
         // await _chaptersController.correlacionarCapitulos(
-        //     capitulosDisponiveis ?? [], data.capitulos, url);
+        //     capitulosDisponiveis ?? [], data.capitulos, url
+        // );
         state.value = MangaInfoStates.sucess2;
       } else {
         // operação OnLine
@@ -88,7 +90,7 @@ class MangaInfoController {
     }
   }
 
-  Future updateBook(String url, ChaptersController chaptersController) async {
+  Future updateBook(String url, /*ChaptersController chaptersController*/) async {
     try {
       print("l= $url  - atualizando...");
 
@@ -114,7 +116,7 @@ class MangaInfoController {
           print("dd off-line false");
           capitulosFromOriginalServer = dados.capitulos;
         }
-        await chaptersController.update(
+        await chaptersController?.update(
             capitulosDisponiveis, capitulosFromOriginalServer, url);
         final MangaInfoOffLineController mangaInfoOffLineController =
             MangaInfoOffLineController();
@@ -133,7 +135,7 @@ class MangaInfoController {
           print("dd false");
           capitulosFromOriginalServer = dados.capitulos;
         }
-        await chaptersController.update(
+        await chaptersController?.update(
             capitulosDisponiveis, capitulosFromOriginalServer, url);
       }
       state.value = MangaInfoStates.sucess1;
@@ -144,6 +146,25 @@ class MangaInfoController {
       state.value = MangaInfoStates.error;
     }
   }
+
+  void updateChaptersAfterDownload(String url) async {
+    try {
+      MangaInfoOffLineModel? localData =
+          await _mangaInfoOffLineController.verifyDatabase(url);
+      if (localData != null) {
+        //print("existe na base de dados! / l= $url");
+        data = localData;
+        capitulosDisponiveis = localData.capitulos;
+        GlobalData.capitulosDisponiveis =
+            List.unmodifiable(capitulosDisponiveis ?? []);
+        await chaptersController?.updateChapters(capitulosDisponiveis, url);
+      }
+    } catch (e) {
+      debugPrint(
+          "erro no updateChaptersAfterDownload at MangaInfoController: $e");
+    }
+  }
+
   /// função de adicionar ou atualizar para adiministradores
   addOrUpdateBook({required String name, required String link}) async {
     await yabuFetchServices.addOrUpdateBook({"name": name, "link": link});
@@ -169,7 +190,9 @@ class ChaptersController {
       print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
-        await updateChapters(listaCapitulosDisponiveis, listaCapitulos, link);
+        await updateChapters(
+            listaCapitulosDisponiveis, link); // , listaCapitulos
+
       } else {
         await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link);
@@ -220,7 +243,7 @@ class ChaptersController {
 
   updateChapters(
     List<Capitulos>? listaCapitulosDisponiveis,
-    List<Capitulos> listaCapitulos,
+    //List<Capitulos> listaCapitulos,
     String link,
   ) async {
     state.value = ChaptersStates.loading;
@@ -254,7 +277,7 @@ class ChaptersController {
         for (int cap = 0; cap < capitulosLidos.length; ++cap) {
           if ((capitulosCorrelacionados[i].id).toString() ==
               capitulosLidos[cap]) {
-            log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
+            //log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
               id: capitulosCorrelacionados[i].id,
               capitulo: capitulosCorrelacionados[i].capitulo,
@@ -333,10 +356,8 @@ class ChaptersController {
     print('marcar desmarcar concluido!');
   }
 
-  Future<void> correlacionarCapitulos(
-      List<Capitulos> listaCapitulosDisponiveis,
-      List<Capitulos> listaCapitulos,
-      String link,
+  Future<void> correlacionarCapitulos(List<Capitulos> listaCapitulosDisponiveis,
+      List<Capitulos> listaCapitulos, String link,
       {bool isAnUpdate = false}) async {
     ClientDataModel clientData = await _hiveController.getClientData();
     // for (Capitulos element in listaCapitulos) {
@@ -352,6 +373,7 @@ class ChaptersController {
       return;
     }
     print("NÃO RETORNOU!!!");
+
     /// aqui verificamos se podemos exibir o botão de [ atualizar/adicionar ] no servidor
     GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
 
@@ -395,8 +417,9 @@ class ChaptersController {
       for (int alreadyIndice = 0;
           alreadyIndice < listaCapitulosDisponiveis.length;
           ++alreadyIndice) {
-        RegExp idCapituloDisponivel =
-            RegExp(listaCapitulosDisponiveis[alreadyIndice].id, caseSensitive: false);
+        RegExp idCapituloDisponivel = RegExp(
+            listaCapitulosDisponiveis[alreadyIndice].id,
+            caseSensitive: false);
         if (listaCapitulos[indice].id.contains(idCapituloDisponivel)) {
           // print("capitulo correlacionado!: ${listaCapitulos[indice].capitulo}");
           capitulosCorrelacionados.add(Capitulos(

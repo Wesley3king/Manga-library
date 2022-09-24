@@ -79,9 +79,7 @@ class _OthersPageState extends State<OthersPage> {
               ListTile(
                 leading: const Icon(Icons.bookmark),
                 title: const Text('Biblioteca'),
-                onTap: () {
-                  GoRouter.of(context).push('/configlibrary');
-                },
+                onTap: () => GoRouter.of(context).push('/configlibrary'),
               ),
               ListTile(
                 leading: const Icon(Icons.account_circle),
@@ -89,9 +87,9 @@ class _OthersPageState extends State<OthersPage> {
                 onTap: () {},
               ),
               ListTile(
-                leading: const Icon(Icons.download_done),
+                leading: const Icon(Icons.backup),
                 title: const Text('Backup e restauração local'),
-                onTap: () {},
+                onTap: () => GoRouter.of(context).push('/backupconfig'),
               ),
               const Divider(),
               ListTile(

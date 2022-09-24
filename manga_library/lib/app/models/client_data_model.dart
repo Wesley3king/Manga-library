@@ -1,4 +1,4 @@
-import 'package:manga_library/app/models/home_page_model.dart';
+// import 'package:manga_library/app/models/home_page_model.dart';
 
 class ClientDataModel {
   ClientDataModel({
@@ -7,7 +7,6 @@ class ClientDataModel {
     required this.mail,
     required this.password,
     required this.isAdimin,
-    required this.favoritos,
     required this.capitulosLidos,
   });
   late final int id;
@@ -15,7 +14,6 @@ class ClientDataModel {
   late final String mail;
   late final String password;
   late final bool isAdimin;
-  late final List<dynamic> favoritos; //Map<String, String>
   late final List<dynamic> capitulosLidos; //Map<String, dynamic>
 
   ClientDataModel.fromJson(Map<String, dynamic> json) {
@@ -24,7 +22,7 @@ class ClientDataModel {
     mail = json['mail'];
     password = json['password'];
     isAdimin = json['isadimin'];
-    favoritos = json['favoritos'];
+    // favoritos = json['favoritos'];
     capitulosLidos = json['capitulosLidos'];
   }
 
@@ -35,7 +33,7 @@ class ClientDataModel {
     _data['mail'] = mail;
     _data['password'] = password;
     _data['isadimin'] = isAdimin;
-    _data['favoritos'] = favoritos;
+    // _data['favoritos'] = favoritos;
     _data['capitulosLidos'] = capitulosLidos;
     return _data;
   }

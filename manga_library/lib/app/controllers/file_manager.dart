@@ -31,9 +31,8 @@ class FileManager {
   }
 
   /// passe a imagem de indice 0 para funcionar :
-  /// ex: [/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/Manga_Library/The Beginning After The End/cap_152/0.jpg]
+  /// ex: [ /storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/Manga_Library/The Beginning After The End/cap_152/0.jpg ]
   Future<bool> deleteDownloads(String imagePath) async {
-    // /storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/Manga_Library/The Beginning After The End/cap_152/8.jpg  /storage/emulated/0/Manga Libray/Downloads/
     try {
       // aqui cortamos o caminho da imagem para pegar seu path e deletar o directório
       List<String> paths = imagePath.split("/0.");
@@ -60,31 +59,28 @@ class FileManager {
 //   }
 // }
 
-void createGzFile() async {
+Future<bool> createGzFile(Map<String, dynamic> backupData) async {
   try {
-    File file = File("/storage/emulated/0/Manga Libray/manga/backup2.gz");
+    File file = File("/storage/emulated/0/Manga Libray/Backups/Backup_${DateTime.now()}.gz");
     if (file.existsSync()) {
       debugPrint("este arquivo existe!");
     } else {
-      Map<String, dynamic> data = {
-        "tipo": "vertical",
-        "exists": true,
-        "num": [1, 3, 6],
-      };
       debugPrint("este arquivo não existe!");
       var resArchive = await file.create(recursive: false);
       // debugPrint("archive: $resArchive");
 
-      var jsonData = json.encode(data);
+      var jsonData = json.encode(backupData);
       var bytes = utf8.encode(jsonData);
       var gzBytes = GZipCodec(dictionary: bytes);
       var decode = gzBytes.encoder;
       resArchive
           .writeAsBytes(decode.convert(bytes))
-          .whenComplete(() => debugPrint("file escrita!"));
+          .whenComplete(() => debugPrint("Backup created!"));
     }
+    return true;
   } catch (e) {
     debugPrint("erro no createGZFile: $e");
+    return false;
   }
 }
 

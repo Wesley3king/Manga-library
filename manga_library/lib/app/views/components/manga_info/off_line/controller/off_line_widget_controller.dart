@@ -59,6 +59,7 @@ class OffLineWidgetController {
         model: mangaModel,
         capitulo: capitulo,
         attempts: 0,
+        cancel: false,
         state: state,
         valueNotifier: downloadProgress);
     // int lengthChapter =
@@ -73,7 +74,7 @@ class OffLineWidgetController {
   }
 
   void cancel(Capitulos capitulo) async {
-    DownloadController.cancelDownload(capitulo);
+    await DownloadController.cancelDownload(capitulo);
     state.value = DownloadStates.download;
   }
 

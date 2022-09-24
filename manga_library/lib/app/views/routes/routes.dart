@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/views/components/configurations/backup_config/backup.dart';
 import 'package:manga_library/app/views/components/configurations/config_options.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/components/configurations/library_config/library_config.dart';
@@ -57,5 +58,9 @@ final routes = GoRouter(initialLocation: '/home', routes: [
   GoRoute(
     path: '/configlibrary',
     builder: (context, state) => const LibraryConfig(),
+  ),
+  GoRoute(
+    path: '/backupconfig',
+    builder: (context, state) => const BackupConfig(),
   ),
 ]);

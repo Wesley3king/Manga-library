@@ -35,7 +35,7 @@ class SucessMangaInfo extends StatefulWidget {
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  final ChaptersController chaptersController = ChaptersController();
+  late final ChaptersController chaptersController;
 
   int itemCount = 2;
   // colors
@@ -54,7 +54,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         await chaptersController.marcarDesmarcar(id, link, nameImageLink);
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
-            ChaptersController.capitulosCorrelacionados,
+            //ChaptersController.capitulosCorrelacionados,
             nameImageLink["link"]!);
       },
       icon: const Icon(Icons.check),
@@ -72,7 +72,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         await chaptersController.marcarDesmarcar(id, link, nameImageLink);
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
-            ChaptersController.capitulosCorrelacionados,
+            // ChaptersController.capitulosCorrelacionados,
             nameImageLink["link"]!);
       },
       icon: const Icon(
@@ -127,10 +127,15 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       leading: capitulo.readed
           ? lido(capitulo.id.toString(), widget.link)
           : naoLido(capitulo.id.toString(), widget.link),
-      trailing: MangaInfoController.isAnOffLineBook ? OffLineWidget(
-        capitulo: capitulo,
-        model: widget.dados,
-      ) : const SizedBox(width: 1, height: 1,),
+      trailing: MangaInfoController.isAnOffLineBook
+          ? OffLineWidget(
+              capitulo: capitulo,
+              model: widget.dados,
+            )
+          : const SizedBox(
+              width: 1,
+              height: 1,
+            ),
       onTap: () => GoRouter.of(context).push('/leitor/${widget.link}/$id'),
     );
   }
@@ -138,6 +143,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   @override
   void initState() {
     super.initState();
+    chaptersController = ChaptersController();
+    MangaInfoController.chaptersController = chaptersController;
     //print("link: ${widget.link}");
   }
 
@@ -166,7 +173,9 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         color: configSystemController.colorManagement(),
         onRefresh: () async {
           if (chaptersController.state.value == ChaptersStates.sucess) {
-            await widget.controller.updateBook(widget.link, chaptersController);
+            await widget.controller.updateBook(
+              widget.link, /*chaptersController*/
+            );
           }
         },
         child: AnimatedBuilder(

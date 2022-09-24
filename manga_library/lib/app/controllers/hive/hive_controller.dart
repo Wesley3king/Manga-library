@@ -36,7 +36,6 @@ class HiveController {
           mail: 'king@mail.com',
           password: 'teste32#f',
           isAdimin: true,
-          favoritos: [],
           capitulosLidos: [],
         );
       } else {
@@ -55,7 +54,6 @@ class HiveController {
       mail: 'king@mail.com',
       password: 'teste32#f',
       isAdimin: true,
-      favoritos: [],
       capitulosLidos: [],
     );
 
