@@ -53,5 +53,11 @@ class BackupCore {
     }
   }
 
-  static readBackup() async {}
+  static readBackup() async {
+    final HiveController hiveController = HiveController();
+    final FileManager fileManager = FileManager();
+
+    final dynamic data = await fileManager.getAnGZFile();
+    
+  }
 }

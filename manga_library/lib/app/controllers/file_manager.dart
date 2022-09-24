@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 // -------------------------------------------------------------------------
@@ -46,7 +48,8 @@ class FileManager {
     }
   }
 
-  Future<bool> createGzFile({required Map<String, dynamic> backupData, required String path}) async {
+  Future<bool> createGzFile(
+      {required Map<String, dynamic> backupData, required String path}) async {
     try {
       File file = File(path);
       if (file.existsSync()) {
@@ -71,17 +74,59 @@ class FileManager {
     }
   }
 
-  void readGzArchive() async {
+  Future<dynamic> readGZFile(String path) async {
     try {
-      File file = File("/storage/emulated/0/Manga Libray/manga/backup2.gz");
+      File file = File(path);
       var bin = await file.readAsBytes();
-      // print(bin);
       var decode = GZipCodec(dictionary: bin);
       var bytes = decode.decoder;
-      var data = utf8.decode(bytes.convert(bin));
+      var stringUtf8 = utf8.decode(bytes.convert(bin));
+      var data = json.decode(stringUtf8);
       print(data);
+      return data;
     } catch (e) {
       debugPrint("erro no readGzArchive: $e");
+      return null;
+    }
+  }
+
+  // abre o buscador de arquivos do sistema para retirar um .gz
+  Future<dynamic> getAnGZFile() async {
+    try {
+      final data = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ['gz']);
+      if (data == null) {
+        debugPrint("não selecionou um arquivo!");
+        return false;
+      } else {
+        // modifique o caminho
+        final path = data.files.single.path!
+            .replaceFirst("Android/data/com.example.manga_library/files/", "");
+        log("arquive - path: $path");
+        //File file = File(path);
+        return await readGZFile(path);
+      }
+    } catch (e) {
+      debugPrint("falha at readArchive System: $e");
+      return null;
+    }
+  }
+
+  Future<String?> getDirectory() async {
+    try {
+      final data = await FilePicker.platform.getDirectoryPath();
+      if (data == null) {
+        log("não foi selecionado uma file!");
+        return null;
+      } else {
+        log("path: $data");
+        return data;
+      }
+    } catch (e) {
+      debugPrint("erro no getDirectory: $e");
+      return null;
     }
   }
 }

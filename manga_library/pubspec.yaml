@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^10.0.0
   image_downloader: ^0.31.0
   extended_image: ^6.2.1
+  file_picker: ^5.2.0
 
 dev_dependencies:
   flutter_test:
