@@ -45,6 +45,45 @@ class FileManager {
       return false;
     }
   }
+
+  Future<bool> createGzFile({required Map<String, dynamic> backupData, required String path}) async {
+    try {
+      File file = File(path);
+      if (file.existsSync()) {
+        debugPrint("este arquivo existe!");
+      } else {
+        debugPrint("este arquivo não existe!");
+        var resArchive = await file.create(recursive: false);
+        // debugPrint("archive: $resArchive");
+
+        var jsonData = json.encode(backupData);
+        var bytes = utf8.encode(jsonData);
+        var gzBytes = GZipCodec(dictionary: bytes);
+        var decode = gzBytes.encoder;
+        resArchive
+            .writeAsBytes(decode.convert(bytes))
+            .whenComplete(() => debugPrint("Backup created!"));
+      }
+      return true;
+    } catch (e) {
+      debugPrint("erro no createGZFile: $e");
+      return false;
+    }
+  }
+
+  void readGzArchive() async {
+    try {
+      File file = File("/storage/emulated/0/Manga Libray/manga/backup2.gz");
+      var bin = await file.readAsBytes();
+      // print(bin);
+      var decode = GZipCodec(dictionary: bin);
+      var bytes = decode.decoder;
+      var data = utf8.decode(bytes.convert(bin));
+      print(data);
+    } catch (e) {
+      debugPrint("erro no readGzArchive: $e");
+    }
+  }
 }
 
 // void deleteFile() async {
@@ -59,41 +98,4 @@ class FileManager {
 //   }
 // }
 
-Future<bool> createGzFile(Map<String, dynamic> backupData) async {
-  try {
-    File file = File("/storage/emulated/0/Manga Libray/Backups/Backup_${DateTime.now()}.gz");
-    if (file.existsSync()) {
-      debugPrint("este arquivo existe!");
-    } else {
-      debugPrint("este arquivo não existe!");
-      var resArchive = await file.create(recursive: false);
-      // debugPrint("archive: $resArchive");
 
-      var jsonData = json.encode(backupData);
-      var bytes = utf8.encode(jsonData);
-      var gzBytes = GZipCodec(dictionary: bytes);
-      var decode = gzBytes.encoder;
-      resArchive
-          .writeAsBytes(decode.convert(bytes))
-          .whenComplete(() => debugPrint("Backup created!"));
-    }
-    return true;
-  } catch (e) {
-    debugPrint("erro no createGZFile: $e");
-    return false;
-  }
-}
-
-void readGzArchive() async {
-  try {
-    File file = File("/storage/emulated/0/Manga Libray/manga/backup2.gz");
-    var bin = await file.readAsBytes();
-    // print(bin);
-    var decode = GZipCodec(dictionary: bin);
-    var bytes = decode.decoder;
-    var data = utf8.decode(bytes.convert(bin));
-    print(data);
-  } catch (e) {
-    debugPrint("erro no readGzArchive: $e");
-  }
-}
