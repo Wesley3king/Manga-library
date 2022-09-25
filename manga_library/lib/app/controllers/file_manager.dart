@@ -75,8 +75,10 @@ class FileManager {
   }
 
   Future<dynamic> readGZFile(String path) async {
+    // final String erro = "";
     try {
       File file = File(path);
+      //erro += ""
       var bin = await file.readAsBytes();
       var decode = GZipCodec(dictionary: bin);
       var bytes = decode.decoder;
@@ -86,31 +88,34 @@ class FileManager {
       return data;
     } catch (e) {
       debugPrint("erro no readGzArchive: $e");
-      return null;
+      return "$e";
     }
   }
 
   // abre o buscador de arquivos do sistema para retirar um .gz
   Future<dynamic> getAnGZFile() async {
+    //String status = "";
     try {
       final data = await FilePicker.platform.pickFiles(
           allowMultiple: false,
           type: FileType.custom,
           allowedExtensions: ['gz']);
       if (data == null) {
+        //status += "sem selecionar";
         debugPrint("não selecionou um arquivo!");
         return false;
       } else {
         // modifique o caminho
         final path = data.files.single.path!
-            .replaceFirst("Android/data/com.example.manga_library/files/", "");
+            .replaceFirst("Android/data/com.example.manga_library/files/", ""); // com.example.manga_library com.king.manga_library
         log("arquive - path: $path");
+        //status += "p= $path";
         //File file = File(path);
         return await readGZFile(path);
       }
     } catch (e) {
       debugPrint("falha at readArchive System: $e");
-      return null;
+      return null; //  "$status - $e"
     }
   }
 

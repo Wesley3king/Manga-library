@@ -22,13 +22,17 @@ class _BackupConfigState extends State<BackupConfig> {
           children: [
             ListTile(
               title: const Text("Criar Backup"),
-              subtitle: const Text("Cria um Backup na pasta de backups em Manga Library/Backups"),
+              subtitle: const Text(
+                  "Cria um Backup na pasta de backups em Manga Library/Backups"),
               onTap: () => BackupCore.createBackup(),
             ),
             ListTile(
               title: const Text("Restaurar Dados"),
               subtitle: const Text("restaura os dados a partir de um backup"),
-              onTap: () => BackupCore.readBackup(),
+              onTap: () async {
+                String response = await BackupCore.readBackup();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response)));
+              },
             )
           ],
         ),

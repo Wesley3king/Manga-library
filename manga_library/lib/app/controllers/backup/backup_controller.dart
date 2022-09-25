@@ -54,34 +54,45 @@ class BackupCore {
     }
   }
 
-  static readBackup() async {
+  static Future<String> readBackup() async {
     final HiveController hiveController = HiveController();
     final FileManager fileManager = FileManager();
-
+    String message = "";
     try {
+      //message += "0, ";
       final dynamic data = await fileManager.getAnGZFile();
-
+      if (data == null) {
+        message += "isNULL";
+      }
+      //message += "$data";
       // clientData
-      await hiveController.updateClientData(ClientDataModel.fromJson(data['clientData']));
-
+      var dados = data['clientData'];
+      //message += "1.1, ";
+      var model = ClientDataModel.fromJson(dados);
+      //message += "1.2, ";
+      await hiveController.updateClientData(model);
+      //message += "2, ";
       // libraries - updateLibraries(List<LibraryModel> listModel)
       List<LibraryModel> libraryList = data['libraries']
-          .map<LibraryModel>(
-              (dynamic json) => LibraryModel.fromJson(json))
+          .map<LibraryModel>((dynamic json) => LibraryModel.fromJson(json))
           .toList(); // Map<String, >
       await hiveController.updateLibraries(libraryList);
-
+      //message += "3, ";
       // settings
       await hiveController.updateSettings(data['settings']);
-
+      //message += "4, ";
       // books - List<MangaInfoOffLineModel> data
       var books = data['books']
           .map<MangaInfoOffLineModel>(
               (dynamic book) => MangaInfoOffLineModel.fromJson(book))
           .toList();
+      //message += "4.5, ";
       await hiveController.updateBook(books);
+      // message += "5, ";
+      return "sucess";
     } catch (e) {
       debugPrint("erro no readBackup at BackupCore: $e");
+      return '$message - $e';
     }
   }
 }
