@@ -24,7 +24,9 @@ class HiveController {
     libraries?.close();
     books?.close();
   }
-
+  // ---------------------------------------------------------------------------
+  //      ======================= CLIENT DATA =======================
+  // ---------------------------------------------------------------------------
   Future<dynamic> getClientData() async {
     try {
       ClientDataModel? data = await clientData?.get('clientAllData');
@@ -70,7 +72,9 @@ class HiveController {
     }
   }
 
-  // library
+  // ---------------------------------------------------------------------------
+  //       ======================= LIBRARIES =======================
+  // ---------------------------------------------------------------------------
   Future<List<LibraryModel>> writeLibraryData() async {
     final LibraryModel model = LibraryModel.fromJson({
       "library": "favoritos",
@@ -140,7 +144,9 @@ class HiveController {
       return false;
     }
   }
-
+  // ---------------------------------------------------------------------------
+  //       ======================= SETTINGS =======================
+  // ---------------------------------------------------------------------------
   Future<Map<String, dynamic>> writeSettings() async {
     Map<String, dynamic> model = {
       "Ordenação": "oldtonew",
@@ -193,7 +199,9 @@ class HiveController {
     }
   }
 
-  // OffLine database operations
+  // ---------------------------------------------------------------------------
+  //  ====================== OffLine database operations =======================
+  // ---------------------------------------------------------------------------
 
   Future<bool> writeBook() async {
     try {

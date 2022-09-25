@@ -10,7 +10,7 @@ import 'dart:io';
 
 /// class that allows manipulating system directories or files
 class FileManager {
-  Directory dir = Directory("/storage/emulated/0/Manga Libray");
+  Directory dir = Directory("/storage/emulated/0/Manga Library");
 
   Future<void> verifyIfIsFirstTime() async {
     if (!dir.existsSync()) {

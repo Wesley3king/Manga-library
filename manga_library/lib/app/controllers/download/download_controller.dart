@@ -189,11 +189,11 @@ class DownloadController {
           filaDeDownload[index].attempts = 3;
           if (pagesPath.isEmpty) {
             await deleteDownloadForCancel(
-                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/$chapterPath/$i.${exe[0]}");
+                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$chapterPath/$i.${exe[0]}");
           } else {
             if (pagesPath[0].contains("error:")) {
               await deleteDownloadForCancel(
-                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Libray/Downloads/$chapterPath/$i.${exe[0]}");
+                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$chapterPath/$i.${exe[0]}");
             } else {
               await deleteDownloadForCancel(pagesPath[0]);
             }
@@ -204,7 +204,7 @@ class DownloadController {
         String imagePath = "";
         var imageId = await ImageDownloader.downloadImage(capitulo.pages[i],
                 destination:
-                    AndroidDestinationType.custom(directory: "Manga Libray")
+                    AndroidDestinationType.custom(directory: "Manga Library")
                       ..inExternalFilesDir()
                       ..subDirectory("Downloads/$chapterPath/$i.${exe[0]}"))
             .catchError((error) {

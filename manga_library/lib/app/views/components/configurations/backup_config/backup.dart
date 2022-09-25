@@ -28,7 +28,7 @@ class _BackupConfigState extends State<BackupConfig> {
             ListTile(
               title: const Text("Restaurar Dados"),
               subtitle: const Text("restaura os dados a partir de um backup"),
-              onTap: () {},
+              onTap: () => BackupCore.readBackup(),
             )
           ],
         ),
