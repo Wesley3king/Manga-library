@@ -1,0 +1,9 @@
+{
+    "nome": "String",
+    "id": 0,
+    "NSFW": true,
+    "enable": true,
+    "homePage": "Function",
+    "mangaDetail": "Function",
+    "search": "Function"
+}
