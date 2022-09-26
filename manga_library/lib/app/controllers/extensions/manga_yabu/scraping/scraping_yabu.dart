@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:chaleno/chaleno.dart';
 import 'package:flutter/rendering.dart';
@@ -61,10 +61,11 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
                 corteLinkAndNnome[0].split('">'); // link [0]
             final List<String> corteNome =
                 corteLinkAndNnome2[1].split('</a>'); // nome [0]
-
+            
+            List<String> corteUrl1 = corteLinkAndNnome2[0].split('manga/'); // posicao 1
             resultadoFinal.add({
               "name": corteNome[0],
-              "url": corteLinkAndNnome2[0],
+              "url": corteUrl1[1],
               "img": imagem,
             });
           }

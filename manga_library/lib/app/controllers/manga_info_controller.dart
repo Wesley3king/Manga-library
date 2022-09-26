@@ -7,7 +7,7 @@ import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart'
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
-import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
+// import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 // import '../models/leitor_pages.dart';
 import '../models/libraries_model.dart';
@@ -19,7 +19,7 @@ class MangaInfoController {
   final mangaYabu = ExtensionMangaYabu();
   final MangaInfoOffLineController _mangaInfoOffLineController =
       MangaInfoOffLineController();
-  final YabuFetchServices yabuFetchServices = YabuFetchServices();
+  // final YabuFetchServices yabuFetchServices = YabuFetchServices();
   static ChaptersController? chaptersController;
   // final ChaptersController _chaptersController = ChaptersController();
 
@@ -52,10 +52,10 @@ class MangaInfoController {
         if (mangaDetailExtensions[idExtension].isTwoRequests) {
           isTwoRequests = true;
         }
-          
+
         data = localData;
         capitulosDisponiveis = localData.capitulos;
-        
+
         log("at offline start length: ${capitulosDisponiveis!.length}");
         GlobalData.capitulosDisponiveis =
             List.unmodifiable(capitulosDisponiveis ?? []);
@@ -72,7 +72,7 @@ class MangaInfoController {
         final MangaInfoOffLineModel? dados;
         if (mangaDetailExtensions[idExtension].isTwoRequests) {
           isTwoRequests = true;
-          dados = await mangaDetailExtensions[idExtension].mangaDetail();
+          dados = await mangaDetailExtensions[idExtension].mangaDetail(url);
           if (dados != null) {
             data = dados;
             state.value = MangaInfoStates.sucess1;
@@ -84,7 +84,7 @@ class MangaInfoController {
           //log("at online start: ${capitulosDisponiveis!.length}");
         } else {
           isTwoRequests = false;
-          dados = await mangaDetailExtensions[idExtension].mangaDetail();
+          dados = await mangaDetailExtensions[idExtension].mangaDetail(url);
           if (dados != null) {
             data = dados;
             capitulosDisponiveis = data.capitulos;
@@ -117,7 +117,8 @@ class MangaInfoController {
     try {
       print("l= $url  - atualizando...");
 
-      final MangaInfoOffLineModel? dados = await mangaDetailExtensions[idExtension].mangaDetail();
+      final MangaInfoOffLineModel? dados =
+          await mangaDetailExtensions[idExtension].mangaDetail(url);
 
       if (dados != null) {
         data = dados;
@@ -137,7 +138,8 @@ class MangaInfoController {
           debugPrint("nao é twoRequests: $capitulosDisponiveis");
         }
 
-        List<Capitulos> capitulosFromOriginalServer = dados == null ? [] : dados.capitulos;
+        List<Capitulos> capitulosFromOriginalServer =
+            dados == null ? [] : dados.capitulos;
         if (dados == null) {
           print("dd off-line true");
           capitulosFromOriginalServer = [];
@@ -146,8 +148,7 @@ class MangaInfoController {
           capitulosFromOriginalServer = dados.capitulos;
         }
         await chaptersController?.update(
-          capitulosDisponiveis, capitulosFromOriginalServer, url
-        );
+            capitulosDisponiveis, capitulosFromOriginalServer, url);
         final MangaInfoOffLineController mangaInfoOffLineController =
             MangaInfoOffLineController();
         await mangaInfoOffLineController.updateBook(
@@ -164,7 +165,7 @@ class MangaInfoController {
           capitulosDisponiveis = dados?.capitulos ?? [];
           debugPrint("nao é twoRequests: $capitulosDisponiveis");
         }
-        
+
         List<Capitulos> capitulosFromOriginalServer =
             dados == null ? [] : dados.capitulos;
         if (dados == null) {
@@ -206,8 +207,16 @@ class MangaInfoController {
   }
 
   /// função de adicionar ou atualizar para adiministradores
-  addOrUpdateBook({required String name, required String link}) async {
-    await yabuFetchServices.addOrUpdateBook({"name": name, "link": link});
+  addOrUpdateBook(
+      {required String name,
+      required String link,
+      required int idExtension}) async {
+    try {
+      await mangaDetailExtensions[idExtension]
+          .addOrUpdateBook({"name": name, "link": link});
+    } catch (e) {
+      debugPrint("erro no addOrUpdateBook at MangaDetail: $e");
+    }
   }
 }
 
@@ -226,7 +235,8 @@ class ChaptersController {
     state.value = ChaptersStates.loading;
     // GlobalData.capitulosDisponiveis;
     try {
-      print('start // link: $link');
+      print(
+          'start // link: $link // ${listaCapitulosDisponiveis?.length} // ${listaCapitulos.length}');
       print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
@@ -238,6 +248,7 @@ class ChaptersController {
           await correlacionarCapitulos(
               listaCapitulosDisponiveis ?? [], listaCapitulos, link);
         } else {
+          print("isn't twoRequests");
           await updateChapters(listaCapitulosDisponiveis, link);
         }
       }
@@ -296,7 +307,7 @@ class ChaptersController {
   ) async {
     state.value = ChaptersStates.loading;
     try {
-      print('restart');
+      print('update chapters');
       // conseguir os dados
       ClientDataModel clientData = await _hiveController.getClientData();
       // achar os capitulos lidos do manga pelo link
@@ -351,6 +362,7 @@ class ChaptersController {
           adicionado = true;
         }
       }
+      print(listaCapitulosCorrelacionadosLidos);
       capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       // }
       print('- restart - end');

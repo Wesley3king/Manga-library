@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/leitor_pages.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
@@ -33,14 +34,14 @@ class MangaInfoOffLineController {
       {required String link, required List<MangaInfoOffLineModel> lista}) {
     RegExp regex = RegExp(link, caseSensitive: false);
     for (int i = 0; i < lista.length; ++i) {
-      print("iniciar!");
-      print("quantidade de mangas = ${lista.length}");
+      debugPrint("iniciar!");
+      debugPrint("quantidade de mangas = ${lista.length}");
       if (lista[i].link.contains(regex)) {
-        print("achado na memória!");
+        debugPrint("achado na memória!");
         return lista[i];
       }
     }
-    print("não encontrei o manga na memoria");
+    debugPrint("não encontrei o manga na memoria");
     return null;
   }
 
@@ -73,13 +74,13 @@ class MangaInfoOffLineController {
   List<ModelCapitulosCorrelacionados> buildModelCapitulosCorrelacionados(
       MangaInfoOffLineModel model) {
     var lista = model.capitulos.map((Capitulos cap) {
-      print("mt1 - ${cap.disponivel ? "T" : "F"}");
+      debugPrint("mt1 - ${cap.disponivel ? "T" : "F"}");
       var md = ModelCapitulosCorrelacionados(
           id: cap.id,
           capitulo: cap.capitulo,
           disponivel: cap.disponivel,
           readed: cap.readed);
-      print("mt2 - ${md.disponivel ? "T" : "F"}");
+      debugPrint("mt2 - ${md.disponivel ? "T" : "F"}");
       return md;
     }).toList();
 
@@ -105,14 +106,14 @@ class MangaInfoOffLineController {
         capitulos: capitulos,
       );
       data!.add(newModel);
-      for (Capitulos element in newModel.capitulos) {
-        print("capitulo addbook:  ${element.capitulo} / ${element.disponivel}");
-      }
+      // for (Capitulos element in newModel.capitulos) {
+      //   print("capitulo addbook:  ${element.capitulo} / ${element.disponivel}");
+      // }
       await _hiveController.updateBook(data);
-      print("terinado!");
+      debugPrint("terinado!");
       return true;
     } catch (e) {
-      print("erro no addBook at MangaInfoOffLineController: $e");
+      debugPrint("erro no addBook at MangaInfoOffLineController: $e");
       return false;
     }
   }

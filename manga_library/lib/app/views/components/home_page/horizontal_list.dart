@@ -20,9 +20,9 @@ class _HorizontalListState extends State<HorizontalList>
       padding: const EdgeInsets.all(3.0),
       child: GestureDetector(
         onTap: () {
-          List<String> corteUrl1 = data.url.split('manga/');
+          // List<String> corteUrl1 = data.url.split('manga/');
           GoRouter.of(context).push(
-              '/detail/${corteUrl1[1].replaceFirst('/', '')}/${data.idExtension}');
+              '/detail/${data.url}/${data.idExtension}');
         },
         child: SizedBox(
           width: 110,

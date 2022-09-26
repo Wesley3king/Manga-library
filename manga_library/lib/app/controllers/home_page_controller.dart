@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
+// import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
@@ -8,7 +8,7 @@ enum HomeStates { start, loading, sucess, error }
 
 class HomePageController {
   static String errorMessage = '';
-  final List<dynamic> extensoes = homePageExtensions;
+  final List<dynamic> extensoes = listOfExtensions;
   final HiveController _hiveController = HiveController();
   List<ModelHomePage> data = [];
 

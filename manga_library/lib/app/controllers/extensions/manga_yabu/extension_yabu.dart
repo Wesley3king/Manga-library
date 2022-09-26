@@ -1,7 +1,8 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:developer';
 
-import 'package:chaleno/chaleno.dart';
+// import 'package:chaleno/chaleno.dart';
+import 'package:manga_library/app/controllers/extensions/manga_yabu/repositories/yabu_fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/scraping/scraping_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 // import 'package:manga_library/app/controllers/home_page_controller.dart';
@@ -9,8 +10,7 @@ import 'package:manga_library/app/models/home_page_model.dart';
 // import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
-import 'package:manga_library/app/views/components/manga_info/manga_details.dart';
-import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
+
 
 class ExtensionMangaYabu implements Extension {
   @override
@@ -39,6 +39,7 @@ class ExtensionMangaYabu implements Extension {
   @override
   Future<SearchModel> search(String txt) async {
     Map<String, dynamic> data = await fetchServices.search(txt);
+    log("data: $data");
     return SearchModel.fromJson(data);
   }
 }

@@ -36,7 +36,9 @@ class _MangaDetailsState extends State<MangaDetails> {
           onPressed: () {
             widget.controller.addOrUpdateBook(
                 name: widget.dados.name,
-                link: 'https://mangayabu.top/manga/${widget.link}');
+                link: 'https://mangayabu.top/manga/${widget.link}',
+                idExtension: widget.dados.idExtension
+                );
           },
           child: const Text('Adicionar/Atualizar'));
     } else {

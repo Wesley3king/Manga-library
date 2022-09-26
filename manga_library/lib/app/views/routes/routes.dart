@@ -42,9 +42,10 @@ final routes = GoRouter(initialLocation: '/home', routes: [
   GoRoute(
     path: '/detail/:link/:extension',
     builder: (context, state) {
-      int idExtension = int.parse(state.params['link'].toString());
+      int idExtension = int.parse(state.params['extension'].toString());
       String url = state.params['link'].toString();
       print(url);
+      print(idExtension);
       return MangaInfo(link: url, idExtension: idExtension,);
     },
   ),

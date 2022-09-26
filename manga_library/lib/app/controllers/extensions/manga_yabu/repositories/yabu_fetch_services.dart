@@ -43,6 +43,7 @@ class YabuFetchServices {
           data: {"txt": txt});
       return {
         "font": "MangaYabu",
+        "idExtension": 1,
         "data": data.data['data'],
       };
     } catch (e, s) {
@@ -50,6 +51,7 @@ class YabuFetchServices {
       print(s);
       return {
         "font": "MangaYabu",
+        "idExtension": 1,
         "data": [],
       };
     }
@@ -74,6 +76,7 @@ class YabuFetchServices {
       }).toList();
       return {
         "font": "MangaYabu Undisponible",
+        "idExtension": 2,
         "data": formatedData,
       };
     } catch (e, s) {
@@ -81,6 +84,7 @@ class YabuFetchServices {
       print(s);
       return {
         "font": "MangaYabu Undisponible",
+        "idExtension": 2,
         "data": [],
       };
     }

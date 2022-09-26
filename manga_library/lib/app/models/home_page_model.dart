@@ -6,10 +6,10 @@ class ModelHomePage {
   late final List<ModelHomeBook> books;
 
   ModelHomePage.fromJson(Map<String, dynamic> json) {
-    //print("satrt");
+    // print("satrt");
     title = json['title'];
     idExtension = json['idExtension'];
-    //print("okkk");
+    // print("okkk");
     books = List.from(json['books'])
         .map((dynamic json) =>
             ModelHomeBook.fromJson({...json, "idExtension": idExtension}))
@@ -37,7 +37,7 @@ class ModelHomeBook {
   late final int idExtension;
 
   ModelHomeBook.fromJson(Map<String, dynamic> json) {
-   // print("home: $json");
+  //  print("home: $json");
     name = json['name'];
     url = json['url'];
     img = json['img'];
