@@ -9,7 +9,7 @@ class YabuFetchServices {
     sendTimeout: 40000,
   ));
   
-  Future<List<Capitulos>?> fetchCapitulos(String url) async {
+  Future<List<Capitulos>?> fetchChapters(String url) async {
     try {
       var data = await dio.post('https://vast-falls-98079.herokuapp.com/manga',
           data: {"url": 'https://mangayabu.top/manga/$url'});

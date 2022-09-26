@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
-import 'package:manga_library/app/views/components/error.dart';
+import 'package:manga_library/app/views/components/home_page/error.dart';
 import 'package:manga_library/app/views/components/manga_info/manga_info_sucess.dart';
 
 import '../models/leitor_pages.dart';
 
 class MangaInfo extends StatefulWidget {
   final String link;
-  const MangaInfo({super.key, required this.link});
+  final int idExtension;
+  const MangaInfo({super.key, required this.link, required this.idExtension});
 
   @override
   State<MangaInfo> createState() => _MangaInfoState();
@@ -54,7 +55,7 @@ class _MangaInfoState extends State<MangaInfo> {
   }
 
   void initialStart() async {
-    await mangaInfoController.start(widget.link);
+    await mangaInfoController.start(widget.link, widget.idExtension);
     if (MangaInfoController.isAnOffLineBook) {
       DownloadController.mangaInfoController = mangaInfoController;
     }

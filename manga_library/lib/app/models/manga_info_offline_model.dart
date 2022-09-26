@@ -4,6 +4,7 @@ class MangaInfoOffLineModel {
     required this.description,
     required this.img,
     required this.link,
+    required this.idExtension,
     required this.genres,
     required this.alternativeName,
     required this.chapters,
@@ -13,6 +14,7 @@ class MangaInfoOffLineModel {
   late final String description;
   late final String img;
   late final String link;
+  late final int idExtension;
   late final List<String> genres;
   late final dynamic alternativeName;
   late final int chapters;
@@ -23,6 +25,7 @@ class MangaInfoOffLineModel {
     description = json['description'];
     img = json['img'];
     link = json['link'];
+    idExtension = json['idExtension'];
     genres = List.castFrom<dynamic, String>(json['genres']);
     alternativeName = json['alternativeName'];
     chapters = json['chapters'];
@@ -37,6 +40,7 @@ class MangaInfoOffLineModel {
     _data['description'] = description;
     _data['img'] = img;
     _data['link'] = link;
+    _data['idExtension'] = idExtension;
     _data['genres'] = genres;
     _data['alternativeName'] = alternativeName;
     _data['chapters'] = chapters;

@@ -17,7 +17,7 @@ class SearchResultsPage extends StatelessWidget {
         onTap: () {
           List<String> corteUrl1 = data.link.split('manga/');
           GoRouter.of(context)
-              .push('/info/${corteUrl1[1].replaceFirst('/', '')}');
+              .push('/detail/${corteUrl1[1].replaceFirst('/', '')}');
         },
         child: SizedBox(
           width: 110,

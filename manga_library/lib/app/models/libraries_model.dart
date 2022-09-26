@@ -24,15 +24,18 @@ class Books {
     required this.name,
     required this.link,
     required this.img,
+    required this.idExtension,
   });
   late final String name;
   late final String link;
   late final String img;
+  late final int idExtension;
 
   Books.fromJson(Map<dynamic, dynamic> json) {
     name = json['name'];
     link = json['link'];
     img = json['img'];
+    idExtension = json['idExtension'];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +43,7 @@ class Books {
     _data['name'] = name;
     _data['link'] = link;
     _data['img'] = img;
+    _data['idExtension'] = idExtension;
     return _data;
   }
 }

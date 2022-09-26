@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
@@ -10,7 +11,8 @@ import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 // import '../models/leitor_pages.dart';
 import '../models/libraries_model.dart';
-import 'extensions/extension_manga_yabu.dart';
+// import 'extensions/extension_manga_yabu.dart';
+import 'extensions/manga_yabu/extension_yabu.dart';
 import 'home_page_controller.dart';
 
 class MangaInfoController {
@@ -26,6 +28,7 @@ class MangaInfoController {
     description: "",
     img: "",
     link: "",
+    idExtension: 0,
     genres: [],
     alternativeName: false,
     chapters: 0,
@@ -33,10 +36,11 @@ class MangaInfoController {
   );
   List<Capitulos>? capitulosDisponiveis = [];
   static bool isAnOffLineBook = false;
+  static bool isTwoRequests = false;
   ValueNotifier<MangaInfoStates> state =
       ValueNotifier<MangaInfoStates>(MangaInfoStates.start);
 
-  Future start(String url) async {
+  Future start(String url, int idExtension) async {
     state.value = MangaInfoStates.loading;
     try {
       // operação OffLine
@@ -61,20 +65,39 @@ class MangaInfoController {
         // operação OnLine
         print("iniciando o fetch! / l= $url");
 
-        final MangaInfoOffLineModel? dados = await mangaYabu.mangaInfo(url);
-        if (dados != null) {
-          data = dados;
-          state.value = MangaInfoStates.sucess1;
+        //final MangaInfoOffLineModel? dados = await mangaYabu.mangaDetail(url);
+        // identificar se a extensão trabalha em duas requisições
+        final MangaInfoOffLineModel? dados;
+        if (mangaDetailExtensions[idExtension].isTwoRequests) {
+          isTwoRequests = true;
+          dados = await mangaDetailExtensions[idExtension].mangaDetail();
+          if (dados != null) {
+            data = dados;
+            state.value = MangaInfoStates.sucess1;
+          } else {
+            state.value = MangaInfoStates.error;
+          }
+          capitulosDisponiveis = await fetchServiceExtensions[idExtension].fetchChapters(url);
+          //log("at online start: ${capitulosDisponiveis!.length}");
+          // GlobalData.capitulosDisponiveis =
+          //     List.unmodifiable(capitulosDisponiveis ?? []);
         } else {
-          state.value = MangaInfoStates.error;
+          isTwoRequests = false;
+          dados = await mangaDetailExtensions[idExtension].mangaDetail();
+          if (dados != null) {
+            data = dados;
+            capitulosDisponiveis = data.capitulos;
+            state.value = MangaInfoStates.sucess1;
+          } else {
+            state.value = MangaInfoStates.error;
+          }
         }
-        capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
-        log("at online start: ${capitulosDisponiveis!.length}");
+
+        // capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
+        // log("at online start: ${capitulosDisponiveis!.length}");
         GlobalData.capitulosDisponiveis =
             List.unmodifiable(capitulosDisponiveis ?? []);
-        // await _chaptersController.correlacionarCapitulos(
-        //     capitulosDisponiveis ?? [], data.capitulos, url);
-        // print(_capitulosDisponiveis);
+
         isAnOffLineBook = false;
         if (state.value != MangaInfoStates.error) {
           state.value = MangaInfoStates.sucess2;
@@ -90,11 +113,54 @@ class MangaInfoController {
     }
   }
 
-  Future updateBook(String url, /*ChaptersController chaptersController*/) async {
+  Future updateBook(
+    String url,
+    int idExtension
+    /*ChaptersController chaptersController*/
+  ) async {
+    // final MangaInfoOffLineModel? dados;
+    //     if (mangaDetailExtensions[idExtension].isTwoRequests) {
+    //       isTwoRequests = true;
+    //       dados = await mangaDetailExtensions[idExtension].mangaDetail();
+    //       if (dados != null) {
+    //         data = dados;
+    //         state.value = MangaInfoStates.sucess1;
+    //       } else {
+    //         state.value = MangaInfoStates.error;
+    //       }
+    //       capitulosDisponiveis = await fetchServiceExtensions[idExtension].fetchChapters(url);
+    //       //log("at online start: ${capitulosDisponiveis!.length}");
+    //       // GlobalData.capitulosDisponiveis =
+    //       //     List.unmodifiable(capitulosDisponiveis ?? []);
+    //     } else {
+    //       isTwoRequests = false;
+    //       dados = await mangaDetailExtensions[idExtension].mangaDetail();
+    //       if (dados != null) {
+    //         data = dados;
+    //         capitulosDisponiveis = data.capitulos;
+    //         state.value = MangaInfoStates.sucess1;
+    //       } else {
+    //         state.value = MangaInfoStates.error;
+    //       }
+    //     }
+
+    //     // capitulosDisponiveis = await yabuFetchServices.fetchCapitulos(url);
+    //     // log("at online start: ${capitulosDisponiveis!.length}");
+    //     GlobalData.capitulosDisponiveis =
+    //         List.unmodifiable(capitulosDisponiveis ?? []);
+
+    //     isAnOffLineBook = false;
+    //     if (state.value != MangaInfoStates.error) {
+    //       state.value = MangaInfoStates.sucess2;
+    //     } else {
+    //       HomePageController.errorMessage = 'erro no null 2';
+    //       state.value = MangaInfoStates.error;
+    //     }
+    //   }
     try {
       print("l= $url  - atualizando...");
 
-      final MangaInfoOffLineModel? dados = await mangaYabu.mangaInfo(url);
+      final MangaInfoOffLineModel? dados = await mangaYabu.mangaDetail(url);
       if (dados != null) {
         data = dados;
       } else {
@@ -190,12 +256,15 @@ class ChaptersController {
       print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
-        await updateChapters(
-            listaCapitulosDisponiveis, link); // , listaCapitulos
+        await updateChapters(listaCapitulosDisponiveis, link); // , listaCapitulos
 
       } else {
-        await correlacionarCapitulos(
+        if (MangaInfoController.isTwoRequests) {
+          await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link);
+        } else {
+          await updateChapters(listaCapitulosDisponiveis, link);
+        }
       }
       // disponibilizar os capitulos correlacionados
 
@@ -223,9 +292,12 @@ class ChaptersController {
       //   await correlacionarCapitulos(
       //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
       // }
-      await correlacionarCapitulos(
-          listaCapitulosDisponiveis ?? [], listaCapitulos, link,
-          isAnUpdate: true);
+      if (MangaInfoController.isTwoRequests) {
+        await correlacionarCapitulos(
+          listaCapitulosDisponiveis ?? [], listaCapitulos, link, isAnUpdate: true);
+      } else {
+        await updateChapters(listaCapitulosDisponiveis, link);
+      }
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
       // print(capitulosCorrelacionados);
@@ -520,7 +592,7 @@ class DialogController {
   }
 
   /// adicionar ou remover da library (biblioteca)
-  Future<bool> addOrRemoveFromLibrary(List<Map> lista, Map<String, String> book,
+  Future<bool> addOrRemoveFromLibrary(List<Map> lista, Map<String, dynamic> book,
       {required String link,
       required MangaInfoOffLineModel model,
       required List<Capitulos> capitulos}) async {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
+// import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
+// import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
+
+import 'extensions/manga_yabu/extension_yabu.dart';
+import 'extensions/manga_yabu/adimin/extension_manga_yabu_adimin.dart';
 
 class SearchController {
   List<SearchModel> result = [];

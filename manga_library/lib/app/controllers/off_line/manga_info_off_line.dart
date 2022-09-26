@@ -96,6 +96,7 @@ class MangaInfoOffLineController {
       MangaInfoOffLineModel newModel = MangaInfoOffLineModel(
         name: model.name,
         link: model.link,
+        idExtension: model.idExtension,
         img: model.img,
         description: model.description,
         chapters: model.chapters,

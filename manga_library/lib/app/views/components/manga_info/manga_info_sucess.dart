@@ -175,6 +175,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
           if (chaptersController.state.value == ChaptersStates.sucess) {
             await widget.controller.updateBook(
               widget.link, /*chaptersController*/
+              widget.dados.idExtension
             );
           }
         },
