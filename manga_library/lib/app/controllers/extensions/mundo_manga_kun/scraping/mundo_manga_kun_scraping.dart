@@ -121,10 +121,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           // print("cap: ${corteCapitulo2[1]}");
           print("------------------------ here");
           // print(corteLink4);
-          print("${corteLink3[5]}_${corteLink3[6]}".replaceAll("/", ""));
+          // print("${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""));
 
           chapters.add(Capitulos(
-            id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("/", ""),
+            id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""),
             capitulo: corteCapitulo2[1],
             download: false,
             readed: false,
