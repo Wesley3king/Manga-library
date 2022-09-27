@@ -33,6 +33,21 @@ class ExtensionMundoMangaKun implements Extension {
   }
 
   @override
+  Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
+    List<Capitulos> result = [];
+    for (int i = 0; i < listChapters.length; ++i) {
+      // print(
+      //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
+      if (listChapters[i].id == id) {
+        result.add(listChapters[i]);
+        break;
+      }
+    }
+    result[0].pages = await scrapingLeitor(id);
+    return result[0];
+  }
+
+  @override
   Future<SearchModel> search(String txt) async {
     Map<String, dynamic> data = await fetchServices.search(txt);
     log("data: $data");

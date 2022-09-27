@@ -14,10 +14,17 @@ abstract class Extension {
   Future<List<ModelHomePage>> homePage() async {
     return [];
   }
+
   // detalhes dos mangas
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
     return null;
   }
+
+  // retorna uma lista com as paginas
+  Future<Capitulos> getPages(String url, List<Capitulos> listChapters) async {
+    return Capitulos(capitulo: "", disponivel: false, download: false, downloadPages: [], id: 0, pages: [], readed: false);
+  }
+
   // retorna um SearchModel com os mangas pesquisados
   Future<SearchModel> search(String txt) async {
     Map<String, dynamic> data = await fetchServices.search(txt);

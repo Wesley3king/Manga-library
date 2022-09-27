@@ -101,23 +101,11 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   Widget _buildChapter(BuildContext context, int index) {
     final Capitulos capitulo =
         ChaptersController.capitulosCorrelacionados[index - 1];
-    //GlobalData.capitulosDisponiveis;
-    // print(
-    //     "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
-    // print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
-    late dynamic id;
-    try {
-      if (capitulo.id is int) {
-        id = capitulo.id;
-      } else {
-        id = int.parse(capitulo.id);
-      }
-    } catch (e) {
-      //print("não é um numero! $e");
-      id = capitulo.id.split("-my");
-      id = id[1];
-      id.toString().replaceAll("/", "");
-    }
+    GlobalData.capitulosDisponiveis;
+    print(
+        "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
+    print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
+    
     return ListTile(
       title: Text(
         'Capitulo ${capitulo.capitulo} l = ${capitulo.pages.length}, ${capitulo.id}',
@@ -136,7 +124,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               width: 1,
               height: 1,
             ),
-      onTap: () => GoRouter.of(context).push('/leitor/${widget.link}/$id'),
+      onTap: () => GoRouter.of(context).push(
+          '/leitor/${widget.link}/${capitulo.id}/${widget.dados.idExtension}'),
     );
   }
 

@@ -49,7 +49,7 @@ class MangaInfoController {
       if (localData != null) {
         print("existe na base de dados! / l= $url");
         // testa para definir isTwoRequests
-        if (mangaDetailExtensions[idExtension].isTwoRequests) {
+        if (mapOfExtensions[idExtension].isTwoRequests) {
           isTwoRequests = true;
         }
 
@@ -70,9 +70,9 @@ class MangaInfoController {
 
         // identificar se a extensão trabalha em duas requisições
         final MangaInfoOffLineModel? dados;
-        if (mangaDetailExtensions[idExtension].isTwoRequests) {
+        if (mapOfExtensions[idExtension].isTwoRequests) {
           isTwoRequests = true;
-          dados = await mangaDetailExtensions[idExtension].mangaDetail(url);
+          dados = await mapOfExtensions[idExtension].mangaDetail(url);
           if (dados != null) {
             data = dados;
             state.value = MangaInfoStates.sucess1;
@@ -84,7 +84,7 @@ class MangaInfoController {
           //log("at online start: ${capitulosDisponiveis!.length}");
         } else {
           isTwoRequests = false;
-          dados = await mangaDetailExtensions[idExtension].mangaDetail(url);
+          dados = await mapOfExtensions[idExtension].mangaDetail(url);
           if (dados != null) {
             data = dados;
             capitulosDisponiveis = data.capitulos;
@@ -118,7 +118,7 @@ class MangaInfoController {
       print("l= $url  - atualizando...");
 
       final MangaInfoOffLineModel? dados =
-          await mangaDetailExtensions[idExtension].mangaDetail(url);
+          await mapOfExtensions[idExtension].mangaDetail(url);
 
       if (dados != null) {
         data = dados;
@@ -128,7 +128,7 @@ class MangaInfoController {
 
       if (isAnOffLineBook) {
         // is an off line book
-        if (mangaDetailExtensions[idExtension].isTwoRequests) {
+        if (mapOfExtensions[idExtension].isTwoRequests) {
           /// isTwoRequests
           capitulosDisponiveis =
               await fetchServiceExtensions[idExtension].fetchChapters(url);
@@ -156,7 +156,7 @@ class MangaInfoController {
             capitulos: ChaptersController.capitulosCorrelacionados);
       } else {
         // isn't an off ine book
-        if (mangaDetailExtensions[idExtension].isTwoRequests) {
+        if (mapOfExtensions[idExtension].isTwoRequests) {
           /// isTwoRequests
           capitulosDisponiveis =
               await fetchServiceExtensions[idExtension].fetchChapters(url);
@@ -212,7 +212,7 @@ class MangaInfoController {
       required String link,
       required int idExtension}) async {
     try {
-      await mangaDetailExtensions[idExtension]
+      await mapOfExtensions[idExtension]
           .addOrUpdateBook({"name": name, "link": link});
     } catch (e) {
       debugPrint("erro no addOrUpdateBook at MangaDetail: $e");

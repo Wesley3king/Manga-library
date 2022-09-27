@@ -8,7 +8,8 @@ import '../../../controllers/leitor_controller.dart';
 class Leitor extends StatefulWidget {
   final String link;
   final String id;
-  const Leitor({super.key, required this.link, required this.id});
+  final int idExtension;
+  const Leitor({super.key, required this.link, required this.id, required this.idExtension});
 
   @override
   State<Leitor> createState() => _LeitorState();
@@ -40,8 +41,9 @@ class _LeitorState extends State<Leitor> {
   @override
   void initState() {
     super.initState();
-    leitorController.start(widget.link, widget.id);
+    leitorController.start(widget.link, widget.id, widget.idExtension);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +51,8 @@ class _LeitorState extends State<Leitor> {
         extendBodyBehindAppBar: true,
         appBar: isVisible
             ? AppBar(
-                title: Text("Capítulo ${leitorController.capitulosEmCarga.isEmpty ? "..." : leitorController.capitulosEmCarga[0].capitulo}"),
+                title: Text(
+                    "Capítulo ${leitorController.capitulosEmCarga.isEmpty ? "..." : leitorController.capitulosEmCarga[0].capitulo}"),
                 backgroundColor: appBarAndBottomAppBarColor,
                 actions: [
                   IconButton(
@@ -90,11 +93,13 @@ class _LeitorState extends State<Leitor> {
                 children: [
                   AnimatedBuilder(
                     animation: leitorController.leitorTypeState,
-                    builder: (context, child) => buildSetLeitorType(leitorController),
+                    builder: (context, child) =>
+                        buildSetLeitorType(leitorController),
                   ),
                   AnimatedBuilder(
                     animation: leitorController.filterQualityState,
-                    builder: (context, child) => buildFilterQuality(leitorController),
+                    builder: (context, child) =>
+                        buildFilterQuality(leitorController),
                   ),
                   IconButton(
                       onPressed: () {},

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/globais.dart';
 
 import '../models/leitor_pages.dart';
+import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
@@ -17,13 +18,23 @@ class LeitorController {
   ValueNotifier<LeitorFilterQuality> filterQualityState =
       ValueNotifier<LeitorFilterQuality>(LeitorFilterQuality.none);
 
-  void start(String link, String id) {
+  void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
       print(
-          "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n ------------------------");
-      _identificarCapitulo(capitulos, id);
+          "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n idExtension: $idExtension  \n------------------------");
+      // _identificarCapitulo(capitulos, id);
+
+      // buscar pelas paginas
+      debugPrint("======= capitulos ==========");
+      Capitulos cap =
+          await mapOfExtensions[idExtension].getPages(id, capitulos);
+      // debugPrint("$cap");
+      capitulosEmCarga.add(cap);
+      debugPrint("=========== em carga =============");
+      print(capitulosEmCarga);
+
       setFilterQuality();
       setReaderType();
       state.value = LeitorStates.sucess;
@@ -34,44 +45,44 @@ class LeitorController {
     }
   }
 
-  void _identificarCapitulo(List<Capitulos> capitulos, String id) {
-    // List pages = [];
-    bool adicionated = false;
-    try {
-      for (int i = 0; i < capitulos.length; ++i) {
-        //print("teste: num cap: ${capitulos[i].id} $id, id: $id / ${int.parse(capitulos[i].id) == int.parse(id)}");
-        if (int.parse(capitulos[i].id) == int.parse(id)) {
-          capitulosEmCarga.add(capitulos[i]);
-          adicionated = true;
-          break;
-        }
-      }
-    } catch (e) {
-      print("não é de numero");
-      RegExp regex = RegExp(id, caseSensitive: false);
-      for (int i = 0; i < capitulos.length; ++i) {
-        print(
-            "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
-        if (capitulos[i].id.toString().contains(regex)) {
-          print("achei o capitulo!");
-          capitulosEmCarga.add(capitulos[i]);
-          adicionated = true;
-          break;
-        }
-      }
-    }
-    if (!adicionated) {
-      print("não achei o capitulo");
-      capitulosEmCarga.add(Capitulos(
-          capitulo: "",
-          id: 0,
-          pages: [],
-          disponivel: false,
-          download: false,
-          readed: false,
-          downloadPages: []));
-    }
-  }
+  // void _identificarCapitulo(List<Capitulos> capitulos, String id) {
+  //   // List pages = [];
+  //   bool adicionated = false;
+  //   try {
+  //     for (int i = 0; i < capitulos.length; ++i) {
+  //       //print("teste: num cap: ${capitulos[i].id} $id, id: $id / ${int.parse(capitulos[i].id) == int.parse(id)}");
+  //       if (int.parse(capitulos[i].id) == int.parse(id)) {
+  //         capitulosEmCarga.add(capitulos[i]);
+  //         adicionated = true;
+  //         break;
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("não é de numero");
+  //     RegExp regex = RegExp(id, caseSensitive: false);
+  //     for (int i = 0; i < capitulos.length; ++i) {
+  //       print(
+  //           "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
+  //       if (capitulos[i].id.toString().contains(regex)) {
+  //         print("achei o capitulo!");
+  //         capitulosEmCarga.add(capitulos[i]);
+  //         adicionated = true;
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   if (!adicionated) {
+  //     print("não achei o capitulo");
+  //     capitulosEmCarga.add(Capitulos(
+  //         capitulo: "",
+  //         id: 0,
+  //         pages: [],
+  //         disponivel: false,
+  //         download: false,
+  //         readed: false,
+  //         downloadPages: []));
+  //   }
+  // }
 
   // void _identificarLeitor() {
   //   final String type = GlobalData.settings['Tipo do Leitor'];

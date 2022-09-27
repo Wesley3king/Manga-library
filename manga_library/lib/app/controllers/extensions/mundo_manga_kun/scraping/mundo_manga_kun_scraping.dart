@@ -119,7 +119,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           // print(html);
           // print("link: ${corteLink2[1]}");
           // print("cap: ${corteCapitulo2[1]}");
-          print("------------------------ here");
+          // print("------------------------ here");
           // print(corteLink4);
           // print("${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""));
 
@@ -150,5 +150,31 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   } catch (e) {
     debugPrint("erro no scrapingMangaDetail at ExtensionMundoMangaKun: $e");
     return null;
+  }
+}
+
+// ============================================================================
+//     ---------------- get pages for leitor ------------------------
+// ============================================================================
+
+Future<List<String>> scrapingLeitor(String id) async {
+  // shounen-no-abyss_cap-tulo-01
+  try {
+    List<String> mangaAndChapter = id.split("_");
+    var parser = await Chaleno().load(
+        "https://mundomangakun.com.br/leitor-online/projeto/${mangaAndChapter[0]}/${mangaAndChapter[1]}/");
+
+    var resultHtml = parser?.querySelector("#leitor_pagina_projeto").innerHTML;
+
+    List<String> resultPages = [];
+    print(resultHtml ?? "erro null");
+    if (resultHtml != null) {
+      List<String> htmlItens = resultHtml.split("</option>");
+    }
+
+    return [];
+  } catch (e) {
+    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    return [];
   }
 }

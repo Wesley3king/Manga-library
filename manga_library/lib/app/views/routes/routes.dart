@@ -50,11 +50,12 @@ final routes = GoRouter(initialLocation: '/home', routes: [
     },
   ),
   GoRoute(
-    path: '/leitor/:link/:id',
+    path: '/leitor/:link/:id/:extension',
     builder: (context, state) {
       String url = state.params['link'].toString();
       String id = state.params['id'].toString();
-      return Leitor(link: url,id: id,);
+      int idExtension = int.parse(state.params['extension'].toString());
+      return Leitor(link: url,id: id,idExtension: idExtension,);
     },
   ),
   GoRoute(

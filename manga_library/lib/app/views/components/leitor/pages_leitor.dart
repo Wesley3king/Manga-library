@@ -251,7 +251,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
             AnimatedBuilder(
               animation: controller.state,
               builder: (context, child) => Text(
-                "${controller.state.value}/${widget.leitorController.capitulosEmCarga[0].pages.length}",
+                "${controller.state.value}/${widget.leitorController.capitulosEmCarga.isEmpty ? 0 : widget.leitorController.capitulosEmCarga[0].pages.length }",
                 style: const TextStyle(shadows: [
                   Shadow(color: Colors.black45, offset: Offset(1, 1))
                 ]),

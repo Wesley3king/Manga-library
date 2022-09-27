@@ -59,13 +59,16 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
                 html.split('" href="').reversed.toList();
             final List<String> corteLinkAndNnome2 =
                 corteLinkAndNnome[0].split('">'); // link [0]
+            // print("link: ${corteLinkAndNnome2[0]}");
+
             final List<String> corteNome =
                 corteLinkAndNnome2[1].split('</a>'); // nome [0]
-            
-            List<String> corteUrl1 = corteLinkAndNnome2[0].split('manga/'); // posicao 1
+
+            List<String> corteUrl1 =
+                corteLinkAndNnome2[0].split('manga/'); // posicao 1
             resultadoFinal.add({
               "name": corteNome[0],
-              "url": corteUrl1[1],
+              "url": corteUrl1[1].replaceFirst("/", ""),
               "img": imagem,
             });
           }
@@ -75,13 +78,13 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
       HomePageController.errorMessage = 'sesão de corte- ${e.toString()}';
       throw Error();
     }
-    print(resultadoFinal);
+    // print(resultadoFinal);
     // processar os dados para model
     List<Map> books1 = [];
     List<Map> books2 = [];
     List<Map> books3 = [];
     List<ModelHomePage> models = [];
-   
+
     for (int i = 0; i < resultadoFinal.length; ++i) {
       if (i < 8) {
         books1.add(resultadoFinal[i]);
@@ -136,18 +139,23 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       var decoded = json.decode(corteHtml2[0]);
       List capitulos = decoded['allposts'];
       // print("passou pelo model pt 1!");
-      // log("num value: ${capitulos}");
-      List<Capitulos> listCapitulos = capitulos
-          .map((element) => Capitulos(
-                id: element['id'],
-                capitulo: element['num'],
-                download: false,
-                readed: false,
-                disponivel: false,
-                downloadPages: [],
-                pages: [],
-              ))
-          .toList();
+      // print("------ capitulos -------------");
+      // print(capitulos);
+      List<Capitulos> listCapitulos = capitulos.map((element) {
+        List<String> corteId = element['id'].split("-my"); // id posição 1
+        return Capitulos(
+          id: corteId[1].replaceFirst("/", ""),
+          capitulo: element['num'],
+          download: false,
+          readed: false,
+          disponivel: false,
+          downloadPages: [],
+          pages: [],
+        );
+      }).toList();
+      // for (Capitulos cap in listCapitulos) {
+      //   print(cap.id);
+      // }
       print("passou pelo model]!");
       return MangaInfoOffLineModel(
           name: decoded['chapter_name'],

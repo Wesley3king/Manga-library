@@ -11,7 +11,6 @@ import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 
-
 class ExtensionMangaYabu implements Extension {
   @override
   dynamic fetchServices = YabuFetchServices();
@@ -34,6 +33,51 @@ class ExtensionMangaYabu implements Extension {
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
     return await scrapingMangaDetail(link);
+  }
+
+  @override
+  Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
+    List<Capitulos> result = [];
+    bool adicionated = false;
+    // print("id: $id / cap: $listChapters");
+    try {
+      for (int i = 0; i < listChapters.length; ++i) {
+        // print(
+        //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
+        if (int.parse(listChapters[i].id) == int.parse(id)) {
+          result.add(listChapters[i]);
+          adicionated = true;
+          break;
+        }
+      }
+    } catch (e) {
+      print("não é de numero");
+      RegExp regex = RegExp(id, caseSensitive: false);
+      for (int i = 0; i < listChapters.length; ++i) {
+        // print(
+        //     "teste: cap: ${listChapters[i].capitulo} ${listChapters[i].id}, id: $id / ${listChapters[i].id.toString().contains(regex)}");
+        if (listChapters[i].id.toString().contains(regex)) {
+          print("achei o capitulo!");
+          result.add(listChapters[i]);
+          adicionated = true;
+          break;
+        }
+      }
+    }
+    if (!adicionated) {
+      print("não achei o capitulo");
+      result.add(Capitulos(
+          capitulo: "error",
+          id: 0,
+          pages: [],
+          disponivel: false,
+          download: false,
+          readed: false,
+          downloadPages: []));
+    }
+    // print("result final!!!");
+    // print(result);
+    return result[0];
   }
 
   @override

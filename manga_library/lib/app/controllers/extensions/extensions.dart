@@ -7,7 +7,7 @@ final List<dynamic> listOfExtensions = [
   ExtensionMundoMangaKun(),
 ];
 
-final Map<int, dynamic> mangaDetailExtensions = {
+final Map<int, dynamic> mapOfExtensions = {
   1: ExtensionMangaYabu(),
   3: ExtensionMundoMangaKun(),
 };
