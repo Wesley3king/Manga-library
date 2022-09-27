@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:chaleno/chaleno.dart';
 import 'package:flutter/rendering.dart';
+import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../../../models/home_page_model.dart';
 import '../../../../models/manga_info_offline_model.dart';
+import '../../../../models/search_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage() async {
   const String url = 'https://mundomangakun.com.br/';
@@ -167,14 +169,106 @@ Future<List<String>> scrapingLeitor(String id) async {
     var resultHtml = parser?.querySelector("#leitor_pagina_projeto").innerHTML;
 
     List<String> resultPages = [];
-    print(resultHtml ?? "erro null");
     if (resultHtml != null) {
+      print(resultHtml);
       List<String> htmlItens = resultHtml.split("</option>");
+      print(htmlItens);
+      List<List<String>> cortePage1 =
+          htmlItens.map((String str) => str.split('">')).toList();
+
+      List<List<String>> cortePage2 = cortePage1
+          .map((List<String> list) => list[0].split('value="'))
+          .toList();
+      print(cortePage2);
+      cortePage2.removeLast();
+      resultPages = cortePage2
+          .map<String>((List<String> list) => list[1].replaceAll("amp;", ""))
+          .toList();
     }
 
-    return [];
-  } catch (e) {
+    return resultPages;
+  } catch (e, s) {
     debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    print(s);
+    return [];
+  }
+}
+// ============================================================================
+//           ---------------- search ------------------------
+// ============================================================================
+
+Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+  try {
+    var parser = await Chaleno().load("https://mundomangakun.com.br/?s=$txt");
+
+    var resultHtml = parser?.querySelector(".main_container");
+    List<Map<String, String>> books = [];
+    if (resultHtml != null) {
+      // projeto
+      var projetoData = resultHtml.querySelectorAll(".post_projeto");
+      // print(projetoData);
+      if (projetoData != null) {
+        List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
+          // name
+          String? name = data.querySelector(".post_projeto_titulo")!.text;
+          // img
+          String? img = data.querySelector(".post_projeto_thumbnail_img")!.src;
+          // link
+          String? link = data.querySelector(".btn_large_primary")!.href;
+          List<String> corteLink = link!.split("projeto/");
+          // print(data.html);
+          return {
+            "nome": name ?? "error",
+            "link": corteLink[1].replaceAll("/", ""),
+            "capa1": img ?? ""
+          };
+        }).toList();
+
+        books.addAll(projetoBooks);
+      }
+      // post normal
+      var normalData = resultHtml.querySelectorAll(".post_normal");
+      List<Map<String, String>> normalBooks = [];
+      if (normalData != null) {
+        for (Result data in normalData) {
+          try {
+            // name
+            // print("pt1");
+            String? name = data.querySelector(".post_title")!.text;
+            // print("pt2 ${data.html}");
+            // img
+            String? img = data.querySelector(".post_head_thumbnail")?.src;
+            // print("pt3 img;$img");
+            // link
+            String? link = data.querySelector(".post_head_comment_tags")!.html;
+            // print("pt4");
+            List<String> corteLink1 = link!.split("tags/");
+            corteLink1 = corteLink1.reversed.toList();
+            List<String> corteLink2 = corteLink1[0].split('/" rel=');
+            // print(corteLink2);
+            if (img != null && img.contains("http")) {
+              normalBooks.add({
+              "nome": name ?? "error",
+              "link": corteLink2[0],
+              "capa1": img
+            });
+            }
+          } catch (e) {
+            debugPrint("não é um manga; $e");
+          }
+        }
+        print(normalBooks);
+        books.addAll(normalBooks);
+      }
+    }
+
+    // return SearchModel(font: "", books: [], idExtension: 3);
+    debugPrint("sucesso no scraping");
+    return books;
+  } catch (e, s) {
+    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    print(s);
+    //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
   }
 }

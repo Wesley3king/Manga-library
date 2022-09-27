@@ -102,13 +102,13 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     final Capitulos capitulo =
         ChaptersController.capitulosCorrelacionados[index - 1];
     GlobalData.capitulosDisponiveis;
-    print(
-        "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
-    print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
+    // print(
+    //     "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
+    // print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
     
     return ListTile(
       title: Text(
-        'Capitulo ${capitulo.capitulo} l = ${capitulo.pages.length}, ${capitulo.id}',
+        'Capitulo ${capitulo.capitulo}',//  l = ${capitulo.pages.length}, ${capitulo.id} 
         style: capitulo.disponivel ? const TextStyle() : indisponivel,
       ),
       subtitle: Text(capitulo.readed ? "lido" : "não lido"),

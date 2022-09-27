@@ -65,7 +65,7 @@ class Capitulos {
   late bool readed;
   late bool disponivel;
   late List<String> downloadPages;
-  late final List<String> pages;
+  late List<String> pages;
 
   Capitulos.fromJson(Map<String, dynamic> json) {
     id = json['id'];

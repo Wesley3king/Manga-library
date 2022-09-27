@@ -15,9 +15,9 @@ class SearchResultsPage extends StatelessWidget {
       padding: const EdgeInsets.all(3.0),
       child: GestureDetector(
         onTap: () {
-          List<String> corteUrl1 = data.link.split('manga/');
+          // List<String> corteUrl1 = data.link.split('manga/');
           GoRouter.of(context)
-              .push('/detail/${corteUrl1[1].replaceFirst('/', '')}/${data.idExtension}');
+              .push('/detail/${data.link}/${data.idExtension}');
         },
         child: SizedBox(
           width: 110,

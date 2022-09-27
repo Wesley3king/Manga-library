@@ -16,17 +16,22 @@ void main() {
 
   // getPages
   test("deve retornar um model Capitulos", () async {
-    var data = await extend.getPages("shounen-no-abyss_cap-tulo-01", [
+    var data = await extend.getPages("shounen-no-abyss_cap-tulo-109", [
       Capitulos(
         capitulo: "01",
-        id: "shounen-no-abyss_cap-tulo-01",
+        id: "shounen-no-abyss_cap-tulo-109",
         disponivel: false,
         download: false,
         downloadPages: [],
-        pages: [],
-        readed: false
+        pages: [],    // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
+        readed: false // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
       )
     ]);
-    print(data);
+    print(data.pages);
+  });
+
+  test("deve retornar um SearchModel", () async {
+    var data = await extend.search("sho");
+    print(data.books[0].name);
   });
 }
