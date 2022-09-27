@@ -47,7 +47,7 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
         //print(corteLink2[i][0]);
         List<String> corteLink1Home = corteLink2[i][0].split("projeto/"); // \/
         //List<String> corteLink2Home = corteLink1Home[1]
-           // .split("/cap"); // .replaceFirst("leitor-online/", "")
+        // .split("/cap"); // .replaceFirst("leitor-online/", "")
         mangas.add({
           "name": corteNome2[i][0].trim(),
           "img": corteImage2[i][0],
@@ -106,18 +106,25 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       for (int i = 0; i < chaptersResult.length; ++i) {
         if (chaptersResult[i] != null) {
           String? html = chaptersResult[i]!.html;
-          // capitulo
-          var corteLink1 = html!.split("','");
-          var corteLink2 = corteLink1[0].split("{'"); // posição 0
           // link
+          List<String> corteLink1 = html!.split("','");
+          List<String> corteLink2 =
+              corteLink1[0].split("{'"); // posição 1 link iteiro
+          List<String> corteLink3 = corteLink2[1].split("/");
+          // print(corteLink3);
+          // List<String> corteLink4 = corteLink3[1].split("\/");
+          // capitulo
           var corteCapitulo1 = html.split("</a>");
-          var corteCapitulo2 = corteCapitulo1[0].split("lo "); // posição 0
+          var corteCapitulo2 = corteCapitulo1[0].split("lo "); // posição 1
           // print(html);
           // print("link: ${corteLink2[1]}");
           // print("cap: ${corteCapitulo2[1]}");
+          print("------------------------ here");
+          // print(corteLink4);
+          print("${corteLink3[5]}_${corteLink3[6]}".replaceAll("/", ""));
 
           chapters.add(Capitulos(
-            id: i,
+            id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("/", ""),
             capitulo: corteCapitulo2[1],
             download: false,
             readed: false,

@@ -120,7 +120,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     }
     return ListTile(
       title: Text(
-        'Capitulo ${capitulo.capitulo} l = ${capitulo.pages.length}',
+        'Capitulo ${capitulo.capitulo} l = ${capitulo.pages.length}, ${capitulo.id}',
         style: capitulo.disponivel ? const TextStyle() : indisponivel,
       ),
       subtitle: Text(capitulo.readed ? "lido" : "não lido"),
@@ -174,9 +174,9 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         onRefresh: () async {
           if (chaptersController.state.value == ChaptersStates.sucess) {
             await widget.controller.updateBook(
-              widget.link, /*chaptersController*/
-              widget.dados.idExtension
-            );
+                widget.link,
+                /*chaptersController*/
+                widget.dados.idExtension);
           }
         },
         child: AnimatedBuilder(

@@ -249,6 +249,7 @@ class ChaptersController {
               listaCapitulosDisponiveis ?? [], listaCapitulos, link);
         } else {
           print("isn't twoRequests");
+          capitulosCorrelacionados = listaCapitulos;
           await updateChapters(listaCapitulosDisponiveis, link);
         }
       }
@@ -327,11 +328,12 @@ class ChaptersController {
       //  if (capitulosLidos.isNotEmpty) {
       // print('inicio = ${capitulosCorrelacionados.length}');
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
+      print("caplist: ${listaCapitulosDisponiveis?.length}");
 
       for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
-        // var item = capitulosCorrelacionados[i];
-        // print(
-        //     "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
+        var item = capitulosCorrelacionados[i];
+        print(
+            "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
         bool adicionado = false;
         for (int cap = 0; cap < capitulosLidos.length; ++cap) {
           if ((capitulosCorrelacionados[i].id).toString() ==
@@ -362,6 +364,7 @@ class ChaptersController {
           adicionado = true;
         }
       }
+      debugPrint("---------- listaCapitulosCorrelacionados");
       print(listaCapitulosCorrelacionadosLidos);
       capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       // }
