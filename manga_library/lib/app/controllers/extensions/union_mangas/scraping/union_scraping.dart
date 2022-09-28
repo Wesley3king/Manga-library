@@ -95,7 +95,7 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
     //     print("${element.html} \n --------------------------------"));
     return models;
   } catch (e) {
-    debugPrint("erro no scrapingHomePage at ExtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingHomePage at ExtensionUnionMangas: $e");
     return [];
   }
 }
@@ -106,7 +106,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
   try {
     var parser =
-        await Chaleno().load("https://unionleitor.top/pagina-manga/$link/");
+        await Chaleno().load("https://unionleitor.top/pagina-manga/$link");
 
     String? name;
     String? description;
@@ -115,66 +115,65 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     List<Capitulos> chapters = [];
     if (parser != null) {
       // name
-      var listOfName = parser.querySelectorAll("div.col-md-8 div div");
-      print(listOfName[0].html);
-      name = "";
-      print("name: $name");
+      name = parser.querySelector("div.col-md-12 h2").text;
+      // List<String> corteName = htmlName!.split(
+      //     '<div class="col-md-12">'); // <div class="row"><div class="col-md-8 perfil-manga"><div class="row"> <h2>
+      // print(corteName);
+      // name = "";
+      // print("name: $name");
       // description
-      description = parser.querySelector("div.col-md-8 div div").text;
-      print("description: $description");
+      description = parser.querySelector(".panel-body").text;
+      // print("description: $description");
       // img
       img = parser.querySelector(".img-thumbnail").src;
-      debugPrint("img: $img");
+      // debugPrint("img: $img");
       // genres
-      Result? genresResult = parser.querySelector(".subtit-manga");
-      print(genresResult!.html);
+      List<Result>? genresResult = parser.querySelectorAll("div.col-md-8 h4 a");
+      // print(genresResult);
 
-      // for (int i = 0; i < genresResult.length; ++i) {
-      //   if (genresResult[i] != null) {
-      //     genres.add("${genresResult[i]!.text}");
-      //   }
-      // }
+      for (int i = 0; i < genresResult.length; ++i) {
+        genres.add("${genresResult[i].text}");
+      }
+      // print(genres);
       // chapters
-      List<Result?> chaptersResult = parser.querySelectorAll(".link_capitulo");
+      List<Result> chaptersResult = parser.querySelectorAll("div.col-xs-6");
+      debugPrint("length de cap: ${chaptersResult.length}");
 
       for (int i = 0; i < chaptersResult.length; ++i) {
-        if (chaptersResult[i] != null) {
-          String? html = chaptersResult[i]!.html;
-          // link
-          List<String> corteLink1 = html!.split("','");
-          List<String> corteLink2 =
-              corteLink1[0].split("{'"); // posição 1 link iteiro
-          List<String> corteLink3 = corteLink2[1].split("/");
-          // print(corteLink3);
-          // List<String> corteLink4 = corteLink3[1].split("\/");
-          // capitulo
-          var corteCapitulo1 = html.split("</a>");
-          var corteCapitulo2 = corteCapitulo1[0].split("lo "); // posição 1
-          // print(html);
-          // print("link: ${corteLink2[1]}");
-          // print("cap: ${corteCapitulo2[1]}");
-          // print("------------------------ here");
-          // print(corteLink4);
-          // print("${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""));
+        String? html = chaptersResult[i].html;
+        // print(html);
+        // link
+        String? link = chaptersResult[i].querySelector("a")!.href;
+        // pula para o próximo em caso de já existir
+        //print(link);
+        if (!link!.contains("leitor/")) continue;
 
-          chapters.add(Capitulos(
-            id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""),
-            capitulo: corteCapitulo2[1],
-            download: false,
-            readed: false,
-            disponivel: true,
-            downloadPages: [],
-            pages: [],
-          ));
-        }
+        List<String> corteLink1 = link.split("leitor/");
+        String replacedLink = corteLink1[1].replaceFirst("/", "--");
+        // print("replced link: $replacedLink");
+
+        // name cap
+        String? capName = chaptersResult[i].querySelector("a")!.text;
+        // print("chapetr name : $capName");
+
+        chapters.add(Capitulos(
+          id: replacedLink,
+          capitulo: capName ?? "erro",
+          download: false,
+          readed: false,
+          disponivel: true,
+          downloadPages: [],
+          pages: [],
+        ));
+        debugPrint("capitulo adicionado! $capName");
       }
 
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
-        link: 'https://mundomangakun.com.br/projeto/$link/',
-        idExtension: 3,
+        link: "https://unionleitor.top/pagina-manga/$link",
+        idExtension: 4,
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
@@ -182,7 +181,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       );
     }
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionUnionMangas: $e");
     return null;
   }
 }
@@ -194,33 +193,29 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 Future<List<String>> scrapingLeitor(String id) async {
   // shounen-no-abyss_cap-tulo-01
   try {
-    List<String> mangaAndChapter = id.split("_");
+    List<String> mangaAndChapter = id.split("--");
     var parser = await Chaleno().load(
-        "https://mundomangakun.com.br/leitor-online/projeto/${mangaAndChapter[0]}/${mangaAndChapter[1]}/");
+        "https://unionleitor.top/leitor/${mangaAndChapter[0]}/${mangaAndChapter[1]}");
 
-    var resultHtml = parser?.querySelector("#leitor_pagina_projeto").innerHTML;
+    var resultHtml = parser?.querySelectorAll(".img-responsive");
 
     List<String> resultPages = [];
     if (resultHtml != null) {
-      print(resultHtml);
-      List<String> htmlItens = resultHtml.split("</option>");
-      print(htmlItens);
-      List<List<String>> cortePage1 =
-          htmlItens.map((String str) => str.split('">')).toList();
-
-      List<List<String>> cortePage2 = cortePage1
-          .map((List<String> list) => list[0].split('value="'))
-          .toList();
-      print(cortePage2);
-      cortePage2.removeLast();
-      resultPages = cortePage2
-          .map<String>((List<String> list) => list[1].replaceAll("amp;", ""))
-          .toList();
+      for (int i = 0; i < 2; ++i) {
+        resultHtml.removeAt(0);
+      }
+      for (Result image in resultHtml) {
+        String? page = image.src;
+        debugPrint("img: $page");
+        if (page != null) {
+          resultPages.add(page);
+        }
+      }
     }
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at EXtensionUnionMangas: $e");
     print(s);
     return [];
   }
