@@ -22,11 +22,15 @@ void main() {
           disponivel: false,
           download: false,
           downloadPages: [],
-          pages: [], // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
-          readed:
-              false // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
+          pages: [],
+          readed: false
           )
     ]);
     print(data.pages);
+  });
+
+  test("deve retornar um SearchModel", () async {
+    var data = await extend.search("ele");
+    print(data);
   });
 }

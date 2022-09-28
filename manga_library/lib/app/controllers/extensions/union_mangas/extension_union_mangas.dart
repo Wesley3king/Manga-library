@@ -1,5 +1,6 @@
-
+import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
+import 'package:manga_library/app/controllers/extensions/union_mangas/repositories/fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/scraping/union_scraping.dart';
 
 import '../../../models/home_page_model.dart';
@@ -54,20 +55,40 @@ class ExtensionUnionMangas implements Extension {
 
   @override
   Future<SearchModel> search(String txt) async {
-    StringBuffer buffer = StringBuffer();
-    List<String> cortes = txt.split(" ");
+    try {
+      debugPrint("UNION SEARCH STARTING...");
+      StringBuffer buffer = StringBuffer();
+      List<String> cortes = txt.split(" ");
 
-    for (int i = 0; i < cortes.length; ++i) {
-      final String str = cortes[i];
-      if (i == (cortes.length - 1)) {
-        buffer.write(str);
-      } else {
-        buffer.write('$str+');
+      for (int i = 0; i < cortes.length; ++i) {
+        final String str = cortes[i];
+        if (i == (cortes.length - 1)) {
+          buffer.write(str);
+        } else {
+          buffer.write('$str+');
+        }
       }
+      dynamic data = await searchService(buffer.toString().toLowerCase());
+      // print("test: ${data is String ? "true":"false"}");
+      // print(data.keys);
+      List<Map> books = [];
+      for (int i = 0; i < data['items'].length; ++i) {
+        Map book = data['items'][i];
+
+        books.add({
+          "nome": book["titulo"],
+          "capa1": book['imagem'],
+          "link": book['url']
+        });
+      }
+      // print('---------------------------------------------');
+      // print(books);
+      return SearchModel.fromJson(
+          {"font": nome, "data": books, "idExtension": id});
+    } catch (e) {
+      debugPrint("erro no search at ExtensionUnionMangas: $e");
+      return SearchModel.fromJson(
+          {"font": nome, "data": [], "idExtension": id});
     }
-    List<Map<String, String>> data = await scrapingSearch(buffer.toString().toLowerCase());
-    print(data);
-    return SearchModel.fromJson(
-        {"font": nome, "data": data, "idExtension": id});
   }
 }

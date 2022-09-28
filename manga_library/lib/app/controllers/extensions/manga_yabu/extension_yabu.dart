@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // import 'package:chaleno/chaleno.dart';
+import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/repositories/yabu_fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/scraping/scraping_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
@@ -82,8 +83,18 @@ class ExtensionMangaYabu implements Extension {
 
   @override
   Future<SearchModel> search(String txt) async {
-    Map<String, dynamic> data = await fetchServices.search(txt);
-    log("data: $data");
-    return SearchModel.fromJson(data);
+    debugPrint("MANGA YABU SEARCH STARTING...");
+    try {
+      Map<String, dynamic> data = await fetchServices.search(txt);
+      log("data: $data");
+      return SearchModel.fromJson(data);
+    } catch (e) {
+      debugPrint("erro no search at ExtensionMangaYabu: $e");
+      return SearchModel(
+        font: "MangaYabu",
+        idExtension: 1,
+        books: [],
+      );
+    }
   }
 }

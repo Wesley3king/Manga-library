@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/scraping/mundo_manga_kun_scraping.dart';
 // import 'package:manga_library/app/models/extension_model.dart';
 
@@ -56,20 +57,30 @@ class ExtensionMundoMangaKun implements Extension {
 
   @override
   Future<SearchModel> search(String txt) async {
-    StringBuffer buffer = StringBuffer();
-    List<String> cortes = txt.split(" ");
+    debugPrint("MUNDO MANGA KUN SEARCH STARTING...");
+    try {
+      StringBuffer buffer = StringBuffer();
+      List<String> cortes = txt.split(" ");
 
-    for (int i = 0; i < cortes.length; ++i) {
-      final String str = cortes[i];
-      if (i == (cortes.length - 1)) {
-        buffer.write(str);
-      } else {
-        buffer.write('$str+');
+      for (int i = 0; i < cortes.length; ++i) {
+        final String str = cortes[i];
+        if (i == (cortes.length - 1)) {
+          buffer.write(str);
+        } else {
+          buffer.write('$str+');
+        }
       }
+      List<Map<String, String>> data = await scrapingSearch(buffer.toString().toLowerCase());
+      print(data);
+      return SearchModel.fromJson(
+          {"font": nome, "data": data, "idExtension": id});
+    } catch (e) {
+      debugPrint("erro no search at ExtensionMundoMangaKun: $e");
+      return SearchModel(
+        font: "MangaYabu",
+        idExtension: 1,
+        books: [],
+      );
     }
-    List<Map<String, String>> data = await scrapingSearch(buffer.toString().toLowerCase());
-    print(data);
-    return SearchModel.fromJson(
-        {"font": nome, "data": data, "idExtension": id});
   }
 }
