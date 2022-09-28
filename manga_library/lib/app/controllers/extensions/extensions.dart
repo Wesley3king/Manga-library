@@ -1,15 +1,18 @@
 import 'package:manga_library/app/controllers/extensions/manga_yabu/extension_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/repositories/yabu_fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/extension_mundo_manga_kun.dart';
+import 'package:manga_library/app/controllers/extensions/union_mangas/extension_union_mangas.dart';
 
 final List<dynamic> listOfExtensions = [
   ExtensionMangaYabu(),
   ExtensionMundoMangaKun(),
+  ExtensionUnionMangas()
 ];
 
 final Map<int, dynamic> mapOfExtensions = {
   1: ExtensionMangaYabu(),
   3: ExtensionMundoMangaKun(),
+  4: ExtensionUnionMangas()
 };
 
 final Map<int, dynamic> fetchServiceExtensions = {

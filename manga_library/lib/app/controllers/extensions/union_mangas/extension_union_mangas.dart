@@ -1,20 +1,18 @@
-import 'dart:developer';
 
-import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/scraping/mundo_manga_kun_scraping.dart';
-// import 'package:manga_library/app/models/extension_model.dart';
+import 'package:manga_library/app/controllers/extensions/model_extension.dart';
+import 'package:manga_library/app/controllers/extensions/union_mangas/scraping/union_scraping.dart';
 
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 import '../../../models/search_model.dart';
-import '../model_extension.dart';
 
-class ExtensionMundoMangaKun implements Extension {
+class ExtensionUnionMangas implements Extension {
   @override
-  dynamic fetchServices = "";
+  dynamic fetchServices;
   @override
-  String nome = "Mundo Manga Kun";
+  String nome = "Union Mangas";
   @override
-  int id = 3;
+  int id = 4;
   @override
   bool isTwoRequests = false;
   @override

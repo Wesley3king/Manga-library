@@ -1,71 +1,98 @@
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:chaleno/chaleno.dart';
 import 'package:flutter/rendering.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
+// import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../../../models/home_page_model.dart';
 import '../../../../models/manga_info_offline_model.dart';
-import '../../../../models/search_model.dart';
+// import '../../../../models/search_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage() async {
-  const String url = 'https://mundomangakun.com.br/';
-  const String indentify = '.post-projeto';
+  const String url = 'https://unionleitor.top/';
+  const String indentify = 'div.col-md-2';
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
-    var result = parser?.querySelectorAll(indentify);
-    // print(result?[0].html);
-    List<String> chaptersHtml = [];
-    if (result != null) {
-      for (Result html in result) {
-        chaptersHtml.add(html.html ?? "");
-      }
-      // cortar o link
-      debugPrint("pt1");
-      List<List<String>> corteLink1 =
-          chaptersHtml.map((e) => e.split('href="')).toList();
-      List<List<String>> corteLink2 = corteLink1
-          .map((e) => e[1].split('/cap'))
-          .toList(); // link na posição 0
-      // print(corteLink2);
-      // cortar a imagem
-      // debugPrint("pt2");
-      List<List<String>> corteImage1 =
-          chaptersHtml.map((e) => e.split('url(')).toList();
-      List<List<String>> corteImage2 = corteImage1
-          .map((e) => e[1].split(');"'))
-          .toList(); // img na posição 0
-      // cortar o nome
-      List<List<String>> corteNome1 =
-          chaptersHtml.map((e) => e.split('<h3 class="titulo-cap">')).toList();
-      List<List<String>> corteNome2 = corteNome1
-          .map((e) => e[1].split('<br><small>'))
-          .toList(); // nome na posição 0
 
-      // juntar tudo
-      List<Map<String, String>> mangas = [];
-      for (int i = 0; i < corteNome2.length; ++i) {
-        //print(corteLink2[i][0]);
-        List<String> corteLink1Home = corteLink2[i][0].split("projeto/"); // \/
-        //List<String> corteLink2Home = corteLink1Home[1]
-        // .split("/cap"); // .replaceFirst("leitor-online/", "")
-        mangas.add({
-          "name": corteNome2[i][0].trim(),
-          "img": corteImage2[i][0],
-          "url": corteLink1Home[1]
-        });
-      }
-      // montar o model
-      // debugPrint("$mangas");
-      Map<String, dynamic> lancamentos = {
-        "idExtension": 3,
-        "title": "Mundo Mangá Kun Lançamentos",
-        "books": mangas
-      };
-      models.add(ModelHomePage.fromJson(lancamentos));
+    var result = parser?.querySelectorAll(indentify);
+    // debugPrint("lrngth: ${result?.length}");
+    List<Map<String, String>> books = [];
+    for (Result html in result!) {
+      // name
+      String? name = html.querySelector("span a")!.text;
+      name!.replaceAll("...", "");
+      name.replaceAll(" - ...", "");
+      // debugPrint(name);
+      // img
+      String? img = html.querySelector(".img-thumbnail")!.src;
+      // debugPrint("img: $img");
+      // link
+      String? link = html.querySelector(".link-titulo")!.href;
+      // debugPrint("link: $link");
+      List<String> linkCorte1 = link!.split("manga/");
+
+      books.add({"name": name, "url": linkCorte1[1], "img": img ?? ""});
+    }
+    // print(books);
+    // monat model destaques
+    debugPrint("montando o model Destaques");
+    Map<String, dynamic> destaques = {
+      "idExtension": 4,
+      "title": "Union Mangas Destaques",
+      "books": books
+    };
+    models.add(ModelHomePage.fromJson(destaques));
+    // hoje
+    var result2 = parser?.querySelectorAll(".col-md-12");
+    books = [];
+    // remover falhas de corte
+    for (int i = 0; i < 9; ++i) {
+      result2?.removeAt(0);
     }
 
+    for (Result html in result2!) {
+      try {
+        // name
+        // print(html.html);
+        List<Result>? nameList = html.querySelectorAll(".link-titulo");
+        // print(nameList);
+        // nameList!.forEach((element) =>
+        //     print("${element.html} \n --------------------------------"));
+        String? name = nameList![1].text;
+        // name!.replaceAll("...", "");
+        // name.replaceAll(" - ...", "");
+        // debugPrint(name);
+        // img
+        String? img = html.querySelector(".link-titulo img")!.src;
+        // debugPrint("img: $img");
+        // link
+        String? link = html.querySelector(".link-titulo")!.href;
+        // debugPrint("link: $link");
+        List<String> linkCorte1 = link!.split("manga/");
+        // debugPrint("link cortado: ${linkCorte1[1]}");
+
+        books.add(
+            {"name": name ?? "erro", "url": linkCorte1[1], "img": img ?? ""});
+        debugPrint("book adicionado!!!");
+      } catch (e) {
+        debugPrint("não é um manga! at hoje: $e");
+      }
+    }
+    // print(books);
+    // monat model destaques
+    if (books.isNotEmpty) {
+      debugPrint("montando o model Atualizações");
+      Map<String, dynamic> today = {
+        "idExtension": 4,
+        "title": "Union Mangas Atualizações",
+        "books": books
+      };
+      models.add(ModelHomePage.fromJson(today));
+    }
+    // print(result!.length);
+    // result.forEach((element) =>
+    //     print("${element.html} \n --------------------------------"));
     return models;
   } catch (e) {
     debugPrint("erro no scrapingHomePage at ExtensionMundoMangaKun: $e");
@@ -79,7 +106,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
   try {
     var parser =
-        await Chaleno().load("https://mundomangakun.com.br/projeto/$link/");
+        await Chaleno().load("https://unionleitor.top/pagina-manga/$link/");
 
     String? name;
     String? description;
@@ -88,20 +115,25 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     List<Capitulos> chapters = [];
     if (parser != null) {
       // name
-      name = parser.querySelector(".titulo_projeto").text;
+      var listOfName = parser.querySelectorAll("div.col-md-8 div div");
+      print(listOfName[0].html);
+      name = "";
+      print("name: $name");
       // description
-      description = parser.querySelector("div.conteudo_projeto p").text;
-      print(description);
+      description = parser.querySelector("div.col-md-8 div div").text;
+      print("description: $description");
       // img
-      img = parser.querySelector(".imagens_projeto_container > img").src;
+      img = parser.querySelector(".img-thumbnail").src;
+      debugPrint("img: $img");
       // genres
-      List<Result?> genresResult = parser.querySelectorAll(".link_genero");
+      Result? genresResult = parser.querySelector(".subtit-manga");
+      print(genresResult!.html);
 
-      for (int i = 0; i < genresResult.length; ++i) {
-        if (genresResult[i] != null) {
-          genres.add("${genresResult[i]!.text}");
-        }
-      }
+      // for (int i = 0; i < genresResult.length; ++i) {
+      //   if (genresResult[i] != null) {
+      //     genres.add("${genresResult[i]!.text}");
+      //   }
+      // }
       // chapters
       List<Result?> chaptersResult = parser.querySelectorAll(".link_capitulo");
 

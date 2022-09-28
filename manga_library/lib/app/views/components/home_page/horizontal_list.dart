@@ -26,12 +26,13 @@ class _HorizontalListState extends State<HorizontalList>
         },
         child: SizedBox(
           width: 110,
-          height: 170,
+          height: 172,
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
                   width: 145.0,
-                  height: 187.5,
+                  height: 177.5,
                   child: CachedNetworkImage(
                     imageUrl: data.img,
                     placeholder: (context, url) => Container(
@@ -61,13 +62,13 @@ class _HorizontalListState extends State<HorizontalList>
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 235,
+      height: 238,
       child: Column(
         children: [
           Text(widget.dados.title, style: const TextStyle(fontSize: 19)),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 210,
+            height: 216,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: widget.dados.books.length,
