@@ -34,6 +34,9 @@ class ExtensionMundoMangaKun implements Extension {
   }
 
   @override
+  String getLink(String pieceOfLink) => 'https://mundomangakun.com.br/projeto/$pieceOfLink/';
+
+  @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
     Capitulos result = Capitulos(
         capitulo: "error",

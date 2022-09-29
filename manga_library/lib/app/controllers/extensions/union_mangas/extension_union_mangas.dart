@@ -32,6 +32,9 @@ class ExtensionUnionMangas implements Extension {
   }
 
   @override
+  String getLink(String pieceOfLink) => "https://unionleitor.top/pagina-manga/$pieceOfLink";
+
+  @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
     Capitulos result = Capitulos(
         capitulo: "error",

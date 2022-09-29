@@ -112,7 +112,7 @@ class DownloadController {
 
       /// pega os daddos atuais do banco
       MangaInfoOffLineModel? atualBook =
-          await mangaInfoOffLineController.verifyDatabase(model.link);
+          await mangaInfoOffLineController.verifyDatabase(model.link, model.idExtension);
       if (atualBook == null) return false;
       // start the download
       List<String>? downloadedPagesPath = await download(
@@ -137,7 +137,7 @@ class DownloadController {
             return false;
           } else {
             log("atualizando a view: ${mangaInfoController == null ? "is null" : "is not Null"}");
-            mangaInfoController?.updateChaptersAfterDownload(atualBook.link);
+            mangaInfoController?.updateChaptersAfterDownload(atualBook.link, atualBook.idExtension);
           }
           break;
         }

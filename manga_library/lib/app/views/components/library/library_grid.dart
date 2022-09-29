@@ -81,8 +81,8 @@ class _LibraryItensState extends State<LibraryItens>
                 TextButton(
                   onPressed: () {
                     print('clickado!');
-                    List<String> corteUrl1 = widget.data.books[index].link.split('manga/');
-                    GoRouter.of(context).push('/detail/${corteUrl1[1].replaceFirst('/', '')}/${widget.data.books[index].idExtension}');
+                    //List<String> corteUrl1 = widget.data.books[index].link.split('manga/');
+                    GoRouter.of(context).push('/detail/${widget.data.books[index].link.replaceFirst('/', '')}/${widget.data.books[index].idExtension}');
                   },
                   style: ButtonStyle(
                       padding:

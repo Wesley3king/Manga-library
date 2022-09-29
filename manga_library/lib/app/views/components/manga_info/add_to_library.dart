@@ -9,12 +9,12 @@ class AddToLibrary extends StatefulWidget {
   final String link;
   final MangaInfoOffLineModel dados;
   final List<Capitulos> capitulos;
-  const AddToLibrary(
-      {super.key,
-      required this.link,
-      required this.dados,
-      required this.capitulos,
-    });
+  const AddToLibrary({
+    super.key,
+    required this.link,
+    required this.dados,
+    required this.capitulos,
+  });
 
   @override
   State<AddToLibrary> createState() => _AddToLibraryState();
@@ -49,7 +49,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
   }
 
   List<Widget> _stateManagement(DialogStates state) {
-    print('tipo de sucess = ${state}');
+    print('tipo de sucess = $state');
     print(_dialogController.addToLibraryCheckboxes);
     switch (state) {
       case DialogStates.start:
@@ -67,11 +67,12 @@ class _AddToLibraryState extends State<AddToLibrary> {
   generateValues(
       List<LibraryModel> lista, Function setState, BuildContext context) {
     if (resultado.isEmpty) {
+      RegExp regex = RegExp(widget.link, caseSensitive: false);
       for (int i = 0; i < lista.length; ++i) {
         bool existe = false;
         for (int iManga = 0; iManga < lista[i].books.length; ++iManga) {
           // print('${lista[i].books[iManga].link} == ${widget.link}/');
-          if (lista[i].books[iManga].link == '${widget.link}/') {
+          if (lista[i].books[iManga].link.contains(regex) && lista[i].books[iManga].idExtension == widget.dados.idExtension) {
             resultado.add({
               "library": lista[i].library,
               "selected": true,
@@ -115,7 +116,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
                 resultado,
                 {
                   "name": widget.dados.name,
-                  "link": '${widget.link}/',
+                  "link": widget.link, // '${widget.link}/'
                   "img": widget.dados.img,
                   "idExtension": widget.dados.idExtension
                 },

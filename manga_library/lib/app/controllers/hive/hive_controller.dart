@@ -82,22 +82,21 @@ class HiveController {
         {
           "name": "Kawaii Dake ja Nai Shikimori-san",
           "link":
-              "https://mangayabu.top/manga/kawaii-dake-ja-nai-shikimori-san/",
+              "kawaii-dake-ja-nai-shikimori-san",
           "img":
               "https://mangayabu.top/wp-content/uploads/2022/07/f0037b59a279112676b9.jpg",
           "idExtension": 1
         },
         {
           "name": "Boku no Hero Academia",
-          "link": "https://mangayabu.top/manga/boku-no-hero-academia/",
+          "link": "boku-no-hero-academia",
           "img":
               "https://mangayabu.top/wp-content/uploads/2022/06/0cb2e604c5c9900bacb7.jpg",
           "idExtension": 1
         },
         {
           "name": "Mushoku Tensei: Isekai Ittara Honki Dasu",
-          "link":
-              "https://mangayabu.top/manga/mushoku-tensei-isekai-ittara-honki-dasu/",
+          "link": "mushoku-tensei-isekai-ittara-honki-dasu",
           "img":
               "https://mangayabu.top/wp-content/uploads/2022/07/97cf1278675bc2fd52b3.jpg",
           "idExtension": 1

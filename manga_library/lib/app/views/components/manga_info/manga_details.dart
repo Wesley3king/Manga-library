@@ -36,7 +36,7 @@ class _MangaDetailsState extends State<MangaDetails> {
           onPressed: () {
             widget.controller.addOrUpdateBook(
                 name: widget.dados.name,
-                link: 'https://mangayabu.top/manga/${widget.link}',
+                link: widget.link,
                 idExtension: widget.dados.idExtension
                 );
           },
@@ -108,7 +108,7 @@ class _MangaDetailsState extends State<MangaDetails> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AddToLibrary(
-              link: 'https://mangayabu.top/manga/${widget.link}',
+              link: widget.link,
               dados: widget.dados,
               capitulos: widget.capitulosDisponiveis ?? [],
             ),

@@ -37,6 +37,9 @@ class ExtensionMangaYabu implements Extension {
   }
 
   @override
+  String getLink(String pieceOfLink) => 'https://mangayabu.top/manga/$pieceOfLink/';
+
+  @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
     List<Capitulos> result = [];
     bool adicionated = false;

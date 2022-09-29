@@ -87,7 +87,7 @@ class OffLineWidgetController {
     final FileManager fileManager = FileManager();
 
     MangaInfoOffLineModel? atualBook =
-        await mangaInfoOffLineController.verifyDatabase(mangaModel.link);
+        await mangaInfoOffLineController.verifyDatabase(mangaModel.link, mangaModel.idExtension);
     if (atualBook == null) {
       state.value = DownloadStates.error;
     } else {

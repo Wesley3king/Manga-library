@@ -51,7 +51,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     };
     return IconButton(
       onPressed: () async {
-        await chaptersController.marcarDesmarcar(id, link, nameImageLink);
+        await chaptersController.marcarDesmarcar(id, link, nameImageLink, widget.dados.idExtension);
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             //ChaptersController.capitulosCorrelacionados,
@@ -69,7 +69,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     };
     return IconButton(
       onPressed: () async {
-        await chaptersController.marcarDesmarcar(id, link, nameImageLink);
+        await chaptersController.marcarDesmarcar(id, link, nameImageLink, widget.dados.idExtension);
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             // ChaptersController.capitulosCorrelacionados,
@@ -156,7 +156,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     if (widget.sucess2) {
       if (chaptersController.state.value == ChaptersStates.start) {
         chaptersController.start(
-            widget.capitulosDisponiveis, widget.dados.capitulos, widget.link);
+            widget.capitulosDisponiveis, widget.dados.capitulos, widget.link, widget.dados.idExtension);
       }
       return RefreshIndicator(
         color: configSystemController.colorManagement(),

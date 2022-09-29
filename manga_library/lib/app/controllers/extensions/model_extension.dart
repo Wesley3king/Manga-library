@@ -20,6 +20,8 @@ abstract class Extension {
     return null;
   }
 
+  String getLink(String pieceOfLink) => "";
+
   // retorna uma lista com as paginas
   Future<Capitulos> getPages(String url, List<Capitulos> listChapters) async {
     return Capitulos(capitulo: "", disponivel: false, download: false, downloadPages: [], id: 0, pages: [], readed: false);
