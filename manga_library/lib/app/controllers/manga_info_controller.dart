@@ -49,9 +49,7 @@ class MangaInfoController {
       if (localData != null) {
         print("existe na base de dados! / l= $url");
         // testa para definir isTwoRequests
-        if (mapOfExtensions[idExtension].isTwoRequests) {
-          isTwoRequests = true;
-        }
+        isTwoRequests = mapOfExtensions[idExtension].isTwoRequests;
 
         data = localData;
         capitulosDisponiveis = localData.capitulos;
@@ -70,8 +68,8 @@ class MangaInfoController {
 
         // identificar se a extensão trabalha em duas requisições
         final MangaInfoOffLineModel? dados;
-        if (mapOfExtensions[idExtension].isTwoRequests) {
-          isTwoRequests = true;
+        isTwoRequests = mapOfExtensions[idExtension].isTwoRequests;
+        if (isTwoRequests) {
           dados = await mapOfExtensions[idExtension].mangaDetail(url);
           if (dados != null) {
             data = dados;
@@ -83,7 +81,6 @@ class MangaInfoController {
               await fetchServiceExtensions[idExtension].fetchChapters(url);
           //log("at online start: ${capitulosDisponiveis!.length}");
         } else {
-          isTwoRequests = false;
           dados = await mapOfExtensions[idExtension].mangaDetail(url);
           if (dados != null) {
             data = dados;
@@ -147,6 +144,7 @@ class MangaInfoController {
           print("dd off-line false");
           capitulosFromOriginalServer = dados.capitulos;
         }
+        // mapOfExtensions[idExtension].isTwoRequests;
         await chaptersController?.update(
             capitulosDisponiveis, capitulosFromOriginalServer, url);
         final MangaInfoOffLineController mangaInfoOffLineController =
@@ -279,6 +277,7 @@ class ChaptersController {
       //   await correlacionarCapitulos(
       //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
       // }
+      log("update is two: ${MangaInfoController.isTwoRequests}");
       if (MangaInfoController.isTwoRequests) {
         await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link,
@@ -313,8 +312,7 @@ class ChaptersController {
       ClientDataModel clientData = await _hiveController.getClientData();
       // achar os capitulos lidos do manga pelo link
       List<dynamic> capitulosLidos = [];
-      RegExp regex = RegExp('https://mangayabu.top/manga/$link',
-          dotAll: true, caseSensitive: false);
+      RegExp regex = RegExp(link, dotAll: true, caseSensitive: false);
 
       for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
         if (clientData.capitulosLidos[i]['link'].contains(regex)) {
@@ -330,20 +328,34 @@ class ChaptersController {
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
       print("caplist: ${listaCapitulosDisponiveis?.length}");
 
-      for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
-        var item = capitulosCorrelacionados[i];
-        print(
-            "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
-        bool adicionado = false;
-        for (int cap = 0; cap < capitulosLidos.length; ++cap) {
-          if ((capitulosCorrelacionados[i].id).toString() ==
-              capitulosLidos[cap]) {
-            //log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
+      if (capitulosLidos.isNotEmpty) {
+        for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
+          var item = capitulosCorrelacionados[i];
+          print(
+              "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
+          bool adicionado = false;
+          for (int cap = 0; cap < capitulosLidos.length; ++cap) {
+            if ((capitulosCorrelacionados[i].id).toString() ==
+                capitulosLidos[cap]) {
+              //log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
+              listaCapitulosCorrelacionadosLidos.add(Capitulos(
+                id: capitulosCorrelacionados[i].id,
+                capitulo: capitulosCorrelacionados[i].capitulo,
+                download: capitulosCorrelacionados[i].download,
+                readed: true,
+                disponivel: capitulosCorrelacionados[i].disponivel,
+                downloadPages: capitulosCorrelacionados[i].downloadPages,
+                pages: capitulosCorrelacionados[i].pages,
+              ));
+              adicionado = true;
+            }
+          }
+          if (!adicionado) {
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
               id: capitulosCorrelacionados[i].id,
               capitulo: capitulosCorrelacionados[i].capitulo,
               download: capitulosCorrelacionados[i].download,
-              readed: true,
+              readed: false,
               disponivel: capitulosCorrelacionados[i].disponivel,
               downloadPages: capitulosCorrelacionados[i].downloadPages,
               pages: capitulosCorrelacionados[i].pages,
@@ -351,22 +363,14 @@ class ChaptersController {
             adicionado = true;
           }
         }
-        if (!adicionado) {
-          listaCapitulosCorrelacionadosLidos.add(Capitulos(
-            id: capitulosCorrelacionados[i].id,
-            capitulo: capitulosCorrelacionados[i].capitulo,
-            download: capitulosCorrelacionados[i].download,
-            readed: false,
-            disponivel: capitulosCorrelacionados[i].disponivel,
-            downloadPages: capitulosCorrelacionados[i].downloadPages,
-            pages: capitulosCorrelacionados[i].pages,
-          ));
-          adicionado = true;
-        }
+        debugPrint("---------- listaCapitulosCorrelacionados");
+        print(listaCapitulosCorrelacionadosLidos);
+        capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       }
-      debugPrint("---------- listaCapitulosCorrelacionados");
-      print(listaCapitulosCorrelacionadosLidos);
-      capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
+      // else {
+      //   capitulosCorrelacionados = listaCapitulosDisponiveis ?? [];
+      // }
+
       // }
       print('- restart - end');
       state.value = ChaptersStates.sucess;

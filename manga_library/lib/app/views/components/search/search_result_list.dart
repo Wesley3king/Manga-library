@@ -27,21 +27,21 @@ class SearchResultsPage extends StatelessWidget {
               SizedBox(
                 width: 145.0,
                 height: 187.5,
-                child: Image.network(
-                  data.img,
-                  width: 145.0,
-                  height: 187.5,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: Colors.grey,
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.report_problem),
-                  ),
-                  fit: BoxFit.fill,
-                ),
+                // child: Image.network(
+                //   data.img,
+                //   width: 145.0,
+                //   height: 187.5,
+                //   loadingBuilder: (context, child, loadingProgress) {
+                //     if (loadingProgress == null) return child;
+                //     return Container(
+                //       color: Colors.grey,
+                //     );
+                //   },
+                //   errorBuilder: (context, error, stackTrace) => const Center(
+                //     child: Icon(Icons.report_problem),
+                //   ),
+                //   fit: BoxFit.fill,
+                // ),
               ),
               Text(data.name,
                   overflow: TextOverflow.ellipsis,

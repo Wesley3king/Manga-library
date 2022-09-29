@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 // import 'package:manga_library/app/models/leitor_pages.dart';
@@ -8,27 +10,26 @@ class YabuFetchServices {
     connectTimeout: 40000,
     sendTimeout: 40000,
   ));
-  
+
   Future<List<Capitulos>?> fetchChapters(String url) async {
     try {
       var data = await dio.post('https://vast-falls-98079.herokuapp.com/manga',
           data: {"url": 'https://mangayabu.top/manga/$url'});
 
       var dadosManga = data.data as Map<String, dynamic>;
-      List<Capitulos> listaCapitulos = dadosManga['data']['capitulos']
-          .map<Capitulos>((dynamic lista) {
-             List<String> corte = lista[0].split('#');
-            return Capitulos(
-              id: lista[1],
-              capitulo: corte[1],
-              pages: lista[4].map<String>((dynamic str)=> str.toString()).toList(),
-              disponivel: true,
-              readed: false,
-              download: false,
-              downloadPages: [],
-            );
-          })
-          .toList();
+      List<Capitulos> listaCapitulos =
+          dadosManga['data']['capitulos'].map<Capitulos>((dynamic lista) {
+        List<String> corte = lista[0].split('#');
+        return Capitulos(
+          id: lista[1],
+          capitulo: corte[1],
+          pages: lista[4].map<String>((dynamic str) => str.toString()).toList(),
+          disponivel: true,
+          readed: false,
+          download: false,
+          downloadPages: [],
+        );
+      }).toList();
 
       return listaCapitulos;
     } catch (e) {
@@ -41,10 +42,21 @@ class YabuFetchServices {
     try {
       var data = await dio.post('https://vast-falls-98079.herokuapp.com/search',
           data: {"txt": txt});
+      print(data.data['data']);
+      // print(data.data['data'] is List ? "lista":"nao lista");
+
+      var decoded = List.from(data.data['data']);
+      List<dynamic> corteLink1 =
+          decoded.map((book) => book['link'].split("manga/")).toList();
+      // print("passou");
+      for (int i = 0; i < decoded.length; ++i) {
+        print(i);
+        decoded[i]['link'] = corteLink1[i][1].replaceAll("/", "");
+      }
       return {
         "font": "MangaYabu",
         "idExtension": 1,
-        "data": data.data['data'],
+        "data": decoded,
       };
     } catch (e, s) {
       print('error no search! $e');

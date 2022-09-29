@@ -22,7 +22,7 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
         chaptersHtml.add(html.html ?? "");
       }
       // cortar o link
-      debugPrint("pt1");
+      // debugPrint("pt1");
       List<List<String>> corteLink1 =
           chaptersHtml.map((e) => e.split('href="')).toList();
       List<List<String>> corteLink2 = corteLink1
@@ -146,7 +146,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
-        capitulos: chapters,
+        capitulos: chapters.reversed.toList(),
       );
     }
   } catch (e) {
