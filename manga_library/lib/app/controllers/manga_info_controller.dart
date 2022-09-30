@@ -147,11 +147,14 @@ class MangaInfoController {
         // mapOfExtensions[idExtension].isTwoRequests;
         await chaptersController?.update(capitulosDisponiveis,
             capitulosFromOriginalServer, url, idExtension);
+        
         final MangaInfoOffLineController mangaInfoOffLineController =
             MangaInfoOffLineController();
+        debugPrint("inserindo na base de dados!");
         await mangaInfoOffLineController.updateBook(
             model: data,
             capitulos: ChaptersController.capitulosCorrelacionados);
+        debugPrint("inserindo com SUCESSO na base de dados!");
       } else {
         // isn't an off ine book
         if (mapOfExtensions[idExtension]!.isTwoRequests) {
@@ -178,7 +181,7 @@ class MangaInfoController {
             capitulosFromOriginalServer, url, idExtension);
       }
       state.value = MangaInfoStates.sucess1;
-      // caso falhe pode ser aqui
+      // aqui deve atualizar a view totalmente
       state.value = MangaInfoStates.sucess2;
     } catch (e) {
       print("erro no update book at mangaInfoController: $e");
@@ -279,6 +282,23 @@ class ChaptersController {
       // }
       log("update is two: ${MangaInfoController.isTwoRequests}");
       if (MangaInfoController.isTwoRequests) {
+        // passar os downloads aos novos capitulos
+        // List<Capitulos> capitulosRetirados =
+        //     List.from(listaCapitulosDisponiveis!);
+        for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
+          if (capCorrelacionados.download) {
+            for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
+              if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
+                debugPrint("capitulo com download disponivel!");
+                listaCapitulosDisponiveis[i].download = true;
+                listaCapitulosDisponiveis[i].downloadPages = capCorrelacionados.downloadPages;
+                // ok
+                
+                break;
+              }
+            }
+          }
+        }
         await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link,
             isAnUpdate: true, idExtension: idExtension);
@@ -605,8 +625,8 @@ class DialogController {
       bool existe = false;
       bool executed = false;
       for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-        print(
-            "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
+        // print(
+        //     "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
         if ((dataLibrary[i].library == lista[i]['library']) &&
             (dataLibrary[i].books[iBook].link == book['link']) &&
             (dataLibrary[i].books[iBook].idExtension == book['idExtension'])) {
@@ -614,9 +634,9 @@ class DialogController {
           offLine = true;
           if (!lista[i]['selected']) {
             print('remover da library');
-            dataLibrary[i]
-                .books
-                .removeWhere((element) => element.link == book['link']);
+            dataLibrary[i].books.removeWhere((element) =>
+                (element.link == book['link']) &&
+                element.idExtension == book['idExtension']);
             await hiveController.updateLibraries(dataLibrary)
                 ? haveError = false
                 : haveError = true;

@@ -130,8 +130,8 @@ class MangaInfoOffLineController {
     if (data != null) {
       RegExp regex = RegExp(link, caseSensitive: false);
       data.removeWhere((MangaInfoOffLineModel element) {
-        debugPrint(
-            "link: ${element.link}- $link | ${element.idExtension} - $idExtension, tst: ${(element.link.contains(regex)) && (element.idExtension == idExtension)}");
+        //debugPrint(
+        //  "link: ${element.link}- $link | ${element.idExtension} - $idExtension, tst: ${(element.link.contains(regex)) && (element.idExtension == idExtension)}");
         return (element.link.contains(regex)) &&
             (element.idExtension == idExtension);
       });
