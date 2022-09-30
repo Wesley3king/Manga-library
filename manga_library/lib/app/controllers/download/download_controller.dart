@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
+import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 // import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
@@ -24,7 +25,7 @@ class DownloadController {
     if (!isDownloading) downloadMachine();
   }
 
-  static cancelDownload(Capitulos capitulo) {
+  static cancelDownload(Capitulos capitulo, int idExtension) {
     try {
       for (int i = 0; i < filaDeDownload.length; ++i) {
         if (filaDeDownload[i].capitulo.id == capitulo.id) {
@@ -33,7 +34,7 @@ class DownloadController {
       }
     } catch (e) {
       debugPrint("erro no cancelDownload at DownloadController: $e");
-      cancelDownload(capitulo);
+      cancelDownload(capitulo, idExtension);
     }
   }
 
@@ -111,14 +112,15 @@ class DownloadController {
       log("process - pages = ${capitulo.pages.length}");
 
       /// pega os daddos atuais do banco
-      MangaInfoOffLineModel? atualBook =
-          await mangaInfoOffLineController.verifyDatabase(model.link, model.idExtension);
+      MangaInfoOffLineModel? atualBook = await mangaInfoOffLineController
+          .verifyDatabase(model.link, model.idExtension);
       if (atualBook == null) return false;
       // start the download
       List<String>? downloadedPagesPath = await download(
         capitulo: capitulo,
         link: model.link,
         name: model.name,
+        idExtension: model.idExtension,
         index: index,
         // downloadProgress: downloadProgress,
       );
@@ -137,7 +139,8 @@ class DownloadController {
             return false;
           } else {
             log("atualizando a view: ${mangaInfoController == null ? "is null" : "is not Null"}");
-            mangaInfoController?.updateChaptersAfterDownload(atualBook.link, atualBook.idExtension);
+            mangaInfoController?.updateChaptersAfterDownload(
+                atualBook.link, atualBook.idExtension);
           }
           break;
         }
@@ -145,7 +148,7 @@ class DownloadController {
       log("capitulo ${capitulo.capitulo} baixado com sucesso!!!");
       return true;
     } catch (e) {
-      print("erro no processOneChapter at DownloadController: $e");
+      debugPrint("erro no processOneChapter at DownloadController: $e");
       return false;
     }
   }
@@ -154,6 +157,7 @@ class DownloadController {
     required Capitulos capitulo,
     required String link,
     required String name,
+    required int idExtension,
     required int index,
     //ValueNotifier<Map<String, int?>>? downloadProgress
   }) async {
@@ -181,7 +185,10 @@ class DownloadController {
       for (int i = 0; i < capitulo.pages.length; ++i) {
         // build exe
         List<String> exe = capitulo.pages[i].split(".");
-        exe = exe.reversed.toList();
+        exe = exe.reversed.toList(); // file type na posição 0
+
+        // get extesion name
+        String extensionaName = mapOfExtensions[idExtension]!.nome;
 
         // cancel download
         if (filaDeDownload[index].cancel) {
@@ -189,11 +196,11 @@ class DownloadController {
           filaDeDownload[index].attempts = 3;
           if (pagesPath.isEmpty) {
             await deleteDownloadForCancel(
-                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$chapterPath/$i.${exe[0]}");
+                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
           } else {
             if (pagesPath[0].contains("error:")) {
               await deleteDownloadForCancel(
-                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$chapterPath/$i.${exe[0]}");
+                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
             } else {
               await deleteDownloadForCancel(pagesPath[0]);
             }
@@ -206,7 +213,7 @@ class DownloadController {
                 destination:
                     AndroidDestinationType.custom(directory: "Manga Library")
                       ..inExternalFilesDir()
-                      ..subDirectory("Downloads/$chapterPath/$i.${exe[0]}"))
+                      ..subDirectory("Downloads/$extensionaName/$chapterPath/$i.${exe[0]}"))
             .catchError((error) {
           if (error is PlatformException) {
             if (error.code == "404") {

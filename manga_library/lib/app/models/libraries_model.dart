@@ -8,6 +8,8 @@ class LibraryModel {
 
   LibraryModel.fromJson(Map<String, dynamic> json) {
     library = json['library'];
+    // print("======list of books");
+    // print('${json['books']}');
     books = List.from(json['books']).map((e) => Books.fromJson(e)).toList();
   }
 
@@ -32,6 +34,8 @@ class Books {
   late final int idExtension;
 
   Books.fromJson(Map<dynamic, dynamic> json) {
+    // print("=========================================== books");
+    // print(json);
     name = json['name'];
     link = json['link'];
     img = json['img'];

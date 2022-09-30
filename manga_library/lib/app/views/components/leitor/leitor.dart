@@ -29,14 +29,14 @@ class _LeitorState extends State<Leitor> {
   }
 
   // icons
-  Map<String, Widget> readerType = {
-    "vertical": const Icon(Icons.system_security_update_outlined),
-    "ltr": const Icon(Icons.send_to_mobile),
-    "rtl": const Icon(Icons.smartphone),
-    "ltrlist": const Icon(Icons.install_mobile_rounded),
-    "rtllist": const Icon(Icons.no_cell_outlined),
-    "webtoon": const Icon(Icons.system_security_update),
-  };
+  // Map<String, Widget> readerType = {
+  //   "vertical": const Icon(Icons.system_security_update_outlined),
+  //   "ltr": const Icon(Icons.send_to_mobile),
+  //   "rtl": const Icon(Icons.smartphone),
+  //   "ltrlist": const Icon(Icons.install_mobile_rounded),
+  //   "rtllist": const Icon(Icons.no_cell_outlined),
+  //   "webtoon": const Icon(Icons.system_security_update),
+  // };
 
   @override
   void initState() {
@@ -88,32 +88,35 @@ class _LeitorState extends State<Leitor> {
             clickVisible: isVisible,
             child: BottomAppBar(
               color: Colors.transparent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  AnimatedBuilder(
-                    animation: leitorController.leitorTypeState,
-                    builder: (context, child) =>
-                        buildSetLeitorType(leitorController),
-                  ),
-                  AnimatedBuilder(
-                    animation: leitorController.filterQualityState,
-                    builder: (context, child) =>
-                        buildFilterQuality(leitorController),
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.screen_rotation,
-                        size: sizeOfButtons,
-                      )),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.settings,
-                        size: sizeOfButtons,
-                      )),
-                ],
+              child: IconTheme(
+                data: const IconThemeData(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AnimatedBuilder(
+                      animation: leitorController.leitorTypeState,
+                      builder: (context, child) =>
+                          buildSetLeitorType(leitorController),
+                    ),
+                    AnimatedBuilder(
+                      animation: leitorController.filterQualityState,
+                      builder: (context, child) =>
+                          buildFilterQuality(leitorController),
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.screen_rotation,
+                          size: sizeOfButtons,
+                        )),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.settings,
+                          size: sizeOfButtons,
+                        )),
+                  ],
+                ),
               ),
             )));
   }

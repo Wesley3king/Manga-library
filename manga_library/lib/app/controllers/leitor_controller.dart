@@ -28,8 +28,7 @@ class LeitorController {
 
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
-      Capitulos cap =
-          await mapOfExtensions[idExtension]!.getPages(id, capitulos);
+      Capitulos cap = await mapOfExtensions[idExtension]!.getPages(id, capitulos);
       // debugPrint("$cap");
       capitulosEmCarga.add(cap);
       debugPrint("=========== em carga =============");

@@ -12,6 +12,9 @@ import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 
+import '../../../models/download_model.dart';
+import '../../download/download_controller.dart';
+
 class ExtensionMangaYabu implements Extension {
   @override
   dynamic fetchServices = YabuFetchServices();
@@ -37,7 +40,8 @@ class ExtensionMangaYabu implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => 'https://mangayabu.top/manga/$pieceOfLink/';
+  String getLink(String pieceOfLink) =>
+      'https://mangayabu.top/manga/$pieceOfLink/';
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -85,6 +89,11 @@ class ExtensionMangaYabu implements Extension {
   }
 
   @override
+  Future<List<String>> getPagesForDownload(String url) async {
+    return [];
+  }
+
+  @override
   Future<SearchModel> search(String txt) async {
     debugPrint("MANGA YABU SEARCH STARTING...");
     try {
@@ -100,4 +109,22 @@ class ExtensionMangaYabu implements Extension {
       );
     }
   }
+
+  // download
+  // @override
+  // Future<void> download(DownloadActions actionType, {DownloadModel? model, Capitulos? chapter, required int idExtension}) async {
+  //   switch (actionType) {
+  //     case DownloadActions.start:
+  //       break;
+  //     case DownloadActions.download:
+  //       if (model != null) {
+  //         DownloadController.addDownload(model);
+  //       }
+  //       break;
+  //     case DownloadActions.cancel:
+  //       break;
+  //     case DownloadActions.delete:
+  //       break;
+  //   }
+  // }
 }

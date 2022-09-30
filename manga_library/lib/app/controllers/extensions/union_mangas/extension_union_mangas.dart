@@ -3,6 +3,7 @@ import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/repositories/fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/scraping/union_scraping.dart';
 
+import '../../../models/download_model.dart';
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 import '../../../models/search_model.dart';
@@ -52,8 +53,19 @@ class ExtensionUnionMangas implements Extension {
         break;
       }
     }
-    result.pages = await scrapingLeitor(id);
+    if (!result.download) {
+      try {
+        result.pages = await scrapingLeitor(id);
+      } catch (e) {
+        debugPrint("erro - não foi possivel obter as paginas on-line: $e");
+      }
+    }
     return result;
+  }
+
+  @override
+  Future<List<String>> getPagesForDownload(String url) async {
+    return await scrapingLeitor(url);
   }
 
   @override
@@ -94,4 +106,19 @@ class ExtensionUnionMangas implements Extension {
           {"font": nome, "data": [], "idExtension": id});
     }
   }
+
+  // downloads
+  // @override
+  // Future<void> download(DownloadActions actionType, {DownloadModel? model, Capitulos? chapter, required int idExtension}) async {
+  //   switch (actionType) {
+  //     case DownloadActions.start:
+  //       break;
+  //     case DownloadActions.download:
+  //       break;
+  //     case DownloadActions.cancel:
+  //       break;
+  //     case DownloadActions.delete:
+  //       break;
+  //   }
+  // }
 }

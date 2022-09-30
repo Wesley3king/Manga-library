@@ -605,8 +605,11 @@ class DialogController {
       bool existe = false;
       bool executed = false;
       for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-        if (dataLibrary[i].library == lista[i]['library'] &&
-            dataLibrary[i].books[iBook].link == book['link'] && dataLibrary[i].books[iBook].idExtension == book['idExtension']) {
+        print(
+            "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
+        if ((dataLibrary[i].library == lista[i]['library']) &&
+            (dataLibrary[i].books[iBook].link == book['link']) &&
+            (dataLibrary[i].books[iBook].idExtension == book['idExtension'])) {
           print("achei o manga na library");
           offLine = true;
           if (!lista[i]['selected']) {
@@ -670,7 +673,8 @@ class DialogController {
     final MangaInfoOffLineController mangaInfoOffLineController =
         MangaInfoOffLineController();
     try {
-      mangaInfoOffLineController.deleteBook(link: link, idExtension: idExtension);
+      mangaInfoOffLineController.deleteBook(
+          link: link, idExtension: idExtension);
       return true;
     } catch (e) {
       print("erro no _removeOffLineManga at DialogController: $e");

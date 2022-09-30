@@ -74,8 +74,12 @@ class _PagesLeitorState extends State<PagesLeitor> {
       }
     }
 
+    debugPrint(
+        "length pages: ${widget.leitorController.capitulosEmCarga[0].pages.length}");
     return PhotoViewGallery.builder(
-      itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.capitulosEmCarga[0].download ? 
+      widget.leitorController.capitulosEmCarga[0].downloadPages.length : 
+      widget.leitorController.capitulosEmCarga[0].pages.length,
       gaplessPlayback: true,
       scrollDirection: scrollDirection,
       reverse: reverse,
@@ -139,7 +143,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget pageListViewLeitor({bool rtl = false, required FilterQuality filterQuality}) {
+  Widget pageListViewLeitor(
+      {bool rtl = false, required FilterQuality filterQuality}) {
     return PageView.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
@@ -251,7 +256,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
             AnimatedBuilder(
               animation: controller.state,
               builder: (context, child) => Text(
-                "${controller.state.value}/${widget.leitorController.capitulosEmCarga.isEmpty ? 0 : widget.leitorController.capitulosEmCarga[0].pages.length }",
+                "${controller.state.value}/${widget.leitorController.capitulosEmCarga.isEmpty ? 0 : widget.leitorController.capitulosEmCarga[0].pages.length}",
                 style: const TextStyle(shadows: [
                   Shadow(color: Colors.black45, offset: Offset(1, 1))
                 ]),

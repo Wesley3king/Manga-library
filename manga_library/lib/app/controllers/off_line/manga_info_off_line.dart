@@ -11,11 +11,13 @@ class MangaInfoOffLineController {
   final HiveController _hiveController = HiveController();
   // final UpdateBook _updateBookController = UpdateBook();
 
-  Future<MangaInfoOffLineModel?> verifyDatabase(String link, int idExtension) async {
+  Future<MangaInfoOffLineModel?> verifyDatabase(
+      String link, int idExtension) async {
     try {
       List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
       if (data != null) {
-        MangaInfoOffLineModel? model = _searchBook(link: link, idExtension: idExtension, lista: data);
+        MangaInfoOffLineModel? model =
+            _searchBook(link: link, idExtension: idExtension, lista: data);
         if (model == null) {
           return null;
         } else {
@@ -31,12 +33,15 @@ class MangaInfoOffLineController {
   }
 
   MangaInfoOffLineModel? _searchBook(
-      {required String link, required int idExtension, required List<MangaInfoOffLineModel> lista}) {
+      {required String link,
+      required int idExtension,
+      required List<MangaInfoOffLineModel> lista}) {
     RegExp regex = RegExp(link, caseSensitive: false);
     for (int i = 0; i < lista.length; ++i) {
       debugPrint("iniciar!");
       debugPrint("quantidade de mangas = ${lista.length}");
-      if ((lista[i].link.contains(regex)) && (lista[i].idExtension == idExtension)) {
+      if ((lista[i].link.contains(regex)) &&
+          (lista[i].idExtension == idExtension)) {
         debugPrint("achado na memória!");
         return lista[i];
       }
@@ -124,8 +129,12 @@ class MangaInfoOffLineController {
     List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
     if (data != null) {
       RegExp regex = RegExp(link, caseSensitive: false);
-      data.removeWhere(
-          (MangaInfoOffLineModel element) => (element.link.contains(regex)) && (element.idExtension == idExtension) );
+      data.removeWhere((MangaInfoOffLineModel element) {
+        debugPrint(
+            "link: ${element.link}- $link | ${element.idExtension} - $idExtension, tst: ${(element.link.contains(regex)) && (element.idExtension == idExtension)}");
+        return (element.link.contains(regex)) &&
+            (element.idExtension == idExtension);
+      });
       await _hiveController.updateBook(data);
     }
   }
@@ -134,15 +143,15 @@ class MangaInfoOffLineController {
 
   Future<bool> updateBook(
       {required MangaInfoOffLineModel model,
-      required List<Capitulos> capitulos
-      }) async {
+      required List<Capitulos> capitulos}) async {
     try {
       RegExp regex = RegExp(model.link, caseSensitive: false);
       List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
 
       if (data != null) {
         for (int i = 0; i < data.length; ++i) {
-          if (data[i].link.contains(regex) && data[i].idExtension == model.idExtension) {
+          if (data[i].link.contains(regex) &&
+              data[i].idExtension == model.idExtension) {
             log("manga off-line found!!! == doing changes");
             model.capitulos = capitulos;
             data[i] = model;

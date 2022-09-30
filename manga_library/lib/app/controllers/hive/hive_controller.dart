@@ -85,7 +85,7 @@ class HiveController {
               "kawaii-dake-ja-nai-shikimori-san",
           "img":
               "https://mangayabu.top/wp-content/uploads/2022/07/f0037b59a279112676b9.jpg",
-          "idExtension": 1
+          "idExtension": 1 
         },
         {
           "name": "Boku no Hero Academia",

@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
+// import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 // import '../../../../../controllers/hive/hive_controller.dart';
+import '../../../../../controllers/extensions/extensions.dart';
 import '../../../../../controllers/off_line/manga_info_off_line.dart';
 
 class OffLineWidgetController {
@@ -69,13 +71,30 @@ class OffLineWidgetController {
       "progress": null
     };
     downloadProgress.value = progressData;
-    DownloadController.addDownload(model);
+
+    if (!mapOfExtensions[mangaModel.idExtension]!.isTwoRequests) {
+      // precisa conseguir as paginas primeiro
+      List<String> data = await mapOfExtensions[mangaModel.idExtension]!
+          .getPagesForDownload(capitulo.id);
+      // editar o model
+      model.capitulo.pages = data;
+      DownloadController.addDownload(model);
+    } else {
+      DownloadController.addDownload(model);
+    }
+
+    // encontrar sua extensão DownloadController.addDownload(model);
+    // mapOfExtensions[mangaModel.idExtension]!.download(DownloadActions.download,
+    // model: model, idExtension: mangaModel.idExtension);
     // state.value = DownloadStates.delete;
   }
 
-  void cancel(Capitulos capitulo) async {
-    await DownloadController.cancelDownload(capitulo);
+  void cancel(Capitulos capitulo, int idExtension) async {
+    // await mapOfExtensions[idExtension]!.download(DownloadActions.cancel,
+    // chapter: capitulo, idExtension: idExtension);
+    await DownloadController.cancelDownload(capitulo, idExtension);
     state.value = DownloadStates.download;
+    // DownloadController.cancelDownload(capitulo);
   }
 
   void delete(
@@ -86,8 +105,8 @@ class OffLineWidgetController {
     // final HiveController _hiveController = HiveController();
     final FileManager fileManager = FileManager();
 
-    MangaInfoOffLineModel? atualBook =
-        await mangaInfoOffLineController.verifyDatabase(mangaModel.link, mangaModel.idExtension);
+    MangaInfoOffLineModel? atualBook = await mangaInfoOffLineController
+        .verifyDatabase(mangaModel.link, mangaModel.idExtension);
     if (atualBook == null) {
       state.value = DownloadStates.error;
     } else {
@@ -102,15 +121,19 @@ class OffLineWidgetController {
             bool saveResult = await mangaInfoOffLineController.updateBook(
                 model: atualBook, capitulos: atualBook.capitulos);
             debugPrint("deletado da memória! : $saveResult");
-            if (saveResult == false) state.value = DownloadStates.error;
+            if (saveResult == false) {
+              state.value = DownloadStates.error;
+            } else {
+              DownloadController.mangaInfoController?.updateChaptersAfterDownload(atualBook.link, atualBook.idExtension);
+              state.value = DownloadStates.download;
+            }
             break;
           } else {
             state.value = DownloadStates.error;
           }
         }
       }
-    }
-    state.value = DownloadStates.download;
+    } 
   }
 }
 

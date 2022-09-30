@@ -71,8 +71,10 @@ class _AddToLibraryState extends State<AddToLibrary> {
       for (int i = 0; i < lista.length; ++i) {
         bool existe = false;
         for (int iManga = 0; iManga < lista[i].books.length; ++iManga) {
-          // print('${lista[i].books[iManga].link} == ${widget.link}/');
-          if (lista[i].books[iManga].link.contains(regex) && lista[i].books[iManga].idExtension == widget.dados.idExtension) {
+          // print(
+          //     '${lista[i].books[iManga].link} == ${widget.link}/ -- ${lista[i].books[iManga].idExtension} == ${widget.dados.idExtension}');
+          if (lista[i].books[iManga].link.contains(regex) &&
+              lista[i].books[iManga].idExtension == widget.dados.idExtension) {
             resultado.add({
               "library": lista[i].library,
               "selected": true,

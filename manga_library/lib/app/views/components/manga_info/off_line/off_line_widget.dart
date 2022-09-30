@@ -69,7 +69,7 @@ class _OffLineWidgetState extends State<OffLineWidget> {
               )),
         ),
         IconButton(
-            onPressed: () => _offLineWidgetController.cancel(widget.capitulo),
+            onPressed: () => _offLineWidgetController.cancel(widget.capitulo, widget.model.idExtension),
             icon: const Icon(Icons.close))
       ],
     );
