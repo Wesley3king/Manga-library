@@ -13,6 +13,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 class PagesLeitor extends StatefulWidget {
   final Function showOrHideInfo;
   final LeitorController leitorController;
+  final PagesController controller;
   final String link;
   final String id;
   const PagesLeitor(
@@ -20,6 +21,7 @@ class PagesLeitor extends StatefulWidget {
       required this.link,
       required this.id,
       required this.leitorController,
+      required this.controller,
       required this.showOrHideInfo});
 
   @override
@@ -28,7 +30,7 @@ class PagesLeitor extends StatefulWidget {
 
 // with AutomaticKeepAliveClientMixin
 class _PagesLeitorState extends State<PagesLeitor> {
-  final PagesController controller = PagesController();
+  // final PagesController controller = PagesController();
   // final PagesStates _pagesStates = PagesStates();
   final FullScreenController screenController = FullScreenController();
 
@@ -77,13 +79,13 @@ class _PagesLeitorState extends State<PagesLeitor> {
     debugPrint(
         "length pages: ${widget.leitorController.capitulosEmCarga[0].pages.length}");
     return PhotoViewGallery.builder(
-      itemCount: widget.leitorController.capitulosEmCarga[0].download ? 
-      widget.leitorController.capitulosEmCarga[0].downloadPages.length : 
-      widget.leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.capitulosEmCarga[0].download
+          ? widget.leitorController.capitulosEmCarga[0].downloadPages.length
+          : widget.leitorController.capitulosEmCarga[0].pages.length,
       gaplessPlayback: true,
       scrollDirection: scrollDirection,
       reverse: reverse,
-      onPageChanged: (index) => controller.setPage = (index + 1),
+      onPageChanged: (index) => widget.controller.setPage = (index + 1),
       wantKeepAlive: true,
       builder: (context, index) => PhotoViewGalleryPageOptions(
         imageProvider: returnAnImageProvider(index),
@@ -100,7 +102,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       cacheExtent: 8000.0,
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
-          controller.setPage = index;
+          widget.controller.setPage = index;
           widget.showOrHideInfo();
         },
         child: MyPageImage(
@@ -148,7 +150,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
     return PageView.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
-      onPageChanged: (index) => controller.setPage = (index + 1),
+      onPageChanged: (index) => widget.controller.setPage = (index + 1),
       reverse: rtl,
       itemBuilder: (context, index) => GestureDetector(
         onTap: () => widget.showOrHideInfo(),
@@ -227,13 +229,13 @@ class _PagesLeitorState extends State<PagesLeitor> {
   void initState() {
     super.initState();
     // widget.leitorController.start(widget.link, widget.id);
-    screenController.enterFullScreen();
+    // screenController.enterFullScreen();
   }
 
   @override
   void dispose() {
     super.dispose();
-    screenController.exitFullScreen();
+    // screenController.exitFullScreen();
   }
 
   // @override
@@ -241,31 +243,11 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      AnimatedBuilder(
-        animation: widget.leitorController.state,
-        builder: (context, child) =>
-            _stateManagement(widget.leitorController.state.value),
-      ),
-      SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            AnimatedBuilder(
-              animation: controller.state,
-              builder: (context, child) => Text(
-                "${controller.state.value}/${widget.leitorController.capitulosEmCarga.isEmpty ? 0 : widget.leitorController.capitulosEmCarga[0].pages.length}",
-                style: const TextStyle(shadows: [
-                  Shadow(color: Colors.black45, offset: Offset(1, 1))
-                ]),
-              ),
-            ),
-          ],
-        ),
-      )
-    ]);
+    return AnimatedBuilder(
+      animation: widget.leitorController.state,
+      builder: (context, child) =>
+          _stateManagement(widget.leitorController.state.value),
+    );
   }
 }
 // ------------------------------------------------
