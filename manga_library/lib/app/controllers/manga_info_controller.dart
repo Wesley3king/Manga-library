@@ -147,7 +147,7 @@ class MangaInfoController {
         // mapOfExtensions[idExtension].isTwoRequests;
         await chaptersController?.update(capitulosDisponiveis,
             capitulosFromOriginalServer, url, idExtension);
-        
+
         final MangaInfoOffLineController mangaInfoOffLineController =
             MangaInfoOffLineController();
         debugPrint("inserindo na base de dados!");
@@ -282,27 +282,42 @@ class ChaptersController {
       // }
       log("update is two: ${MangaInfoController.isTwoRequests}");
       if (MangaInfoController.isTwoRequests) {
+
         // passar os downloads aos novos capitulos
-        // List<Capitulos> capitulosRetirados =
-        //     List.from(listaCapitulosDisponiveis!);
         for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
           if (capCorrelacionados.download) {
             for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
               if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
                 debugPrint("capitulo com download disponivel!");
                 listaCapitulosDisponiveis[i].download = true;
-                listaCapitulosDisponiveis[i].downloadPages = capCorrelacionados.downloadPages;
+                listaCapitulosDisponiveis[i].downloadPages =
+                    capCorrelacionados.downloadPages;
                 // ok
-                
                 break;
               }
             }
           }
         }
+        log("off line twoRequests ok pt1");
         await correlacionarCapitulos(
             listaCapitulosDisponiveis ?? [], listaCapitulos, link,
             isAnUpdate: true, idExtension: idExtension);
+        log("off line twoRequests ok pt2");
       } else {
+        for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
+          if (capCorrelacionados.download) {
+            for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
+              if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
+                debugPrint("capitulo com download disponivel!");
+                listaCapitulosDisponiveis[i].download = true;
+                listaCapitulosDisponiveis[i].downloadPages =
+                    capCorrelacionados.downloadPages;
+                // ok
+                break;
+              }
+            }
+          }
+        }
         capitulosCorrelacionados = listaCapitulosDisponiveis ?? [];
         await updateChapters(listaCapitulosDisponiveis, link);
       }
@@ -312,8 +327,8 @@ class ChaptersController {
       state.value = ChaptersStates.sucess;
       return true;
     } catch (e) {
-      HomePageController.errorMessage =
-          'erro no update at ChapterController: $e';
+      // HomePageController.errorMessage =
+      //     'erro no update at ChapterController: $e';
       print('erro no update ChapterController');
       print(e);
       state.value = ChaptersStates.error;
@@ -396,8 +411,7 @@ class ChaptersController {
       print('- restart - end');
       state.value = ChaptersStates.sucess;
     } catch (e) {
-      debugPrint('erro no Restart BottomSheetController at update');
-      debugPrint('$e');
+      debugPrint('erro no updateChapters at ChaptersController: $e');
       state.value = ChaptersStates.error;
     }
   }
@@ -460,7 +474,7 @@ class ChaptersController {
       print("is off line!, returning...");
       return;
     }
-    print("NÃO RETORNOU!!!");
+    debugPrint("NÃO RETORNOU!!!");
 
     /// aqui verificamos se podemos exibir o botão de [ atualizar/adicionar ] no servidor
     GlobalData.showAdiminAtualizationBanner = clientData.isAdimin;
@@ -476,7 +490,7 @@ class ChaptersController {
       }
     }
 
-    print('iniciando a parte pessada do correlacionamento!!!');
+    debugPrint('iniciando a parte pessada do correlacionamento!!!');
     capitulosCorrelacionados = [];
     //print("disponivel = ${listaCapitulosDisponiveis[indice]}");
     // CAPITULOS
@@ -513,10 +527,10 @@ class ChaptersController {
           capitulosCorrelacionados.add(Capitulos(
             id: listaCapitulos[indice].id,
             capitulo: listaCapitulos[indice].capitulo,
-            download: listaCapitulos[indice].download,
+            download: listaCapitulosDisponiveis[alreadyIndice].download,
             readed: false,
             disponivel: true,
-            downloadPages: listaCapitulos[indice].downloadPages,
+            downloadPages: listaCapitulosDisponiveis[alreadyIndice].downloadPages,
             pages: listaCapitulosDisponiveis[alreadyIndice]
                 .pages
                 .map<String>((dynamic page) => page.toString())
@@ -531,10 +545,10 @@ class ChaptersController {
         capitulosCorrelacionados.add(Capitulos(
           id: listaCapitulos[indice].id,
           capitulo: listaCapitulos[indice].capitulo,
-          download: false,
+          download: false, // listaCapitulosDisponiveis[indice].download
           readed: false,
           disponivel: false,
-          downloadPages: [],
+          downloadPages: [], // listaCapitulosDisponiveis[indice].downloadPages
           pages: [],
         ));
       }
@@ -558,19 +572,21 @@ class ChaptersController {
       for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
         var item = capitulosCorrelacionados[i];
         bool adicionado = false;
-        for (int cap = 0; cap < capitulosLidos.length; ++cap) {
-          if (capitulosCorrelacionados[i].id == capitulosLidos[cap]) {
-            //log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
-            listaCapitulosCorrelacionadosLidos.add(Capitulos(
-              id: capitulosCorrelacionados[i].id,
-              capitulo: capitulosCorrelacionados[i].capitulo,
-              download: false,
-              readed: true,
-              disponivel: capitulosCorrelacionados[i].disponivel,
-              downloadPages: [],
-              pages: [],
-            ));
-            adicionado = true;
+        if (capitulosLidos.contains(item.id)) {
+          for (int cap = 0; cap < capitulosLidos.length; ++cap) {
+            if (capitulosCorrelacionados[i].id == capitulosLidos[cap]) {
+              //log("lido! - ${listaCapitulos[i].capitulo} / i = $i / d = ${listaCapitulos[i].disponivel ? "true" : "false"}");
+              listaCapitulosCorrelacionadosLidos.add(Capitulos(
+                id: capitulosCorrelacionados[i].id,
+                capitulo: capitulosCorrelacionados[i].capitulo,
+                download: false,
+                readed: true,
+                disponivel: capitulosCorrelacionados[i].disponivel,
+                downloadPages: [],
+                pages: [],
+              ));
+              adicionado = true;
+            }
           }
         }
         if (!adicionado) {

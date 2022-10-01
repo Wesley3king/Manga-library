@@ -99,17 +99,17 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
     // montar os models
     Map<String, dynamic> lancamentos = {
       "idExtension": 1,
-      "title": "Lançamentos",
+      "title": "Manga Yabu Lançamentos",
       "books": books1
     };
     Map<String, dynamic> populares = {
       "idExtension": 1,
-      "title": "Populares",
+      "title": "Manga Yabu Populares",
       "books": books2
     };
     Map<String, dynamic> atualizados = {
       "idExtension": 1,
-      "title": "Ultimos Atualizados",
+      "title": "Manga Yabu Ultimos Atualizados",
       "books": books3
     };
     models.add(ModelHomePage.fromJson(lancamentos));
