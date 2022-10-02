@@ -25,7 +25,11 @@ class HomePageController {
         data.addAll(dados);
       }
 
-      state.value = HomeStates.sucess;
+      if (data[0].books.isEmpty) {
+        state.value = HomeStates.error;
+      } else {
+        state.value = HomeStates.sucess;
+      }
     } catch (e) {
       debugPrint("erro no start at HomePageController: $e");
       state.value = HomeStates.error;
