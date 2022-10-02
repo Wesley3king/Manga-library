@@ -8,6 +8,7 @@ import 'package:manga_library/app/controllers/leitor_controller.dart';
 // import 'package:manga_library/app/views/components/leitor/pages_states.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/components/leitor/web_view/web_view_reader.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class PagesLeitor extends StatefulWidget {
@@ -201,6 +202,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return photoViewLeitor(Axis.horizontal, true, filterQuality);
       case LeitorTypes.webtoon:
         return newLeitor(filterQuality);
+      case LeitorTypes.webview:
+        return MyWebviewx(
+            pages: widget.leitorController.capitulosEmCarga[0].pages);
       case LeitorTypes.ltrlist:
         return pageListViewLeitor(filterQuality: filterQuality);
       case LeitorTypes.rtllist:

@@ -28,7 +28,8 @@ class LeitorController {
 
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
-      Capitulos cap = await mapOfExtensions[idExtension]!.getPages(id, capitulos);
+      Capitulos cap =
+          await mapOfExtensions[idExtension]!.getPages(id, capitulos);
       // debugPrint("$cap");
       capitulosEmCarga.add(cap);
       debugPrint("=========== em carga =============");
@@ -133,6 +134,9 @@ class LeitorController {
       case "webtoon":
         leitorTypeState.value = LeitorTypes.webtoon;
         break;
+      case "webview":
+        leitorTypeState.value = LeitorTypes.webview;
+        break;
       default:
         print("default do leitor acionado!");
         leitorTypeState.value = LeitorTypes.vertical;
@@ -161,7 +165,7 @@ class LeitorController {
 
 enum LeitorStates { start, loading, sucess, error }
 
-enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon }
+enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon, webview }
 
 enum LeitorFilterQuality { none, low, medium, hight }
 

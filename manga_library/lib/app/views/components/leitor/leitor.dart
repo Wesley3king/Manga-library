@@ -25,8 +25,10 @@ class _LeitorState extends State<Leitor> {
   final FullScreenController screenController = FullScreenController();
   final PagesController controller = PagesController();
   final LeitorController leitorController = LeitorController();
-  final Color appBarAndBottomAppBarColor = const Color.fromARGB(146, 0, 0, 0);
+  final Color appBarAndBottomAppBarColor = const Color.fromARGB(204, 0, 0, 0);
   final double sizeOfButtons = 25.0;
+  final int visibleDuration = 900;
+  final Curve visibleCurve = Curves.ease;
   bool isVisible = true;
 
   // colocar e remover o appbar e bottomNavigation
@@ -41,12 +43,25 @@ class _LeitorState extends State<Leitor> {
   // =========================================================================
   List<Widget> buildInfo(BuildContext context) {
     // final double height = MediaQuery.of(context).size.height - 120;
+    // definir o fullScreen
+    isVisible
+        ? screenController.enterEdgeFullScreen()
+        : screenController.enterFullScreen();
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape
+            ? true
+            : false;
     return [
       AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: isVisible ? 100 : 0,
+        duration: Duration(milliseconds: visibleDuration),
+        curve: visibleCurve,
+        height: isVisible
+            ? isLandscape
+                ? 60
+                : 100
+            : 0,
         child: Container(
-          color: Colors.black54,
+          color: appBarAndBottomAppBarColor,
           width: MediaQuery.of(context).size.width,
           height: 100,
           child: Row(
@@ -74,7 +89,7 @@ class _LeitorState extends State<Leitor> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(bottom: 170),
+        padding: EdgeInsets.only(bottom: isLandscape ? 0 : 170),
         child: GestureDetector(
           onTap: () => setState(() {
             isVisible = !isVisible;
@@ -83,22 +98,29 @@ class _LeitorState extends State<Leitor> {
             decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
-            height: 200,
-            width: MediaQuery.of(context).size.width - 190,
+            height: isLandscape ? 60 : 200,
+            width:
+                MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
           ),
         ),
       ),
       AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: isVisible ? 100 : 0,
+        duration: Duration(milliseconds: visibleDuration),
+        curve: visibleCurve,
+        height: isVisible
+            ? isLandscape
+                ? 60
+                : 100
+            : 0,
         child: Wrap(
           children: [
             Container(
-              color: Colors.black54,
+              color: appBarAndBottomAppBarColor,
               width: MediaQuery.of(context).size.width,
-              height: 100,
+              height: isLandscape ? 60 : 100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AnimatedBuilder(
                     animation: leitorController.leitorTypeState,
@@ -135,7 +157,6 @@ class _LeitorState extends State<Leitor> {
   void initState() {
     super.initState();
     leitorController.start(widget.link, widget.id, widget.idExtension);
-    screenController.enterFullScreen();
   }
 
   @override

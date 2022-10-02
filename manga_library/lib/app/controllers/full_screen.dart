@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter/material.dart';
 
@@ -15,17 +16,31 @@ class FullScreenController {
   }
 
   void enterFullScreen() {
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.immersiveSticky,
-      overlays: [SystemUiOverlay.top]
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+        overlays: [SystemUiOverlay.top]);
     isFullScreen = true;
+  }
+
+  void enterEdgeFullScreen() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemStatusBarContrastEnforced: false,
+        systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
+        systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
+        systemNavigationBarContrastEnforced: false,
+        ));
+    isFullScreen = false;
   }
 
   void exitFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle());
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemStatusBarContrastEnforced: true,
+        systemNavigationBarDividerColor: Color.fromARGB(255, 0, 0, 0),
+        systemNavigationBarContrastEnforced: true,
+        ));
+
     isFullScreen = false;
   }
 }
