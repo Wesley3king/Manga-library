@@ -28,7 +28,6 @@ class ExtensionUniversoHen implements Extension {
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
     return await scrapingMangaDetail(link);
-    // scrapingMangaDetail(link);
   }
 
   @override
@@ -37,20 +36,41 @@ class ExtensionUniversoHen implements Extension {
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
-    // return await scrapingLeitor(id);
-    return Capitulos.fromJson({});
+    Capitulos result = Capitulos(
+        capitulo: "error",
+        id: "error",
+        disponivel: false,
+        download: false,
+        downloadPages: [],
+        pages: [],
+        readed: false);
+    for (int i = 0; i < listChapters.length; ++i) {
+      // print(
+      //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
+      if (listChapters[i].id == id) {
+        result = listChapters[i];
+        break;
+      }
+    }
+    if (!result.download) {
+      try {
+        result.pages = await scrapingLeitor(id);
+      } catch (e) {
+        debugPrint("erro - não foi possivel obter as paginas on-line: $e");
+      }
+    }
+    return result;
   }
 
   @override
   Future<List<String>> getPagesForDownload(String url) async {
-    return [];
-    //await scrapingLeitor(url);
+    return await scrapingLeitor(url);
   }
 
   @override
   Future<SearchModel> search(String txt) async {
     try {
-      debugPrint("NHENT SEARCH STARTING...");
+      debugPrint("UNIVERSO HENT SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 
@@ -63,10 +83,9 @@ class ExtensionUniversoHen implements Extension {
         }
       }
 
-      List<Map> books = []; // await scrapingSearch(buffer.toString())
+      List<Map> books = await scrapingSearch(buffer.toString());
 
-      return SearchModel.fromJson(
-          {"font": nome, "data": books, "idExtension": id});
+      return SearchModel.fromJson({"font": nome, "data": books, "idExtension": id});
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
       return SearchModel.fromJson(

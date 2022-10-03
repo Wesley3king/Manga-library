@@ -86,7 +86,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         description: description ?? "erro",
         img: img ?? "erro",
         link: "https://nhentai.to/g/$link",
-        idExtension: 5,
+        idExtension: 6,
         genres: genres,
         alternativeName: false,
         chapters: 1,
@@ -113,12 +113,53 @@ Future<List<String>> scrapingLeitor(String url) async {
   try {
     Parser? parser =
         await Chaleno().load("https://universohentai.com/galeria/?id=$url");
+    List<String> pages = [];
     if (parser != null) {
-      // continue...
+      Result? result = parser.querySelector("div.galeria-foto");
+      List<Result>? elements = result.querySelectorAll("a");
+
+      if (elements != null) {
+        for (Result page in elements) {
+          pages.add(page.href ?? "erro");
+        }
+      }
     }
-    return [];
+    return pages;
   } catch (e) {
     debugPrint("erro no scrapingMangaDetail at ExtensionUniversoHen: $e");
+    return [];
+  }
+}
+
+// ============== SEARCH ==============
+Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+  try {
+    Parser? parser = await Chaleno().load("https://universohentai.com/?s=$txt");
+    Result? result = parser?.querySelector("div.videos");
+    // books
+    List<Map<String, String>> books = [];
+    List<Result>? results = result?.querySelectorAll("div.video-thumb");
+    for (Result book in results!) {
+      // name
+      String? name = book.querySelector("a span.video-titulo")!.text;
+      // debugPrint("name: $name");
+      // img
+      String? img = book.querySelector("a img")!.src;
+      // debugPrint("img: $img");
+      // link
+      String? link = book.querySelector("a")!.href;
+      //  debugPrint("link: $link");
+      List<String> corteLink = link!.split("com/");
+
+      books.add({
+        "nome": name ?? "error",
+        "link": corteLink[1].replaceAll("/", ""),
+        "capa1": "https://cdn.dogehls.xyz/$img"
+      });
+    }
+    return books;
+  } catch (e) {
+    debugPrint("erro no scrapingSearch at ExtensionUniversoHen: $e");
     return [];
   }
 }

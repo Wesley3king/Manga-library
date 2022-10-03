@@ -23,10 +23,11 @@ class SearchResultsPage extends StatelessWidget {
           width: 110,
           height: 170,
           child: Column(
+            mainAxisAlignment:   MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: 145.0,
-                height: 187.5,
+                height: 181.0,
                 // child: Image.network(
                 //   data.img,
                 //   width: 145.0,
@@ -45,9 +46,13 @@ class SearchResultsPage extends StatelessWidget {
               ),
               Text(data.name,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  )),
+                  strutStyle: StrutStyle.fromTextStyle(const TextStyle(
+                    fontSize: 13,
+                  ), height: 1.0,
+                  forceStrutHeight: true,
+                  fontSize: 13
+                ),
+              ),
             ],
           ),
         ),
