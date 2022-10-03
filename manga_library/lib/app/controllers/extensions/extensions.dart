@@ -1,3 +1,4 @@
+import 'package:manga_library/app/controllers/extensions/hen_season/extension_hen_season.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/extension_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/repositories/yabu_fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
@@ -11,7 +12,8 @@ final List<Extension> listOfExtensions = [
   ExtensionMundoMangaKun(),
   ExtensionUnionMangas(),
   ExtensionNHen(),
-  ExtensionUniversoHen()
+  ExtensionUniversoHen(),
+  ExtensionHenSeason()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -19,7 +21,8 @@ final Map<int, Extension> mapOfExtensions = {
   3: ExtensionMundoMangaKun(),
   4: ExtensionUnionMangas(),
   5: ExtensionNHen(),
-  6: ExtensionUniversoHen()
+  6: ExtensionUniversoHen(),
+  7: ExtensionHenSeason()
 };
 
 final Map<int, dynamic> fetchServiceExtensions = {

@@ -85,7 +85,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
-        link: "https://nhentai.to/g/$link",
+        link: "https://universohentai.com/$link/",
         idExtension: 6,
         genres: genres,
         alternativeName: false,
