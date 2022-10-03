@@ -74,10 +74,13 @@ class OffLineWidgetController {
 
     if (!mapOfExtensions[mangaModel.idExtension]!.isTwoRequests) {
       // precisa conseguir as paginas primeiro
-      List<String> data = await mapOfExtensions[mangaModel.idExtension]!
-          .getPagesForDownload(capitulo.id);
-      // editar o model
-      model.capitulo.pages = data;
+      List<String> data = [];
+      if (capitulo.pages.isEmpty) {
+        data = await mapOfExtensions[mangaModel.idExtension]!.getPagesForDownload(capitulo.id);
+        // editar o model
+        model.capitulo.pages = data;
+      }
+
       DownloadController.addDownload(model);
     } else {
       DownloadController.addDownload(model);
