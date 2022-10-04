@@ -27,8 +27,8 @@ class _LeitorState extends State<Leitor> {
   final LeitorController leitorController = LeitorController();
   final Color appBarAndBottomAppBarColor = const Color.fromARGB(204, 0, 0, 0);
   final double sizeOfButtons = 25.0;
-  final int visibleDuration = 900;
-  final Curve visibleCurve = Curves.ease;
+  final int visibleDuration = 400;
+  final Curve visibleCurve = Curves.easeInOut;
   bool isVisible = true;
 
   // colocar e remover o appbar e bottomNavigation
@@ -165,16 +165,16 @@ class _LeitorState extends State<Leitor> {
     screenController.exitFullScreen();
   }
 
-  double getHeight(BuildContext context) {
-    debugPrint("height get: ${MediaQuery.of(context).size.height}");
-    return MediaQuery.of(context).size.height;
-  }
+  // double getHeight(BuildContext context) {
+  //   debugPrint("height get: ${MediaQuery.of(context).size.height}");
+  //   return MediaQuery.of(context).size.height;
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
-        height: getHeight(context),
+        height: MediaQuery.of(context).size.height,
         child: Stack(
           children: [
             SizedBox(

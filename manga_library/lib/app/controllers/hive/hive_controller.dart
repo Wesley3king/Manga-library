@@ -1,6 +1,8 @@
+import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
@@ -24,6 +26,7 @@ class HiveController {
     libraries?.close();
     books?.close();
   }
+
   // ---------------------------------------------------------------------------
   //      ======================= CLIENT DATA =======================
   // ---------------------------------------------------------------------------
@@ -73,34 +76,67 @@ class HiveController {
   }
 
   // ---------------------------------------------------------------------------
+  //       ======================= HOME PAGE =======================
+  // ---------------------------------------------------------------------------
+
+  Future<List<ModelHomePage>?> getHomePage() async {
+    var data;
+    try {
+      print("box: $clientData");
+      data = await clientData?.get("homePage") as List<dynamic>;
+      List<ModelHomePage> encodedData =
+          data.map<ModelHomePage>((dynamic model) {
+        print("data: ${model.runtimeType}");
+        Map<String, dynamic> map = model;
+        return ModelHomePage.fromJson(map);
+      }).toList();
+      return encodedData;
+    } catch (e) {
+      debugPrint("erro no getHomePage at HiveController: $e");
+      return null;
+    }
+  }
+
+  Future<bool> updateHomePage(List<ModelHomePage> models) async {
+    try {
+      List<Map<String, dynamic>> decodedModels =
+          models.map((ModelHomePage model) => model.toJson()).toList();
+      await clientData?.put("homePage", decodedModels);
+      return true;
+    } catch (e) {
+      debugPrint("erro no updateHomePage at HiveController: $e");
+      return false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   //       ======================= LIBRARIES =======================
   // ---------------------------------------------------------------------------
   Future<List<LibraryModel>> writeLibraryData() async {
     final LibraryModel model = LibraryModel.fromJson({
       "library": "favoritos",
       "books": [
-        {
-          "name": "Kawaii Dake ja Nai Shikimori-san",
-          "link":
-              "kawaii-dake-ja-nai-shikimori-san",
-          "img":
-              "https://mangayabu.top/wp-content/uploads/2022/07/f0037b59a279112676b9.jpg",
-          "idExtension": 1 
-        },
-        {
-          "name": "Boku no Hero Academia",
-          "link": "boku-no-hero-academia",
-          "img":
-              "https://mangayabu.top/wp-content/uploads/2022/06/0cb2e604c5c9900bacb7.jpg",
-          "idExtension": 1
-        },
-        {
-          "name": "Mushoku Tensei: Isekai Ittara Honki Dasu",
-          "link": "mushoku-tensei-isekai-ittara-honki-dasu",
-          "img":
-              "https://mangayabu.top/wp-content/uploads/2022/07/97cf1278675bc2fd52b3.jpg",
-          "idExtension": 1
-        },
+        // {
+        //   "name": "Kawaii Dake ja Nai Shikimori-san",
+        //   "link": "kawaii-dake-ja-nai-shikimori-san",
+        //   "img":
+        //       "https://mangayabu.top/wp-content/uploads/2022/07/f0037b59a279112676b9.jpg",
+        //   "idExtension": 1
+        // },
+        // {
+        //   "name": "Boku no Hero Academia",
+        //   "link": "boku-no-hero-academia",
+        //   "img":
+        //       "https://mangayabu.top/wp-content/uploads/2022/06/0cb2e604c5c9900bacb7.jpg",
+        //   "idExtension": 1
+        // },
+        // {
+        //   "name": "Mushoku Tensei: Isekai Ittara Honki Dasu",
+        //   "link": "mushoku-tensei-isekai-ittara-honki-dasu",
+        //   "img":
+        //       "https://mangayabu.top/wp-content/uploads/2022/07/97cf1278675bc2fd52b3.jpg",
+        //   "idExtension": 1
+        // },
       ]
     });
     libraries?.put('libraries', [model.toJson()]);
@@ -146,6 +182,7 @@ class HiveController {
       return false;
     }
   }
+
   // ---------------------------------------------------------------------------
   //       ======================= SETTINGS =======================
   // ---------------------------------------------------------------------------

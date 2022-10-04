@@ -9,30 +9,53 @@ enum HomeStates { start, loading, sucess, error }
 class HomePageController {
   static String errorMessage = '';
   final List<dynamic> extensoes = listOfExtensions;
-  final HiveController _hiveController = HiveController();
+  final HiveController hiveController = HiveController();
   List<ModelHomePage> data = [];
 
   final ValueNotifier<HomeStates> state = ValueNotifier(HomeStates.start);
 
-  Future<void> start() async { // List<ModelHomePage>
+  Future<void> start() async {
+    // List<ModelHomePage>
     try {
       state.value = HomeStates.loading;
       //_hiveController.writeClientData();
       // List? dados = await mangaYabu.homePage();
-      for (dynamic font in extensoes) {
-        List<ModelHomePage> dados = await font.homePage();
-        
-        data.addAll(dados);
-      }
 
-      if (data[0].books.isEmpty) {
+      // for (dynamic font in extensoes) {
+      //   List<ModelHomePage> dados = await font.homePage();
+
+      //   data.addAll(dados);
+      // }
+      var dados = await hiveController.getHomePage();
+      // caso seja nulo atualiza os dados
+      dados ??= await updateHomePage();
+
+      if (dados == null) {
         state.value = HomeStates.error;
       } else {
+        data = dados;
         state.value = HomeStates.sucess;
       }
     } catch (e) {
       debugPrint("erro no start at HomePageController: $e");
       state.value = HomeStates.error;
+    }
+  }
+
+  Future<List<ModelHomePage>?> updateHomePage() async {
+    List<ModelHomePage> dados = [];
+    try {
+      debugPrint("iniciando a atualização do home page!");
+      for (dynamic font in extensoes) {
+        List<ModelHomePage> extensionData = await font.homePage();
+
+        dados.addAll(extensionData);
+      }
+      await hiveController.updateHomePage(dados);
+      return dados;
+    } catch (e) {
+      debugPrint("erro no updateHomePage at HomePageController: $e");
+      return null;
     }
   }
 }

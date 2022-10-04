@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 
 import '../../../controllers/system_config.dart';
@@ -136,6 +137,7 @@ class _MangaDetailsState extends State<MangaDetails> {
                   ),
                 ),
                 _showAdiminAtualizationBanner(),
+                Flexible(child: Text(mapOfExtensions[widget.dados.idExtension]!.nome))
               ],
             )),
         SizedBox(

@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final SystemController systemController = SystemController();
+  // final SystemController systemController = SystemController();
   ThemeData theme = darkTheme;
 
   void detectTheme() {
@@ -62,7 +62,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     detectTheme();
-    systemController.start();
   }
 
   @override
