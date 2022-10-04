@@ -1,24 +1,24 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manga_library/app/controllers/extensions/silence_scan/extension_silence_scan.dart';
+import 'package:manga_library/app/controllers/extensions/manga_chan/extension_manga_chan.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 void main() {
-  final ExtensionSilenceScan extend = ExtensionSilenceScan();
+  final ExtensionMangaChan extend = ExtensionMangaChan();
 
   test("deve retornar uma lista de destaques", () async {
     var data = await extend.homePage();
     debugPrint("$data");
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('houkago-no-goumon-shoujo');
-    // print(data);
+    var data = await extend.mangaDetail('tales-of-demons-and-gods');
+    print(data?.capitulos.length);
   });
 
-  test("deve retornar um model Capitulos", () async {
-    var data = await extend.getPages("houkago-no-goumon-shoujo-capitulo-116", [
+  test("deve retornar um model Capitulos com as paginas do leitor", () async {
+    var data = await extend.getPages("tales-of-demons-and-gods-capitulo-312-5", [
       Capitulos(
-          capitulo: "116",
+          capitulo: "312-5",
           id: "houkago-no-goumon-shoujo-capitulo-116",
           disponivel: false,
           download: false,
@@ -31,7 +31,7 @@ void main() {
   });
 
   test("deve retornar um SearchModel", () async {
-    var data = await extend.search("sono bisque Doll");
+    var data = await extend.search("elf w");
     print(data);
   });
 }

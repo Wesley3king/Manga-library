@@ -5,14 +5,13 @@ import '../../../../models/home_page_model.dart';
 import '../../../../models/manga_info_offline_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage() async {
-  const String url = 'https://silencescan.com.br/';
+  const String url = 'https://mangaschan.com/';
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
-    // var result = parser?.querySelectorAll(indentify);
-    // debugPrint("lrngth: ${result?.length}");
+
     // ==================================================================
-    //          -- LANCAMENTOS --
+    //          -- ULTIMAS ATUALIZAÇÕES --
     Result? lancamentos =
         parser?.querySelector("div.postbody > div.bixbox > div.listupd");
     List<Result>? lancametosItens =
@@ -21,8 +20,6 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
     for (Result html in lancametosItens!) {
       // name
       String? name = html.querySelector("div.bigor > div.tt > a")!.text;
-      // name!.replaceAll("...", "");
-      // name.replaceAll(" - ...", "");
       // debugPrint("name: $name");
       // img
       String? img = html.querySelector("a > div.limit > img")!.src;
@@ -40,71 +37,23 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
     }
     // print(books);
     // monat model destaques
-    debugPrint("montando o model Lançamentos");
+    debugPrint("montando o model Ultimas Atualizações");
     Map<String, dynamic> destaques = {
-      "idExtension": 9,
-      "title": "Silence Scan Lançamentos",
+      "idExtension": 10,
+      "title": "Mangá Chan Ultimas Atualizações",
       "books": books
     };
     models.add(ModelHomePage.fromJson(destaques));
-    // novos
-    Result? result2 = parser?.querySelector(
-        "div.section > span.ts-ajax-cache > div.serieslist > ul");
-    List<Result>? novosItens = result2?.querySelectorAll("li");
-    books = [];
-
-    for (Result html in novosItens!) {
-      // name
-      // List<Result>? nameList = html.querySelectorAll(".link-titulo");
-      // print(nameList);
-      // nameList!.forEach((element) =>
-      //     print("${element.html} \n --------------------------------"));
-      String? name = html.querySelector("div.leftseries > h2")!.text;
-      // name!.replaceAll("...", "");
-      // name.replaceAll(" - ...", "");
-      // debugPrint("name: $name");
-      // img
-      String? img = html.querySelector("div.imgseries > a > img")!.src;
-      // debugPrint("img: $img");
-      // link
-      String? link = html.querySelector("div.imgseries > a")!.href;
-      // debugPrint("link: $link");
-      List<String> linkCorte1 = link!.split("manga/");
-      // debugPrint("link cortado: ${linkCorte1[1]}");
-
-      books.add({
-        "name": name ?? "erro",
-        "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img ?? ""
-      });
-      debugPrint("book adicionado!!!");
-    }
-    // print(books);
-    // monat model destaques
-    if (books.isNotEmpty) {
-      debugPrint("montando o model Novos");
-      Map<String, dynamic> novos = {
-        "idExtension": 9,
-        "title": "Silence Scan Novos",
-        "books": books
-      };
-      models.add(ModelHomePage.fromJson(novos));
-    }
-    // novos
-    Result? result3 =
-        parser?.querySelector("div#wpop-items > div.serieslist > ul");
+    // mais lidos
+    Result? result3 = parser
+        ?.querySelector("div.section > div.wpop-items > div.serieslist > ul");
     List<Result>? maisLidosItens = result3?.querySelectorAll("li");
     books = [];
 
     for (Result html in maisLidosItens!) {
       // name
-      // List<Result>? nameList = html.querySelectorAll(".link-titulo");
-      // print(nameList);
-      // nameList!.forEach((element) =>
-      //     print("${element.html} \n --------------------------------"));
       String? name = html.querySelector("div.leftseries > h2")!.text;
-      // name!.replaceAll("...", "");
-      // name.replaceAll(" - ...", "");
+
       // debugPrint("name: $name");
       // img
       String? img = html.querySelector("div.imgseries > a > img")!.src;
@@ -127,15 +76,15 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
     if (books.isNotEmpty) {
       debugPrint("montando o model Mais lidos da semana");
       Map<String, dynamic> maislidos = {
-        "idExtension": 9,
-        "title": "Silence Scan mais lidos da semana",
+        "idExtension": 10,
+        "title": "Mangá Chan mais lidos da semana",
         "books": books
       };
       models.add(ModelHomePage.fromJson(maislidos));
     }
     return models;
   } catch (e) {
-    debugPrint("erro no scrapingHomePage at ExtensionSilenceScan: $e");
+    debugPrint("erro no scrapingHomePage at ExtensionMangaChan: $e");
     return [];
   }
 }
@@ -145,8 +94,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   //const String indentify = "";
 
   try {
-    var parser =
-        await Chaleno().load("https://silencescan.com.br/manga/$link/");
+    var parser = await Chaleno().load("https://mangaschan.com/manga/$link/");
 
     String? name;
     String? description;
@@ -155,18 +103,20 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     List<Capitulos> chapters = [];
     if (parser != null) {
       // name
-      name = parser.querySelector("div#titlemove h1.entry-title").text;
+      name = parser.querySelector("div.seriestuheader h1.entry-title").text;
       // debugPrint("name: $name");
       // description
-      description =
-          parser.querySelector("div.wd-full > div.entry-content > p").text;
+      description = parser
+          .querySelector(
+              "div.seriestucontent > div.seriestucontentr > div.seriestuhead > div > p")
+          .text;
       // debugPrint("description: $description");
       // img
       img = parser.querySelector("div.thumb > img").src;
       // debugPrint("img: $img");
       // genres
-      List<Result>? genresResult =
-          parser.querySelectorAll("div.wd-full > span.mgen > a");
+      List<Result>? genresResult = parser.querySelectorAll(
+          "div.seriestucontent > div.seriestucontentr > div.seriestucont > div.seriestucontr > div.seriestugenre > a");
       // print(genresResult);
 
       for (int i = 0; i < genresResult.length; ++i) {
@@ -177,21 +127,20 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       List<Result> chaptersResult =
           parser.querySelectorAll("div#chapterlist > ul > li");
       // debugPrint("length de cap: ${chaptersResult.length}");
+      // int indice = 0;
 
-      for (int i = 0; i < chaptersResult.length; ++i) {
+      for (Result result in chaptersResult) {
+        // debugPrint("inice: $indice / cap: ${chaptersResult.length}");
+        // indice++;
         // link
-        String? link =
-            chaptersResult[i].querySelector("div > div.eph-num > a")!.href;
-        // pula para o próximo em caso de já existir
-        //print(link);
-        //if (!link!.contains("leitor/")) continue;
+        String? link = result.querySelector("div > div.eph-num > a")!.href;
 
-        List<String> corteLink1 = link!.split("br/");
+        List<String> corteLink1 = link!.split("com/");
         String replacedLink = corteLink1[1].replaceFirst("/", "");
-        // debugPrint("replced link: $replacedLink");
+        // debugPrint("replaced link: $replacedLink");
 
         // name cap
-        String? capName = chaptersResult[i]
+        String? capName = result
             .querySelector("div > div.eph-num > a > span.chapternum")!
             .text;
         String chapter = capName!.replaceAll("Capítulo ", "");
@@ -208,13 +157,14 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         ));
         // debugPrint("capitulo adicionado! $capName");
       }
+      // debugPrint("length de cap> ${chapters.length}");
 
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
-        link: "https://silencescan.com.br/manga/$link/",
-        idExtension: 9,
+        link: "https://mangaschan.com/manga/$link/",
+        idExtension: 10,
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
@@ -222,7 +172,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       );
     }
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionSilenceScan: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionMangaChan: $e");
     return null;
   }
 }
@@ -233,10 +183,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
 Future<List<String>> scrapingLeitor(String id) async {
   try {
-    var parser = await Chaleno().load("https://silencescan.com.br/$id/");
+    var parser = await Chaleno().load("https://mangaschan.com/$id/");
 
     Result? area = parser?.querySelector("div#readerarea > noscript");
-    // debugPrint("area: ${area?.html}");
+    debugPrint("area: ${area?.html}");
 
     List<String>? resultHtml = area?.html?.split('" alt=');
     // debugPrint('result: $resultHtml');
@@ -254,21 +204,20 @@ Future<List<String>> scrapingLeitor(String id) async {
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at ExtensionSilenceScan: $e");
+    debugPrint("erro no scrapingLeitor at EXtensionMangaChan: $e");
     debugPrint("$s");
     return [];
   }
 }
-
 // ============================================================================
 //           ---------------- search ------------------------
 // ============================================================================
 
 Future<List<Map<String, String>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load("https://silencescan.com.br/?s=$txt");
+    var parser = await Chaleno().load("https://mangaschan.com/?s=$txt");
 
-    var resultHtml = parser?.querySelector("div.listupd");
+    var resultHtml = parser?.querySelector("div.bixbox > div.listupd");
     List<Map<String, String>> books = [];
     if (resultHtml != null) {
       // projeto
@@ -303,7 +252,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionSilenceScan: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");
     print(s);
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];

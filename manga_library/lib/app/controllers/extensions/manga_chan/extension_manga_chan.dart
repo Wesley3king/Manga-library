@@ -1,18 +1,18 @@
 import 'package:flutter/rendering.dart';
-import 'package:manga_library/app/controllers/extensions/silence_scan/scraping/scraping_silence_scan.dart';
+import 'package:manga_library/app/controllers/extensions/manga_chan/scraping/scraping_manga_chan.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 import '../../../models/search_model.dart';
 
-class ExtensionSilenceScan implements Extension {
+class ExtensionMangaChan implements Extension {
   @override
   dynamic fetchServices;
   @override
-  String nome = "Silence Scan";
+  String nome = "Mangá Chan";
   @override
-  int id = 9;
+  int id = 10;
   @override
   bool isTwoRequests = false;
   @override
@@ -32,7 +32,7 @@ class ExtensionSilenceScan implements Extension {
 
   @override
   String getLink(String pieceOfLink) =>
-      "https://silencescan.com.br/manga/$pieceOfLink/";
+      "https://mangaschan.com/manga/$pieceOfLink/";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -64,7 +64,8 @@ class ExtensionSilenceScan implements Extension {
 
   @override
   Future<List<String>> getPagesForDownload(String id) async {
-    return await scrapingLeitor(id);
+    return [];
+    //await scrapingLeitor(id);
   }
 
   @override
@@ -80,24 +81,24 @@ class ExtensionSilenceScan implements Extension {
         // if (i == 0) {
         //   buffer.write(str);
         // } else {
-          // caso tenha caracteres maisculos
-          // if (str.contains(RegExp(r'^[A-Z]'))) {
-          //   debugPrint("tem maiuscula");
-          //   buffer.write('+$str');
-          // } else {
-          //   debugPrint("não tem maiuscula");
-          //   buffer.write('%20$str');
-          // }
-          if (i == (cortes.length - 1)) {
-            buffer.write(str);
-          } else {
-            buffer.write('$str+');
-          }
+        // caso tenha caracteres maisculos
+        // if (str.contains(RegExp(r'^[A-Z]'))) {
+        //   debugPrint("tem maiuscula");
+        //   buffer.write('+$str');
+        // } else {
+        //   debugPrint("não tem maiuscula");
+        //   buffer.write('%20$str');
+        // }
+        if (i == (cortes.length - 1)) {
+          buffer.write(str);
+        } else {
+          buffer.write('$str+');
+        }
         // }
       }
       // print(buffer.toString());
       List<Map<String, String>> data = await scrapingSearch(buffer.toString());
-      
+
       // print('---------------------------------------------');
       // print(data);
       return SearchModel.fromJson(

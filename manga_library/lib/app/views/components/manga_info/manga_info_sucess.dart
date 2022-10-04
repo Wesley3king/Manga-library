@@ -108,7 +108,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     
     return ListTile(
       title: Text(
-        'Capitulo ${capitulo.capitulo}',//  l = ${capitulo.pages.length}, ${capitulo.id} 
+        'Capítulo ${capitulo.capitulo}',//  l = ${capitulo.pages.length}, ${capitulo.id} 
         style: capitulo.disponivel ? const TextStyle() : indisponivel,
       ),
       subtitle: Text(capitulo.readed ? "lido" : "não lido"),

@@ -32,7 +32,7 @@ class _HorizontalListState extends State<HorizontalList>
             children: [
               SizedBox(
                   width: 145.0,
-                  height: 177.5,
+                  height: 176.0,
                   // child: CachedNetworkImage(
                   //   imageUrl: data.img,
                   //   placeholder: (context, url) => Container(
@@ -45,11 +45,13 @@ class _HorizontalListState extends State<HorizontalList>
                   //   fit: BoxFit.fill,
                   // )
                 ),
-              Text(data.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  )),
+              Flexible(
+                child: Text(data.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13.5,
+                    )),
+              ),
             ],
           ),
         ),
