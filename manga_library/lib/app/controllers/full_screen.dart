@@ -33,14 +33,16 @@ class FullScreenController {
   }
 
   void exitFullScreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //     systemStatusBarContrastEnforced: true,
+    //     systemNavigationBarDividerColor: Color.fromARGB(255, 0, 0, 0),
+    //     systemNavigationBarContrastEnforced: true,
+    //     ));
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        systemStatusBarContrastEnforced: true,
-        systemNavigationBarDividerColor: Color.fromARGB(255, 0, 0, 0),
-        systemNavigationBarContrastEnforced: true,
-        ));
-
+          systemNavigationBarContrastEnforced: false,
+          systemNavigationBarDividerColor: Colors.black26,
+          systemNavigationBarColor: Colors.black26));
     isFullScreen = false;
   }
 }

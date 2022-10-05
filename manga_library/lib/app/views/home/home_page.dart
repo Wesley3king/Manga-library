@@ -16,43 +16,21 @@ class _HomePageState extends State<HomePage> {
 
   final HomePageController homePageController = HomePageController();
   Widget _start() {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 150,
-              height: 150,
-              child: Image.asset('assests/imgs/new-icon-manga-mini.png'),
-            ),
-          ],
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }
 
   Widget _loading() {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 150,
-              height: 150,
-              child: Image.asset('assests/imgs/new-icon-manga-mini.png'),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            const CircularProgressIndicator(),
-          ],
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }

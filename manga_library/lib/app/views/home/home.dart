@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/views/bottom_navigation_bar.dart';
+import 'package:manga_library/app/views/home/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/home/library.dart';
 import 'package:manga_library/app/views/home/others.dart';

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
-
-import '../controllers/system_config.dart';
+import '../../controllers/system_config.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final ScrollController controller;
@@ -20,13 +18,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     with SingleTickerProviderStateMixin {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  late AnimationController _animation;
-  Map<int, ValueNotifier<bool>> animatedIcons = {
-    0: ValueNotifier<bool>(false),
-    1: ValueNotifier<bool>(false),
-    2: ValueNotifier<bool>(false),
-    3: ValueNotifier<bool>(false),
-  };
+  //late AnimationController _animation;
+  // Map<int, ValueNotifier<bool>> animatedIcons = {
+  //   0: ValueNotifier<bool>(false),
+  //   1: ValueNotifier<bool>(false),
+  //   2: ValueNotifier<bool>(false),
+  //   3: ValueNotifier<bool>(false),
+  // };
 
   @override
   void initState() {
@@ -41,7 +39,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
   // toggle() {}
 
   void redirect(int route) {
-    animatedIcons[route]!.value = !animatedIcons[route]!.value;
+    // animatedIcons[route]!.value = !animatedIcons[route]!.value;
 
     switch (route) {
       case 0:
@@ -75,28 +73,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
             selectedItemColor: configSystemController.colorManagement(),
             showUnselectedLabels: true),
         child: BottomNavigationBar(
-          backgroundColor: const Color.fromARGB(255, 26, 26, 26),
+          backgroundColor: const Color.fromARGB(255, 37, 37, 37),
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 13,
           unselectedFontSize: 13,
           currentIndex: widget.currentIndex.value,
           onTap: (value) => redirect(value),
-          items: [
+          items: const [
             BottomNavigationBarItem(
-                // icon: Icon(Icons.home_outlined),
-                icon: CustomAnimatedIcon(
-                  icon: AnimatedIcons.add_event,
-                  notifier: animatedIcons[0]!,
-                ),
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home),
                 label: "Home"),
             BottomNavigationBarItem(
-                icon: CustomAnimatedIcon(
-                  icon: AnimatedIcons.menu_arrow,
-                  notifier: animatedIcons[1]!,
-                ), // Icon(Icons.local_library)
-                // activeIcon: Icon(
-                //   Icons.import_contacts_sharp,
-                // ),
+                icon: Icon(Icons.import_contacts), // Icon(Icons.local_library)
+                activeIcon: Icon(
+                  Icons.import_contacts_sharp,
+                ),
                 label: "Biblioteca"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.explore_outlined),
@@ -189,46 +181,49 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
 
 // ANIMATED ICON
 
-class CustomAnimatedIcon extends StatefulWidget {
-  final AnimatedIconData icon;
-  final ValueNotifier<bool> notifier;
-  const CustomAnimatedIcon(
-      {super.key, required this.icon, required this.notifier});
+// class CustomAnimatedIcon extends StatefulWidget {
+//   final String icon;
+//   final ValueNotifier<bool> notifier;
+//   const CustomAnimatedIcon(
+//       {super.key, required this.icon, required this.notifier});
 
-  @override
-  State<CustomAnimatedIcon> createState() => _CustomAnimatedIconState();
-}
+//   @override
+//   State<CustomAnimatedIcon> createState() => _CustomAnimatedIconState();
+// }
 
-class _CustomAnimatedIconState extends State<CustomAnimatedIcon>
-    with SingleTickerProviderStateMixin {
-  // ValueNotifier<bool> notifier = widget.notifier;
-  late AnimationController _animation;
+// class _CustomAnimatedIconState extends State<CustomAnimatedIcon>
+//     with SingleTickerProviderStateMixin {
+//   // ValueNotifier<bool> notifier = widget.notifier;
+//   late AnimationController _animation;
 
-  toggle() {
-    widget.notifier.value ? _animation.forward() : _animation.reverse();
-  }
+//   toggle() {
+//     widget.notifier.value ? _animation.forward() : _animation.reverse();
+//   }
 
-  @override
-  void initState() {
-    super.initState();
-    _animation = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _animation = AnimationController(
+//         vsync: this, duration: const Duration(milliseconds: 500));
+//   }
 
-  @override
-  void dispose() {
-    _animation.dispose();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     _animation.dispose();
+//     super.dispose();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: widget.notifier,
-      builder: (context, value, child) {
-        toggle();
-        return AnimatedIcon(icon: widget.icon, progress: _animation);
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ValueListenableBuilder(
+//       valueListenable: widget.notifier,
+//       builder: (context, value, child) {
+//         toggle();
+//         return SizedBox(
+//           height: 30,
+//           width: 30,
+//           child: Lottie.asset(widget.icon,controller: _animation, animate: true, )); //AnimatedIcon(icon: widget.icon, progress: _animation);
+//       },
+//     );
+//   }
+// }
