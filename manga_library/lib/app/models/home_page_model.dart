@@ -6,7 +6,7 @@ class ModelHomePage {
   late final List<ModelHomeBook> books;
 
   ModelHomePage.fromJson(Map<String, dynamic> json) {
-    // print("satrt");
+    // print("start");
     title = json['title'];
     idExtension = json['idExtension'];
     // print("okkk");
@@ -45,12 +45,12 @@ class ModelHomeBook {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['url'] = url;
-    _data['img'] = img;
-    _data['idExtension'] = idExtension;
-    return _data;
+    final data = <String, dynamic>{};
+    data['name'] = name;
+    data['url'] = url;
+    data['img'] = img;
+    data['idExtension'] = idExtension;
+    return data;
   }
 }
 

@@ -9,13 +9,13 @@ class ErrorHomePage extends StatelessWidget {
     return Center(
       child: Column(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             width: 100,
             height: 100,
             child: Icon(Icons.info),
           ),
-          Text('Error'),
-          Text('${HomePageController.errorMessage}'),
+          const Text('Error'),
+          Text(HomePageController.errorMessage),
         ],
       ),
     );

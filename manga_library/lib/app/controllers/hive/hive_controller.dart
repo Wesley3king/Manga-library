@@ -82,12 +82,11 @@ class HiveController {
   Future<List<ModelHomePage>?> getHomePage() async {
     var data;
     try {
-      print("box: $clientData");
+      // print("box: $clientData");
       data = await clientData?.get("homePage") as List<dynamic>;
       List<ModelHomePage> encodedData =
           data.map<ModelHomePage>((dynamic model) {
-        print("data: ${model.runtimeType}");
-        Map<String, dynamic> map = model;
+        Map<String, dynamic> map = Map<String, dynamic>.from(model);
         return ModelHomePage.fromJson(map);
       }).toList();
       return encodedData;

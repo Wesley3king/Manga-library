@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ScrollController controller = ScrollController();
 
-  final HomePageController _homePageController = HomePageController();
+  final HomePageController homePageController = HomePageController();
   Widget _start() {
     return SizedBox(
       width: double.infinity,
@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage> {
         return _loading();
       case HomeStates.sucess:
         return Sucess(
-          dados: _homePageController.data,
+          dados: homePageController.data,
+          controller: homePageController,
           controllerScroll: controller,
         );
       case HomeStates.error:
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     SystemController().getSystemPermissions();
-    _homePageController.start();
+    homePageController.start();
   }
 
   @override
@@ -91,9 +92,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _homePageController.state,
+        animation: homePageController.state,
         builder: (context, child) =>
-            stateManagement(_homePageController.state.value),
+            stateManagement(homePageController.state.value),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         controller: controller,

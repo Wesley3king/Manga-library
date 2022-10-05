@@ -15,20 +15,12 @@ class HomePageController {
   final ValueNotifier<HomeStates> state = ValueNotifier(HomeStates.start);
 
   Future<void> start() async {
-    // List<ModelHomePage>
     try {
       state.value = HomeStates.loading;
-      //_hiveController.writeClientData();
-      // List? dados = await mangaYabu.homePage();
 
-      // for (dynamic font in extensoes) {
-      //   List<ModelHomePage> dados = await font.homePage();
-
-      //   data.addAll(dados);
-      // }
       var dados = await hiveController.getHomePage();
       // caso seja nulo atualiza os dados
-      dados ??= await updateHomePage();
+      dados ??= await _updateHomePage();
 
       if (dados == null) {
         state.value = HomeStates.error;
@@ -42,7 +34,20 @@ class HomePageController {
     }
   }
 
-  Future<List<ModelHomePage>?> updateHomePage() async {
+  Future<void> update() async {
+    try {
+      List<ModelHomePage>? dados = await _updateHomePage();
+      data = dados!;
+      state.value = HomeStates.loading;
+      // aqui fazemos o refresh
+      state.value = HomeStates.sucess;
+    } catch (e) {
+      debugPrint("erro ao atualizar o homePage: $e");
+      state.value = HomeStates.error;
+    }
+  }
+
+  Future<List<ModelHomePage>?> _updateHomePage() async {
     List<ModelHomePage> dados = [];
     try {
       debugPrint("iniciando a atualização do home page!");
@@ -59,15 +64,3 @@ class HomePageController {
     }
   }
 }
-// if (dados.isNotEmpty) {
-//   dados.forEach((element) {
-//     data.add(ModelHomePage.fromJson(element));
-//   });
-
-//   for (ModelHomePage model in dados) {
-
-//   }
-//   data.addAll(dados);
-// } else {
-//   state.value = HomeStates.error;
-// }

@@ -46,8 +46,10 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
     models.add(ModelHomePage.fromJson(destaques));
     // mais lidos
     Result? result3 = parser
-        ?.querySelector("div.section > div.wpop-items > div.serieslist > ul");
+        ?.querySelector("div.section > div#wpop-items > div.serieslist > ul");
     List<Result>? maisLidosItens = result3?.querySelectorAll("li");
+    // print(result3?.html);
+    // print("data: $result3 / li: $maisLidosItens");
     books = [];
 
     for (Result html in maisLidosItens!) {
@@ -69,7 +71,7 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
         "url": linkCorte1[1].replaceAll("/", ""),
         "img": img ?? ""
       });
-      debugPrint("book adicionado!!!");
+      // debugPrint("book adicionado!!!");
     }
     // print(books);
     // monat model destaques
@@ -171,6 +173,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         capitulos: chapters,
       );
     }
+    return null;
   } catch (e) {
     debugPrint("erro no scrapingMangaDetail at ExtensionMangaChan: $e");
     return null;

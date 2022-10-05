@@ -8,7 +8,7 @@ void main() {
 
   test("deve retornar uma lista de destaques", () async {
     var data = await extend.homePage();
-    debugPrint("$data");
+    debugPrint("length: ${data.length}");
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {
     var data = await extend.mangaDetail('tales-of-demons-and-gods');
@@ -16,7 +16,8 @@ void main() {
   });
 
   test("deve retornar um model Capitulos com as paginas do leitor", () async {
-    var data = await extend.getPages("tales-of-demons-and-gods-capitulo-312-5", [
+    var data =
+        await extend.getPages("tales-of-demons-and-gods-capitulo-312-5", [
       Capitulos(
           capitulo: "312-5",
           id: "houkago-no-goumon-shoujo-capitulo-116",
@@ -24,8 +25,7 @@ void main() {
           download: false,
           downloadPages: [],
           pages: [],
-          readed: false
-          )
+          readed: false)
     ]);
     debugPrint("${data.pages}");
   });
