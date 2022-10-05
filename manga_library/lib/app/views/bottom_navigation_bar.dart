@@ -1,66 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../controllers/system_config.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final ScrollController controller;
-  const CustomBottomNavigationBar({super.key, required this.controller});
+  final ValueNotifier<int> currentIndex;
+  const CustomBottomNavigationBar(
+      {super.key, required this.controller, required this.currentIndex});
 
   @override
   State<CustomBottomNavigationBar> createState() =>
       _CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
+    with SingleTickerProviderStateMixin {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  // ScrollController controller = widget.controller;
+  late AnimationController _animation;
+  Map<int, ValueNotifier<bool>> animatedIcons = {
+    0: ValueNotifier<bool>(false),
+    1: ValueNotifier<bool>(false),
+    2: ValueNotifier<bool>(false),
+    3: ValueNotifier<bool>(false),
+  };
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   controller = ScrollController();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // set UI Style
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarColor: Colors.transparent));
+  }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   controller.dispose();
-  // }
+  // toggle() {}
+
+  void redirect(int route) {
+    animatedIcons[route]!.value = !animatedIcons[route]!.value;
+
+    switch (route) {
+      case 0:
+        widget.currentIndex.value = 0;
+        break;
+      case 1:
+        widget.currentIndex.value = 1;
+        break;
+      case 2:
+        widget.currentIndex.value = 2;
+        break;
+      case 3:
+        widget.currentIndex.value = 3;
+        break;
+    }
+
+    // Future.delayed(const Duration(seconds: 2), () {
+
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScrollHideWidget(
       controller: widget.controller,
-      child: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AnimatedBuilder(
-            animation: ConfigSystemController.instance,
-            builder: (context, child) => IconTheme(
-              data: IconThemeData(
-                  color: configSystemController.colorManagement()),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                      onPressed: () => GoRouter.of(context).push('/home'),
-                      icon: const Icon(Icons.home)),
-                  IconButton(
-                      onPressed: () => GoRouter.of(context).push('/library'),
-                      icon: const Icon(Icons.local_library)),
-                  IconButton(
-                      onPressed: () => GoRouter.of(context).push('/search'),
-                      icon: const Icon(Icons.explore)),
-                  IconButton(
-                      onPressed: () => GoRouter.of(context).push('/others'),
-                      icon: const Icon(Icons.more_horiz)),
-                ],
-              ),
-            ),
-          ),
+      child: BottomNavigationBarTheme(
+        data: BottomNavigationBarThemeData(
+            unselectedItemColor: Colors.grey,
+            unselectedLabelStyle: const TextStyle(
+                color: Colors.white, overflow: TextOverflow.ellipsis),
+            selectedItemColor: configSystemController.colorManagement(),
+            showUnselectedLabels: true),
+        child: BottomNavigationBar(
+          backgroundColor: const Color.fromARGB(255, 26, 26, 26),
+          type: BottomNavigationBarType.fixed,
+          selectedFontSize: 13,
+          unselectedFontSize: 13,
+          currentIndex: widget.currentIndex.value,
+          onTap: (value) => redirect(value),
+          items: [
+            BottomNavigationBarItem(
+                // icon: Icon(Icons.home_outlined),
+                icon: CustomAnimatedIcon(
+                  icon: AnimatedIcons.add_event,
+                  notifier: animatedIcons[0]!,
+                ),
+                label: "Home"),
+            BottomNavigationBarItem(
+                icon: CustomAnimatedIcon(
+                  icon: AnimatedIcons.menu_arrow,
+                  notifier: animatedIcons[1]!,
+                ), // Icon(Icons.local_library)
+                // activeIcon: Icon(
+                //   Icons.import_contacts_sharp,
+                // ),
+                label: "Biblioteca"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.explore_outlined),
+                activeIcon: Icon(Icons.explore),
+                label: "Navegar"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.more_horiz_outlined),
+                activeIcon: Icon(Icons.more_horiz),
+                label: "Outros")
+          ],
         ),
       ),
     );
@@ -100,8 +146,16 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
     final direction = widget.controller.position.userScrollDirection;
     if (direction == ScrollDirection.forward) {
       show();
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarContrastEnforced: false,
+          systemNavigationBarDividerColor: Colors.black,
+          systemNavigationBarColor: Colors.transparent));
     } else if (direction == ScrollDirection.reverse) {
       hide();
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarContrastEnforced: false,
+          systemNavigationBarDividerColor: Colors.black26,
+          systemNavigationBarColor: Colors.black26));
     }
   }
 
@@ -125,10 +179,56 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: widget.duration,
-      height: isVisible ? kBottomNavigationBarHeight : 0,
+      height: isVisible ? (kBottomNavigationBarHeight + 48) : 0,
       child: Wrap(
         children: [widget.child],
       ),
+    );
+  }
+}
+
+// ANIMATED ICON
+
+class CustomAnimatedIcon extends StatefulWidget {
+  final AnimatedIconData icon;
+  final ValueNotifier<bool> notifier;
+  const CustomAnimatedIcon(
+      {super.key, required this.icon, required this.notifier});
+
+  @override
+  State<CustomAnimatedIcon> createState() => _CustomAnimatedIconState();
+}
+
+class _CustomAnimatedIconState extends State<CustomAnimatedIcon>
+    with SingleTickerProviderStateMixin {
+  // ValueNotifier<bool> notifier = widget.notifier;
+  late AnimationController _animation;
+
+  toggle() {
+    widget.notifier.value ? _animation.forward() : _animation.reverse();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animation = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+  }
+
+  @override
+  void dispose() {
+    _animation.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: widget.notifier,
+      builder: (context, value, child) {
+        toggle();
+        return AnimatedIcon(icon: widget.icon, progress: _animation);
+      },
     );
   }
 }

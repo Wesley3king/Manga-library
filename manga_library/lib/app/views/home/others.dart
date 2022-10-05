@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:manga_library/app/views/bottom_navigation_bar.dart';
 
 class OthersPage extends StatefulWidget {
   const OthersPage({super.key});
@@ -13,21 +12,15 @@ class OthersPage extends StatefulWidget {
 class _OthersPageState extends State<OthersPage> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  ScrollController controller = ScrollController();
 
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Outros'),
-      ),
-      body: AnimatedBuilder(
+    return AnimatedBuilder(
         animation: ConfigSystemController.instance,
         builder: (context, child) => IconTheme(
           data: IconThemeData(color: configSystemController.colorManagement()),
@@ -105,10 +98,6 @@ class _OthersPageState extends State<OthersPage> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        controller: controller,
-      ),
-    );
+      );
   }
 }

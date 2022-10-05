@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/views/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/components/search/search_result.dart';
 
 import '../../controllers/search_controller.dart';
@@ -7,7 +6,8 @@ import '../../controllers/search_controller.dart';
 final SearchController searchController = SearchController();
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final ScrollController scrollController;
+  const SearchPage({super.key, required this.scrollController});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -36,12 +36,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        controller: controller,
-      ),
-    );
+    return Container();//buildAppBar()
   }
 }
 

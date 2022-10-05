@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:manga_library/app/views/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/components/home_page/error.dart';
 import 'package:manga_library/app/views/components/home_page/sucess.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ScrollController scrollController;
+  const HomePage({super.key, required this.scrollController});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  ScrollController controller = ScrollController();
 
   final HomePageController homePageController = HomePageController();
   Widget _start() {
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
         return Sucess(
           dados: homePageController.data,
           controller: homePageController,
-          controllerScroll: controller,
+          controllerScroll: widget.scrollController,
         );
       case HomeStates.error:
         return const ErrorHomePage();
@@ -84,21 +83,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnimatedBuilder(
-        animation: homePageController.state,
-        builder: (context, child) =>
-            stateManagement(homePageController.state.value),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        controller: controller,
-      ),
+    return AnimatedBuilder(
+      animation: homePageController.state,
+      builder: (context, child) =>
+          stateManagement(homePageController.state.value),
     );
   }
 }
