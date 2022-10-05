@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late ScrollController scrollController;
-  ValueNotifier<int> index = ValueNotifier<int>(0);
+  ValueNotifier<int> currentRoute = ValueNotifier<int>(0);
 
   AppBar? getAppBar(BuildContext context, int route) {
     switch (route) {
@@ -43,11 +43,17 @@ class _HomeState extends State<Home> {
   redirect(int route) {
     switch (route) {
       case 0:
-        return HomePage(scrollController: scrollController,);
+        return HomePage(
+          scrollController: scrollController,
+        );
       case 1:
-        return LibraryPage(scrollController: scrollController,);
+        return LibraryPage(
+          scrollController: scrollController,
+        );
       case 2:
-        return SearchPage(scrollController: scrollController,);
+        return SearchPage(
+          scrollController: scrollController,
+        );
       case 3:
         return const OthersPage();
     }
@@ -62,13 +68,23 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: index,
-      builder: (context, child) => Scaffold(
-        appBar: getAppBar(context, index.value),
-        body: redirect(index.value),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          controller: scrollController,
-          currentIndex: index,
+      animation: currentRoute,
+      builder: (context, child) => WillPopScope(
+        onWillPop: () async {
+          if (currentRoute.value == 0) {
+            return true;
+          } else {
+            currentRoute.value = 0;
+            return false;
+          }
+        },
+        child: Scaffold(
+          appBar: getAppBar(context, currentRoute.value),
+          body: redirect(currentRoute.value),
+          bottomNavigationBar: CustomBottomNavigationBar(
+            controller: scrollController,
+            currentIndex: currentRoute,
+          ),
         ),
       ),
     );

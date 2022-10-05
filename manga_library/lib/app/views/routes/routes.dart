@@ -3,7 +3,7 @@ import 'package:manga_library/app/views/components/configurations/backup_config/
 import 'package:manga_library/app/views/components/configurations/config_options.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/components/configurations/library_config/library_config.dart';
-import 'package:manga_library/app/views/home/home.dart';
+import 'package:manga_library/app/views/home.dart';
 // import 'package:manga_library/app/views/home/home_page.dart';
 // import 'package:manga_library/app/views/home/library.dart';
 // import 'package:manga_library/app/views/home/others.dart';
