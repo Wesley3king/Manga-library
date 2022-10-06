@@ -3,6 +3,7 @@ import 'package:manga_library/app/views/components/configurations/backup_config/
 import 'package:manga_library/app/views/components/configurations/config_options.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/components/configurations/library_config/library_config.dart';
+import 'package:manga_library/app/views/components/library/ocult%20library/ocult_library.dart';
 import 'package:manga_library/app/views/home.dart';
 // import 'package:manga_library/app/views/home/home_page.dart';
 // import 'package:manga_library/app/views/home/library.dart';
@@ -16,10 +17,10 @@ final routes = GoRouter(initialLocation: '/home', routes: [
     path: '/home',
     builder: (context, state) => const Home(),
   ),
-  // GoRoute(
-  //   path: '/library',
-  //   builder: (context, state) => const LibraryPage(),
-  // ),
+  GoRoute(
+    path: '/ocultlibrary',
+    builder: (context, state) => const LibraryOcult(),
+  ),
   // GoRoute(
   //   path: '/search',
   //   builder: (context, state) => const SearchPage(),

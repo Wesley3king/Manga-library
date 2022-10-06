@@ -2,25 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 
-class LibraryController {
-  List<LibraryModel> librariesData = [];
+class OcultLibraryController {
+  List<LibraryModel> ocultLibrariesData = [];
   HiveController hiveController = HiveController();
-  ValueNotifier<LibraryStates> state =
-      ValueNotifier<LibraryStates>(LibraryStates.start);
+  ValueNotifier<OcultLibraryStates> state =
+      ValueNotifier<OcultLibraryStates>(OcultLibraryStates.start);
 
   start() async {
-    state.value = LibraryStates.loading;
+    state.value = OcultLibraryStates.loading;
     try {
-      librariesData = await hiveController.getLibraries();
-      state.value = LibraryStates.sucess;
+      ocultLibrariesData = await hiveController.getOcultLibraries();
+      state.value = OcultLibraryStates.sucess;
 
     } catch (e, s) {
-      print('erro no start LibraryController');
-      print(e);
-      print(s);
-      state.value = LibraryStates.error;
+      debugPrint('erro no start LibraryOcultController: $e');
+      debugPrint('$s');
+      state.value = OcultLibraryStates.error;
     }
   }
 }
 
-enum LibraryStates { start, loading, sucess, error }
+enum OcultLibraryStates { start, loading, sucess, error }

@@ -183,6 +183,57 @@ class HiveController {
   }
 
   // ---------------------------------------------------------------------------
+  //       ======================= OCULT LIBRARIES =======================
+  // ---------------------------------------------------------------------------
+  final String ocultLibrary = "ocultLibraries";
+  Future<List<LibraryModel>> writeOcultLibraryData() async {
+    final LibraryModel model =
+        LibraryModel.fromJson({"library": "ocultos", "books": []});
+    libraries?.put(ocultLibrary, [model.toJson()]);
+    return [model];
+  }
+
+  Future<List<LibraryModel>> getOcultLibraries() async {
+    List<dynamic>? data = await libraries?.get(ocultLibrary);
+    print(data);
+    if (data != null) {
+      print('entrou na converção');
+      List<LibraryModel> librariesModels = [];
+      try {
+        librariesModels = data.map((e) {
+          Map<String, dynamic> map = {
+            "library": e['library'],
+            "books": e['books'],
+          };
+          return LibraryModel.fromJson(map);
+        }).toList();
+      } catch (e, s) {
+        debugPrint("$e");
+        debugPrint('$s');
+      }
+      debugPrint('saiu da converção');
+
+      return librariesModels;
+    } else {
+      debugPrint('não é uma lista \n em HiveController - getOcultLibraries');
+      debugPrint('${data.runtimeType}');
+      return writeLibraryData();
+    }
+  }
+
+  Future<bool> updateOcultLibraries(List<LibraryModel> listModel) async {
+    try {
+      List<Map<String, dynamic>> data =
+          listModel.map((model) => model.toJson()).toList();
+      await libraries?.put(ocultLibrary, data);
+      return true;
+    } catch (e) {
+      debugPrint('erro no updateOcultLibraries: $e');
+      return false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   //       ======================= SETTINGS =======================
   // ---------------------------------------------------------------------------
   Future<Map<String, dynamic>> writeSettings() async {
@@ -214,7 +265,7 @@ class HiveController {
 
   Future<Map> getSettings() async {
     var data = await clientData?.get("settings");
-    print(data is Map<String, dynamic>
+    debugPrint(data is Map<String, dynamic>
         ? "é Map<String, dynamic>"
         : "não é Map<String, dynamic>");
     if (data != null && data is Map) {
