@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 
-import '../../../../../models/libraries_model.dart';
+import '../../../../../../models/libraries_model.dart';
 
 class LibraryConfigController {
   final HiveController _hiveController = HiveController();
-  ValueNotifier<LibraryConfigStates> state =
-      ValueNotifier<LibraryConfigStates>(LibraryConfigStates.start);
+  ValueNotifier<OcultLibraryConfigStates> state =
+      ValueNotifier<OcultLibraryConfigStates>(OcultLibraryConfigStates.start);
   List<LibraryModel> libraries = [];
   void start() async {
-    state.value = LibraryConfigStates.loading;
+    state.value = OcultLibraryConfigStates.loading;
     try {
       libraries = await _hiveController.getLibraries();
-      state.value = LibraryConfigStates.sucess;
+      state.value = OcultLibraryConfigStates.sucess;
     } catch (e) {
-      print("erro no start at LibraryConfigController: $e");
-      state.value = LibraryConfigStates.error;
+      debugPrint("erro no start at LibraryConfigController: $e");
+      state.value = OcultLibraryConfigStates.error;
     }
   }
 
   void restart() async {
-    state.value = LibraryConfigStates.restarting;
+    state.value = OcultLibraryConfigStates.restarting;
     try {
       libraries = await _hiveController.getLibraries();
-      state.value = LibraryConfigStates.sucess;
+      state.value = OcultLibraryConfigStates.sucess;
     } catch (e) {
-      print("erro no restart at LibraryConfigController: $e");
-      state.value = LibraryConfigStates.error;
+      debugPrint("erro no restart at LibraryConfigController: $e");
+      state.value = OcultLibraryConfigStates.error;
     }
   }
 
@@ -47,7 +47,7 @@ class LibraryConfigController {
       await _hiveController.updateLibraries(libraries);
       restart();
     } catch (e) {
-      print("erro no removeLibrary at LibraryConfigController: $e");
+      debugPrint("erro no removeLibrary at LibraryConfigController: $e");
     }
   }
 
@@ -63,7 +63,7 @@ class LibraryConfigController {
       }
       restart();
     } catch (e) {
-      print("erro no renameLibrary at LibraryConfigController: $e");
+      debugPrint("erro no renameLibrary at LibraryConfigController: $e");
     }
   }
 
@@ -71,9 +71,9 @@ class LibraryConfigController {
     try {
       await _hiveController.updateLibraries(listOfModels);
     } catch (e) {
-      print("erro no removeLibrary at LibraryConfigController: $e");
+      debugPrint("erro no removeLibrary at LibraryConfigController: $e");
     }
   }
 }
 
-enum LibraryConfigStates { start, loading, restarting, sucess, error }
+enum OcultLibraryConfigStates { start, loading, restarting, sucess, error }

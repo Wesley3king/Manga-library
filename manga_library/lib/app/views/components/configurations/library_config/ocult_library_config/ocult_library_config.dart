@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:manga_library/app/views/components/configurations/library_config/controller/library_config_controller.dart';
+import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/views/components/configurations/library_config/ocult_library_config/controller/ocult_library_config_controller.dart';
 
-import '../../../../models/libraries_model.dart';
-
-class LibraryConfig extends StatefulWidget {
-  const LibraryConfig({super.key});
+class LibraryOcultConfig extends StatefulWidget {
+  const LibraryOcultConfig({super.key});
 
   @override
-  State<LibraryConfig> createState() => _LibraryConfigState();
+  State<LibraryOcultConfig> createState() => _LibraryOcultConfigState();
 }
 
-class _LibraryConfigState extends State<LibraryConfig> {
+class _LibraryOcultConfigState extends State<LibraryOcultConfig> {
   final ConfigSystemController _configSystemController =
       ConfigSystemController();
-  final LibraryConfigController _libraryConfigController =
-      LibraryConfigController();
+  final OcultLibraryConfigController _libraryConfigController = OcultLibraryConfigController();
   // guarda a ordem da biblioteca
   List<LibraryModel> lista = [];
   Widget _loading() {
@@ -67,7 +65,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
   void _rename(String name) {
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(text: name);
-    String valor = name;
+    // String valor = name;
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -78,7 +76,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
             child: TextField(
               autofocus: true,
               controller: textController,
-              onChanged: (value) => valor = value,
+              onChanged: (value) {} ,// => valor = value
             ),
           ),
           Row(
@@ -103,10 +101,10 @@ class _LibraryConfigState extends State<LibraryConfig> {
 
   List<Widget> itensEdit() {
     List<Widget> list = [];
-    for (int i = 0; i < _libraryConfigController.libraries.length; ++i) {
+    for (int i = 0; i < _libraryConfigController.ocultlibraries.length; ++i) {
       list.add(
         ListTile(
-          title: Text(_libraryConfigController.libraries[i].library),
+          title: Text(_libraryConfigController.ocultlibraries[i].library),
           trailing: PopupMenuButton<String>(
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -116,7 +114,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
                   Future.delayed(
                       const Duration(milliseconds: 100),
                       () => _rename(
-                          _libraryConfigController.libraries[i].library));
+                          _libraryConfigController.ocultlibraries[i].library));
                 },
               ),
               PopupMenuItem(
@@ -126,7 +124,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
                     Future.delayed(
                         const Duration(milliseconds: 100),
                         () => _delete(
-                            _libraryConfigController.libraries[i].library));
+                            _libraryConfigController.ocultlibraries[i].library));
                   })
             ],
           ),
@@ -146,31 +144,8 @@ class _LibraryConfigState extends State<LibraryConfig> {
     );
   }
 
-  /*
-  SizedBox(
-                  width: 50,
-                  height: 40,
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            _rename(
-                                _libraryConfigController.libraries[index].library);
-                          },
-                          icon: const Icon(Icons.border_color)),
-                      IconButton(
-                          onPressed: () {
-                            _delete(
-                                _libraryConfigController.libraries[index].library);
-                          },
-                          icon: const Icon(Icons.delete_outline)),
-                    ],
-                  ),
-                ),
-                */
-
   Widget _sucess() {
-    lista = _libraryConfigController.libraries;
+    lista = _libraryConfigController.ocultlibraries;
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
@@ -178,9 +153,9 @@ class _LibraryConfigState extends State<LibraryConfig> {
           itemBuilder: (context, index) => ListTile(
                 key: UniqueKey(),
                 leading: const Icon(Icons.density_large),
-                title: Text(_libraryConfigController.libraries[index].library),
+                title: Text(_libraryConfigController.ocultlibraries[index].library),
               ),
-          itemCount: _libraryConfigController.libraries.length,
+          itemCount: _libraryConfigController.ocultlibraries.length,
           onReorder: (oldIndex, newIndex) {
             // aqui temos o sistema para mudar a ordem
             if (oldIndex != newIndex) {
@@ -199,7 +174,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
                 do {
                   lista[local] = lista[++local];
                   index++;
-                  print(index);
+                  debugPrint('$index');
                 } while (index < noMove - oldIndex);
                 lista[noMove] = item;
               }
@@ -234,7 +209,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Biblioteca"),
+        title: const Text("Biblioteca Oculta"),
         actions: [
           IconButton(
               tooltip: "Salvar Ordem",
@@ -257,7 +232,7 @@ class _LibraryConfigState extends State<LibraryConfig> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: _configSystemController.colorManagement(),
-        tooltip: "Adicionar Biblioteca",
+        tooltip: "Adicionar Biblioteca Oculta",
         onPressed: () {
           String libraryName = "";
           showDialog(

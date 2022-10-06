@@ -614,7 +614,6 @@ class DialogController {
     // state.value = DialogStates.loading;
     try {
       dataLibrary = await hiveController.getLibraries();
-      // dataOcultLibrary = await hiveController.getOcultLibraries();
       //generateValues(dataLibrary);
       return true;
     } catch (e, s) {
@@ -628,7 +627,7 @@ class DialogController {
   Future<bool> startOcultLibrary() async {
     // state.value = DialogStates.loading;
     try {
-      dataLibrary = await hiveController.getOcultLibraries();
+      dataOcultLibrary = await hiveController.getOcultLibraries();
       //generateValues(dataLibrary);
       return true;
     } catch (e, s) {
@@ -722,6 +721,8 @@ class DialogController {
       bool existe = false;
       bool executed = false;
       for (int iBook = 0; iBook < dataOcultLibrary[i].books.length; ++iBook) {
+        // print(
+        //     "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
         if ((dataOcultLibrary[i].library == lista[i]['library']) &&
             (dataOcultLibrary[i].books[iBook].link == book['link']) &&
             (dataOcultLibrary[i].books[iBook].idExtension == book['idExtension'])) {

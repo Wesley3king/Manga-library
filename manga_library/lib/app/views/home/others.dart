@@ -72,7 +72,7 @@ class _OthersPageState extends State<OthersPage> {
               ListTile(
                 leading: const Icon(Icons.bookmark),
                 title: const Text('Biblioteca'),
-                onTap: () => GoRouter.of(context).push('/configlibrary'),
+                onTap: () => GoRouter.of(context).push('/configlibrary/false'),
               ),
               ListTile(
                 leading: const Icon(Icons.account_circle),

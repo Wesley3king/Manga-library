@@ -217,7 +217,7 @@ class HiveController {
     } else {
       debugPrint('é null em HiveController - getOcultLibraries');
       // debugPrint('${data.runtimeType}');
-      return await writeLibraryData();
+      return await writeOcultLibraryData();
     }
   }
 

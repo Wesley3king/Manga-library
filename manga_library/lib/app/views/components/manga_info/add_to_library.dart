@@ -31,9 +31,10 @@ class _AddToLibraryState extends State<AddToLibrary> {
   List<Map> resultadoForOcultLibrary = [];
   // gera os valores para o Dialog
   List<Widget> generateValuesForOcultLibrary(
-      List<LibraryModel> lista, Function setState, BuildContext context){
+      List<LibraryModel> lista, Function setState, BuildContext context) {
     if (resultadoForOcultLibrary.isEmpty) {
       RegExp regex = RegExp(widget.link, caseSensitive: false);
+
       for (int i = 0; i < lista.length; ++i) {
         bool existe = false;
         for (int iManga = 0; iManga < lista[i].books.length; ++iManga) {
@@ -41,6 +42,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
           //     '${lista[i].books[iManga].link} == ${widget.link}/ -- ${lista[i].books[iManga].idExtension} == ${widget.dados.idExtension}');
           if (lista[i].books[iManga].link.contains(regex) &&
               lista[i].books[iManga].idExtension == widget.dados.idExtension) {
+            debugPrint("exite!!!");
             resultadoForOcultLibrary.add({
               "library": lista[i].library,
               "selected": true,
@@ -50,6 +52,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
           }
         }
         if (!existe) {
+          debugPrint("não exite!!!");
           resultadoForOcultLibrary.add({
             "library": lista[i].library,
             "selected": false,
@@ -59,12 +62,15 @@ class _AddToLibraryState extends State<AddToLibrary> {
     }
     List<Widget> checkboxes = [];
     for (int i = 0; i < resultadoForOcultLibrary.length; ++i) {
+      debugPrint(
+          "estranho: ${resultadoForOcultLibrary[i]['selected']} \n selcted: ${resultadoForOcultLibrary[i]['selected']}");
+
       checkboxes.add(CheckboxListTile(
         title: Text(resultadoForOcultLibrary[i]['library']),
         value: resultadoForOcultLibrary[i]['selected'],
         onChanged: (value) => setState(() {
-          resultadoForOcultLibrary[i]['selected'] = !resultado[i]['selected'];
-          debugPrint(resultado[i]['selected'] ? "adicionado!" : "removido!");
+          resultadoForOcultLibrary[i]['selected'] = !resultadoForOcultLibrary[i]['selected'];
+          debugPrint(resultadoForOcultLibrary[i]['selected'] ? "adicionado!" : "removido!");
         }),
       ));
     }
@@ -74,7 +80,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
       children: [
         TextButton(
             onPressed: () {
-              resultado = [];
+              resultadoForOcultLibrary = [];
               Navigator.of(context).pop();
               setState(() {
                 isOcultLibrary = false;
@@ -84,7 +90,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
         TextButton(
             onPressed: () {
               _dialogController.addOrRemoveFromOcultLibrary(
-                resultado,
+                resultadoForOcultLibrary,
                 {
                   "name": widget.dados.name,
                   "link": widget.link,
@@ -215,14 +221,10 @@ class _AddToLibraryState extends State<AddToLibrary> {
             ));
   }
 
-  // void startar() async {
-  //   bool addToLibrary = await _dialogController.start();
-  // }
-
   @override
   void initState() {
     super.initState();
-     //_dialogController.start();
+    //_dialogController.start();
     // startar();
   }
 
