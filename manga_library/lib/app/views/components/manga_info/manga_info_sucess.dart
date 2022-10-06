@@ -8,6 +8,7 @@ import 'package:manga_library/app/models/manga_info_offline_model.dart';
 // import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
 // import 'package:manga_library/app/views/components/manga_info/chapters_list_states.dart';
 import 'package:manga_library/app/views/components/manga_info/manga_details.dart';
+import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../../controllers/system_config.dart';
 import '../../../models/globais.dart';
@@ -36,6 +37,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
   late final ChaptersController chaptersController;
+  late ScrollController _scrollController;
 
   int itemCount = 2;
   // colors
@@ -51,7 +53,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     };
     return IconButton(
       onPressed: () async {
-        await chaptersController.marcarDesmarcar(id, link, nameImageLink, widget.dados.idExtension);
+        await chaptersController.marcarDesmarcar(
+            id, link, nameImageLink, widget.dados.idExtension);
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             //ChaptersController.capitulosCorrelacionados,
@@ -69,7 +72,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     };
     return IconButton(
       onPressed: () async {
-        await chaptersController.marcarDesmarcar(id, link, nameImageLink, widget.dados.idExtension);
+        await chaptersController.marcarDesmarcar(
+            id, link, nameImageLink, widget.dados.idExtension);
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             // ChaptersController.capitulosCorrelacionados,
@@ -105,10 +109,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     // print(
     //     "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
     // print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
-    
+
     return ListTile(
       title: Text(
-        'Capítulo ${capitulo.capitulo}',//  l = ${capitulo.pages.length}, ${capitulo.id} 
+        'Capítulo ${capitulo.capitulo}', //  l = ${capitulo.pages.length}, ${capitulo.id}
         style: capitulo.disponivel ? const TextStyle() : indisponivel,
       ),
       subtitle: Text(capitulo.readed ? "lido" : "não lido"),
@@ -134,6 +138,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     super.initState();
     chaptersController = ChaptersController();
     MangaInfoController.chaptersController = chaptersController;
+    _scrollController = ScrollController();
     //print("link: ${widget.link}");
   }
 
@@ -155,8 +160,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   Widget build(BuildContext context) {
     if (widget.sucess2) {
       if (chaptersController.state.value == ChaptersStates.start) {
-        chaptersController.start(
-            widget.capitulosDisponiveis, widget.dados.capitulos, widget.link, widget.dados.idExtension);
+        chaptersController.start(widget.capitulosDisponiveis,
+            widget.dados.capitulos, widget.link, widget.dados.idExtension);
       }
       return RefreshIndicator(
         color: configSystemController.colorManagement(),
@@ -223,20 +228,29 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                     ],
                   );
                 case ChaptersStates.sucess:
-                  return ListView.builder(
-                    itemCount:
-                        ChaptersController.capitulosCorrelacionados.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return MangaDetails(
-                            link: widget.link,
-                            dados: widget.dados,
-                            controller: widget.controller,
-                            capitulosDisponiveis: widget.capitulosDisponiveis);
-                      } else {
-                        return _buildChapter(context, index);
-                      }
-                    },
+                  return VsScrollbar(
+                    controller:  _scrollController,
+                    style: const VsScrollbarStyle(
+                      color: Color.fromARGB(223, 158, 158, 158)
+                    ),
+                    child: ListView.builder(
+                      controller:  _scrollController,
+                      itemCount:
+                          ChaptersController.capitulosCorrelacionados.length +
+                              1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return MangaDetails(
+                              link: widget.link,
+                              dados: widget.dados,
+                              controller: widget.controller,
+                              capitulosDisponiveis:
+                                  widget.capitulosDisponiveis);
+                        } else {
+                          return _buildChapter(context, index);
+                        }
+                      },
+                    ),
                   );
                 case ChaptersStates.error:
                   return ListView(

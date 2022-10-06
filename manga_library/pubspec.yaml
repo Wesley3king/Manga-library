@@ -51,6 +51,7 @@ dependencies:
   image_downloader: ^0.31.0
   extended_image: ^6.2.1
   file_picker: ^5.2.0
+  vs_scrollbar: ^0.2.1
   #flutter_animated_icons: ^1.0.1
 
 dev_dependencies:

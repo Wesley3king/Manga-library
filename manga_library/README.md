@@ -18,7 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 ### a serem adicionadas num futuro próximo
 
 - biblioteca privada
-- scrollbar para as lidas
 - visualizar os capilos off line em uma aba própria
 - implementar as configurações restantes e tornalas funcionais
 - organizar a biblioteca com uma ordem diferente

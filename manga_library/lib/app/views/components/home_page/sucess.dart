@@ -4,6 +4,7 @@ import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/views/components/home_page/horizontal_list.dart';
+import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../../models/globais.dart';
 

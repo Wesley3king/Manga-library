@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 class LibraryItens extends StatefulWidget {
   final LibraryModel data;
@@ -13,6 +14,7 @@ class LibraryItens extends StatefulWidget {
 
 class _LibraryItensState extends State<LibraryItens>
     with AutomaticKeepAliveClientMixin {
+  // late ScrollController _scrollController;
   Widget createBook(BuildContext context, int index) {
     return Container(
       decoration: const BoxDecoration(boxShadow: [
@@ -91,11 +93,18 @@ class _LibraryItensState extends State<LibraryItens>
   bool get wantKeepAlive => true;
 
   @override
+  void initState() {
+    super.initState();
+    // _scrollController = ScrollController();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: GridView.builder(
           addAutomaticKeepAlives: true,
+          // controller: _scrollController,
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 200,
             mainAxisExtent: 260, // aqui ajustamos o height

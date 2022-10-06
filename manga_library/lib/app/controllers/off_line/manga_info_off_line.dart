@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/rendering.dart';
+import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/leitor_pages.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
@@ -36,6 +37,7 @@ class MangaInfoOffLineController {
       {required String link,
       required int idExtension,
       required List<MangaInfoOffLineModel> lista}) {
+    link = mapOfExtensions[idExtension]!.getLink(link);
     RegExp regex = RegExp(link, caseSensitive: false);
     for (int i = 0; i < lista.length; ++i) {
       debugPrint("iniciar!");
