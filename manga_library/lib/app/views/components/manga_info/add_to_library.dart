@@ -22,46 +22,7 @@ class AddToLibrary extends StatefulWidget {
 
 class _AddToLibraryState extends State<AddToLibrary> {
   final DialogController _dialogController = DialogController();
-
-  // List<Widget> _loading() {
-  //   return const [
-  //     Center(
-  //       child: CircularProgressIndicator(),
-  //     )
-  //   ];
-  // }
-
-  // List<Widget> _error() {
-  //   return [
-  //     Center(
-  //       child: Column(
-  //         children: const <Widget>[
-  //           Icon(Icons.report_problem),
-  //           Text('Error'),
-  //         ],
-  //       ),
-  //     ),
-  //   ];
-  // }
-
-  // List<Widget> _sucess() {
-  //   return _dialogController.addToLibraryCheckboxes;
-  // }
-
-  // List<Widget> _stateManagement(DialogStates state) {
-  //   print('tipo de sucess = $state');
-  //   print(_dialogController.addToLibraryCheckboxes);
-  //   switch (state) {
-  //     case DialogStates.start:
-  //       return _loading();
-  //     case DialogStates.loading:
-  //       return _loading();
-  //     case DialogStates.sucess:
-  //       return _sucess();
-  //     case DialogStates.error:
-  //       return _error();
-  //   }
-  // }
+  bool isOcultLibrary = false;
 
   // ========================================================================
   // ------------------------- OCULT LIBRARY --------------------------------
@@ -69,8 +30,8 @@ class _AddToLibraryState extends State<AddToLibrary> {
 
   List<Map> resultadoForOcultLibrary = [];
   // gera os valores para o Dialog
-  generateValuesForOcultLibrary(
-      List<LibraryModel> lista, BuildContext context) async {
+  List<Widget> generateValuesForOcultLibrary(
+      List<LibraryModel> lista, Function setState, BuildContext context){
     if (resultadoForOcultLibrary.isEmpty) {
       RegExp regex = RegExp(widget.link, caseSensitive: false);
       for (int i = 0; i < lista.length; ++i) {
@@ -97,7 +58,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
       }
     }
     List<Widget> checkboxes = [];
-    for (int i = 0; i < resultado.length; ++i) {
+    for (int i = 0; i < resultadoForOcultLibrary.length; ++i) {
       checkboxes.add(CheckboxListTile(
         title: Text(resultadoForOcultLibrary[i]['library']),
         value: resultadoForOcultLibrary[i]['selected'],
@@ -111,19 +72,13 @@ class _AddToLibraryState extends State<AddToLibrary> {
     checkboxes.add(Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // TextButton(
-        //     onPressed: () {
-        //       resultado = [];
-        //       Navigator.of(context).pop();
-        //       Future.delayed(const Duration(milliseconds: 200), () {
-
-        //       });
-        //     },
-        //     child: const Text('Library')),
         TextButton(
             onPressed: () {
               resultado = [];
               Navigator.of(context).pop();
+              setState(() {
+                isOcultLibrary = false;
+              });
             },
             child: const Text('Cancelar')),
         TextButton(
@@ -132,7 +87,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
                 resultado,
                 {
                   "name": widget.dados.name,
-                  "link": widget.link, // '${widget.link}/'
+                  "link": widget.link,
                   "img": widget.dados.img,
                   "idExtension": widget.dados.idExtension
                 },
@@ -141,26 +96,31 @@ class _AddToLibraryState extends State<AddToLibrary> {
                 model: widget.dados,
               );
               Navigator.of(context).pop();
+              setState(() {
+                isOcultLibrary = false;
+              });
             },
             child: const Text('Confirmar')),
       ],
     ));
-    // return checkboxes;
-    await showDialog(
-      context: context,
+    return checkboxes;
+  }
+
+  buidDialogForOcultLibrary(BuildContext context) async {
+    await _dialogController.startOcultLibrary();
+    return await showDialog(
+        context: context,
         builder: (context) => StatefulBuilder(
-          builder: (context, setState) => SimpleDialog(
-            title: const Text('Adicionar:'),
-            children: checkboxes,
-        )
-      )
-    );
+            builder: (context, setState) => SimpleDialog(
+                  title: const Text('Adicionar a Oculta:'),
+                  children: generateValuesForOcultLibrary(
+                      _dialogController.dataOcultLibrary, setState, context),
+                )));
   }
 
   // ========================================================================
   // ------------------------- LIBRARY --------------------------------
   // ========================================================================
-
 
   List<Map> resultado = [];
   generateValues(
@@ -209,7 +169,9 @@ class _AddToLibraryState extends State<AddToLibrary> {
             onPressed: () {
               resultado = [];
               Navigator.of(context).pop();
-              Future.delayed(const Duration(milliseconds: 200), () => generateValuesForOcultLibrary(_dialogController.dataOcultLibrary, context));
+              setState(() {
+                isOcultLibrary = true;
+              });
             },
             child: const Text('Library')),
         TextButton(
@@ -240,14 +202,28 @@ class _AddToLibraryState extends State<AddToLibrary> {
     return checkboxes;
   }
 
-  void startar() async {
-    bool addToLibrary = await _dialogController.start();
+  buildDialogForLibrary(BuildContext context) async {
+    await _dialogController.start();
+    return await showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+              builder: (context, setState) => SimpleDialog(
+                title: const Text('Adicionar:'),
+                children: generateValues(
+                    _dialogController.dataLibrary, setState, context),
+              ),
+            ));
   }
+
+  // void startar() async {
+  //   bool addToLibrary = await _dialogController.start();
+  // }
 
   @override
   void initState() {
     super.initState();
-    startar();
+     //_dialogController.start();
+    // startar();
   }
 
   @override
@@ -257,15 +233,9 @@ class _AddToLibraryState extends State<AddToLibrary> {
         height: 55,
         child: IconButton(
             onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => StatefulBuilder(
-                        builder: (context, setState) => SimpleDialog(
-                          title: const Text('Adicionar:'),
-                          children: generateValues(
-                              _dialogController.dataLibrary, setState, context),
-                        ),
-                      ));
+              isOcultLibrary
+                  ? buidDialogForOcultLibrary(context)
+                  : buildDialogForLibrary(context);
             },
             icon: const Icon(
               Icons.favorite,
@@ -273,3 +243,43 @@ class _AddToLibraryState extends State<AddToLibrary> {
             )));
   }
 }
+
+ // List<Widget> _loading() {
+  //   return const [
+  //     Center(
+  //       child: CircularProgressIndicator(),
+  //     )
+  //   ];
+  // }
+
+  // List<Widget> _error() {
+  //   return [
+  //     Center(
+  //       child: Column(
+  //         children: const <Widget>[
+  //           Icon(Icons.report_problem),
+  //           Text('Error'),
+  //         ],
+  //       ),
+  //     ),
+  //   ];
+  // }
+
+  // List<Widget> _sucess() {
+  //   return _dialogController.addToLibraryCheckboxes;
+  // }
+
+  // List<Widget> _stateManagement(DialogStates state) {
+  //   print('tipo de sucess = $state');
+  //   print(_dialogController.addToLibraryCheckboxes);
+  //   switch (state) {
+  //     case DialogStates.start:
+  //       return _loading();
+  //     case DialogStates.loading:
+  //       return _loading();
+  //     case DialogStates.sucess:
+  //       return _sucess();
+  //     case DialogStates.error:
+  //       return _error();
+  //   }
+  // }

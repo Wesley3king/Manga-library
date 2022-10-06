@@ -144,9 +144,9 @@ class HiveController {
 
   Future<List<LibraryModel>> getLibraries() async {
     List<dynamic>? data = await libraries?.get('libraries');
-    print(data);
+    debugPrint('$data');
     if (data != null) {
-      print('entrou na converção');
+      debugPrint('entrou na converção');
       List<LibraryModel> librariesModels = [];
       try {
         librariesModels = data.map((e) {
@@ -157,15 +157,15 @@ class HiveController {
           return LibraryModel.fromJson(map);
         }).toList();
       } catch (e, s) {
-        print(e);
-        print(s);
+        debugPrint('$e');
+        debugPrint('$s');
       }
-      print('saiu da converção');
+      debugPrint('saiu da converção');
 
       return librariesModels;
     } else {
-      print('não é uma lista \n em HiveController - getLibraries');
-      print(data.runtimeType);
+      debugPrint('é null em HiveController - getLibraries');
+      debugPrint('${data.runtimeType}');
       return writeLibraryData();
     }
   }
@@ -177,7 +177,7 @@ class HiveController {
       await libraries?.put('libraries', data);
       return true;
     } catch (e) {
-      print('erro no updateLibraries: $e');
+      debugPrint('erro no updateLibraries: $e');
       return false;
     }
   }
@@ -186,18 +186,18 @@ class HiveController {
   //       ======================= OCULT LIBRARIES =======================
   // ---------------------------------------------------------------------------
   final String ocultLibrary = "ocultLibraries";
+
   Future<List<LibraryModel>> writeOcultLibraryData() async {
-    final LibraryModel model =
-        LibraryModel.fromJson({"library": "ocultos", "books": []});
+    debugPrint("escrevendo o model inicial na DB!");
+    final LibraryModel model = LibraryModel.fromJson({"library": "ocultos", "books": []});
     libraries?.put(ocultLibrary, [model.toJson()]);
     return [model];
   }
 
   Future<List<LibraryModel>> getOcultLibraries() async {
     List<dynamic>? data = await libraries?.get(ocultLibrary);
-    print(data);
+    debugPrint('data from ocult library: $data');
     if (data != null) {
-      print('entrou na converção');
       List<LibraryModel> librariesModels = [];
       try {
         librariesModels = data.map((e) {
@@ -215,9 +215,9 @@ class HiveController {
 
       return librariesModels;
     } else {
-      debugPrint('não é uma lista \n em HiveController - getOcultLibraries');
-      debugPrint('${data.runtimeType}');
-      return writeLibraryData();
+      debugPrint('é null em HiveController - getOcultLibraries');
+      // debugPrint('${data.runtimeType}');
+      return await writeLibraryData();
     }
   }
 

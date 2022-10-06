@@ -282,7 +282,6 @@ class ChaptersController {
       // }
       log("update is two: ${MangaInfoController.isTwoRequests}");
       if (MangaInfoController.isTwoRequests) {
-
         // passar os downloads aos novos capitulos
         for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
           if (capCorrelacionados.download) {
@@ -530,7 +529,8 @@ class ChaptersController {
             download: listaCapitulosDisponiveis[alreadyIndice].download,
             readed: false,
             disponivel: true,
-            downloadPages: listaCapitulosDisponiveis[alreadyIndice].downloadPages,
+            downloadPages:
+                listaCapitulosDisponiveis[alreadyIndice].downloadPages,
             pages: listaCapitulosDisponiveis[alreadyIndice]
                 .pages
                 .map<String>((dynamic page) => page.toString())
@@ -607,30 +607,32 @@ class DialogController {
   List<LibraryModel> dataLibrary = [];
   List<LibraryModel> dataOcultLibrary = [];
   List<CheckboxListTile> addToLibraryCheckboxes = [];
-  ValueNotifier<DialogStates> state =
-      ValueNotifier<DialogStates>(DialogStates.start);
+  // ValueNotifier<DialogStates> state =
+  //     ValueNotifier<DialogStates>(DialogStates.start);
 
   Future<bool> start() async {
-    state.value = DialogStates.loading;
+    // state.value = DialogStates.loading;
     try {
       dataLibrary = await hiveController.getLibraries();
+      // dataOcultLibrary = await hiveController.getOcultLibraries();
       //generateValues(dataLibrary);
       return true;
     } catch (e, s) {
-      state.value = DialogStates.error;
+      // state.value = DialogStates.error;
       debugPrint('erro no start at DialogController: $e');
       debugPrint('$s');
       return false;
     }
   }
+
   Future<bool> startOcultLibrary() async {
-    state.value = DialogStates.loading;
+    // state.value = DialogStates.loading;
     try {
       dataLibrary = await hiveController.getOcultLibraries();
       //generateValues(dataLibrary);
       return true;
     } catch (e, s) {
-      state.value = DialogStates.error;
+      // state.value = DialogStates.error;
       debugPrint('erro no start at DialogController: $e');
       debugPrint('$s');
       return false;
@@ -644,8 +646,7 @@ class DialogController {
       required MangaInfoOffLineModel model,
       required List<Capitulos> capitulos}) async {
     debugPrint('inicio do processo de atualização da library');
-    // print(book);
-    // print(lista);
+
     bool haveError = false;
     dataLibrary = await hiveController.getLibraries();
     bool offLine = false;
@@ -711,28 +712,27 @@ class DialogController {
       required MangaInfoOffLineModel model,
       required List<Capitulos> capitulos}) async {
     debugPrint('inicio do processo de atualização da Ocult library');
-  
+
     bool haveError = false;
-    dataLibrary = await hiveController.getOcultLibraries();
+    dataOcultLibrary = await hiveController.getOcultLibraries();
     bool offLine = false;
     bool removerDB = true;
 
     for (int i = 0; i < lista.length; ++i) {
       bool existe = false;
       bool executed = false;
-      for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-       
-        if ((dataLibrary[i].library == lista[i]['library']) &&
-            (dataLibrary[i].books[iBook].link == book['link']) &&
-            (dataLibrary[i].books[iBook].idExtension == book['idExtension'])) {
+      for (int iBook = 0; iBook < dataOcultLibrary[i].books.length; ++iBook) {
+        if ((dataOcultLibrary[i].library == lista[i]['library']) &&
+            (dataOcultLibrary[i].books[iBook].link == book['link']) &&
+            (dataOcultLibrary[i].books[iBook].idExtension == book['idExtension'])) {
           debugPrint("achei o manga na OCULT library");
           offLine = true;
           if (!lista[i]['selected']) {
             debugPrint('remover da OCULT library');
-            dataLibrary[i].books.removeWhere((element) =>
+            dataOcultLibrary[i].books.removeWhere((element) =>
                 (element.link == book['link']) &&
                 element.idExtension == book['idExtension']);
-            await hiveController.updateOcultLibraries(dataLibrary)
+            await hiveController.updateOcultLibraries(dataOcultLibrary)
                 ? haveError = false
                 : haveError = true;
             executed = true;
@@ -745,14 +745,13 @@ class DialogController {
       }
       if (!existe && !executed && lista[i]['selected']) {
         debugPrint('adicionar a OCULT library');
-        dataLibrary[i].books.add(Books.fromJson(book));
-        await hiveController.updateOcultLibraries(dataLibrary)
+        dataOcultLibrary[i].books.add(Books.fromJson(book));
+        await hiveController.updateOcultLibraries(dataOcultLibrary)
             ? haveError = false
             : haveError = true;
       }
     }
     if (!offLine) {
-      
       await _addOffLineManga(
         link: link,
         model: model,
