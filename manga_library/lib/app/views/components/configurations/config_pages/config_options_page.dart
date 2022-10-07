@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/settings_options_controller.dart';
-import 'package:manga_library/app/models/seetings_model.dart';
+import 'package:manga_library/app/views/components/configurations/config_pages/config_generate.dart';
+import 'package:manga_library/app/views/components/configurations/config_pages/controller/page_config_controller.dart';
 
 class ConfigOptionsPage extends StatefulWidget {
   final String type;
@@ -11,36 +11,23 @@ class ConfigOptionsPage extends StatefulWidget {
 }
 
 class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
-  final SettingsOptionsController settingsOptionsController =
-      SettingsOptionsController();
-  final InputTypes inputTypes = InputTypes();
-
-  Widget _buidInput(Settings data, BuildContext context) {
-    switch (data.inputType) {
-      case "switch":
-        return inputTypes.onOff(data, settingsOptionsController);
-      case "radio":
-        return inputTypes.radio(data, context, settingsOptionsController);
-      case "confirm":
-        return inputTypes.confirm(data);
-      case "input":
-        return inputTypes.input(data);
-      default:
-        return Container();
-    }
-  }
-
-  List<Widget> buildAllInputs(BuildContext context) {
-    List<Widget> widgets = [];
-    for (int i = 0; i < settingsOptionsController.settings.length; ++i) {
-      widgets.add(_buidInput(settingsOptionsController.settings[i], context));
-    }
-    return widgets;
-  }
+  final SettingsOptionsController settingsOptionsController = SettingsOptionsController();
+  
+  // List<Widget> buildAllInputs(BuildContext context) {
+  //   List<Widget> widgets = [];
+  //   for (int i = 0;
+  //       i < settingsOptionsController.settingsAndContainers.length;
+  //       ++i) {
+  //     widgets.add(_buidInput(
+  //         ));
+  //   }
+  //   generateOptions(settingsOptionsController.settingsAndContainers[i], context)
+  //   return widgets;
+  // }
 
   Widget _sucess(BuildContext context) {
     return ListView(
-      children: buildAllInputs(context),
+      children: generateOptions(settingsOptionsController.settingsAndContainers, context, settingsOptionsController),
     );
   }
 
@@ -93,59 +80,5 @@ class _ConfigOptionsPageState extends State<ConfigOptionsPage> {
           builder: (context, child) =>
               _stateManagement(settingsOptionsController.state.value, context),
         ));
-  }
-}
-
-class InputTypes {
-  Widget onOff(Settings data, SettingsOptionsController controller) {
-    print(data.value);
-    return SwitchListTile(
-      title: Text(data.nameConfig),
-      subtitle: Text(data.description),
-      value: data.value,
-      onChanged: (value) {
-        data.function(value, controller);
-      },
-    );
-  }
-
-  Widget radio(Settings data, BuildContext context,
-      SettingsOptionsController controller) {
-    return ListTile(
-      title: Text(data.nameConfig),
-      subtitle: Text(data.description),
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            //dynamic valuegroup = data.value;
-            List<Widget> list = [];
-            for (int i = 0; i < data.optionsAndValues.length; ++i) {
-              list.add(RadioListTile(
-                title: Text(data.optionsAndValues[i].option),
-                value: data.optionsAndValues[i].value,
-                groupValue: data.value,
-                onChanged: (value) {
-                  data.function(value, controller);
-                  Navigator.of(context).pop();
-                },
-              ));
-            }
-            return SimpleDialog(
-              title: Text(data.nameConfig),
-              children: list,
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget input(Settings data) {
-    return Container();
-  }
-
-  Widget confirm(Settings data) {
-    return Container();
   }
 }

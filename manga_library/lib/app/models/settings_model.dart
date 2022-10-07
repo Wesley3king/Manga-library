@@ -26,7 +26,7 @@ class ConfigurationModel {
       {required this.nameOptions, required this.type, required this.settings});
 
   ConfigurationModel.fromJson(Map<String, dynamic> json) {
-    debugPrint("chefou ao ConfigurationModel.fromJson! - model: $json");
+    // debugPrint("chefou ao ConfigurationModel.fromJson! - model: $json");
     type = json['type'];
     nameOptions = json['nameOptions'];
     settings = List.from(json['settings']).map((e) {
