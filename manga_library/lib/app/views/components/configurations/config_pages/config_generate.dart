@@ -16,24 +16,30 @@ Widget generateOption(
     dynamic data, BuildContext context, SettingsOptionsController controller) {
   final InputTypes inputTypes = InputTypes();
   final SettingsContainers containers = SettingsContainers();
-
-  switch (data.inputType) {
-    case "container":
-      return containers.container(data, context, controller);
-    case "dependence":
-      return containers.dependence(data, context, controller);
-    case "class":
-      return containers.classe(data, context, controller);
-    case "switch":
-      return inputTypes.onOff(data, controller);
-    case "radio":
-      return inputTypes.radio(data, context, controller);
-    case "confirm":
-      return inputTypes.confirm(data, context, controller);
-    case "input":
-      return inputTypes.input(data, context, controller);
-    default:
-      return Container();
+  if (data.containsKey("type")) {
+    switch (data.type) {
+      case "container":
+        return containers.container(data, context, controller);
+      case "dependence":
+        return containers.dependence(data, context, controller);
+      case "class":
+        return containers.classe(data, context, controller);
+      default:
+        return Container();
+    }
+  } else {
+    switch (data.inputType) {
+      case "switch":
+        return inputTypes.onOff(data, controller);
+      case "radio":
+        return inputTypes.radio(data, context, controller);
+      case "confirm":
+        return inputTypes.confirm(data, context, controller);
+      case "input":
+        return inputTypes.input(data, context, controller);
+      default:
+        return Container();
+    }
   }
 }
 
