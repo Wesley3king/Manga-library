@@ -1,0 +1,59 @@
+[
+    {
+        "type": "library",
+        "nameOptions": "Biblioteca",
+        "settings" : [
+            {
+                "type": "container",
+                "children": [
+                    "um container permite colocar qualquer widget dentro dele como testos de alerta"
+                ]
+            },
+            {
+                "type": "dependence",
+                "children": [
+                    "um dependence permite acessar a proxima configuração ou não com base na primeira configuração"
+                ]
+            },
+            {
+                "type": "class",
+                "name-class": "tema",
+                "children": [
+                    "cria uma categoria de configuração"
+                ]
+            },
+            {
+            "nameConfig": "Ordenação",
+            "description": "A ordem em que os mangas serão exibidos",
+            "inputType": "radio",
+            "value": "oldtonew",
+            "optionsAndValues": [
+                {"option": "Velhos até Novos", "value": "oldtonew"},
+                {"option": "Novos até Velhos", "value": "newtoold"},
+                {"option": "Alfabética", "value": "alfabetic"}
+                ]
+            },
+            {
+            "nameConfig": "Tamanho dos quadros",
+            "description": "Configura o tamanho das capas",
+            "inputType": "switch",
+            "value": "normal",
+            "optionsAndValues": [
+                {"option": "Pequenos", "value": "small"},
+                {"option": "Normal", "value": "normal"},
+                {"option": "Grandes", "value": "big"}
+                ]
+            },
+            {
+            "nameConfig": "Atualizar as Capas",
+            "description": "Atualiza as capas da Biblioteca",
+            "inputType": "confirm",
+            "value": false,
+            "optionsAndValues": [
+                {"option": "Cancelar", "value": false},
+                {"option": "Confirmar", "value": true}
+                ]
+            }
+        ]
+    }
+]
