@@ -58,7 +58,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             //ChaptersController.capitulosCorrelacionados,
-            nameImageLink["link"]!);
+            nameImageLink["link"]!,
+            widget.dados.idExtension);
       },
       icon: const Icon(Icons.check),
     );
@@ -77,7 +78,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             // ChaptersController.capitulosCorrelacionados,
-            nameImageLink["link"]!);
+            nameImageLink["link"]!,
+            widget.dados.idExtension);
       },
       icon: const Icon(
         Icons.check,

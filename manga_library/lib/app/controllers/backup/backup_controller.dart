@@ -27,6 +27,10 @@ class BackupCore {
       var librariesData = await hiveController.getLibraries();
       var libraries = librariesData.map((model) => model.toJson()).toList();
 
+      // ocultlibraries ocultLibraries
+      var ocultLibrariesData = await hiveController.getOcultLibraries();
+      var ocultLibraries = ocultLibrariesData.map((model) => model.toJson()).toList();
+
       // settings
       Map<dynamic, dynamic> settings = await hiveController.getSettings();
 
@@ -41,6 +45,7 @@ class BackupCore {
       Map<String, dynamic> backupData = {
         "clientData": clientData,
         "libraries": libraries,
+        "ocultLibraries": ocultLibraries,
         "settings": settings,
         "books": books
       };
@@ -65,30 +70,33 @@ class BackupCore {
         message += "isNULL";
       }
       //message += "$data";
-      // clientData
+      // ============ clientData ====================
       var dados = data['clientData'];
-      //message += "1.1, ";
       var model = ClientDataModel.fromJson(dados);
-      //message += "1.2, ";
+
       await hiveController.updateClientData(model);
-      //message += "2, ";
-      // libraries - updateLibraries(List<LibraryModel> listModel)
+
+      // ================ libraries ====================- updateLibraries(List<LibraryModel> listModel)
       List<LibraryModel> libraryList = data['libraries']
           .map<LibraryModel>((dynamic json) => LibraryModel.fromJson(json))
           .toList(); // Map<String, >
       await hiveController.updateLibraries(libraryList);
-      //message += "3, ";
-      // settings
+      // ================ ocult libraries =================================
+      List<LibraryModel> ocultLibraryList = data['ocultLibraries']
+          .map<LibraryModel>((dynamic json) => LibraryModel.fromJson(json))
+          .toList();
+      await hiveController.updateOcultLibraries(ocultLibraryList);
+      // ================= settings =============================
       await hiveController.updateSettings(data['settings']);
       //message += "4, ";
-      // books - List<MangaInfoOffLineModel> data
+      // ======================= books ====================
       var books = data['books']
           .map<MangaInfoOffLineModel>(
               (dynamic book) => MangaInfoOffLineModel.fromJson(book))
           .toList();
-      //message += "4.5, ";
+      
       await hiveController.updateBook(books);
-      // message += "5, ";
+      
       return "sucess";
     } catch (e) {
       debugPrint("erro no readBackup at BackupCore: $e");

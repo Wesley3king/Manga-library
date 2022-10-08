@@ -199,7 +199,7 @@ class MangaInfoController {
         capitulosDisponiveis = localData.capitulos;
         GlobalData.capitulosDisponiveis =
             List.unmodifiable(capitulosDisponiveis ?? []);
-        await chaptersController?.updateChapters(capitulosDisponiveis, url);
+        await chaptersController?.updateChapters(capitulosDisponiveis, url, idExtension);
       }
     } catch (e) {
       debugPrint(
@@ -241,7 +241,7 @@ class ChaptersController {
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
         await updateChapters(
-            listaCapitulosDisponiveis, link); // , listaCapitulos
+            listaCapitulosDisponiveis, link, idExtension); // , listaCapitulos
 
       } else {
         if (MangaInfoController.isTwoRequests) {
@@ -251,7 +251,7 @@ class ChaptersController {
         } else {
           print("isn't twoRequests");
           capitulosCorrelacionados = listaCapitulos;
-          await updateChapters(listaCapitulosDisponiveis, link);
+          await updateChapters(listaCapitulosDisponiveis, link, idExtension);
         }
       }
       // disponibilizar os capitulos correlacionados
@@ -318,7 +318,7 @@ class ChaptersController {
           }
         }
         capitulosCorrelacionados = listaCapitulosDisponiveis ?? [];
-        await updateChapters(listaCapitulosDisponiveis, link);
+        await updateChapters(listaCapitulosDisponiveis, link, idExtension);
       }
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
@@ -328,8 +328,8 @@ class ChaptersController {
     } catch (e) {
       // HomePageController.errorMessage =
       //     'erro no update at ChapterController: $e';
-      print('erro no update ChapterController');
-      print(e);
+      debugPrint('erro no update ChapterController');
+      debugPrint('$e');
       state.value = ChaptersStates.error;
       return false;
     }
@@ -339,35 +339,37 @@ class ChaptersController {
     List<Capitulos>? listaCapitulosDisponiveis,
     //List<Capitulos> listaCapitulos,
     String link,
+    int idExtension
   ) async {
     state.value = ChaptersStates.loading;
     try {
-      print('update chapters');
+      debugPrint('update chapters');
       // conseguir os dados
       ClientDataModel clientData = await _hiveController.getClientData();
       // achar os capitulos lidos do manga pelo link
       List<dynamic> capitulosLidos = [];
-      RegExp regex = RegExp(link, dotAll: true, caseSensitive: false);
+      String completUrl = mapOfExtensions[idExtension]!.getLink(link);
+      RegExp regex = RegExp(completUrl, dotAll: true, caseSensitive: false);
 
       for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
         if (clientData.capitulosLidos[i]['link'].contains(regex)) {
           capitulosLidos = clientData.capitulosLidos[i]['capitulos'];
         }
       }
-      print(capitulosLidos);
+      debugPrint('$capitulosLidos');
       // await correlacionarCapitulos(
       //     listaCapitulosDisponiveis ?? [], listaCapitulos, link);
       // faz o recorrelacionamento
       //  if (capitulosLidos.isNotEmpty) {
       // print('inicio = ${capitulosCorrelacionados.length}');
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
-      print("caplist: ${listaCapitulosDisponiveis?.length}");
+      debugPrint("caplist: ${listaCapitulosDisponiveis?.length}");
 
       if (capitulosLidos.isNotEmpty) {
         for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
-          var item = capitulosCorrelacionados[i];
-          print(
-              "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
+          // var item = capitulosCorrelacionados[i];
+          // print(
+          //     "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
           bool adicionado = false;
           for (int cap = 0; cap < capitulosLidos.length; ++cap) {
             if ((capitulosCorrelacionados[i].id).toString() ==
@@ -399,7 +401,7 @@ class ChaptersController {
           }
         }
         debugPrint("---------- listaCapitulosCorrelacionados");
-        print(listaCapitulosCorrelacionadosLidos);
+        debugPrint('$listaCapitulosCorrelacionadosLidos');
         capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       }
       // else {
@@ -407,7 +409,7 @@ class ChaptersController {
       // }
 
       // }
-      print('- restart - end');
+      debugPrint('- restart - end');
       state.value = ChaptersStates.sucess;
     } catch (e) {
       debugPrint('erro no updateChapters at ChaptersController: $e');
@@ -418,7 +420,7 @@ class ChaptersController {
   marcarDesmarcar(String id, String link, Map<String, String> nameAndImage,
       int idExtension) async {
     ClientDataModel clientData = await _hiveController.getClientData();
-    print(clientData.capitulosLidos);
+    debugPrint('${clientData.capitulosLidos}');
 
     // achar o manga pelo link
     // List<dynamic> capitulosLidos = [];
@@ -431,13 +433,13 @@ class ChaptersController {
         List<dynamic> capitulosLidos =
             clientData.capitulosLidos[i]['capitulos'];
         if (capitulosLidos.contains(id)) {
-          print('temos o capitulo. removendo...');
+          debugPrint('temos o capitulo. removendo...');
           capitulosLidos.removeWhere((element) => element == id);
           clientData.capitulosLidos[i]['capitulos'] = capitulosLidos;
 
           await _hiveController.updateClientData(clientData);
         } else {
-          print('não temos o capitulo. adicionado...');
+          debugPrint('não temos o capitulo. adicionado...');
           capitulosLidos.add(id);
           clientData.capitulosLidos[i]['capitulos'] = capitulosLidos;
           await _hiveController.updateClientData(clientData);
@@ -451,10 +453,10 @@ class ChaptersController {
         "link": completUrl,
         "capitulos": [id],
       });
-      print('não existe! adicionado...');
+      debugPrint('não existe! adicionado...');
       await _hiveController.updateClientData(clientData);
     }
-    print('marcar desmarcar concluido!');
+    debugPrint('marcar desmarcar concluido!');
   }
 
   Future<void> correlacionarCapitulos(List<Capitulos> listaCapitulosDisponiveis,
@@ -470,7 +472,7 @@ class ChaptersController {
     //print("HORA DO TESTE!");
     if (MangaInfoController.isAnOffLineBook && !isAnUpdate) {
       capitulosCorrelacionados = listaCapitulos;
-      print("is off line!, returning...");
+      debugPrint("is off line!, returning...");
       return;
     }
     debugPrint("NÃO RETORNOU!!!");

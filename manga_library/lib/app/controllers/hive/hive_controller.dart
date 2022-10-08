@@ -70,7 +70,7 @@ class HiveController {
       await clientData?.put('clientAllData', data);
       return true;
     } catch (e) {
-      print(e);
+      debugPrint('$e');
       return false;
     }
   }
@@ -278,13 +278,13 @@ class HiveController {
 
   Future<bool> updateSettings(Map data) async {
     try {
-      print(data['Tema']);
+      debugPrint('${data['Tema']}');
       await clientData?.put("settings", data);
       // var data2 = await clientData?.get("settings");
       // print(data2);
       return true;
     } catch (e) {
-      print('erro no HiveController - updateSettings: $e');
+      debugPrint('erro no HiveController - updateSettings: $e');
       return false;
     }
   }
