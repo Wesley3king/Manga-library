@@ -28,7 +28,7 @@ class MangaInfoOffLineController {
         throw Error();
       }
     } catch (e) {
-      print('erro no verifyDatabase at MangaInfoOffLineController: $e');
+      debugPrint('erro no verifyDatabase at MangaInfoOffLineController: $e');
       return null;
     }
   }
@@ -37,7 +37,10 @@ class MangaInfoOffLineController {
       {required String link,
       required int idExtension,
       required List<MangaInfoOffLineModel> lista}) {
-    link = mapOfExtensions[idExtension]!.getLink(link);
+    // o link pode acabar vindo inteiro (downloads)
+    if (!link.contains("/")) {
+      link = mapOfExtensions[idExtension]!.getLink(link);
+    }
     RegExp regex = RegExp(link, caseSensitive: false);
     for (int i = 0; i < lista.length; ++i) {
       debugPrint("iniciar!");

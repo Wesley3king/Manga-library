@@ -75,6 +75,12 @@ class _LibraryOcultState extends State<LibraryOcult>
           pinned: true,
           snap: true,
           floating: true,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.filter_list)
+            )
+          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(35),
             child: TabBar(

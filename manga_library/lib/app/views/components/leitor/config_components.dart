@@ -55,12 +55,11 @@ Widget buildSetLeitorType(LeitorController controller) {
 
   List<PopupMenuItem<String>> popUpMenuItens = [];
   for (Map<String, String> option in options) {
+    // debugPrint("typeoption: ${controller.leitorTypeUi.toString()}");
     popUpMenuItens.add(PopupMenuItem(
-        enabled: type == option['value'] ? false : true,
+        enabled: controller.leitorTypeUi == option['value'] ? false : true,
         onTap: () => controller.setReaderType(option['value']!),
-        child: Text(option['option']!)
-      )
-    );
+        child: Text(option['option']!)));
   }
 
   return PopupMenuButton<String>(
@@ -74,6 +73,7 @@ Widget buildSetLeitorType(LeitorController controller) {
 // -----------------------------------------------------------------
 
 Map<String, Icon> filterQualityIcons = {
+  "pattern": const Icon(Icons.filter_list),
   "low": const Icon(Icons.filter_alt_outlined),
   "medium": const Icon(Icons.filter_alt_rounded),
   "hight": const Icon(Icons.filter_alt_sharp),
@@ -90,10 +90,12 @@ Widget buildFilterQuality(LeitorController controller) {
   ];
 
   List<PopupMenuItem<String>> popUpMenuItens = [];
+  debugPrint("typeoption: ${controller.leitorTypeUi}");
   for (Map<String, String> option in options) {
     popUpMenuItens.add(PopupMenuItem(
-        child: Text(option['option']!),
-        onTap: () => controller.setFilterQuality(option['value']!)));
+        enabled: controller.filterQualityUi == option['value'] ? false : true,
+        onTap: () => controller.setFilterQuality(option['value']!),
+        child: Text(option['option']!)));
   }
 
   String type = "";
@@ -122,7 +124,7 @@ Widget buildFilterQuality(LeitorController controller) {
 //             ========= Orientacion ==========
 // -----------------------------------------------------------------
 
-Widget buildOrientacion(LeitorController controller) {
+Widget buildOrientacion(LeitorController controller, Function setState) {
   final List<Map<String, String>> options = [
     {"option": "Padrão", "value": "pattern"},
     {"option": "Seguir o Sistema", "value": "auto"},
@@ -133,10 +135,15 @@ Widget buildOrientacion(LeitorController controller) {
   ];
 
   List<PopupMenuItem<String>> popUpMenuItens = [];
+  debugPrint("typeoption: ${controller.leitorTypeUi}");
   for (Map<String, String> option in options) {
     popUpMenuItens.add(PopupMenuItem(
-        child: Text(option['option']!),
-        onTap: () => controller.setOrientacion(option['value']!)));
+        enabled: controller.orientacionUi == option['value']! ? false : true,
+        onTap: () {
+          controller.setOrientacion(option['value']!);
+          setState(() {});
+        },
+        child: Text(option['option']!)));
   }
 
   return PopupMenuButton<String>(

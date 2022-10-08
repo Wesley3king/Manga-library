@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,8 +104,13 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           actions: [
             IconButton(
-                onPressed: () => goToOcultLibrary(),
-                icon: const Icon(Icons.lock))
+              onPressed: () => goToOcultLibrary(),
+              icon: const Icon(Icons.lock)
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.filter_list)
+            )
           ],
           pinned: true,
           snap: true,

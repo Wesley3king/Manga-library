@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 
-import '../models/leitor_pages.dart';
+// import '../models/leitor_pages.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import '../models/manga_info_offline_model.dart';
 
@@ -15,12 +15,15 @@ class LeitorController {
   // ===== Reader Type =====
   ValueNotifier<LeitorTypes> leitorTypeState =
       ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
+  // ===== Reader Type UI =====
+  String leitorTypeUi = "pattern";
   // ===== Filter Quality =====
   ValueNotifier<LeitorFilterQuality> filterQualityState =
       ValueNotifier<LeitorFilterQuality>(LeitorFilterQuality.none);
-  // ===== Orientacion =====
-  // ValueNotifier<LeitorOrientacion> orientacionState =
-  //     ValueNotifier<LeitorOrientacion>(LeitorOrientacion.auto);
+  // ===== Filter Quality Ui ============
+  String filterQualityUi = "pattern";
+  // ===== Orientacion Ui =====
+  String orientacionUi = "pattern";
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
@@ -39,9 +42,9 @@ class LeitorController {
       debugPrint("=========== em carga =============");
       debugPrint('$capitulosEmCarga');
 
-      setFilterQuality();
-      setOrientacion();
-      setReaderType();
+      setFilterQuality("pattern");
+      setOrientacion("pattern");
+      setReaderType("pattern");
       state.value = LeitorStates.sucess;
     } catch (e) {
       debugPrint('erro em start LeitorController');
@@ -50,8 +53,9 @@ class LeitorController {
     }
   }
 
-  void setReaderType([String? type]) {
-    type ??= GlobalData.settings['Tipo do Leitor'];
+  void setReaderType(String type) {
+    // type ??= GlobalData.settings['Tipo do Leitor'];
+    leitorTypeUi = type;
     if (type == "pattern") {
       type = GlobalData.settings['Tipo do Leitor'];
     }
@@ -80,15 +84,15 @@ class LeitorController {
       case "webview":
         leitorTypeState.value = LeitorTypes.webview;
         break;
-      default:
-        debugPrint("default do leitor acionado!");
-        leitorTypeState.value = LeitorTypes.vertical;
-        break;
     }
   }
 
-  void setFilterQuality([String? type]) {
-    type ??= GlobalData.settings['Qualidade'];
+  void setFilterQuality(String type) {
+    // type ??= GlobalData.settings['Qualidade'];
+    filterQualityUi = type;
+    if (type == "pattern") {
+      type = GlobalData.settings['Qualidade'];
+    }
     switch (type) {
       case "none":
         filterQualityState.value = LeitorFilterQuality.none;
@@ -105,31 +109,15 @@ class LeitorController {
     }
   }
 
-  void setOrientacion([String? type]) {
-    type ??= GlobalData.settings['Orientação do Leitor'];
+  void setOrientacion(String type) {
+    // type ??= GlobalData.settings['Orientação do Leitor'];
+    orientacionUi = type;
     if (type == "pattern") {
       type = GlobalData.settings['Orientação do Leitor'];
-      ConfigSystemController.instance.setSystemOrientacion(type ?? "auto");
+      ConfigSystemController.instance.setSystemOrientacion(type);
     } else {
-      ConfigSystemController.instance.setSystemOrientacion(type ?? "auto");
+      ConfigSystemController.instance.setSystemOrientacion(type);
     }
-    //   switch (type) {
-    //     case "auto":
-    //       orientacionState.value = LeitorOrientacion.auto;
-    //       break;
-    //     case "portraitup":
-    //       orientacionState.value = LeitorOrientacion.portraitUp;
-    //       break;
-    //     case "portraitdown":
-    //       orientacionState.value = LeitorOrientacion.portraitDown;
-    //       break;
-    //     case "landscapeleft":
-    //       orientacionState.value = LeitorOrientacion.landscapeLeft;
-    //       break;
-    //     case "landscaperight":
-    //       orientacionState.value = LeitorOrientacion.landscapeRight;
-    //       break;
-    //   }
   }
 }
 
@@ -137,9 +125,23 @@ enum LeitorStates { start, loading, sucess, error }
 
 enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon, webview }
 
+enum LeitorUiTypes {
+  pattern,
+  vertical,
+  ltr,
+  rtl,
+  ltrlist,
+  rtllist,
+  webtoon,
+  webview
+}
+
 enum LeitorFilterQuality { none, low, medium, hight }
 
-// enum LeitorOrientacion {
+enum LeitorUiFilterQuality { pattern, none, low, medium, hight }
+
+// enum LeitorUiOrientacion {
+//   pattern,
 //   auto,
 //   portraitUp,
 //   portraitDown,
