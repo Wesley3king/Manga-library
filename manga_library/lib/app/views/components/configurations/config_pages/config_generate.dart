@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/settings_model.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/controller/page_config_controller.dart';
 
@@ -6,47 +7,48 @@ List<Widget> generateOptions(List<dynamic> settingsAndContainers,
     BuildContext context, SettingsOptionsController controller) {
   List<Widget> widgets = [];
   for (int i = 0; i < settingsAndContainers.length; ++i) {
-    widgets.add(generateOption(settingsAndContainers[i], context, controller));
+    widgets.add(generateOption(settingsAndContainers[i], context, controller,
+        isFirstOption: i == 0 ? true : false));
   }
 
   return widgets;
 }
 
 Widget generateOption(
-    dynamic data, BuildContext context, SettingsOptionsController controller) {
+    dynamic data, BuildContext context, SettingsOptionsController controller,
+    {bool isFirstOption = false, bool isNotDisponible = false}) {
   final InputTypes inputTypes = InputTypes();
   final SettingsContainers containers = SettingsContainers();
-  if (data.containsKey("type")) {
-    switch (data.type) {
-      case "container":
-        return containers.container(data, context, controller);
-      case "dependence":
-        return containers.dependence(data, context, controller);
-      case "class":
-        return containers.classe(data, context, controller);
-      default:
-        return Container();
-    }
-  } else {
-    switch (data.inputType) {
-      case "switch":
-        return inputTypes.onOff(data, controller);
-      case "radio":
-        return inputTypes.radio(data, context, controller);
-      case "confirm":
-        return inputTypes.confirm(data, context, controller);
-      case "input":
-        return inputTypes.input(data, context, controller);
-      default:
-        return Container();
-    }
+
+  switch (data.type) {
+    case "container":
+      return containers.container(data, context, controller);
+    case "dependence":
+      return containers.dependence(data, context, controller);
+    case "class":
+      return containers.classe(data, context, controller, isFirstOption);
+    case "switch":
+      return inputTypes.onOff(data, controller,
+          isNotDisponible: isNotDisponible);
+    case "radio":
+      return inputTypes.radio(data, context, controller,
+          isNotDisponible: isNotDisponible);
+    case "confirm":
+      return inputTypes.confirm(data, context, controller,
+          isNotDisponible: isNotDisponible);
+    case "input":
+      return inputTypes.input(data, context, controller,
+          isNotDisponible: isNotDisponible);
+    default:
+      return Container();
   }
 }
 
 class SettingsContainers {
+  ConfigSystemController configSystemController = ConfigSystemController();
   Widget container(dynamic data, BuildContext context,
       SettingsOptionsController controller) {
-    debugPrint("container - data: $data");
+    debugPrint("container - data: ${data.toJson()}");
 
     List<Widget> buildItens() {
       List<Widget> itens = [];
@@ -69,44 +71,77 @@ class SettingsContainers {
   Widget dependence(dynamic data, BuildContext context,
       SettingsOptionsController controller) {
     debugPrint("dependence - data: $data");
+    bool disponible = data.children[0].value == true;
     return Column(
       children: [
         generateOption(data.children[0], context, controller),
-        generateOption(data.children[1], context, controller)
+        disponible
+            ? generateOption(data.children[1], context, controller)
+            : generateOption(data.children[1], context, controller,
+                isNotDisponible: true)
       ],
     );
   }
 
   Widget classe(dynamic data, BuildContext context,
-      SettingsOptionsController controller) {
-    debugPrint("classe - data: $data");
+      SettingsOptionsController controller, bool isFirstOption) {
+    debugPrint("classe - data: ${data.toJson()}");
+    List<Widget> itens = data.children
+        .map<Widget>(
+            (dynamic setting) => generateOption(setting, context, controller))
+        .toList();
     return Column(
       children: [
-        const Divider(),
-        Text(data.nameClass), // children
+        isFirstOption
+            ? Container()
+            : Divider(
+                color: configSystemController.colorManagement(),
+              ),
+        Text(
+          data.nameClass,
+          style: TextStyle(color: configSystemController.colorManagement()),
+        ),
+        ...itens // children
       ],
     );
   }
 }
 
 class InputTypes {
-  Widget onOff(Setting data, SettingsOptionsController controller) {
-    debugPrint('${data.value}');
-    return SwitchListTile(
-      title: Text(data.nameConfig),
-      subtitle: Text(data.description),
-      value: data.value,
-      onChanged: (value) {
-        data.function(value, controller);
-      },
-    );
-  }
+  ConfigSystemController configSystemController = ConfigSystemController();
 
-  Widget radio(Setting data, BuildContext context,
-      SettingsOptionsController controller) {
+  Widget onOff(Setting data, SettingsOptionsController controller,
+      {bool isNotDisponible = false}) {
+    debugPrint('${data.value}');
+    // return SwitchListTile(
+    //   title: Text(data.nameConfig),
+    //   subtitle: Text(data.description),
+    //   // selected: isNotDisponible ? false : true,
+    //   value: data.value,
+    //   activeColor: configSystemController.colorManagement(),
+    //   onChanged: (value) {
+    //     data.function(value, controller);
+    //   },
+    // );
     return ListTile(
       title: Text(data.nameConfig),
       subtitle: Text(data.description),
+      enabled: isNotDisponible ? false : true,
+      trailing: Switch(
+          value: data.value,
+          onChanged: (value) {
+            data.function(value, controller);
+          }),
+    );
+  }
+
+  Widget radio(
+      Setting data, BuildContext context, SettingsOptionsController controller,
+      {bool isNotDisponible = false}) {
+    return ListTile(
+      title: Text(data.nameConfig),
+      subtitle: Text(data.description),
+      enabled: isNotDisponible ? false : true,
       onTap: () {
         showDialog(
           context: context,
@@ -134,13 +169,65 @@ class InputTypes {
     );
   }
 
-  Widget input(Setting data, BuildContext context,
-      SettingsOptionsController controller) {
-    return Container();
+  Widget input(
+      Setting data, BuildContext context, SettingsOptionsController controller,
+      {bool isNotDisponible = false}) {
+    return ListTile(
+        title: Text(data.nameConfig),
+        subtitle: Text(data.description),
+        enabled: isNotDisponible ? false : true,
+        onTap: () {
+          String password = "";
+          showDialog(
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: const Text("Insira a senha"),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 6.0),
+                  child: TextField(
+                    autofocus: true,
+                    // decoration: const InputDecoration(
+                    //     label: Text("Nome da Biblioteca")),
+                    onChanged: (value) => password = value,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("Cancelar")),
+                    TextButton(
+                        onPressed: () {}, child: const Text("Adicionar")),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
-  Widget confirm(Setting data, BuildContext context,
-      SettingsOptionsController controller) {
-    return Container();
+  Widget confirm(
+      Setting data, BuildContext context, SettingsOptionsController controller,
+      {bool isNotDisponible = false}) {
+    return ListTile(
+      title: Text(data.nameConfig),
+      subtitle: Text(data.description),
+      enabled: isNotDisponible ? false : true,
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('Tem certeza?'),
+                  content: const Text("está ação não é reversivel"),
+                  actions: [
+                    TextButton(onPressed: () {}, child: const Text("Cancelar")),
+                    TextButton(onPressed: () {}, child: const Text("Confirmar"))
+                  ],
+                ));
+      },
+    );
   }
 }

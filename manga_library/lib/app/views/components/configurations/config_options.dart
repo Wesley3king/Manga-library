@@ -61,7 +61,7 @@ class _ConfigurationsTypesState extends State<ConfigurationsTypes> {
               ),
               ListTile(
                 leading: const Icon(Icons.explore),
-                title: const Text('Extensões e Pesquisa'),
+                title: const Text('Pesquisa e Extensões'),
                 onTap: () {
                   GoRouter.of(context).push('/settingoptions/extension');
                 },

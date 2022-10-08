@@ -39,6 +39,7 @@ Map<String, Function> settingsFunctions = {
     controller.updateSetting();
   },
   "Cor de fundo": (dynamic value, SettingsOptionsController controller) {},
+  "Orientação do Leitor": (dynamic value, SettingsOptionsController controller) {},
   "Qualidade": (dynamic value, SettingsOptionsController controller) {
     GlobalData.settings['Qualidade'] = value;
     final ConfigSystemController configSystemController =

@@ -247,6 +247,7 @@ class HiveController {
       "Rolar a Barra": true,
       "Tipo do Leitor": "vertical",
       "Cor de fundo": "auto",
+      "Orientação do Leitor": "auto",
       "Qualidade": "medium",
       "Tela cheia": true,
       "Local de armazenamento": "intern",

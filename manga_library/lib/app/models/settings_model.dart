@@ -147,7 +147,7 @@ class Setting {
   late final String type;
   late final String nameConfig;
   late final String description;
-  late final String inputType;
+  // late final String inputType;
   late dynamic value;
   late Function function;
   late final List<OptionsAndValues> optionsAndValues;
@@ -156,16 +156,16 @@ class Setting {
       {required this.type,
       required this.nameConfig,
       required this.description,
-      required this.inputType,
+      // required this.inputType,
       required this.value,
       required this.optionsAndValues,
       required this.function});
 
   Setting.fromJson(Map<String, dynamic> json) {
-    type = "setting";
+    type = json['type'];
     nameConfig = json['nameConfig'];
     description = json['description'];
-    inputType = json['inputType'];
+    // inputType = json['inputType'];
     function = json['function'];
     value = json['value'];
     optionsAndValues = List.from(json['optionsAndValues'])
@@ -178,7 +178,7 @@ class Setting {
     data['type'] = type;
     data['nameConfig'] = nameConfig;
     data['description'] = description;
-    data['inputType'] = inputType;
+    // data['inputType'] = inputType;
     data['value'] = value;
     data['function'] = function;
     data['optionsAndValues'] = optionsAndValues.map((e) => e.toJson()).toList();

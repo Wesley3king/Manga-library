@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/models/settings_model.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/functions/config_functions.dart';
@@ -14,7 +16,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Ordenação",
           "description": "A ordem em que os mangas serão exibidos",
-          "inputType": "radio",
+          "type": "radio",
           "value": data['Ordenação'],
           "function": functions['Ordenação'],
           "optionsAndValues": [
@@ -26,7 +28,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Tamanho dos quadros",
           "description": "Configura o tamanho das capas",
-          "inputType": "radio",
+          "type": "radio",
           "value": data['Tamanho dos quadros'],
           "function": functions['Tamanho dos quadros'],
           "optionsAndValues": [
@@ -38,7 +40,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Atualizar as Capas",
           "description": "Atualiza as capas da Biblioteca",
-          "inputType": "confirm",
+          "type": "confirm",
           "value": data['Atualizar as Capas'],
           "function": functions['Atualizar as Capas'],
           "optionsAndValues": [
@@ -55,7 +57,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Tipo do Leitor",
           "description": "O modo como as paginas disponibilizadas",
-          "inputType": "radio",
+          "type": "radio",
           "value": data['Tipo do Leitor'],
           "function": functions['Tipo do Leitor'],
           "optionsAndValues": [
@@ -70,7 +72,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Cor de fundo",
           "description": "A cor para o fundo do Leitor",
-          "inputType": "radio",
+          "type": "radio",
           "value": data['Cor de fundo'],
           "function": functions['Cor de fundo'],
           "optionsAndValues": [
@@ -81,9 +83,21 @@ buildSettingsModel() {
           ]
         },
         {
+          "nameConfig": "Orientação do Leitor",
+          "description": "O modo padrão da orientação do aparelho",
+          "type": "radio",
+          "value": data['Orientação do Leitor'],
+          "function": functions['Orientação do Leitor'],
+          "optionsAndValues": [
+            {"option": "Seguir o Sistema", "value": "auto"},
+            {"option": "Retrato", "value": "portrait"},
+            {"option": "Paisagem", "value": "landscape"},
+          ]
+        },
+        {
           "nameConfig": "Qualidade",
           "description": "A qualidade das imagens (pode afetar o desempenho)",
-          "inputType": "radio",
+          "type": "radio",
           "value": data['Qualidade'],
           "function": functions['Qualidade'],
           "optionsAndValues": [
@@ -96,7 +110,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Tela cheia",
           "description": "Se o Leitor será exibido em tela cheia",
-          "inputType": "switch",
+          "type": "switch",
           "value": data['Tela cheia'],
           "function": functions['Tela cheia'],
           "optionsAndValues": [
@@ -116,7 +130,7 @@ buildSettingsModel() {
             {
               "nameConfig": "Tema",
               "description": "Define o tema do aplicativo",
-              "inputType": "radio",
+              "type": "radio",
               "value": data['Tema'],
               "function": functions['Tema'],
               "optionsAndValues": [
@@ -128,7 +142,7 @@ buildSettingsModel() {
             {
               "nameConfig": "Cor da Interface",
               "description": "Define a cor dos icones e cabechalhos",
-              "inputType": "radio",
+              "type": "radio",
               "value": data['Cor da Interface'],
               "function": functions['Cor da Interface'],
               "optionsAndValues": [
@@ -148,25 +162,31 @@ buildSettingsModel() {
           ]
         },
         {
-          "nameConfig": "Idioma",
-          "description": "Define o linguagem do aplicativo",
-          "inputType": "radio",
-          "value": data['Idioma'],
-          "function": functions['Idioma'],
-          "optionsAndValues": [
-            {"option": "Português(Br)", "value": "ptbr"}
+          "type": "class",
+          "nameClass": "Localidade",
+          "children": [
+            {
+              "nameConfig": "Idioma",
+              "description": "Define o linguagem do aplicativo",
+              "type": "radio",
+              "value": data['Idioma'],
+              "function": functions['Idioma'],
+              "optionsAndValues": [
+                {"option": "Português(Br)", "value": "ptbr"}
+              ]
+            },
+            {
+              "nameConfig": "Rolar a Barra",
+              "description": "retira a barra ao rolar para baixo",
+              "type": "switch",
+              "value": data['Rolar a Barra'],
+              "function": functions['Rolar a Barra'],
+              "optionsAndValues": [
+                {"option": "switch", "value": true}
+              ]
+            }
           ]
         },
-        {
-          "nameConfig": "Rolar a Barra",
-          "description": "retira a barra ao rolar para baixo",
-          "inputType": "switch",
-          "value": data['Rolar a Barra'],
-          "function": functions['Rolar a Barra'],
-          "optionsAndValues": [
-            {"option": "switch", "value": true}
-          ]
-        }
       ]
     },
     {
@@ -176,7 +196,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Local de armazenamento",
           "description": "Define o local que fivaram os downloads",
-          "inputType": "radio",
+          "type": "radio",
           "value": data['Local de armazenamento'],
           "function": functions['Local de armazenamento'],
           "optionsAndValues": [
@@ -192,30 +212,35 @@ buildSettingsModel() {
       "nameOptions": "Segurança",
       "settings": [
         {
-          "nameConfig": "Autenticação",
-          "description": "Define se havera autenticação ao entrar",
-          "inputType": "switch",
-          "value": data['Autenticação'],
-          "function": functions['Autenticação'],
-          "optionsAndValues": [
-            {"option": "switch", "value": false}
-          ]
-        },
-        {
-          "nameConfig": "Tipo de Autenticação",
-          "description": "Define o tipo autenticação",
-          "inputType": "radio",
-          "value": data['Tipo de Autenticação'],
-          "function": functions['Tipo de Autenticação'],
-          "optionsAndValues": [
-            {"option": "Caracteres", "value": "text"},
-            {"option": "Numeros", "value": "number"}
+          "type": "dependence",
+          "children": [
+            {
+              "nameConfig": "Autenticação",
+              "description": "Define se havera autenticação ao entrar",
+              "type": "switch",
+              "value": data['Autenticação'],
+              "function": functions['Autenticação'],
+              "optionsAndValues": [
+                {"option": "switch", "value": false}
+              ]
+            },
+            {
+              "nameConfig": "Tipo de Autenticação",
+              "description": "Define o tipo autenticação",
+              "type": "radio",
+              "value": data['Tipo de Autenticação'],
+              "function": functions['Tipo de Autenticação'],
+              "optionsAndValues": [
+                {"option": "Caracteres", "value": "text"},
+                {"option": "Numeros", "value": "number"}
+              ]
+            }
           ]
         },
         {
           "nameConfig": "Senha de Autenticação",
           "description": "Define se havera autenticação ao entrar",
-          "inputType": "input",
+          "type": "input",
           "value": data['Senha de Autenticação'],
           "function": functions['Senha de Autenticação'],
           "optionsAndValues": [
@@ -230,33 +255,67 @@ buildSettingsModel() {
       "nameOptions": "Exetensões e e Pesquisa",
       "settings": [
         {
-          "nameConfig": "Multiplas Pesquisas",
-          "description": "Define se pode fazer mais de uma pesquisa por vez",
-          "inputType": "switch",
-          "value": data['Multiplas Pesquisas'],
-          "function": functions['Multiplas Pesquisas'],
-          "optionsAndValues": [
-            {"option": "switch", "value": false}
+          "type": "class",
+          "nameClass": "Pesquisa",
+          "children": [
+            {
+              "nameConfig": "Multiplas Pesquisas",
+              "description": "Define se pode fazer mais de uma pesquisa por vez",
+              "type": "switch",
+              "value": data['Multiplas Pesquisas'],
+              "function": functions['Multiplas Pesquisas'],
+              "optionsAndValues": [
+                {"option": "switch", "value": false}
+              ]
+            },
           ]
         },
         {
-          "nameConfig": "Conteudo NSFW",
-          "description": "Define se havera extesões +18",
-          "inputType": "switch",
-          "value": data['Conteudo NSFW'],
-          "function": functions['Conteudo NSFW'],
-          "optionsAndValues": [
-            {"option": "switch", "value": false}
-          ]
-        },
-        {
-          "nameConfig": "Mostrar na Lista",
-          "description": "Exibe estas extensões na Lista de Extensões",
-          "inputType": "switch",
-          "value": data['Mostrar na Lista'],
-          "function": functions['Mostrar na Lista'],
-          "optionsAndValues": [
-            {"option": "switch", "value": true}
+          "type": "class",
+          "nameClass": "Extensões",
+          "children": [
+            {
+              "type": "dependence",
+              "children": [
+                {
+                  "nameConfig": "Conteudo NSFW",
+                  "description": "Define se havera extesões +18",
+                  "type": "switch",
+                  "value": data['Conteudo NSFW'],
+                  "function": functions['Conteudo NSFW'],
+                  "optionsAndValues": [
+                    {"option": "switch", "value": false}
+                  ]
+                },
+                {
+                  "nameConfig": "Mostrar na Lista",
+                  "description": "Exibe estas extensões na Lista de Extensões",
+                  "type": "switch",
+                  "value": data['Mostrar na Lista'],
+                  "function": functions['Mostrar na Lista'],
+                  "optionsAndValues": [
+                    {"option": "switch", "value": true}
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "children": [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: const <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.report_problem),
+                      ),
+                      Flexible(child: Text("Isto não impede Extesões de exibirem conteudo NSFW", softWrap: true,))
+                    ],
+                  ),
+                )
+              ]
+            }
           ]
         }
       ]
@@ -268,7 +327,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Limpar o Cache",
           "description": "Remove dados substituiveis",
-          "inputType": "confirm",
+          "type": "confirm",
           "value": data['Limpar o Cache'],
           "function": functions['Limpar o Cache'],
           "optionsAndValues": [
@@ -279,7 +338,7 @@ buildSettingsModel() {
         {
           "nameConfig": "Restaurar",
           "description": "Remove todos os dados do aplicativo",
-          "inputType": "confirm",
+          "type": "confirm",
           "value": data['Restaurar'],
           "function": functions['Restaurar'],
           "optionsAndValues": [
