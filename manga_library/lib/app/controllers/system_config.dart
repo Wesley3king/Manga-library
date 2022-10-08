@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,7 +18,7 @@ class SystemController {
 
   Future updateConfig() async {
     Map data = await _hiveController.getSettings();
-    print(data);
+    debugPrint('$data');
     GlobalData.settings = data;
     ConfigSystemController.instance.start();
   }
@@ -39,7 +40,7 @@ class SystemController {
       log("fazendo a requisição do write");
       permissionManageStatus = await Permission.manageExternalStorage.request();
     }
-    
+
     // cria a estrutra de pastas do aplicativo
     if (permissionStorageStatus == PermissionStatus.granted ||
         permissionManageStatus == PermissionStatus.granted) {
@@ -89,6 +90,28 @@ class ConfigSystemController extends ChangeNotifier {
         return Colors.grey;
       default:
         return Colors.blue;
+    }
+  }
+
+  void setSystemOrientacion(String orientacion) {
+    switch (orientacion) {
+      case "auto":
+        SystemChrome.setPreferredOrientations([]);
+        break;
+      case "portraitup":
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+        break;
+      case "portraitdown":
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown]);
+        break;
+      case "landscapeleft":
+        SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.landscapeLeft]);
+        break;
+      case "landscaperight":
+        SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.landscapeRight]);
+        break;
     }
   }
 }
