@@ -194,6 +194,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   Widget _leitorType(LeitorTypes type, FilterQuality filterQuality) {
     switch (type) {
+      // case LeitorTypes.pattern:
+      //   widget.leitorController.setReaderType();
+      //   return Container();
       case LeitorTypes.vertical:
         return photoViewLeitor(Axis.vertical, false, filterQuality);
       case LeitorTypes.ltr:

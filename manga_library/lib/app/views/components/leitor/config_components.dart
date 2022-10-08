@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
-import 'package:manga_library/app/models/globais.dart';
+// import 'package:manga_library/app/models/globais.dart';
 
 Map<String, Icon> readerTypeIcons = {
+  "pattern": const Icon(Icons.system_security_update_good),
   "vertical": const Icon(Icons.system_security_update_outlined),
   "ltr": const Icon(Icons.send_to_mobile),
   "rtl": const Icon(Icons.smartphone),
@@ -14,6 +15,7 @@ Map<String, Icon> readerTypeIcons = {
 
 Widget buildSetLeitorType(LeitorController controller) {
   final List<Map<String, String>> options = [
+    {"option": "Padrão", "value": "pattern"},
     {"option": "Vertical", "value": "vertical"},
     {"option": "Esquerda para Direita", "value": "ltr"},
     {"option": "Direita para esquerda", "value": "rtl"},
@@ -23,14 +25,11 @@ Widget buildSetLeitorType(LeitorController controller) {
     {"option": "Webview (on-line)", "value": "webview"}
   ];
 
-  List<PopupMenuItem<String>> popUpMenuItens = [];
-  for (Map<String, String> option in options) {
-    popUpMenuItens.add(PopupMenuItem(
-        child: Text(option['option']!),
-        onTap: () => controller.setReaderType(option['value']!)));
-  }
   String type = "";
   switch (controller.leitorTypeState.value) {
+    // case LeitorTypes.pattern:
+    //   type = "pattern";
+    //   break;
     case LeitorTypes.vertical:
       type = "vertical";
       break;
@@ -53,8 +52,20 @@ Widget buildSetLeitorType(LeitorController controller) {
       type = "webview";
       break;
   }
+
+  List<PopupMenuItem<String>> popUpMenuItens = [];
+  for (Map<String, String> option in options) {
+    popUpMenuItens.add(PopupMenuItem(
+        enabled: type == option['value'] ? false : true,
+        onTap: () => controller.setReaderType(option['value']!),
+        child: Text(option['option']!)
+      )
+    );
+  }
+
   return PopupMenuButton<String>(
     icon: readerTypeIcons[type],
+    initialValue: "pattern",
     itemBuilder: (context) => popUpMenuItens,
   );
 }
@@ -71,6 +82,7 @@ Map<String, Icon> filterQualityIcons = {
 
 Widget buildFilterQuality(LeitorController controller) {
   final List<Map<String, String>> options = [
+    {"option": "Padrão", "value": "pattern"},
     {"option": "Baixo", "value": "low"},
     {"option": "Médio", "value": "medium"},
     {"option": "Alto", "value": "hight"},
@@ -101,6 +113,35 @@ Widget buildFilterQuality(LeitorController controller) {
   }
   return PopupMenuButton<String>(
     icon: filterQualityIcons[type],
+    initialValue: "pattern",
+    itemBuilder: (context) => popUpMenuItens,
+  );
+}
+
+// -----------------------------------------------------------------
+//             ========= Orientacion ==========
+// -----------------------------------------------------------------
+
+Widget buildOrientacion(LeitorController controller) {
+  final List<Map<String, String>> options = [
+    {"option": "Padrão", "value": "pattern"},
+    {"option": "Seguir o Sistema", "value": "auto"},
+    {"option": "Retrato", "value": "portraitup"},
+    {"option": "Retrato Invertido", "value": "portraitdown"},
+    {"option": "Paisagem Esquerda", "value": "landscapeleft"},
+    {"option": "Paisagem Direita", "value": "landscaperight"},
+  ];
+
+  List<PopupMenuItem<String>> popUpMenuItens = [];
+  for (Map<String, String> option in options) {
+    popUpMenuItens.add(PopupMenuItem(
+        child: Text(option['option']!),
+        onTap: () => controller.setOrientacion(option['value']!)));
+  }
+
+  return PopupMenuButton<String>(
+    icon: const Icon(Icons.screen_rotation),
+    initialValue: "pattern",
     itemBuilder: (context) => popUpMenuItens,
   );
 }

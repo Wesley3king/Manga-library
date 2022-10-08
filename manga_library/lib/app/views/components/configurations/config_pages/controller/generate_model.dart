@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/models/settings_model.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/functions/config_functions.dart';
 
@@ -90,8 +90,10 @@ buildSettingsModel() {
           "function": functions['Orientação do Leitor'],
           "optionsAndValues": [
             {"option": "Seguir o Sistema", "value": "auto"},
-            {"option": "Retrato", "value": "portrait"},
-            {"option": "Paisagem", "value": "landscape"},
+            {"option": "Retrato", "value": "portraitup"},
+            {"option": "Retrato Invertido", "value": "portraitdown"},
+            {"option": "Paisagem Esquerda", "value": "landscapeleft"},
+            {"option": "Paisagem Direita", "value": "landscaperight"},
           ]
         },
         {

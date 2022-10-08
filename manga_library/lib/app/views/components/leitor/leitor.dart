@@ -132,12 +132,7 @@ class _LeitorState extends State<Leitor> {
                     builder: (context, child) =>
                         buildFilterQuality(leitorController),
                   ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.screen_rotation,
-                        size: sizeOfButtons,
-                      )),
+                  buildOrientacion(leitorController),
                   IconButton(
                       onPressed: () {},
                       icon: Icon(

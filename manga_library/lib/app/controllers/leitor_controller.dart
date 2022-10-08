@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 
 import '../models/leitor_pages.dart';
@@ -17,12 +18,15 @@ class LeitorController {
   // ===== Filter Quality =====
   ValueNotifier<LeitorFilterQuality> filterQualityState =
       ValueNotifier<LeitorFilterQuality>(LeitorFilterQuality.none);
+  // ===== Orientacion =====
+  // ValueNotifier<LeitorOrientacion> orientacionState =
+  //     ValueNotifier<LeitorOrientacion>(LeitorOrientacion.auto);
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
-      print(
+      debugPrint(
           "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n idExtension: $idExtension  \n------------------------");
       // _identificarCapitulo(capitulos, id);
 
@@ -33,89 +37,28 @@ class LeitorController {
       // debugPrint("$cap");
       capitulosEmCarga.add(cap);
       debugPrint("=========== em carga =============");
-      print(capitulosEmCarga);
+      debugPrint('$capitulosEmCarga');
 
       setFilterQuality();
+      setOrientacion();
       setReaderType();
       state.value = LeitorStates.sucess;
     } catch (e) {
-      print('erro em start LeitorController');
-      print(e);
+      debugPrint('erro em start LeitorController');
+      debugPrint('$e');
       state.value = LeitorStates.error;
     }
   }
 
-  // void _identificarCapitulo(List<Capitulos> capitulos, String id) {
-  //   // List pages = [];
-  //   bool adicionated = false;
-  //   try {
-  //     for (int i = 0; i < capitulos.length; ++i) {
-  //       //print("teste: num cap: ${capitulos[i].id} $id, id: $id / ${int.parse(capitulos[i].id) == int.parse(id)}");
-  //       if (int.parse(capitulos[i].id) == int.parse(id)) {
-  //         capitulosEmCarga.add(capitulos[i]);
-  //         adicionated = true;
-  //         break;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("não é de numero");
-  //     RegExp regex = RegExp(id, caseSensitive: false);
-  //     for (int i = 0; i < capitulos.length; ++i) {
-  //       print(
-  //           "teste: cap: ${capitulos[i].capitulo} ${capitulos[i].id}, id: $id / ${capitulos[i].id.toString().contains(regex)}");
-  //       if (capitulos[i].id.toString().contains(regex)) {
-  //         print("achei o capitulo!");
-  //         capitulosEmCarga.add(capitulos[i]);
-  //         adicionated = true;
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   if (!adicionated) {
-  //     print("não achei o capitulo");
-  //     capitulosEmCarga.add(Capitulos(
-  //         capitulo: "",
-  //         id: 0,
-  //         pages: [],
-  //         disponivel: false,
-  //         download: false,
-  //         readed: false,
-  //         downloadPages: []));
-  //   }
-  // }
-
-  // void _identificarLeitor() {
-  //   final String type = GlobalData.settings['Tipo do Leitor'];
-  //   print('tipo do leitor: $type');
-  //   switch (type) {
-  //     case "vertical":
-  //       leitorTypeState.value = LeitorTypes.vertical;
-  //       break;
-  //     case "ltr":
-  //       leitorTypeState.value = LeitorTypes.ltr;
-  //       break;
-  //     case "rtl":
-  //       leitorTypeState.value = LeitorTypes.rtl;
-  //       break;
-  //     case "ltrlist":
-  //       leitorTypeState.value = LeitorTypes.ltrlist;
-  //       break;
-  //     case "rtllist":
-  //       leitorTypeState.value = LeitorTypes.rtllist;
-  //       break;
-  //     case "webtoon":
-  //       leitorTypeState.value = LeitorTypes.webtoon;
-  //       break;
-  //     default:
-  //       print("default do leitor acionado!");
-  //       leitorTypeState.value = LeitorTypes.vertical;
-  //       break;
-  //   }
-  // }
-
   void setReaderType([String? type]) {
     type ??= GlobalData.settings['Tipo do Leitor'];
+    if (type == "pattern") {
+      type = GlobalData.settings['Tipo do Leitor'];
+    }
     switch (type) {
+      // case "pattern":
+      //   leitorTypeState.value = LeitorTypes.pattern;
+      //   break;
       case "vertical":
         leitorTypeState.value = LeitorTypes.vertical;
         break;
@@ -138,7 +81,7 @@ class LeitorController {
         leitorTypeState.value = LeitorTypes.webview;
         break;
       default:
-        print("default do leitor acionado!");
+        debugPrint("default do leitor acionado!");
         leitorTypeState.value = LeitorTypes.vertical;
         break;
     }
@@ -161,6 +104,33 @@ class LeitorController {
         break;
     }
   }
+
+  void setOrientacion([String? type]) {
+    type ??= GlobalData.settings['Orientação do Leitor'];
+    if (type == "pattern") {
+      type = GlobalData.settings['Orientação do Leitor'];
+      ConfigSystemController.instance.setSystemOrientacion(type ?? "auto");
+    } else {
+      ConfigSystemController.instance.setSystemOrientacion(type ?? "auto");
+    }
+    //   switch (type) {
+    //     case "auto":
+    //       orientacionState.value = LeitorOrientacion.auto;
+    //       break;
+    //     case "portraitup":
+    //       orientacionState.value = LeitorOrientacion.portraitUp;
+    //       break;
+    //     case "portraitdown":
+    //       orientacionState.value = LeitorOrientacion.portraitDown;
+    //       break;
+    //     case "landscapeleft":
+    //       orientacionState.value = LeitorOrientacion.landscapeLeft;
+    //       break;
+    //     case "landscaperight":
+    //       orientacionState.value = LeitorOrientacion.landscapeRight;
+    //       break;
+    //   }
+  }
 }
 
 enum LeitorStates { start, loading, sucess, error }
@@ -168,6 +138,14 @@ enum LeitorStates { start, loading, sucess, error }
 enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon, webview }
 
 enum LeitorFilterQuality { none, low, medium, hight }
+
+// enum LeitorOrientacion {
+//   auto,
+//   portraitUp,
+//   portraitDown,
+//   landscapeLeft,
+//   landscapeRight
+// }
 
 class PagesController {
   // int maxPages = 1;
@@ -177,7 +155,7 @@ class PagesController {
   //   print('iniciou!');
   // }
   set setPage(int max) {
-    print(max);
+    debugPrint('$max');
     state.value = max;
   }
 
