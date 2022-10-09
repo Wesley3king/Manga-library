@@ -8,7 +8,12 @@ var settings = GlobalData.settings;
 
 Map<String, Function> settingsFunctions = {
   "Ordenação": (dynamic value, SettingsOptionsController controller) {
-    
+    debugPrint("alterar o valor de Ordenação: $value");
+    GlobalData.settings['Ordenação'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
   },
   "Tamanho dos quadros":
       (dynamic value, SettingsOptionsController controller) {},

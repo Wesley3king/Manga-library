@@ -17,7 +17,7 @@ class LibraryController {
   start() async {
     state.value = LibraryStates.loading;
     try {
-      await setLibraryOrdem(ordemState.value);
+      await updateTemporallyOrdem("pattern");
 
       state.value = LibraryStates.sucess;
     } catch (e, s) {
@@ -27,9 +27,9 @@ class LibraryController {
     }
   }
 
-  void updateTemporallyOrdem(String type) {
+  Future<void> updateTemporallyOrdem(String type) async {
     setStateOrdenacion(type);
-    setLibraryOrdem(ordemState.value);
+    await setLibraryOrdem(ordemState.value);
     state.value = LibraryStates.loading;
     // set state
     state.value = LibraryStates.sucess;
@@ -107,15 +107,17 @@ class OrdenateLibrary {
         // bool added = false;
         // BOOKS
         for (int bookIndex = 0; bookIndex < allBooks.length; ++bookIndex) {
-          if (allBooks[bookIndex].name.startsWith(letter)) {
+          // debugPrint("teste: ${allBooks[bookIndex].name.startsWith(letter)}");
+          RegExp regex = RegExp(letter, caseSensitive: false);
+          if (allBooks[bookIndex].name.startsWith(regex, 0)) {
             books.add(allBooks[bookIndex]);
             removeIndexes.add(bookIndex);
-            break;
+            // break;
           }
         }
         // remove estes livros, depois limpa a lista de remoção
         for (int index in removeIndexes) {
-          allBooks.removeAt(index);
+          allBooks; // removeAt(index);
         }
         removeIndexes = [];
       }
