@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 
 class LibraryController {
+  final OrdenateLibrary _ordenateLibrary = OrdenateLibrary();
   List<LibraryModel> librariesData = [];
   HiveController hiveController = HiveController();
   ValueNotifier<LibraryStates> state =
@@ -10,11 +12,12 @@ class LibraryController {
   ValueNotifier<LibraryOrdem> ordemState =
       ValueNotifier<LibraryOrdem>(LibraryOrdem.oldToNew);
   LibraryOrdem oldOrdem = LibraryOrdem.oldToNew;
+  String ordemType = "pattern";
 
   start() async {
     state.value = LibraryStates.loading;
     try {
-      librariesData = await hiveController.getLibraries();
+      await setLibraryOrdem(ordemState.value);
 
       state.value = LibraryStates.sucess;
     } catch (e, s) {
@@ -24,15 +27,56 @@ class LibraryController {
     }
   }
 
-  setLibraryOrdem(LibraryOrdem ordem) {
+  void updateTemporallyOrdem(String type) {
+    setStateOrdenacion(type);
+    setLibraryOrdem(ordemState.value);
+    state.value = LibraryStates.loading;
+    // set state
+    state.value = LibraryStates.sucess;
+  }
+
+  void setStateOrdenacion(String type) {
+    ordemType = type;
+    if (type == "pattern") {
+      type = GlobalData.settings['Ordenação'];
+    }
+    oldOrdem = ordemState.value;
+    switch (type) {
+      case "oldtonew":
+        ordemState.value = LibraryOrdem.oldToNew;
+        break;
+      case "newtoold":
+        ordemState.value = LibraryOrdem.newToOld;
+        break;
+      case "alfabetic":
+        ordemState.value = LibraryOrdem.aToZ;
+        break;
+    }
+  }
+
+  setLibraryOrdem(LibraryOrdem ordem) async {
+    librariesData.isEmpty
+        ? librariesData = await hiveController.getLibraries()
+        : debugPrint("não está vazio em setLibraryOrdem");
+
     switch (ordem) {
       case LibraryOrdem.oldToNew:
-        if (oldOrdem == LibraryOrdem.newToOld) {}
-        if (oldOrdem == LibraryOrdem.aToZ) {}
+        if (oldOrdem == LibraryOrdem.newToOld) {
+          librariesData = await _ordenateLibrary.reverse(librariesData);
+        } else if (oldOrdem == LibraryOrdem.aToZ) {
+          librariesData = await hiveController.getLibraries();
+          // librariesData = await _ordenateLibrary.
+        }
         break;
       case LibraryOrdem.newToOld:
+        if (oldOrdem == LibraryOrdem.oldToNew) {
+          librariesData = await _ordenateLibrary.reverse(librariesData);
+        } else if (oldOrdem == LibraryOrdem.aToZ) {
+          librariesData = await hiveController.getLibraries();
+        }
         break;
       case LibraryOrdem.aToZ:
+        librariesData = await _ordenateLibrary.toAZ(librariesData);
         break;
     }
   }
@@ -79,10 +123,5 @@ class OrdenateLibrary {
       models[i].books = books;
     }
     return models;
-  }
-
-  Future<List<LibraryModel>> getOldToNew() async {
-    HiveController hiveController = HiveController();
-    return await hiveController.getLibraries();
   }
 }

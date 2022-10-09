@@ -11,7 +11,7 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  final LibraryController _libraryController = LibraryController();
+  final LibraryController libraryController = LibraryController();
 
   Widget _loading() {
     return const Center(
@@ -37,7 +37,7 @@ class _LibraryPageState extends State<LibraryPage> {
       case LibraryStates.loading:
         return _loading();
       case LibraryStates.sucess:
-        return LibrarrySucessState(dados: _libraryController.librariesData, controllerScroll: widget.scrollController,);
+        return LibrarrySucessState(dados: libraryController.librariesData, controllerScroll: widget.scrollController, controller: libraryController);
       case LibraryStates.error:
         return _error();
     }
@@ -46,7 +46,7 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   void initState() {
     super.initState();
-    _libraryController.start();
+    libraryController.start();
   }
 
   @override
@@ -57,8 +57,8 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _libraryController.state,
-        builder: (context, child) => _stateManagement(_libraryController.state.value),
+        animation: libraryController.state,
+        builder: (context, child) => _stateManagement(libraryController.state.value),
         );
   }
 }

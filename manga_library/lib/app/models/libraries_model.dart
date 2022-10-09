@@ -4,7 +4,7 @@ class LibraryModel {
     required this.books,
   });
   late String library;
-  late final List<Books> books;
+  late List<Books> books;
 
   LibraryModel.fromJson(Map<String, dynamic> json) {
     library = json['library'];

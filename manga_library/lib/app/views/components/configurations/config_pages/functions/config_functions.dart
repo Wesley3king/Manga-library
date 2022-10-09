@@ -7,7 +7,9 @@ import '../../../../../models/globais.dart';
 var settings = GlobalData.settings;
 
 Map<String, Function> settingsFunctions = {
-  "Ordenação": (dynamic value, SettingsOptionsController controller) {},
+  "Ordenação": (dynamic value, SettingsOptionsController controller) {
+    
+  },
   "Tamanho dos quadros":
       (dynamic value, SettingsOptionsController controller) {},
   "Atualizar as Capas":
