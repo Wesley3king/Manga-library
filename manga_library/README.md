@@ -20,6 +20,5 @@ samples, guidance on mobile development, and a full API reference.
 - biblioteca privada
 - visualizar os capilos off line em uma aba própria
 - implementar as configurações restantes e tornalas funcionais
-- organizar a biblioteca com uma ordem diferente
 - organizar os capitulos com uma ordem diferente
 - melhorias na interface e estilo

@@ -100,7 +100,7 @@ class OrdenateLibrary {
     for (int i = 0; i < models.length; ++i) {
       List<Books> allBooks = models[i].books;
       List<Books> books = [];
-      List<int> removeIndexes = [];
+      List<Map<String, dynamic>> removeLinks = [];
       // LETTERS
       for (int letterIndex = 0; letterIndex < letters.length; ++letterIndex) {
         String letter = letters[letterIndex];
@@ -111,15 +111,18 @@ class OrdenateLibrary {
           RegExp regex = RegExp(letter, caseSensitive: false);
           if (allBooks[bookIndex].name.startsWith(regex, 0)) {
             books.add(allBooks[bookIndex]);
-            removeIndexes.add(bookIndex);
+            removeLinks.add({
+              "link": allBooks[bookIndex].link,
+              "idExtension": allBooks[bookIndex].idExtension
+            });
             // break;
           }
         }
         // remove estes livros, depois limpa a lista de remoção
-        for (int index in removeIndexes) {
-          allBooks; // removeAt(index);
+        for (Map<String, dynamic> map in removeLinks) {
+          allBooks.removeWhere((book) => (book.link == map['link']) && (book.idExtension == map['idExtension']));
         }
-        removeIndexes = [];
+        removeLinks.clear();
       }
       books.addAll(allBooks);
       models[i].books = books;
