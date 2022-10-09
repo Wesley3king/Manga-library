@@ -16,7 +16,14 @@ Map<String, Function> settingsFunctions = {
     controller.updateSetting();
   },
   "Tamanho dos quadros":
-      (dynamic value, SettingsOptionsController controller) {},
+      (dynamic value, SettingsOptionsController controller) {
+        debugPrint("alterar o valor de Tamanho dos quadros: $value");
+        GlobalData.settings['Tamanho dos quadros'] = value;
+        final ConfigSystemController configSystemController =
+            ConfigSystemController();
+        configSystemController.update(settings);
+        controller.updateSetting();
+      },
   "Atualizar as Capas":
       (dynamic value, SettingsOptionsController controller) {},
   "Tema": (dynamic value, SettingsOptionsController controller) {

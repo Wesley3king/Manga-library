@@ -90,17 +90,14 @@ class _LeitorState extends State<Leitor> {
       ),
       Padding(
         padding: EdgeInsets.only(bottom: isLandscape ? 0 : 170),
-        child: GestureDetector(
-          onTap: () => setState(() {
-            isVisible = !isVisible;
-          }),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-            height: isLandscape ? 60 : 200,
-            width:
-                MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
+        child: SizedBox(
+          height: isLandscape ? 60 : 200,
+          width:
+              MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
+          child: GestureDetector(
+            onTap: () => setState(() {
+              isVisible = !isVisible;
+            }),
           ),
         ),
       ),

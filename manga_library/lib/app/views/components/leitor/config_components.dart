@@ -90,7 +90,7 @@ Widget buildFilterQuality(LeitorController controller) {
   ];
 
   List<PopupMenuItem<String>> popUpMenuItens = [];
-  debugPrint("typeoption: ${controller.leitorTypeUi}");
+  // debugPrint("typeoption: ${controller.leitorTypeUi}");
   for (Map<String, String> option in options) {
     popUpMenuItens.add(PopupMenuItem(
         enabled: controller.filterQualityUi == option['value'] ? false : true,
@@ -135,7 +135,7 @@ Widget buildOrientacion(LeitorController controller, Function setState) {
   ];
 
   List<PopupMenuItem<String>> popUpMenuItens = [];
-  debugPrint("typeoption: ${controller.leitorTypeUi}");
+  // debugPrint("typeoption: ${controller.leitorTypeUi}");
   for (Map<String, String> option in options) {
     popUpMenuItens.add(PopupMenuItem(
         enabled: controller.orientacionUi == option['value']! ? false : true,

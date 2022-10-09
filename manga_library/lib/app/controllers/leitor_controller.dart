@@ -29,8 +29,8 @@ class LeitorController {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
-      debugPrint(
-          "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n idExtension: $idExtension  \n------------------------");
+      // debugPrint(
+      //     "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n idExtension: $idExtension  \n------------------------");
       // _identificarCapitulo(capitulos, id);
 
       // buscar pelas paginas
@@ -41,7 +41,21 @@ class LeitorController {
       capitulosEmCarga.add(cap);
       debugPrint("=========== em carga =============");
       debugPrint('$capitulosEmCarga');
-
+      // try {
+      //   setFilterQuality("pattern");
+      // } catch (e) {
+      //   debugPrint("erro 1: $e");
+      // }
+      // try {
+      //   setOrientacion("pattern");
+      // } catch (e) {
+      //   debugPrint("erro 2: $e");
+      // }
+      // try {
+      //   setReaderType("pattern");
+      // } catch (e) {
+      //   debugPrint("erro 3: $e");
+      // }
       setFilterQuality("pattern");
       setOrientacion("pattern");
       setReaderType("pattern");
@@ -114,6 +128,7 @@ class LeitorController {
     orientacionUi = type;
     if (type == "pattern") {
       type = GlobalData.settings['Orientação do Leitor'];
+      // debugPrint(" =================== chegou aqui: $type");
       ConfigSystemController.instance.setSystemOrientacion(type);
     } else {
       ConfigSystemController.instance.setSystemOrientacion(type);

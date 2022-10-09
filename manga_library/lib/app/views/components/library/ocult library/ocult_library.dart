@@ -7,22 +7,19 @@ import '../../../../controllers/system_config.dart';
 import 'controller/ocult_library_controller.dart';
 
 class LibraryOcult extends StatefulWidget {
-  // final List<LibraryModel> dados;
-  // final ScrollController controllerScroll;
   const LibraryOcult(
       {super.key});
-
   @override
   State<LibraryOcult> createState() => _LibraryOcultState();
 }
 
-class _LibraryOcultState extends State<LibraryOcult>
-    with SingleTickerProviderStateMixin {
+class _LibraryOcultState extends State<LibraryOcult> with SingleTickerProviderStateMixin {
+  // with SingleTickerProviderStateMixin   with TickerProviderStateMixin
   final ConfigSystemController configSystemController =
       ConfigSystemController();
   late ScrollController controllerScroll;
-  final OcultLibraryController _libraryController = OcultLibraryController();
-  late TabController tabController;
+  final OcultLibraryController libraryController = OcultLibraryController();
+  TabController? tabController;
 
   List<Widget> _getPages(List<LibraryModel> lista) {
     List<Widget> pages = [];
@@ -41,6 +38,33 @@ class _LibraryOcultState extends State<LibraryOcult>
       ));
     }
     return tabs;
+  }
+
+  // ========================================================================
+  //         -----------------  Ordem  ----------------------
+  // ========================================================================
+
+  Widget buildSetTemporallyOrdem(OcultLibraryController controller) {
+    final List<Map<String, String>> options = [
+      {"option": "Padrão", "value": "pattern"},
+      {"option": "Velhos até Novos", "value": "oldtonew"},
+      {"option": "Novos até Velhos", "value": "newtoold"},
+      {"option": "Alfabética", "value": "alfabetic"}
+    ];
+
+    List<PopupMenuEntry<String>> itens = options
+        .map<PopupMenuEntry<String>>(((Map<String, String> option) =>
+            PopupMenuItem(
+              onTap: () => controller.updateTemporallyOrdem(option['value']!),
+              enabled: controller.ordemType == option['value'] ? false : true,
+              child: Text(option['option']!),
+            )))
+        .toList();
+
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.filter_list),
+      itemBuilder: (context) => itens,
+    );
   }
 
   // ------------- loading -----------------------
@@ -64,7 +88,7 @@ class _LibraryOcultState extends State<LibraryOcult>
 
   // ------------- SUCESS ------------------
   Widget sucess(BuildContext context) {
-    final List<LibraryModel> dados = _libraryController.ocultLibrariesData;
+    final List<LibraryModel> dados = libraryController.ocultLibrariesData;
     return NestedScrollView(
       controller: controllerScroll,
       floatHeaderSlivers: true,
@@ -76,10 +100,7 @@ class _LibraryOcultState extends State<LibraryOcult>
           snap: true,
           floating: true,
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.filter_list)
-            )
+            buildSetTemporallyOrdem(libraryController),
           ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(35),
@@ -108,7 +129,7 @@ class _LibraryOcultState extends State<LibraryOcult>
       case OcultLibraryStates.loading:
         return _loading();
       case OcultLibraryStates.sucess:
-        tabController = TabController(length: _libraryController.ocultLibrariesData.length, vsync: this);
+        tabController ??= TabController(length: libraryController.ocultLibrariesData.length, vsync: this);
         return sucess(context);
       case OcultLibraryStates.error:
         return _error();
@@ -118,23 +139,23 @@ class _LibraryOcultState extends State<LibraryOcult>
   @override
   void initState() {
     super.initState();
-    _libraryController.start();
+    libraryController.start();
     controllerScroll = ScrollController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    tabController.dispose();
+    tabController?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _libraryController.state,
+        animation: libraryController.state,
         builder: (context, child) =>
-            _stateManagement(context, _libraryController.state.value),
+            _stateManagement(context, libraryController.state.value),
       ),
     );
   }

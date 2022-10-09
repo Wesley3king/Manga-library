@@ -57,7 +57,7 @@ class FileManager {
       } else {
         debugPrint("este arquivo não existe!");
         var resArchive = await file.create(recursive: false);
-        // debugPrint("archive: $resArchive");
+        debugPrint("archive: ${resArchive.path}");
 
         var jsonData = json.encode(backupData);
         var bytes = utf8.encode(jsonData);
@@ -84,7 +84,7 @@ class FileManager {
       var bytes = decode.decoder;
       var stringUtf8 = utf8.decode(bytes.convert(bin));
       var data = json.decode(stringUtf8);
-      print(data);
+      debugPrint(data);
       return data;
     } catch (e) {
       debugPrint("erro no readGzArchive: $e");
