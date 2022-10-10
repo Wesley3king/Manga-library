@@ -6,7 +6,8 @@ import 'package:webviewx/webviewx.dart';
 
 class MyWebviewx extends StatefulWidget {
   final List<String> pages;
-  const MyWebviewx({super.key, required this.pages});
+  final Color color;
+  const MyWebviewx({super.key, required this.pages, required this.color});
 
   @override
   State<MyWebviewx> createState() => _MyWebviewxState();
@@ -15,13 +16,21 @@ class MyWebviewx extends StatefulWidget {
 class _MyWebviewxState extends State<MyWebviewx> {
   // bool showThis = false;
   late WebViewXController webviewController;
+  String getColor() {
+    if (widget.color == Colors.black) {
+      return "black";
+    } else {
+      return "white";
+    }
+  }
+
   String buildPages(BuildContext context) {
     StringBuffer buffer = StringBuffer();
     for (String str in widget.pages) {
       buffer.write(
           '<img src="$str" width="${MediaQuery.of(context).size.width}px" alt="page of manga" />');
     }
-    return '<head><style>::-webkit-scrollbar{display: none;}body{margin: 0px;padding:0px;}div{height: 34px}img{margin-top: -4px;}</style></head><body><div></div>${buffer.toString()}</body>';
+    return '<head><style>::-webkit-scrollbar{display: none;}body{margin: 0px;padding:0px;background-color:${getColor()}}div{height: 34px}img{margin-top: -4px;}</style></head><body><div></div>${buffer.toString()}</body>';
     //  style=""
   }
 

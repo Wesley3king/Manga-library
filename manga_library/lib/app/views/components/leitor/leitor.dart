@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
+import 'package:manga_library/app/views/components/leitor/components/bottom_sheet.dart';
 import 'package:manga_library/app/views/components/leitor/config_components.dart';
 // import 'package:flutter/services.dart';
 import 'package:manga_library/app/views/components/leitor/pages_leitor.dart';
@@ -21,8 +22,9 @@ class Leitor extends StatefulWidget {
   State<Leitor> createState() => _LeitorState();
 }
 
-class _LeitorState extends State<Leitor> {
+class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
   final FullScreenController screenController = FullScreenController();
+  late AnimationController bottomSheetController;
   final PagesController controller = PagesController();
   final LeitorController leitorController = LeitorController();
   final Color appBarAndBottomAppBarColor = const Color.fromARGB(204, 0, 0, 0);
@@ -76,11 +78,12 @@ class _LeitorState extends State<Leitor> {
                 style: const TextStyle(fontSize: 20),
               ),
               IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.bookmark_border,
-                    size: isVisible ? sizeOfButtons : 0,
-                  )),
+                onPressed: () {},
+                icon: Icon(
+                  Icons.bookmark_border,
+                  size: isVisible ? sizeOfButtons : 0,
+                ),
+              ),
               // const SizedBox(
               //   width: 10,
               // )
@@ -92,8 +95,7 @@ class _LeitorState extends State<Leitor> {
         padding: EdgeInsets.only(bottom: isLandscape ? 0 : 170),
         child: SizedBox(
           height: isLandscape ? 60 : 200,
-          width:
-              MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
+          width: MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
           child: GestureDetector(
             onTap: () => setState(() {
               isVisible = !isVisible;
@@ -130,12 +132,17 @@ class _LeitorState extends State<Leitor> {
                         buildFilterQuality(leitorController),
                   ),
                   buildOrientacion(leitorController, setState),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.settings,
-                        size: sizeOfButtons,
-                      )),
+                  Builder(
+                    builder: (context) {
+                      return IconButton(
+                          onPressed: () => customBottomSheetForLeitor(context, bottomSheetController),
+                          icon: Icon(
+                            Icons.settings,
+                            size: sizeOfButtons,
+                          )
+                        );
+                    },
+                  )
                 ],
               ),
             )
@@ -149,6 +156,7 @@ class _LeitorState extends State<Leitor> {
   void initState() {
     super.initState();
     leitorController.start(widget.link, widget.id, widget.idExtension);
+    bottomSheetController = AnimationController(vsync: this);
   }
 
   @override

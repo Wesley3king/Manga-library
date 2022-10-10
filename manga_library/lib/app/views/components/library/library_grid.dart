@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/views/components/library/functions/library_functions.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 class LibraryItens extends StatefulWidget {
@@ -15,6 +16,7 @@ class LibraryItens extends StatefulWidget {
 class _LibraryItensState extends State<LibraryItens>
     with AutomaticKeepAliveClientMixin {
   // late ScrollController _scrollController;
+  late List<double> sizeOfBooks;
   Widget createBook(BuildContext context, int index) {
     return Container(
       decoration: const BoxDecoration(boxShadow: [
@@ -95,6 +97,7 @@ class _LibraryItensState extends State<LibraryItens>
   @override
   void initState() {
     super.initState();
+    sizeOfBooks = getSizeOfBooks();
     // _scrollController = ScrollController();
   }
 
@@ -105,9 +108,9 @@ class _LibraryItensState extends State<LibraryItens>
       child: GridView.builder(
           addAutomaticKeepAlives: true,
           // controller: _scrollController,
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            mainAxisExtent: 260, // aqui ajustamos o height
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: sizeOfBooks[0],
+            mainAxisExtent: sizeOfBooks[1], // aqui ajustamos o height
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),

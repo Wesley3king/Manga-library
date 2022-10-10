@@ -64,8 +64,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget photoViewLeitor(
-      Axis scrollDirection, bool reverse, FilterQuality filterQuality) {
+  Widget photoViewLeitor(Axis scrollDirection, bool reverse,
+      FilterQuality filterQuality, Color color) {
     /// esta função determina o tipo de image privider ao decodificar as imagens
     ImageProvider<Object> returnAnImageProvider(int index) {
       if (widget.leitorController.capitulosEmCarga[0].download) {
@@ -76,6 +76,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
             widget.leitorController.capitulosEmCarga[0].pages[index]);
       }
     }
+
+    // Color(0xff000000);
 
     debugPrint(
         "length pages: ${widget.leitorController.capitulosEmCarga[0].pages.length}");
@@ -88,10 +90,11 @@ class _PagesLeitorState extends State<PagesLeitor> {
       reverse: reverse,
       onPageChanged: (index) => widget.controller.setPage = (index + 1),
       wantKeepAlive: true,
+      backgroundDecoration: BoxDecoration(color: color),
       builder: (context, index) => PhotoViewGalleryPageOptions(
         imageProvider: returnAnImageProvider(index),
         filterQuality: filterQuality,
-        onTapUp: (context, details, controllerValue) => widget.showOrHideInfo(),
+        // onTapUp: (context, details, controllerValue) => widget.showOrHideInfo(),
         // filterQuality:
       ),
     );
@@ -104,7 +107,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
           widget.controller.setPage = index;
-          widget.showOrHideInfo();
+          // widget.showOrHideInfo();
         },
         child: MyPageImage(
           capitulo: widget.leitorController.capitulosEmCarga[0],
@@ -116,9 +119,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
   }
 
   // teste de leitor
-  Widget newLeitor(FilterQuality filterQuality) {
-    return GestureDetector(
-      onTap: () => widget.showOrHideInfo(),
+  Widget newLeitor(FilterQuality filterQuality, Color color) {
+    return Container(
+      color: color,
       child: widget.leitorController.capitulosEmCarga[0].download
           ? ListView.builder(
               itemCount:
@@ -147,14 +150,19 @@ class _PagesLeitorState extends State<PagesLeitor> {
   }
 
   Widget pageListViewLeitor(
-      {bool rtl = false, required FilterQuality filterQuality}) {
+      {bool rtl = false,
+      required FilterQuality filterQuality,
+      required Color color}) {
     return PageView.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
       onPageChanged: (index) => widget.controller.setPage = (index + 1),
       reverse: rtl,
-      itemBuilder: (context, index) => GestureDetector(
-        onTap: () => widget.showOrHideInfo(),
+      itemBuilder: (context, index) => Container(
+        // onTap: () => widget.showOrHideInfo(),
+        color: color,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         child: ListView(
           children: [
             MyPageImage(
@@ -186,33 +194,53 @@ class _PagesLeitorState extends State<PagesLeitor> {
         break;
     }
     return AnimatedBuilder(
-      animation: widget.leitorController.leitorTypeState,
-      builder: (context, child) => _leitorType(
+      animation: widget.leitorController.backgroundColorState,
+      builder: (context, child) => _backgroundColor(
           widget.leitorController.leitorTypeState.value, filterQuality),
     );
   }
 
-  Widget _leitorType(LeitorTypes type, FilterQuality filterQuality) {
+  Widget _leitorType(
+      LeitorTypes type, FilterQuality filterQuality, Color color) {
     switch (type) {
-      // case LeitorTypes.pattern:
-      //   widget.leitorController.setReaderType();
-      //   return Container();
       case LeitorTypes.vertical:
-        return photoViewLeitor(Axis.vertical, false, filterQuality);
+        return photoViewLeitor(Axis.vertical, false, filterQuality, color);
       case LeitorTypes.ltr:
-        return photoViewLeitor(Axis.horizontal, false, filterQuality);
+        return photoViewLeitor(Axis.horizontal, false, filterQuality, color);
       case LeitorTypes.rtl:
-        return photoViewLeitor(Axis.horizontal, true, filterQuality);
+        return photoViewLeitor(Axis.horizontal, true, filterQuality, color);
       case LeitorTypes.webtoon:
-        return newLeitor(filterQuality);
+        return newLeitor(filterQuality, color);
       case LeitorTypes.webview:
         return MyWebviewx(
-            pages: widget.leitorController.capitulosEmCarga[0].pages);
+          pages: widget.leitorController.capitulosEmCarga[0].pages,
+          color: color,
+        );
       case LeitorTypes.ltrlist:
-        return pageListViewLeitor(filterQuality: filterQuality);
+        return pageListViewLeitor(filterQuality: filterQuality, color: color);
       case LeitorTypes.rtllist:
-        return pageListViewLeitor(rtl: true, filterQuality: filterQuality);
+        return pageListViewLeitor(
+            rtl: true, filterQuality: filterQuality, color: color);
     }
+  }
+
+  Widget _backgroundColor(LeitorTypes type, FilterQuality filterQuality) {
+    return AnimatedBuilder(
+      animation: widget.leitorController.leitorTypeState,
+      builder: (context, child) {
+        Color color = widget.leitorController.backgroundColorState.value ==
+                LeitorBackgroundColor.black
+            ? Colors.black
+            : Colors.white;
+        return AnimatedBuilder(
+          animation: widget.leitorController.leitorTypeState,
+          builder: (context, child) => _leitorType(
+              widget.leitorController.leitorTypeState.value,
+              filterQuality,
+              color),
+        );
+      },
+    );
   }
 
   Widget _stateManagement(LeitorStates state) {

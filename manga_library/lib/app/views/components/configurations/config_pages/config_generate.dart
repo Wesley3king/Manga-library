@@ -220,11 +220,17 @@ class InputTypes {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                  title: const Text('Tem certeza?'),
-                  content: const Text("está ação não é reversivel"),
+                  title: Text('Deseja ${data.nameConfig}?'),
+                  content: const Text("está ação pode não ser reversivel"),
                   actions: [
-                    TextButton(onPressed: () {}, child: const Text("Cancelar")),
-                    TextButton(onPressed: () {}, child: const Text("Confirmar"))
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("Cancelar")),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Confirmar"))
                   ],
                 ));
       },

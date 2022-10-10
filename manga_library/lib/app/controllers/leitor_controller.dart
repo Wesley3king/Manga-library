@@ -24,14 +24,14 @@ class LeitorController {
   String filterQualityUi = "pattern";
   // ===== Orientacion Ui =====
   String orientacionUi = "pattern";
+  // ===== Background Color ======
+  ValueNotifier<LeitorBackgroundColor> backgroundColorState =
+      ValueNotifier<LeitorBackgroundColor>(LeitorBackgroundColor.black);
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
-      // debugPrint(
-      //     "--------------------------- \n id leitor: $id - length: ${capitulos.length}\n idExtension: $idExtension  \n------------------------");
-      // _identificarCapitulo(capitulos, id);
 
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
@@ -58,6 +58,7 @@ class LeitorController {
       // }
       setFilterQuality("pattern");
       setOrientacion("pattern");
+      setBackgroundColor();
       setReaderType("pattern");
       state.value = LeitorStates.sucess;
     } catch (e) {
@@ -134,6 +135,18 @@ class LeitorController {
       ConfigSystemController.instance.setSystemOrientacion(type);
     }
   }
+
+  void setBackgroundColor([String? type]) {
+    type ??= GlobalData.settings['Cor de fundo'];
+    switch (type) {
+      case "black":
+        backgroundColorState.value = LeitorBackgroundColor.black;
+        break;
+      case "white":
+        backgroundColorState.value = LeitorBackgroundColor.white;
+        break;
+    }
+  }
 }
 
 enum LeitorStates { start, loading, sucess, error }
@@ -154,6 +167,8 @@ enum LeitorUiTypes {
 enum LeitorFilterQuality { none, low, medium, hight }
 
 enum LeitorUiFilterQuality { pattern, none, low, medium, hight }
+
+enum LeitorBackgroundColor { black, white }
 
 // enum LeitorUiOrientacion {
 //   pattern,

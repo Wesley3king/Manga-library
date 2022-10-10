@@ -246,7 +246,7 @@ class HiveController {
       "Idioma": "ptbr",
       "Rolar a Barra": true,
       "Tipo do Leitor": "vertical",
-      "Cor de fundo": "auto",
+      "Cor de fundo": "black",
       "Orientação do Leitor": "auto",
       "Qualidade": "medium",
       "Tela cheia": true,

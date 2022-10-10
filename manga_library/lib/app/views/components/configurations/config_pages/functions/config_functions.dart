@@ -52,7 +52,14 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Cor de fundo": (dynamic value, SettingsOptionsController controller) {},
+  "Cor de fundo": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor Cor de fundo = $value");
+    GlobalData.settings['Cor de fundo'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Orientação do Leitor": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Orientação do Leitor'] = value;

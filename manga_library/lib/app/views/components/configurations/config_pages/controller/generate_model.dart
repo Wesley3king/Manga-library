@@ -76,8 +76,6 @@ buildSettingsModel() {
           "value": data['Cor de fundo'],
           "function": functions['Cor de fundo'],
           "optionsAndValues": [
-            {"option": "Automatico", "value": "auto"},
-            {"option": "Dark", "value": "dark"},
             {"option": "Preto", "value": "black"},
             {"option": "Branco", "value": "white"}
           ]

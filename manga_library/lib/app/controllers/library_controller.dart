@@ -13,6 +13,7 @@ class LibraryController {
       ValueNotifier<LibraryOrdem>(LibraryOrdem.oldToNew);
   LibraryOrdem oldOrdem = LibraryOrdem.oldToNew;
   String ordemType = "pattern";
+  
 
   start() async {
     state.value = LibraryStates.loading;
@@ -80,6 +81,8 @@ class LibraryController {
         break;
     }
   }
+
+
 }
 
 enum LibraryStates { start, loading, sucess, error }
