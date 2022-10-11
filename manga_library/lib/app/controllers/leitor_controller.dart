@@ -4,6 +4,7 @@ import 'package:manga_library/app/models/globais.dart';
 
 // import '../models/leitor_pages.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
@@ -182,6 +183,9 @@ enum LeitorBackgroundColor { black, white }
 class PagesController {
   // int maxPages = 1;
   ValueNotifier<int> state = ValueNotifier<int>(1);
+  PageController pageController = PageController();
+  ItemScrollController scrollControllerList = ItemScrollController();
+
   // start() {
   //   state.value++;
   //   print('iniciou!');
@@ -189,6 +193,32 @@ class PagesController {
   set setPage(int max) {
     debugPrint('$max');
     state.value = max;
+  }
+
+  void scrollTo(int index, LeitorTypes type) {
+    setPage = index;
+    switch (type) {
+      case LeitorTypes.vertical:
+        pageController.jumpToPage(index);
+        break;
+      case LeitorTypes.ltr:
+        pageController.jumpToPage(index);
+        break;
+      case LeitorTypes.rtl:
+        pageController.jumpToPage(index);
+        break;
+      case LeitorTypes.ltrlist:
+        pageController.jumpToPage(index);
+        break;
+      case LeitorTypes.rtllist:
+        pageController.jumpToPage(index);
+        break;
+      case LeitorTypes.webtoon:
+        scrollControllerList.jumpTo(index: index);
+        break;
+      case LeitorTypes.webview:
+        break;
+    }
   }
 
   // startNextPage() {

@@ -10,6 +10,7 @@ import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/components/leitor/web_view/web_view_reader.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class PagesLeitor extends StatefulWidget {
   final Function showOrHideInfo;
@@ -34,6 +35,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
   // final PagesController controller = PagesController();
   // final PagesStates _pagesStates = PagesStates();
   final FullScreenController screenController = FullScreenController();
+  // late ItemScrollController itemScrollController;
+  late ItemPositionsListener itemPositionsListener;
 
   Widget loading() {
     return const SizedBox(
@@ -78,7 +81,6 @@ class _PagesLeitorState extends State<PagesLeitor> {
     }
 
     // Color(0xff000000);
-
     debugPrint(
         "length pages: ${widget.leitorController.capitulosEmCarga[0].pages.length}");
     return PhotoViewGallery.builder(
@@ -87,6 +89,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
           : widget.leitorController.capitulosEmCarga[0].pages.length,
       gaplessPlayback: true,
       scrollDirection: scrollDirection,
+      pageController: widget.controller.pageController,
       reverse: reverse,
       onPageChanged: (index) => widget.controller.setPage = (index + 1),
       wantKeepAlive: true,
@@ -101,9 +104,11 @@ class _PagesLeitorState extends State<PagesLeitor> {
   }
 
   Widget listViewLeitor(FilterQuality filterQuality) {
-    return ListView.builder(
+    return ScrollablePositionedList.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
-      cacheExtent: 8000.0,
+      itemPositionsListener: itemPositionsListener,
+      itemScrollController: widget.controller.scrollControllerList,
+      // cacheExtent: 8000.0,
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
           widget.controller.setPage = index;
@@ -123,7 +128,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
     return Container(
       color: color,
       child: widget.leitorController.capitulosEmCarga[0].download
-          ? ListView.builder(
+          ? ScrollablePositionedList.builder(
+              itemScrollController: widget.controller.scrollControllerList,
+              itemPositionsListener: itemPositionsListener,
               itemCount:
                   widget.leitorController.capitulosEmCarga[0].pages.length,
               itemBuilder: (context, index) => ExtendedImage.file(
@@ -135,7 +142,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
                 compressionRatio: 0.9,
               ),
             )
-          : ListView.builder(
+          : ScrollablePositionedList.builder(
+              itemScrollController: widget.controller.scrollControllerList,
+              itemPositionsListener: itemPositionsListener,
               itemCount:
                   widget.leitorController.capitulosEmCarga[0].pages.length,
               itemBuilder: (context, index) => ExtendedImage.network(
@@ -156,6 +165,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
     return PageView.builder(
       itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
       scrollDirection: Axis.horizontal,
+      controller: widget.controller.pageController,
       onPageChanged: (index) => widget.controller.setPage = (index + 1),
       reverse: rtl,
       itemBuilder: (context, index) => Container(
@@ -214,6 +224,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       case LeitorTypes.webview:
         return MyWebviewx(
           pages: widget.leitorController.capitulosEmCarga[0].pages,
+          controller: widget.controller,
           color: color,
         );
       case LeitorTypes.ltrlist:
@@ -263,6 +274,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
   @override
   void initState() {
     super.initState();
+    // itemScrollController = ItemScrollController();
+    itemPositionsListener = ItemPositionsListener.create();
     // widget.leitorController.start(widget.link, widget.id);
     // screenController.enterFullScreen();
   }

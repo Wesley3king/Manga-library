@@ -108,11 +108,62 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
         curve: visibleCurve,
         height: isVisible
             ? isLandscape
-                ? 60
-                : 100
+                ? 1200
+                : 160
             : 0,
         child: Wrap(
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: SizedBox(
+                      height: 60,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const SizedBox(width: 3.0,),
+                          SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Material(
+                              color: const Color.fromARGB(179, 0, 0, 0),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(40)),
+                              ),
+                              child: IconButton(onPressed: (){}, icon: const Icon(Icons.skip_previous, size: 25,)))),
+                              const SizedBox(width: 3.0,),
+                            Flexible(
+                              child: SizedBox(height: 50, child: AnimatedBuilder(
+                                animation: controller.state,
+                                builder: (context, child) => Material(
+                                  color: const Color.fromARGB(179, 0, 0, 0),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                                  ),
+                                  child: Slider(
+                                    value: controller.state.value.toDouble(),
+                                    max: leitorController.capitulosEmCarga.isEmpty ? 1 : leitorController.capitulosEmCarga[0].pages.length.toDouble(),
+                                    min: 0.0,
+                                    onChanged: (value) => controller.scrollTo(value.toInt(), leitorController.leitorTypeState.value),
+                                  )
+                                  )
+                                ),),
+                            ),
+                            const SizedBox(width: 3.0,),
+                          SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Material(
+                              color: const Color.fromARGB(179, 0, 0, 0),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(40)),
+                              ),
+                              child: IconButton(onPressed: (){}, icon: const Icon(Icons.skip_next, size: 25,)),)),
+                          const SizedBox(width: 3.0,),
+                        ],
+                      ),
+                    ),
+            ),
             Container(
               color: appBarAndBottomAppBarColor,
               width: MediaQuery.of(context).size.width,

@@ -1,13 +1,15 @@
 // import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/leitor_controller.dart';
 // import 'package:flutter/services.dart';
 import 'package:webviewx/webviewx.dart';
 
 class MyWebviewx extends StatefulWidget {
   final List<String> pages;
+  final PagesController controller;
   final Color color;
-  const MyWebviewx({super.key, required this.pages, required this.color});
+  const MyWebviewx({super.key, required this.pages, required this.color, required this.controller});
 
   @override
   State<MyWebviewx> createState() => _MyWebviewxState();
