@@ -11,7 +11,7 @@ void main() {
   });
   test("deve retornar um MangaInfoOffLineModel", () async {
     var data =
-        await extend.mangaDetail("mesmo-eu-tendo-decidido-jogar-com-voce");
+        await extend.mangaDetail("mesmo-eu-tendo-decidido-jogar-com-voce"); // tiny-evil
     debugPrint("data: $data");
   });
 

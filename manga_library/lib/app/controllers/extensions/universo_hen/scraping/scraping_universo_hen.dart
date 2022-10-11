@@ -58,21 +58,26 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     if (parser != null) {
       Result? postInfo = parser.querySelector("ul.paginaPostItens");
       List<Result>? itens = postInfo.querySelectorAll("li");
+      debugPrint("itens: $itens");
       // name
       name = parser.querySelector("div.paginaPostInfo h1").text;
-      // debugPrint("name: $name");
-      description = itens![0].querySelector("i")!.text;
-      // debugPrint("description: $description");
+      debugPrint("name: $name");
+      description = itens![0].querySelector("i")?.text;
+      debugPrint("description: $description");
       // img
       img = parser.querySelector("div.paginaPostThumb img").src;
-      // debugPrint("img: $img");
+      debugPrint("img: $img");
       // genres
-      List<Result>? generos = itens[5].querySelectorAll("a");
+      for (int cat = 3; cat < itens.length; ++cat) {
+        List<Result>? generos = itens[cat].querySelectorAll("a");
 
-      for (int i = 0; i < generos!.length; ++i) {
-        genres.add("${generos[i].text}");
+        if (generos != null) {
+          for (int i = 0; i < generos.length; ++i) {
+            genres.add("${generos[i].text}");
+          }
+        }
       }
-      // debugPrint("genres: $genres");
+      debugPrint("genres: $genres");
       // chapters
       String? chapterPages =
           parser.querySelector("ul.paginaPostBotoes > li > a").href; //  li a
@@ -83,7 +88,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
       return MangaInfoOffLineModel(
         name: name ?? "erro",
-        description: description ?? "erro",
+        description: description ?? "Descrição indisponivel",
         img: img ?? "erro",
         link: "https://universohentai.com/$link/",
         idExtension: 6,
@@ -103,6 +108,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         ],
       );
     }
+    return null;
   } catch (e) {
     debugPrint("erro no scrapingMangaDetail at ExtensionUniversoHen: $e");
     return null;
