@@ -8,6 +8,7 @@ import 'package:manga_library/app/controllers/leitor_controller.dart';
 // import 'package:manga_library/app/views/components/leitor/pages_states.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/components/leitor/scrollable_list_view/scrollable_list_reader.dart';
 import 'package:manga_library/app/views/components/leitor/web_view/web_view_reader.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -158,6 +159,18 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
+  // novo Leitor
+  Widget webtoonReader(FilterQuality filterQuality, Color color) {
+    return ScrollablePositionedListPage(
+        lista: widget.leitorController.capitulosEmCarga[0].download
+            ? widget.leitorController.capitulosEmCarga[0].downloadPages
+            : widget.leitorController.capitulosEmCarga[0].pages,
+        color: color,
+        filterQuality: filterQuality,
+        isOffLine: widget.leitorController.capitulosEmCarga[0].download,
+        controller: widget.controller);
+  }
+
   Widget pageListViewLeitor(
       {bool rtl = false,
       required FilterQuality filterQuality,
@@ -220,7 +233,8 @@ class _PagesLeitorState extends State<PagesLeitor> {
       case LeitorTypes.rtl:
         return photoViewLeitor(Axis.horizontal, true, filterQuality, color);
       case LeitorTypes.webtoon:
-        return newLeitor(filterQuality, color);
+        // return newLeitor(filterQuality, color);
+        return webtoonReader(filterQuality, color);
       case LeitorTypes.webview:
         return MyWebviewx(
           pages: widget.leitorController.capitulosEmCarga[0].pages,
