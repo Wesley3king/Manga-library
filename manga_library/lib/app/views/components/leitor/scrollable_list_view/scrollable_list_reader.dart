@@ -34,7 +34,7 @@ class ScrollablePositionedListPageState
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
   late List<double> itemHeights = [];
-  var indexes = 0;
+  ValueNotifier<int> indexes = ValueNotifier<int>(0);
   bool isWorking = false;
   List<Widget> images = [];
 
@@ -68,7 +68,9 @@ class ScrollablePositionedListPageState
 
   Widget list(Orientation orientation) => Container(
         color: widget.color,
-        child: ScrollablePositionedList.builder(
+        child: ValueListenableBuilder(
+          valueListenable: indexes, 
+          builder: (context, value, child) => ScrollablePositionedList.builder(
           itemCount: widget.lista.length,
           itemBuilder: (context, index) => generateItens(index, context),
           itemScrollController: widget.controller.scrollControllerList,
@@ -78,6 +80,7 @@ class ScrollablePositionedListPageState
           //     ? Axis.vertical
           //     : Axis.horizontal,
         ),
+        )
       );
 
   Widget get positionsView => ValueListenableBuilder<Iterable<ItemPosition>>(
@@ -109,14 +112,17 @@ class ScrollablePositionedListPageState
                         : max)
                 .index;
           }
-          widget.controller.setPage = (max! + 1);
+          if (max != null) {
+            Future.delayed(const Duration(milliseconds: 100),
+                () => widget.controller.setPage = ((max ?? 0) + 1));
+          }
           return Container();
         },
       );
 
   /// generate itens
   Widget generateItens(int index, BuildContext context) {
-    if (index < indexes) {
+    if (index < indexes.value) {
       return item(index, MediaQuery.of(context).orientation);
     } else {
       if (images.length != widget.lista.length) {
@@ -142,7 +148,7 @@ class ScrollablePositionedListPageState
 
   // get on line image
   Future<Uint8List> getOnLineImage(String src) async {
-    Response<List<int>> rs = await Dio().get<List<int>>(src,
+    Response<List<int>> rs = await Dio(BaseOptions(connectTimeout: 60000, )).get<List<int>>(src,
         options: Options(responseType: ResponseType.bytes));
     return Uint8List.fromList(rs.data!);
   }
@@ -161,18 +167,21 @@ class ScrollablePositionedListPageState
           ? await getOffLineImage(src)
           : await getOnLineImage(src);
       var image = await decodeImageFromList(bytes);
-      var image2 = Image.memory(bytes, fit: BoxFit.fill, filterQuality: widget.filterQuality,);
+      var image2 = Image.memory(
+        bytes,
+        fit: BoxFit.fill,
+        filterQuality: widget.filterQuality,
+      );
       itemHeights.add((image.height * width) / image.width);
       images.add(image2);
       debugPrint("Imagem adicionada!");
       // debugPrint("imagem : $src adicionada! h : ${image.height.toDouble()}");
-      setState(() {
-        isWorking = false;
-        indexes++;
-      });
+      isWorking = false;
+      indexes.value++;
     } catch (e) {
       debugPrint("erro no getSize: $e");
       isWorking = false;
+      getSize(src, width);
     }
   }
 

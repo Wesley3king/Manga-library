@@ -64,8 +64,7 @@ class ExtensionMangaChan implements Extension {
 
   @override
   Future<List<String>> getPagesForDownload(String id) async {
-    return [];
-    //await scrapingLeitor(id);
+    return await scrapingLeitor(id);
   }
 
   @override
