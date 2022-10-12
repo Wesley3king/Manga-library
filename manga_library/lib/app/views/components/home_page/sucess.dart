@@ -98,11 +98,13 @@ class _SucessState extends State<Sucess> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(widget.dados[0].books[0].name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              )),
+                          Flexible(
+                            child: Text(widget.dados[0].books[0].name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                )),
+                          ),
                           const SizedBox(
                             height: 15,
                           ),
