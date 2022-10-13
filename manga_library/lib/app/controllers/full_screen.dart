@@ -3,46 +3,53 @@ import 'package:flutter/services.dart';
 // import 'package:flutter/material.dart';
 
 class FullScreenController {
-  static bool isFullScreen = false;
+  static FullScreenTypes activedFullScreen = FullScreenTypes.home;
 
-  setFullScreen() {
-    print('configurando...');
+  // setFullScreen() {
+  //   print('configurando...');
 
-    if (isFullScreen) {
-      exitFullScreen();
-    } else {
-      enterFullScreen();
-    }
-  }
+  //   if (isFullScreen) {
+  //     exitEdgeFullScreen();
+  //   } else {
+  //     enterFullScreen();
+  //   }
+  // }
 
   void enterFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
         overlays: [SystemUiOverlay.top]);
-    isFullScreen = true;
+    // activedFullScreen
   }
 
   void enterEdgeFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        systemStatusBarContrastEnforced: false,
-        systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
-        systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
-        systemNavigationBarContrastEnforced: false,
-        ));
-    isFullScreen = false;
+      systemStatusBarContrastEnforced: false,
+      systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
+      systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
+      systemNavigationBarContrastEnforced: false,
+    ));
+    // isFullScreen = false;
   }
 
-  void exitFullScreen() {
+  void exitEdgeFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //     systemStatusBarContrastEnforced: true,
-    //     systemNavigationBarDividerColor: Color.fromARGB(255, 0, 0, 0),
-    //     systemNavigationBarContrastEnforced: true,
-    //     ));
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarContrastEnforced: false,
-          systemNavigationBarDividerColor: Colors.black26,
-          systemNavigationBarColor: Colors.black26));
-    isFullScreen = false;
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarDividerColor: Colors.black26,
+        systemNavigationBarColor: Colors.black26));
+    // isFullScreen = false;
+  }
+
+  void exitEdgeFullScreenToReader() {
+    const Color color = Color.fromARGB(255, 24, 24, 24);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarDividerColor: color,
+        systemNavigationBarColor: color));
+    // isFullScreen = false;
   }
 }
+
+enum FullScreenTypes { home ,mangaDetail, reader}

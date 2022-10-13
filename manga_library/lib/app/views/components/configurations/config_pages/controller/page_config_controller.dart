@@ -57,6 +57,7 @@ class SettingsOptionsController {
   updateSetting() {
     state.value = SettingsOptionsStates.update;
     start(updateType);
+    debugPrint("settings updated!");
   }
 }
 

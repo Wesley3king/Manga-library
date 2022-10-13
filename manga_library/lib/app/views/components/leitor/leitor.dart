@@ -22,8 +22,7 @@ class Leitor extends StatefulWidget {
   State<Leitor> createState() => _LeitorState();
 }
 
-class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
-  final FullScreenController screenController = FullScreenController();
+class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   late AnimationController bottomSheetController;
   final PagesController controller = PagesController();
   final LeitorController leitorController = LeitorController();
@@ -46,9 +45,12 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
   List<Widget> buildInfo(BuildContext context) {
     // final double height = MediaQuery.of(context).size.height - 120;
     // definir o fullScreen
+    // isVisible
+    //     ? screenController.enterEdgeFullScreen()
+    //     : screenController.enterFullScreen();
     isVisible
-        ? screenController.enterEdgeFullScreen()
-        : screenController.enterFullScreen();
+        ? leitorController.setFullScreen(true)
+        : leitorController.setFullScreen(false);
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape
             ? true
@@ -116,53 +118,86 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: SizedBox(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const SizedBox(width: 3.0,),
-                          SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Material(
-                              color: const Color.fromARGB(179, 0, 0, 0),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(40)),
-                              ),
-                              child: IconButton(onPressed: (){}, icon: const Icon(Icons.skip_previous, size: 25,)))),
-                              const SizedBox(width: 3.0,),
-                            Flexible(
-                              child: SizedBox(height: 50, child: AnimatedBuilder(
-                                animation: controller.state,
-                                builder: (context, child) => Material(
-                                  color: const Color.fromARGB(179, 0, 0, 0),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                                  ),
-                                  child: Slider(
-                                    value: controller.state.value.toDouble(),
-                                    max: leitorController.capitulosEmCarga.isEmpty ? 1.0 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length.toDouble() : leitorController.capitulosEmCarga[0].pages.length.toDouble(),
-                                    min: 1.0,
-                                    onChanged: (value) => controller.scrollTo(value.toInt(), leitorController.leitorTypeState.value),
-                                  )
-                                  )
-                                ),),
+                height: 60,
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(
+                      width: 3.0,
+                    ),
+                    SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Material(
+                            color: const Color.fromARGB(179, 0, 0, 0),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(40)),
                             ),
-                            const SizedBox(width: 3.0,),
-                          SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Material(
-                              color: const Color.fromARGB(179, 0, 0, 0),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(40)),
-                              ),
-                              child: IconButton(onPressed: (){}, icon: const Icon(Icons.skip_next, size: 25,)),)),
-                          const SizedBox(width: 3.0,),
-                        ],
+                            child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.skip_previous,
+                                  size: 25,
+                                )))),
+                    const SizedBox(
+                      width: 3.0,
+                    ),
+                    Flexible(
+                      child: SizedBox(
+                        height: 50,
+                        child: AnimatedBuilder(
+                            animation: controller.state,
+                            builder: (context, child) => Material(
+                                color: const Color.fromARGB(179, 0, 0, 0),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30)),
+                                ),
+                                child: Slider(
+                                  value: controller.state.value.toDouble(),
+                                  max: leitorController.capitulosEmCarga.isEmpty
+                                      ? 1.0
+                                      : leitorController
+                                              .capitulosEmCarga[0].download
+                                          ? leitorController.capitulosEmCarga[0]
+                                              .downloadPages.length
+                                              .toDouble()
+                                          : leitorController
+                                              .capitulosEmCarga[0].pages.length
+                                              .toDouble(),
+                                  min: 1.0,
+                                  onChanged: (value) => controller.scrollTo(
+                                      value.toInt(),
+                                      leitorController.leitorTypeState.value),
+                                ))),
                       ),
                     ),
+                    const SizedBox(
+                      width: 3.0,
+                    ),
+                    SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Material(
+                          color: const Color.fromARGB(179, 0, 0, 0),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                          ),
+                          child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.skip_next,
+                                size: 25,
+                              )),
+                        )),
+                    const SizedBox(
+                      width: 3.0,
+                    ),
+                  ],
+                ),
+              ),
             ),
             Container(
               color: appBarAndBottomAppBarColor,
@@ -186,12 +221,12 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
                   Builder(
                     builder: (context) {
                       return IconButton(
-                          onPressed: () => customBottomSheetForLeitor(context, bottomSheetController),
+                          onPressed: () => customBottomSheetForLeitor(
+                              context, bottomSheetController),
                           icon: Icon(
                             Icons.settings,
                             size: sizeOfButtons,
-                          )
-                        );
+                          ));
                     },
                   )
                 ],
@@ -212,8 +247,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
 
   @override
   void dispose() {
+    leitorController.setFullScreen(true);
     super.dispose();
-    screenController.exitFullScreen();
   }
 
   // double getHeight(BuildContext context) {

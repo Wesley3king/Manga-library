@@ -124,6 +124,16 @@ buildSettingsModel() {
       "nameOptions": "Thema e Idioma",
       "settings": [
         {
+          "nameConfig": "Rolar a Barra",
+          "description": "retira a barra ao rolar para baixo",
+          "type": "switch",
+          "value": data['Rolar a Barra'],
+          "function": functions['Rolar a Barra'],
+          "optionsAndValues": [
+            {"option": "switch", "value": true}
+          ]
+        },
+        {
           "type": "class",
           "nameClass": "Tema",
           "children": [
@@ -173,16 +183,6 @@ buildSettingsModel() {
               "function": functions['Idioma'],
               "optionsAndValues": [
                 {"option": "Português(Br)", "value": "ptbr"}
-              ]
-            },
-            {
-              "nameConfig": "Rolar a Barra",
-              "description": "retira a barra ao rolar para baixo",
-              "type": "switch",
-              "value": data['Rolar a Barra'],
-              "function": functions['Rolar a Barra'],
-              "optionsAndValues": [
-                {"option": "switch", "value": true}
               ]
             }
           ]

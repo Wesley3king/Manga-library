@@ -131,6 +131,7 @@ class InputTypes {
           value: data.value,
           onChanged: (value) {
             data.function(value, controller);
+            debugPrint("mudou: $value");
           }),
     );
   }

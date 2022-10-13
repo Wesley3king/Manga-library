@@ -43,7 +43,13 @@ Map<String, Function> settingsFunctions = {
     controller.updateSetting();
   },
   "Idioma": (dynamic value, SettingsOptionsController controller) {},
-  "Rolar a Barra": (dynamic value, SettingsOptionsController controller) {},
+  "Rolar a Barra": (dynamic value, SettingsOptionsController controller) {
+    GlobalData.settings['Rolar a Barra'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Tipo do Leitor": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Tipo do Leitor'] = value;
@@ -75,7 +81,13 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Tela cheia": (dynamic value, SettingsOptionsController controller) {},
+  "Tela cheia": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("valor de Tela cheia: $value");
+    GlobalData.settings['Tela cheia'] = value;
+    final ConfigSystemController configSystemController = ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Local de armazenamento":
       (dynamic value, SettingsOptionsController controller) {},
   "Autenticação": (dynamic value, SettingsOptionsController controller) {},

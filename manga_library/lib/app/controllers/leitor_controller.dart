@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 
@@ -9,6 +10,7 @@ import 'package:webviewx/webviewx.dart';
 import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
+  final FullScreenController screenController = FullScreenController();
   List<Capitulos> capitulos = [];
   List<Capitulos> capitulosEmCarga = [];
   // ===== State =====
@@ -148,6 +150,20 @@ class LeitorController {
       case "white":
         backgroundColorState.value = LeitorBackgroundColor.white;
         break;
+    }
+  }
+
+  setFullScreen(bool isFullScreen, {bool? keepFullScreen}) {
+    keepFullScreen ??= GlobalData.settings['Tela cheia'];
+
+    if (keepFullScreen!) {
+      if (isFullScreen) {
+        screenController.enterEdgeFullScreen();
+      } else {
+        screenController.enterFullScreen();
+      }
+    } else {
+      screenController.exitEdgeFullScreenToReader();
     }
   }
 }

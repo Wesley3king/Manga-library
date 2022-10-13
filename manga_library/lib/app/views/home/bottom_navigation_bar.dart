@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:manga_library/app/models/globais.dart';
 import '../../controllers/system_config.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -138,16 +139,8 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
     final direction = widget.controller.position.userScrollDirection;
     if (direction == ScrollDirection.forward) {
       show();
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarContrastEnforced: false,
-          systemNavigationBarDividerColor: Colors.black,
-          systemNavigationBarColor: Colors.transparent));
     } else if (direction == ScrollDirection.reverse) {
       hide();
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarContrastEnforced: false,
-          systemNavigationBarDividerColor: Colors.black26,
-          systemNavigationBarColor: Colors.black26));
     }
   }
 
@@ -166,12 +159,34 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
       });
     }
   }
+  /// controla o height e os efeitos, como a rolagem e estilo do NativeBottomNavigation
+  double setHeight() {
+    if (GlobalData.settings['Rolar a Barra']) {
+      if (isVisible) {
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarContrastEnforced: false,
+          systemNavigationBarDividerColor: Colors.black,
+          systemNavigationBarColor: Colors.transparent)
+        );
+        return (kBottomNavigationBarHeight + 48);
+      } else {
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarContrastEnforced: false,
+          systemNavigationBarDividerColor: Colors.black26,
+          systemNavigationBarColor: Colors.black26)
+        );
+        return 0;
+      }
+    } else {
+      return (kBottomNavigationBarHeight + 48);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: widget.duration,
-      height: isVisible ? (kBottomNavigationBarHeight + 48) : 0,
+      height: setHeight(),
       child: Wrap(
         children: [widget.child],
       ),
