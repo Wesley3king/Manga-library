@@ -9,7 +9,11 @@ class MyWebviewx extends StatefulWidget {
   final List<String> pages;
   final PagesController controller;
   final Color color;
-  const MyWebviewx({super.key, required this.pages, required this.color, required this.controller});
+  const MyWebviewx(
+      {super.key,
+      required this.pages,
+      required this.color,
+      required this.controller});
 
   @override
   State<MyWebviewx> createState() => _MyWebviewxState();
@@ -33,75 +37,12 @@ class _MyWebviewxState extends State<MyWebviewx> {
           '<img src="$str" width="${MediaQuery.of(context).size.width}px" alt="page of manga" />');
     }
     return '<head><style>::-webkit-scrollbar{display: none;}body{margin: 0px;padding:0px;background-color:${getColor()}}div{height: 34px}img{margin-top: -4px;}</style></head><body><div></div>${buffer.toString()}</body>';
-    //  style=""
   }
-
-  // List<Widget> buildInfo(BuildContext context) {
-  //   // final double height = MediaQuery.of(context).size.height - 120;
-  //   return [
-  //     AnimatedContainer(
-  //       duration: const Duration(milliseconds: 200),
-  //       height: showThis ? 60 : 0,
-  //       child: Container(
-  //         color: Colors.black54,
-  //         width: MediaQuery.of(context).size.width,
-  //         height: showThis ? 60 : 0,
-  //       ),
-  //     ),
-  //     Padding(
-  //       padding: const EdgeInsets.only(bottom: 170),
-  //       child: GestureDetector(
-  //         onTap: () => setState(() {
-  //           showThis = !showThis;
-  //         }),
-  //         //onDoubleTap: () => webviewController.callJsMethod("scroll", []),
-  //         child: Container(
-  //           //color: Colors.black54,
-  //           decoration: const BoxDecoration(
-  //             color: Colors.black54,
-  //           ),
-  //           height: 200,
-  //           width: MediaQuery.of(context).size.width - 190,
-  //         ),
-  //       ),
-  //     ),
-  //     AnimatedContainer(
-  //       duration: const Duration(milliseconds: 200),
-  //       height: showThis ? 60 : 0,
-  //       child: Wrap(
-  //         children: [
-  //           Container(
-  //             color: Colors.black54,
-  //             width: MediaQuery.of(context).size.width,
-  //             height: 60,
-  //           )
-  //         ],
-  //       ),
-  //     ),
-  //   ];
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  //   // Future.delayed(
-  //   //     const Duration(seconds: 2),
-  //   //     () => webviewController.loadContent( // 'https://flutter.dev'
-  //   //       "https://wesley3king.github.io/mangaKa/maked/",
-  //   //           SourceType.url,
-  //   //         ));
-  // }
-
-  // void turnOffWebView() async {
-  //  await webviewController.clearCache();
-  //   webviewController.dispose();
-  // }
 
   @override
   void dispose() {
     super.dispose();
-    // turnOffWebView();
+    // webviewController.clearCache();
     webviewController.dispose();
   }
 
