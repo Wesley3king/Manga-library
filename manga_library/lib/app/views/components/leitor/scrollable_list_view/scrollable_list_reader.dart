@@ -133,7 +133,7 @@ class ScrollablePositionedListPageState
             child: Center(child: CircularProgressIndicator()),
           );
         } else {
-          getSize(widget.lista[index], MediaQuery.of(context).size.width);
+          generateImage(widget.lista[index], MediaQuery.of(context).size.width);
           return const SizedBox(
             width: double.infinity,
             height: 800,
@@ -160,7 +160,7 @@ class ScrollablePositionedListPageState
     return Uint8List.fromList(rs);
   }
 
-  Future<void> getSize(String src, double width) async {
+  Future<void> generateImage(String src, double width) async {
     try {
       isWorking = true;
       Uint8List bytes = widget.isOffLine
@@ -171,6 +171,14 @@ class ScrollablePositionedListPageState
         bytes,
         fit: BoxFit.fill,
         filterQuality: widget.filterQuality,
+        errorBuilder: (context, error, stackTrace) => SizedBox(
+          width: width,
+          height: 100,
+          child: Row(children: [
+            const Icon(Icons.report_problem),
+            Text('Erro ao carregar Imagem: $src')
+          ],),
+        ),
       );
       itemHeights.add((image.height * width) / image.width);
       images.add(image2);
@@ -181,7 +189,7 @@ class ScrollablePositionedListPageState
     } catch (e) {
       debugPrint("erro no getSize: $e");
       isWorking = false;
-      getSize(src, width);
+      generateImage(src, width);
     }
   }
 

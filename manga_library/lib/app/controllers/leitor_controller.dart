@@ -5,6 +5,7 @@ import 'package:manga_library/app/models/globais.dart';
 // import '../models/leitor_pages.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:webviewx/webviewx.dart';
 import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
@@ -33,6 +34,11 @@ class LeitorController {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.capitulosDisponiveis;
+      // configurar o leitor
+      setFilterQuality("pattern");
+      setOrientacion("pattern");
+      setBackgroundColor();
+      setReaderType("pattern");
 
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
@@ -57,10 +63,6 @@ class LeitorController {
       // } catch (e) {
       //   debugPrint("erro 3: $e");
       // }
-      setFilterQuality("pattern");
-      setOrientacion("pattern");
-      setBackgroundColor();
-      setReaderType("pattern");
       state.value = LeitorStates.sucess;
     } catch (e) {
       debugPrint('erro em start LeitorController');
@@ -185,6 +187,7 @@ class PagesController {
   ValueNotifier<int> state = ValueNotifier<int>(1);
   PageController pageController = PageController();
   ItemScrollController scrollControllerList = ItemScrollController();
+  WebViewXController? webViewController;
 
   // start() {
   //   state.value++;
@@ -195,8 +198,14 @@ class PagesController {
     state.value = max;
   }
 
+  // recebe o controller do webViewX
+  set setWebViewController(WebViewXController webViewXController) {
+    webViewController = webViewXController;
+  }
+
   void scrollTo(int index, LeitorTypes type) {
     setPage = index;
+    index--;
     switch (type) {
       case LeitorTypes.vertical:
         pageController.jumpToPage(index);
@@ -217,6 +226,7 @@ class PagesController {
         scrollControllerList.jumpTo(index: index);
         break;
       case LeitorTypes.webview:
+        webViewController?.callJsMethod('scrollToIndex', [index]);
         break;
     }
   }

@@ -142,8 +142,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin{
                                   ),
                                   child: Slider(
                                     value: controller.state.value.toDouble(),
-                                    max: leitorController.capitulosEmCarga.isEmpty ? 1 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length.toDouble() : leitorController.capitulosEmCarga[0].pages.length.toDouble(),
-                                    min: 0.0,
+                                    max: leitorController.capitulosEmCarga.isEmpty ? 1.0 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length.toDouble() : leitorController.capitulosEmCarga[0].pages.length.toDouble(),
+                                    min: 1.0,
                                     onChanged: (value) => controller.scrollTo(value.toInt(), leitorController.leitorTypeState.value),
                                   )
                                   )

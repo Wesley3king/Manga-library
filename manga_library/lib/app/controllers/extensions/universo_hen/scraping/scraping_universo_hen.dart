@@ -160,7 +160,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       books.add({
         "nome": name ?? "error",
         "link": corteLink[1].replaceAll("/", ""),
-        "capa1": "https://cdn.dogehls.xyz/$img"
+        "capa1": img ?? "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg"
       });
     }
     return books;

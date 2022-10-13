@@ -49,15 +49,23 @@ class _MyWebviewxState extends State<MyWebviewx> {
     <title>teste de html</title>
     <style>
         body{
-            padding: 0;
-            margin: 0;
+          padding: 0;
+          margin: 0;
+          background-color:${getColor()};
         }
         ::-webkit-scrollbar{
             display: none;
         }
+        #initial_space{
+          height: 34px;
+        }
+        img{
+          margin-top: -4px;
+        }
     </style>
 </head>
 <body>
+    <div id="initial_space"></div>
     <div id="images">
         
     </div>
@@ -72,14 +80,9 @@ class _MyWebviewxState extends State<MyWebviewx> {
           try{
             var image = window.document.querySelector(`#img`+ indice);
             image.scrollIntoView();
-            testPlatformSpecificMethod(indice);
           } catch (e) {
             console.log('erro '+e);
           }
-        }
-
-        function sendResponse(indice) {
-           // console.log(`index: ` + index);
         }
 
         async function renderCore(src) {
@@ -125,11 +128,14 @@ class _MyWebviewxState extends State<MyWebviewx> {
       height: MediaQuery.of(context).size.height,
       initialContent: buildPages(context),
       initialSourceType: SourceType.html,
-      onWebViewCreated: (controller) => webviewController = controller,
+      onWebViewCreated: (controller) {
+        webviewController = controller;
+        widget.controller.setWebViewController = webviewController;
+      },
       jsContent: const {
         EmbeddedJsContent(
           webJs:
-              "function testPlatformSpecificMethod(indice) {TestDartCallback('Web callback says: ' + indice) }",
+              "function testPlatformSpecificMethod(indice) {TestDartCallback(indice) }",
           mobileJs:
               "function testPlatformSpecificMethod(indice) { TestDartCallback.postMessage(indice) }",
         ),
