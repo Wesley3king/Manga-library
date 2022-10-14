@@ -178,7 +178,7 @@ class InputTypes {
         subtitle: Text(data.description),
         enabled: isNotDisponible ? false : true,
         onTap: () {
-          String password = "";
+          String text = "";
           showDialog(
             context: context,
             builder: (context) => SimpleDialog(
@@ -191,7 +191,7 @@ class InputTypes {
                     autofocus: true,
                     // decoration: const InputDecoration(
                     //     label: Text("Nome da Biblioteca")),
-                    onChanged: (value) => password = value,
+                    onChanged: (value) => text = value,
                   ),
                 ),
                 Row(
@@ -201,7 +201,11 @@ class InputTypes {
                         onPressed: () => Navigator.of(context).pop(),
                         child: const Text("Cancelar")),
                     TextButton(
-                        onPressed: () {}, child: const Text("Adicionar")),
+                        onPressed: () {
+                          data.function(text, controller);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Salvar")),
                   ],
                 )
               ],

@@ -90,11 +90,30 @@ Map<String, Function> settingsFunctions = {
   },
   "Local de armazenamento":
       (dynamic value, SettingsOptionsController controller) {},
-  "Autenticação": (dynamic value, SettingsOptionsController controller) {},
-  "Tipo de Autenticação":
-      (dynamic value, SettingsOptionsController controller) {},
-  "Senha de Autenticação":
-      (dynamic value, SettingsOptionsController controller) {},
+  "Autenticação": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor = $value");
+    GlobalData.settings['Autenticação'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "Tipo de Autenticação": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor = $value");
+    GlobalData.settings['Tipo de Autenticação'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "Senha de Autenticação": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor = $value");
+    GlobalData.settings['Senha de Autenticação'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Multiplas Pesquisas":
       (dynamic value, SettingsOptionsController controller) {},
   "Conteudo NSFW": (dynamic value, SettingsOptionsController controller) {},

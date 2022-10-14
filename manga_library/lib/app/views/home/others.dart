@@ -32,7 +32,7 @@ class _OthersPageState extends State<OthersPage> {
                     width: MediaQuery.of(context).size.width,
                     height: 200,
                     child: Image.asset(
-                      'assests/imgs/grid-image-ready.png',
+                      'assets/imgs/grid-image-ready.png',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -46,7 +46,7 @@ class _OthersPageState extends State<OthersPage> {
                       width: 200,
                       height: 200,
                       child: Image.asset(
-                        'assests/imgs/new-icon-manga-mini.png',
+                        'assets/imgs/new-icon-manga-mini.png',
                         fit: BoxFit.contain,
                       ),
                     ),

@@ -72,13 +72,13 @@ dev_dependencies:
 #flutter_native_splash config
 flutter_native_splash:
   color: "#ffffff"
-  image: "assests/imgs/new-icon-manga-mini.png"
+  image: "assets/imgs/new-icon-manga-mini.png"
   android: true
   ios: true
 
 #flutter_launcher_icons config
 flutter_icons:
-  image_path: "assests/imgs/new-icon-manga-mini.png"
+  image_path: "assets/imgs/new-icon-manga-mini.png"
   ios: true
   remove_alpha_ios: true
   android: "launcher_icon"
@@ -95,8 +95,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assests/imgs/new-icon-manga-mini.png
-    - assests/imgs/grid-image-ready.png
+    - assets/imgs/new-icon-manga-mini.png
+    - assets/imgs/grid-image-ready.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

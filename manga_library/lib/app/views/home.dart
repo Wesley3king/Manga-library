@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/views/home/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/home/library.dart';
 import 'package:manga_library/app/views/home/others.dart';
 import 'package:manga_library/app/views/home/search.dart';
+
+import '../models/globais.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -67,6 +70,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // if (GlobalData.settings['Autenticação']) {
+    //   GoRouter.of(context).replace('/auth');
+    // }
     return AnimatedBuilder(
       animation: currentRoute,
       builder: (context, child) => WillPopScope(
