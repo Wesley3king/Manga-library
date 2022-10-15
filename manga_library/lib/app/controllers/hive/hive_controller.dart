@@ -2,6 +2,7 @@ import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
@@ -10,22 +11,24 @@ class HiveController {
   static Box? clientData;
   static Box? libraries;
   static LazyBox? books;
+  static Box? historic;
 
   Future<void> start() async {
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ClientDataModelHiveAdapter());
     }
-    print("hive enabled");
+    debugPrint("hive enabled");
     clientData = await Hive.openBox('clientData');
     libraries = await Hive.openBox('libraries');
+    historic = await Hive.openBox('historic');
     books = await Hive.openLazyBox('books');
   }
 
-  void end() {
-    clientData?.close();
-    libraries?.close();
-    books?.close();
-  }
+  // void end() {
+  //   clientData?.close();
+  //   libraries?.close();
+  //   books?.close();
+  // }
 
   // ---------------------------------------------------------------------------
   //      ======================= CLIENT DATA =======================
@@ -189,7 +192,8 @@ class HiveController {
 
   Future<List<LibraryModel>> writeOcultLibraryData() async {
     debugPrint("escrevendo o model inicial na DB!");
-    final LibraryModel model = LibraryModel.fromJson({"library": "ocultos", "books": []});
+    final LibraryModel model =
+        LibraryModel.fromJson({"library": "ocultos", "books": []});
     libraries?.put(ocultLibrary, [model.toJson()]);
     return [model];
   }
@@ -298,7 +302,7 @@ class HiveController {
       await books?.put("allbooks", []);
       return true;
     } catch (e) {
-      print('erro no writeBook, at HiveController: $e');
+      debugPrint('erro no writeBook, at HiveController: $e');
       return false;
     }
   }
@@ -310,7 +314,7 @@ class HiveController {
       await books?.put("allbooks", jsonModel);
       return true;
     } catch (e) {
-      print('erro no updateBook, at HiveController: $e');
+      debugPrint('erro no updateBook, at HiveController: $e');
       return false;
     }
   }
@@ -322,15 +326,50 @@ class HiveController {
         writeBook();
         return [];
       } else {
-        print(" - dados do Hive:");
-        print(data);
+        debugPrint(" - dados do Hive:");
+        debugPrint('$data');
         return data
             .map((book) => MangaInfoOffLineModel.fromJson(book))
             .toList();
       }
     } catch (e) {
-      print('erro no getBooks, at HiveController: $e');
+      debugPrint('erro no getBooks, at HiveController: $e');
       return null;
+    }
+  }
+
+  // ==========================================================================
+  //      ---------------------- HISTORIC --------------------------------
+  // ==========================================================================
+
+  Future<bool> writeHistoric() async {
+    try {
+      await historic?.put('historic', []);
+      return true;
+    } catch (e) {
+      debugPrint("erro no writeHistoric at HiveController: $e");
+      return false;
+    }
+  }
+
+  Future<bool> updateHistoric(List<HistoricModel> models) async {
+    try {
+      List<Map<String, dynamic>> data = models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
+      await historic?.put('historic', data);
+      return true;
+    } catch (e) {
+      debugPrint("erro no updateHistoric at HiveController: $e");
+      return false;
+    }
+  }
+
+  Future<List<HistoricModel>> getHistoric() async {
+    try {
+      List<Map<String, dynamic>> data =await historic?.get('historic');
+      return data.map((json) => HistoricModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("erro no updateHistoric at HiveController: $e");
+      return [];
     }
   }
 }

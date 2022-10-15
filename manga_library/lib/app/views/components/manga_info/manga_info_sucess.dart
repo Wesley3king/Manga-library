@@ -1,17 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/controllers/historic_manager_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
-import 'package:manga_library/app/models/leitor_pages.dart';
+import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
-// import 'package:manga_library/app/views/components/manga_info/add_to_library.dart';
-// import 'package:manga_library/app/views/components/manga_info/chapters_list_states.dart';
 import 'package:manga_library/app/views/components/manga_info/manga_details.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../../controllers/system_config.dart';
-import '../../../models/globais.dart';
 import 'off_line/off_line_widget.dart';
 
 class SucessMangaInfo extends StatefulWidget {
@@ -34,6 +31,8 @@ class SucessMangaInfo extends StatefulWidget {
 }
 
 class _SucessMangaInfoState extends State<SucessMangaInfo> {
+  final ManagerHistoricController historicController =
+      ManagerHistoricController();
   final ConfigSystemController configSystemController =
       ConfigSystemController();
   late final ChaptersController chaptersController;
@@ -55,6 +54,16 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       onPressed: () async {
         await chaptersController.marcarDesmarcar(
             id, link, nameImageLink, widget.dados.idExtension);
+        await historicController.insertOnHistoric(
+          HistoricModel(
+            name: widget.dados.name,
+            img: widget.dados.img,
+            link: widget.link,
+            idExtension: widget.dados.idExtension,
+            chapter: id,
+            date: ""
+          )
+        );
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             //ChaptersController.capitulosCorrelacionados,
@@ -75,6 +84,16 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       onPressed: () async {
         await chaptersController.marcarDesmarcar(
             id, link, nameImageLink, widget.dados.idExtension);
+        await historicController.insertOnHistoric(
+          HistoricModel(
+            name: widget.dados.name,
+            img: widget.dados.img,
+            link: widget.link,
+            idExtension: widget.dados.idExtension,
+            chapter: id,
+            date: ""
+          )
+        );
         chaptersController.updateChapters(
             widget.controller.capitulosDisponiveis,
             // ChaptersController.capitulosCorrelacionados,
@@ -231,12 +250,11 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   );
                 case ChaptersStates.sucess:
                   return VsScrollbar(
-                    controller:  _scrollController,
+                    controller: _scrollController,
                     style: const VsScrollbarStyle(
-                      color: Color.fromARGB(223, 158, 158, 158)
-                    ),
+                        color: Color.fromARGB(223, 158, 158, 158)),
                     child: ListView.builder(
-                      controller:  _scrollController,
+                      controller: _scrollController,
                       itemCount:
                           ChaptersController.capitulosCorrelacionados.length +
                               1,
