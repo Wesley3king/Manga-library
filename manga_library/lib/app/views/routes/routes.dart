@@ -7,6 +7,7 @@ import 'package:manga_library/app/views/components/configurations/backup_config/
 import 'package:manga_library/app/views/components/configurations/config_options.dart';
 import 'package:manga_library/app/views/components/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/components/configurations/library_config/library_config_main.dart';
+import 'package:manga_library/app/views/components/historic/historic_page.dart';
 import 'package:manga_library/app/views/components/library/ocult%20library/ocult_library.dart';
 import 'package:manga_library/app/views/home.dart';
 import 'package:manga_library/app/views/components/leitor/leitor.dart';
@@ -97,5 +98,9 @@ final routes = GoRouter(
       GoRoute(
         path: '/backupconfig',
         builder: (context, state) => const BackupConfig(),
+      ),
+      GoRoute(
+        path: '/historic',
+        builder: (context, state) => const HistoricPage(),
       ),
     ]);

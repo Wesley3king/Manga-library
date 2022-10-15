@@ -10,6 +10,7 @@ class ManagerHistoricController {
   /// caso ele já exista apenas atualiza o [capitulo] e a [data].
   Future<bool> insertOnHistoric(HistoricModel model) async {
     try {
+      model.date = getDateTime();
       List<HistoricModel> data = await _hiveController.getHistoric();
       bool done = false;
       for (int i = 0; i < data.length; ++i) {
@@ -47,6 +48,7 @@ class ManagerHistoricController {
       bool updated = await _hiveController.updateHistoric(data);
       // caso tenha um erro ao atualizar
       if (!updated) return false;
+      debugPrint(" === adicionado ao Histórico! ===");
       return true;
     } catch (e) {
       debugPrint("erro no indertOnHistoric at ManagerHistoricController: $e");

@@ -354,7 +354,8 @@ class HiveController {
 
   Future<bool> updateHistoric(List<HistoricModel> models) async {
     try {
-      List<Map<String, dynamic>> data = models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
+      List<Map<String, dynamic>> data =
+          models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
       await historic?.put('historic', data);
       return true;
     } catch (e) {
@@ -365,7 +366,11 @@ class HiveController {
 
   Future<List<HistoricModel>> getHistoric() async {
     try {
-      List<Map<String, dynamic>> data =await historic?.get('historic');
+      List<dynamic>? data = await historic?.get('historic');
+      if (data == null) {
+        await writeHistoric();
+        return [];
+      }
       return data.map((json) => HistoricModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no updateHistoric at HiveController: $e");

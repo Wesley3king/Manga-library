@@ -67,7 +67,7 @@ class _OthersPageState extends State<OthersPage> {
               ListTile(
                 leading: const Icon(Icons.history),
                 title: const Text('Historico'),
-                onTap: () {},
+                onTap: () => GoRouter.of(context).push('/historic'),
               ),
               ListTile(
                 leading: const Icon(Icons.bookmark),

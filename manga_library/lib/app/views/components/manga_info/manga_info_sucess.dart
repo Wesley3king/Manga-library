@@ -44,7 +44,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   // final List<Capitulos> listaCapitulos;
   //   final List<ModelLeitor>? listaCapitulosDisponiveis;
   // trailings
-  IconButton naoLido(String id, String link) {
+  IconButton naoLido(String id, String link, String chapter) {
     Map<String, String> nameImageLink = {
       "name": widget.dados.name,
       "img": widget.dados.img,
@@ -60,7 +60,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             img: widget.dados.img,
             link: widget.link,
             idExtension: widget.dados.idExtension,
-            chapter: id,
+            chapter: chapter,
             date: ""
           )
         );
@@ -74,7 +74,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     );
   }
 
-  IconButton lido(String id, String link) {
+  IconButton lido(String id, String link, String chapter) {
     Map<String, String> nameImageLink = {
       "name": widget.dados.name,
       "img": widget.dados.img,
@@ -90,7 +90,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
             img: widget.dados.img,
             link: widget.link,
             idExtension: widget.dados.idExtension,
-            chapter: id,
+            chapter: chapter,
             date: ""
           )
         );
@@ -138,8 +138,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       ),
       subtitle: Text(capitulo.readed ? "lido" : "não lido"),
       leading: capitulo.readed
-          ? lido(capitulo.id.toString(), widget.link)
-          : naoLido(capitulo.id.toString(), widget.link),
+          ? lido(capitulo.id.toString(), widget.link, capitulo.capitulo)
+          : naoLido(capitulo.id.toString(), widget.link, capitulo.capitulo),
       trailing: MangaInfoController.isAnOffLineBook
           ? OffLineWidget(
               capitulo: capitulo,
