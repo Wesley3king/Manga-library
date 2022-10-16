@@ -1,6 +1,8 @@
 class MangaInfoOffLineModel {
   MangaInfoOffLineModel({
     required this.name,
+    required this.authors,
+    required this.state,
     required this.description,
     required this.img,
     required this.link,
@@ -11,7 +13,9 @@ class MangaInfoOffLineModel {
     required this.capitulos,
   });
   late final String name;
+  late final String authors;
   late final String description;
+  late final String state;
   late final String img;
   late final String link;
   late final int idExtension;
@@ -22,6 +26,8 @@ class MangaInfoOffLineModel {
 
   MangaInfoOffLineModel.fromJson(Map<dynamic, dynamic> json) {
     name = json['name'];
+    authors = json[' authors'];
+    state = json['state'];
     description = json['description'];
     img = json['img'];
     link = json['link'];
@@ -35,17 +41,19 @@ class MangaInfoOffLineModel {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['description'] = description;
-    _data['img'] = img;
-    _data['link'] = link;
-    _data['idExtension'] = idExtension;
-    _data['genres'] = genres;
-    _data['alternativeName'] = alternativeName;
-    _data['chapters'] = chapters;
-    _data['capitulos'] = capitulos.map((e) => e.toJson()).toList();
-    return _data;
+    final data = <String, dynamic>{};
+    data['name'] = name;
+    data['authors'] = authors;
+    data['state'] = state;
+    data['description'] = description;
+    data['img'] = img;
+    data['link'] = link;
+    data['idExtension'] = idExtension;
+    data['genres'] = genres;
+    data['alternativeName'] = alternativeName;
+    data['chapters'] = chapters;
+    data['capitulos'] = capitulos.map((e) => e.toJson()).toList();
+    return data;
   }
 }
 
@@ -53,6 +61,7 @@ class Capitulos {
   Capitulos({
     required this.id,
     required this.capitulo,
+    required this.description,
     required this.download,
     required this.readed,
     required this.disponivel,
@@ -61,6 +70,7 @@ class Capitulos {
   });
   late final dynamic id;
   late final String capitulo;
+  late String description;
   late bool download;
   late bool readed;
   late bool disponivel;
@@ -70,6 +80,7 @@ class Capitulos {
   Capitulos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     capitulo = json['capitulo'];
+    description = json['description'];
     download = json['download'];
     disponivel = json['disponivel'];
     readed = json['readed'];
@@ -78,14 +89,15 @@ class Capitulos {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['capitulo'] = capitulo;
-    _data['download'] = download;
-    _data['disponivel'] = disponivel;
-    _data['readed'] = readed;
-    _data['downloadPages'] = downloadPages;
-    _data['pages'] = pages;
-    return _data;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['capitulo'] = capitulo;
+    data['description'] = description;
+    data['download'] = download;
+    data['disponivel'] = disponivel;
+    data['readed'] = readed;
+    data['downloadPages'] = downloadPages;
+    data['pages'] = pages;
+    return data;
   }
 }

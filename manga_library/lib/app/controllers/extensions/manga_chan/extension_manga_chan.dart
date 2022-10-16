@@ -40,6 +40,7 @@ class ExtensionMangaChan implements Extension {
         capitulo: "error",
         id: "error",
         disponivel: false,
+        description: '',
         download: false,
         downloadPages: [],
         pages: [],

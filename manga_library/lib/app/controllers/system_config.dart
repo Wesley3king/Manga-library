@@ -47,6 +47,16 @@ class SystemController {
       await fileManager.verifyIfIsFirstTime();
     }
   }
+
+  /// restaura as configurações originais
+  Future<void> restartApp() async {
+    _hiveController.writeClientData();
+    await _hiveController.writeLibraryData();
+    await _hiveController.writeBook();
+    await _hiveController.writeSettings();
+    await _hiveController.writeOcultLibraryData();
+    await _hiveController.writeHistoric();
+  }
 }
 
 class ConfigSystemController extends ChangeNotifier {

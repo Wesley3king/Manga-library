@@ -25,6 +25,8 @@ class MangaInfoController {
 
   MangaInfoOffLineModel data = MangaInfoOffLineModel(
     name: "",
+    authors: "",
+    state: "",
     description: "",
     img: "",
     link: "",
@@ -378,6 +380,7 @@ class ChaptersController {
               listaCapitulosCorrelacionadosLidos.add(Capitulos(
                 id: capitulosCorrelacionados[i].id,
                 capitulo: capitulosCorrelacionados[i].capitulo,
+                description: capitulosCorrelacionados[i].description,
                 download: capitulosCorrelacionados[i].download,
                 readed: true,
                 disponivel: capitulosCorrelacionados[i].disponivel,
@@ -391,6 +394,7 @@ class ChaptersController {
             listaCapitulosCorrelacionadosLidos.add(Capitulos(
               id: capitulosCorrelacionados[i].id,
               capitulo: capitulosCorrelacionados[i].capitulo,
+              description: capitulosCorrelacionados[i].description,
               download: capitulosCorrelacionados[i].download,
               readed: false,
               disponivel: capitulosCorrelacionados[i].disponivel,
@@ -522,6 +526,7 @@ class ChaptersController {
           capitulosCorrelacionados.add(Capitulos(
             id: listaCapitulos[indice].id,
             capitulo: listaCapitulos[indice].capitulo,
+            description: listaCapitulos[indice].description,
             download: listaCapitulosDisponiveis[alreadyIndice].download,
             readed: false,
             disponivel: true,
@@ -541,6 +546,7 @@ class ChaptersController {
         capitulosCorrelacionados.add(Capitulos(
           id: listaCapitulos[indice].id,
           capitulo: listaCapitulos[indice].capitulo,
+          description: listaCapitulos[indice].description,
           download: false, // listaCapitulosDisponiveis[indice].download
           readed: false,
           disponivel: false,
@@ -575,6 +581,7 @@ class ChaptersController {
               listaCapitulosCorrelacionadosLidos.add(Capitulos(
                 id: capitulosCorrelacionados[i].id,
                 capitulo: capitulosCorrelacionados[i].capitulo,
+                description: capitulosCorrelacionados[i].description,
                 download: false,
                 readed: true,
                 disponivel: capitulosCorrelacionados[i].disponivel,

@@ -60,12 +60,14 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? author;
+    String? tradutor;
     List<String> genres = [];
     List<String> pagesChapter = [];
     if (parser != null) {
       List<Result>? postBoxes = parser.querySelectorAll("div.post-box");
       Result? postInfo = postBoxes[0];
-      List<Result>? itens = postInfo.querySelectorAll("li");
+      // List<Result>? itens = postInfo.querySelectorAll("li");
       // name
       name = postInfo.querySelector("h1")!.text;
       debugPrint("name: $name");
@@ -78,17 +80,40 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       List<Result>? generos = postInfo.querySelectorAll("ul.post-itens > li");
       // print(generos);
 
-      for (int i = 0; i < 2; ++i) {
-        List<Result>? classeDeGenero = generos![i].querySelectorAll("a");
-        for (Result result in classeDeGenero!) {
-          genres.add("${result.text}");
+      try {
+        for (int i = 0; i < 2; ++i) {
+          List<Result>? classeDeGenero = generos![i].querySelectorAll("a");
+          for (Result result in classeDeGenero!) {
+            genres.add("${result.text}");
+          }
+        }
+      } catch (e) {
+        debugPrint("não tem duas classes: $e");
+      }
+      // author & tradutor
+      for (Result resultado in generos!) {
+        String? txt = resultado.querySelector("strong")?.text;
+        if (txt == "Artista") {
+          List<Result>? lista = resultado.querySelectorAll("a");
+          StringBuffer buffer = StringBuffer();
+          for (Result result in lista ?? []) {
+            buffer.write('${result.text}');
+          }
+          author = buffer.toString();
+        } else if (txt == "Tradutor") {
+          List<Result>? lista = resultado.querySelectorAll("a");
+          StringBuffer buffer = StringBuffer();
+          for (Result result in lista ?? []) {
+            buffer.write('${result.text}');
+          }
+          tradutor = buffer.toString();
         }
       }
       // debugPrint("genres: $genres");
       // chapters
       List<Result>? chapterPages =
           postBoxes[1].querySelectorAll("ul.post-fotos > li > a"); //  li a
-      
+
       for (Result result in chapterPages!) {
         String? chapter = result.querySelector("img")!.src;
         chapter = chapter?.replaceFirst("-241x334", "");
@@ -100,6 +125,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
+        state: 'Finalizado',
+        authors: author ?? "Autor desconhecido",
         img: img ?? "erro",
         link: "https://hentaiseason.com/$link",
         idExtension: 7,
@@ -111,6 +138,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             id: "chap1",
             capitulo: "1",
             download: false,
+            description: tradutor ?? "",
             readed: false,
             disponivel: true,
             downloadPages: [],
@@ -119,6 +147,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         ],
       );
     }
+    return null;
   } catch (e) {
     debugPrint("erro no scrapingMangaDetail at ExtensionHenSeason: $e");
     return null;
@@ -128,7 +157,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ============== SEARCH ==============
 Future<List<Map<String, String>>> scrapingSearch(String txt) async {
   try {
-    Parser? parser = await Chaleno().load("https://hentaiseason.com/?s=$txt");// https://hentaiseason.com/?s=do
+    Parser? parser = await Chaleno().load(
+        "https://hentaiseason.com/?s=$txt"); // https://hentaiseason.com/?s=do
     Result? result = parser?.querySelector("div.lista > ul");
     // books
     List<Map<String, String>> books = [];
@@ -142,7 +172,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       debugPrint("img: $img");
       // link
       String? link = book.querySelector("a")!.href;
-       debugPrint("link: $link");
+      debugPrint("link: $link");
       List<String> corteLink = link!.split("com/");
       String modicaredLink = corteLink[1].replaceAll("/", "_");
 

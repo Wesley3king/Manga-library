@@ -15,19 +15,20 @@ void main() {
     debugPrint("data: $data");
   });
 
-  // test("deve retornar um model Capitulos com as paginas", () async {
-  //   var data = await extend.getPages("14859", [
-  //     Capitulos(
-  //         id: "14859",
-  //         capitulo: "1",
-  //         download: false,
-  //         readed: false,
-  //         disponivel: true,
-  //         downloadPages: [],
-  //         pages: [])
-  //   ]);
-  //   debugPrint("data: ${data.pages}");
-  // });
+  test("deve retornar um model Capitulos com as paginas", () async {
+    var data = await extend.getPages("14859", [
+      Capitulos(
+          id: "14859",
+          capitulo: "1",
+          description: '',
+          download: false,
+          readed: false,
+          disponivel: true,
+          downloadPages: [],
+          pages: [])
+    ]);
+    debugPrint("data: ${data.pages}");
+  });
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("dom");

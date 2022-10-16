@@ -233,6 +233,7 @@ class InputTypes {
                         child: const Text("Cancelar")),
                     TextButton(
                         onPressed: () {
+                          data.function(true, controller);
                           Navigator.of(context).pop();
                         },
                         child: const Text("Confirmar"))

@@ -15,15 +15,14 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Tamanho dos quadros":
-      (dynamic value, SettingsOptionsController controller) {
-        debugPrint("alterar o valor de Tamanho dos quadros: $value");
-        GlobalData.settings['Tamanho dos quadros'] = value;
-        final ConfigSystemController configSystemController =
-            ConfigSystemController();
-        configSystemController.update(settings);
-        controller.updateSetting();
-      },
+  "Tamanho dos quadros": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor de Tamanho dos quadros: $value");
+    GlobalData.settings['Tamanho dos quadros'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Atualizar as Capas":
       (dynamic value, SettingsOptionsController controller) {},
   "Tema": (dynamic value, SettingsOptionsController controller) {
@@ -66,7 +65,8 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Orientação do Leitor": (dynamic value, SettingsOptionsController controller) {
+  "Orientação do Leitor":
+      (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Orientação do Leitor'] = value;
     final ConfigSystemController configSystemController =
@@ -84,7 +84,8 @@ Map<String, Function> settingsFunctions = {
   "Tela cheia": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de Tela cheia: $value");
     GlobalData.settings['Tela cheia'] = value;
-    final ConfigSystemController configSystemController = ConfigSystemController();
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
     configSystemController.update(settings);
     controller.updateSetting();
   },
@@ -98,7 +99,8 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Tipo de Autenticação": (dynamic value, SettingsOptionsController controller) {
+  "Tipo de Autenticação":
+      (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Tipo de Autenticação'] = value;
     final ConfigSystemController configSystemController =
@@ -106,7 +108,8 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Senha de Autenticação": (dynamic value, SettingsOptionsController controller) {
+  "Senha de Autenticação":
+      (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Senha de Autenticação'] = value;
     final ConfigSystemController configSystemController =
@@ -119,5 +122,8 @@ Map<String, Function> settingsFunctions = {
   "Conteudo NSFW": (dynamic value, SettingsOptionsController controller) {},
   "Mostrar na Lista": (dynamic value, SettingsOptionsController controller) {},
   "Limpar o Cache": (dynamic value, SettingsOptionsController controller) {},
-  "Restaurar": (dynamic value, SettingsOptionsController controller) {},
+  "Restaurar": (dynamic value, SettingsOptionsController controller) {
+    final SystemController systemController = SystemController();
+    systemController.restartApp();
+  },
 };

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/historic_manager_controller.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/views/components/historic/controller/historic_controller.dart';
@@ -46,31 +47,13 @@ class HistoricProcessBuilders {
       child: Text(
         referenceName,
         style: const TextStyle(
-          fontSize: 17,
-          color: Color.fromARGB(255, 221, 221, 221)
-        ),
+            fontSize: 17, color: Color.fromARGB(255, 221, 221, 221)),
       ),
     ));
   }
 
   /// constroi o listTile
   void buildListTile(HistoricModel model) {
-    // historicWidgets.add(ListTile(
-    //   title: Text(model.name),
-    //   subtitle: Text('Cap. ${model.chapter} - ${getHour(model.date)}'),
-    //   leading: ClipRRect(
-    //     borderRadius: const BorderRadius.all(Radius.circular(8)),
-    //     child: SizedBox(
-    //       width: 50,
-    //       height: 80,
-    //       child: CachedNetworkImage(imageUrl: model.img),
-    //     ),
-    //   ),
-    //   trailing: IconButton(
-    //       onPressed: () => _managerHistoricController.removeFromHistoric(model),
-    //       icon: const Icon(Icons.delete)),
-    //   // style: ListTileStyle.drawer,
-    // ));
     historicWidgets.add(CustomListTile(
       model: model,
       controller: managerHistoricController,
@@ -97,7 +80,43 @@ class HistoricProcessBuilders {
     } else if (int.parse(atualDay[2]) == (int.parse(modelDay[2]) + 1)) {
       return "Ontem";
     } else {
-      return "${modelDay[2]}/${modelDay[1]} de ${modelDay[0]}";
+      return "${modelDay[2]} de ${getMonth(modelDay[1])}. de ${modelDay[0]}";
+    }
+  }
+
+  String getMonth(String numberOfMonth) {
+    try {
+      int indice = int.parse(numberOfMonth);
+      switch (indice) {
+        case 1:
+          return "Jan";
+        case 2:
+          return "Fev";
+        case 3:
+          return "Mar";
+        case 4:
+          return "Abr";
+        case 5:
+          return "Mai";
+        case 6:
+          return "Jun";
+        case 7:
+          return "Jul";
+        case 8:
+          return "Ago";
+        case 9:
+          return "Set";
+        case 10:
+          return "Out";
+        case 11:
+          return "Nov";
+        case 12:
+          return "Dez";
+      }
+      return numberOfMonth;
+    } catch (e) {
+      debugPrint("erro no getMonth at HistoricProcessBuilders: $e");
+      return numberOfMonth;
     }
   }
 
@@ -122,6 +141,10 @@ class CustomListTile extends StatelessWidget {
       required this.historicController,
       required this.builders});
 
+  void goToMangaDetail(BuildContext context, String link, int idExtension) {
+    GoRouter.of(context).push('/detail/$link/$idExtension');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -131,42 +154,47 @@ class CustomListTile extends StatelessWidget {
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: SizedBox(
-                    width: 80,
-                    height: 110,
-                    child: CachedNetworkImage(
-                      imageUrl: model.img,
-                      fit: BoxFit.fill,
+                  child: GestureDetector(
+                    onTap: () => goToMangaDetail(context, model.link, model.idExtension),
+                    child: SizedBox(
+                      width: 80,
+                      height: 110,
+                      child: CachedNetworkImage(
+                        imageUrl: model.img,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
               ),
               SizedBox(
                 width: (MediaQuery.of(context).size.width - 150),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      model.name,
-                      maxLines: 3,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Cap. ${model.chapter} - ${HistoricProcessBuilders.getHour(model.date)}',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                child: GestureDetector(
+                  onTap: () => goToMangaDetail(context, model.link, model.idExtension),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        model.name,
+                        maxLines: 3,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 16),
                       ),
-                    )
-                  ],
+                      Text(
+                        'Cap. ${model.chapter} - ${HistoricProcessBuilders.getHour(model.date)}',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Padding(

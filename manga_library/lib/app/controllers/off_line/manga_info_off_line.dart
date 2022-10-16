@@ -106,6 +106,8 @@ class MangaInfoOffLineController {
       var data = await _hiveController.getBooks();
       MangaInfoOffLineModel newModel = MangaInfoOffLineModel(
         name: model.name,
+        authors: model.authors,
+        state: model.state,
         link: model.link,
         idExtension: model.idExtension,
         img: model.img,
