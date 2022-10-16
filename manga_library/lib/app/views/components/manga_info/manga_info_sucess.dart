@@ -51,60 +51,39 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       "link": widget.link
     };
     return IconButton(
-      onPressed: () async {
-        await chaptersController.marcarDesmarcar(
-            id, link, nameImageLink, widget.dados.idExtension);
-        await historicController.insertOnHistoric(
-          HistoricModel(
-            name: widget.dados.name,
-            img: widget.dados.img,
-            link: widget.link,
-            idExtension: widget.dados.idExtension,
-            chapter: chapter,
-            date: ""
-          )
-        );
-        chaptersController.updateChapters(
-            widget.controller.capitulosDisponiveis,
-            //ChaptersController.capitulosCorrelacionados,
-            nameImageLink["link"]!,
-            widget.dados.idExtension);
-      },
+      onPressed: () => markOrRemoveMark(id, link, chapter),
       icon: const Icon(Icons.check),
     );
   }
 
   IconButton lido(String id, String link, String chapter) {
-    Map<String, String> nameImageLink = {
-      "name": widget.dados.name,
-      "img": widget.dados.img,
-      "link": widget.link
-    };
     return IconButton(
-      onPressed: () async {
-        await chaptersController.marcarDesmarcar(
-            id, link, nameImageLink, widget.dados.idExtension);
-        await historicController.insertOnHistoric(
-          HistoricModel(
-            name: widget.dados.name,
-            img: widget.dados.img,
-            link: widget.link,
-            idExtension: widget.dados.idExtension,
-            chapter: chapter,
-            date: ""
-          )
-        );
-        chaptersController.updateChapters(
-            widget.controller.capitulosDisponiveis,
-            // ChaptersController.capitulosCorrelacionados,
-            nameImageLink["link"]!,
-            widget.dados.idExtension);
-      },
+      onPressed: () => markOrRemoveMark(id, link, chapter),
       icon: const Icon(
         Icons.check,
         color: Colors.green,
       ),
     );
+  }
+
+  /// marca os capitulos como lido ou remove-o da lista de lidos (caso já esteja lido)
+  Future<void> markOrRemoveMark(String id, String link, String chapter) async {
+    Map<String, String> nameImageLink = {
+      "name": widget.dados.name,
+      "img": widget.dados.img,
+      "link": widget.link
+    };
+    await chaptersController.marcarDesmarcar(
+        id, link, nameImageLink, widget.dados.idExtension);
+    await historicController.insertOnHistoric(HistoricModel(
+        name: widget.dados.name,
+        img: widget.dados.img,
+        link: widget.link,
+        idExtension: widget.dados.idExtension,
+        chapter: chapter,
+        date: ""));
+    chaptersController.updateChapters(widget.controller.capitulosDisponiveis,
+        nameImageLink["link"]!, widget.dados.idExtension);
   }
 
   // states
@@ -127,14 +106,15 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     final Capitulos capitulo =
         ChaptersController.capitulosCorrelacionados[index - 1];
     GlobalData.capitulosDisponiveis;
-    // print(
-    //     "========= \n capitulo: ${capitulo.capitulo}/ ${capitulo.disponivel} / ${capitulo.readed}");
-    // print("chapters count  ${capitulo.capitulo}/ ${capitulo.pages.length}");
 
     return ListTile(
       title: Text(
         'Capítulo ${capitulo.capitulo}', //  l = ${capitulo.pages.length}, ${capitulo.id}
-        style: capitulo.disponivel ? const TextStyle() : indisponivel,
+        style: capitulo.disponivel
+            ? capitulo.readed
+                ? const TextStyle(color: Color.fromARGB(255, 184, 184, 184))
+                : const TextStyle()
+            : indisponivel,
       ),
       subtitle: Text(capitulo.readed ? "lido" : "não lido"),
       leading: capitulo.readed
@@ -149,8 +129,14 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               width: 1,
               height: 1,
             ),
-      onTap: () => GoRouter.of(context).push(
-          '/leitor/${widget.link}/${capitulo.id}/${widget.dados.idExtension}'),
+      onTap: () async {
+        if (!capitulo.readed) {
+          markOrRemoveMark(
+            capitulo.id.toString(), widget.link, capitulo.capitulo);
+        }
+        GoRouter.of(context).push(
+            '/leitor/${widget.link}/${capitulo.id}/${widget.dados.idExtension}');
+      },
     );
   }
 
@@ -162,20 +148,6 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     _scrollController = ScrollController();
     //print("link: ${widget.link}");
   }
-
-  // Widget _stateManagement(
-  //     BuildContext context, ChaptersStates state, int index) {
-  //   switch (state) {
-  //     case ChaptersStates.start:
-  //       return _loading();
-  //     case ChaptersStates.loading:
-  //       return _loading();
-  //     case ChaptersStates.sucess:
-  //       return _buildChapter(context, index);
-  //     case ChaptersStates.error:
-  //       return _error();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -318,15 +290,3 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     }
   }
 }
-/*
-if (ChaptersController.capitulosCorrelacionados.isEmpty) {
-                    return Column(
-                      children: [
-                        LinearProgressIndicator(color: configSystemController.colorManagement()),
-                        const Text("Carregando os Capitulos", textAlign: TextAlign.center,),
-                      ],
-                    );
-                  } else {
-                    return _buildChapter(context, index);
-                  }
-*/

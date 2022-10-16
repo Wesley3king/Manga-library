@@ -11,7 +11,7 @@ class HistoricPage extends StatefulWidget {
 
 class _HistoricPageState extends State<HistoricPage> {
   final HistoricController controller = HistoricController();
-  final HistoricProcessBuilders listBulders = HistoricProcessBuilders();
+  late final HistoricProcessBuilders listBulders;
 
   Widget get loading => const Center(
         child: CircularProgressIndicator(),
@@ -72,6 +72,7 @@ class _HistoricPageState extends State<HistoricPage> {
   @override
   void initState() {
     super.initState();
+    listBulders = HistoricProcessBuilders(controller: controller);
     controller.start(listBulders);
   }
 

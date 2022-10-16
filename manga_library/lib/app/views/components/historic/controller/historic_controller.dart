@@ -31,6 +31,11 @@ class HistoricController {
     if (!response) return "erro ao limpar o histórico!";
     return "Limpo!";
   }
+
+  /// atualiza a view depois de uma modificação
+  // void update() {
+
+  // }
 }
 
 enum HistoricStates { start, loading, sucess, error }

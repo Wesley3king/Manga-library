@@ -363,7 +363,7 @@ class ChaptersController {
       //  if (capitulosLidos.isNotEmpty) {
       // print('inicio = ${capitulosCorrelacionados.length}');
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
-      debugPrint("caplist: ${listaCapitulosDisponiveis?.length}");
+      // debugPrint("caplist: ${listaCapitulosDisponiveis?.length}");
 
       if (capitulosLidos.isNotEmpty) {
         for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
@@ -404,12 +404,7 @@ class ChaptersController {
         debugPrint('$listaCapitulosCorrelacionadosLidos');
         capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       }
-      // else {
-      //   capitulosCorrelacionados = listaCapitulosDisponiveis ?? [];
-      // }
-
-      // }
-      debugPrint('- restart - end');
+      debugPrint('- updateChapters - end');
       state.value = ChaptersStates.sucess;
     } catch (e) {
       debugPrint('erro no updateChapters at ChaptersController: $e');
@@ -469,7 +464,6 @@ class ChaptersController {
     //log("disponiveis: ${listaCapitulosDisponiveis.length}, todos ${listaCapitulos.length}");
 
     /// if it is an offline book, it will not do the correlation, it will only return the [ Capitulos ] model
-    //print("HORA DO TESTE!");
     if (MangaInfoController.isAnOffLineBook && !isAnUpdate) {
       capitulosCorrelacionados = listaCapitulos;
       debugPrint("is off line!, returning...");

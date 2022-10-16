@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
@@ -366,14 +368,16 @@ class HiveController {
 
   Future<List<HistoricModel>> getHistoric() async {
     try {
-      List<dynamic>? data = await historic?.get('historic');
+      var data = await historic?.get('historic');
       if (data == null) {
         await writeHistoric();
         return [];
       }
-      return data.map((json) => HistoricModel.fromJson(json)).toList();
+      List<dynamic>? lista = List.from(data);
+      List<Map<String, dynamic>> maps = lista.map((e) => Map<String, dynamic>.from(e)).toList();
+      return maps.map((json) => HistoricModel.fromJson(json)).toList();
     } catch (e) {
-      debugPrint("erro no updateHistoric at HiveController: $e");
+      debugPrint("erro no getHistoric at HiveController: $e");
       return [];
     }
   }
