@@ -55,6 +55,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    StringBuffer authors = StringBuffer();
+    String? state;
     List<String> genres = [];
     List<String> paginas = [];
     if (parser != null) {
@@ -78,6 +80,14 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         genres.add("${generos[i].text}");
       }
       debugPrint("genres: $genres");
+      // authors
+      List<Result>? artists = genresResult[3].querySelectorAll("a");
+      for (int i = 0; i < artists!.length; ++i) {
+        authors.write('${artists[i].text}, ');
+      }
+      // state
+      state = parser.querySelector("div > time").text;
+
       // chapters
       Result? chapterPages = parser.querySelector("div#thumbnail-container");
       // debugPrint("length de cap: ${chapterPages.html}");
@@ -87,10 +97,12 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       for (int i = 0; i < pages!.length; ++i) {
         String? page = pages[i].src;
         // retirar a versão pequena
-        List<String> cortePage = page!.split("/"); // https://cdn.dogehls.xyz/galleries/2216481/1t.jpg // https://cdn.dogehls.xyz/galleries/2216481/1.jpg
+        List<String> cortePage = page!.split(
+            "/"); // https://cdn.dogehls.xyz/galleries/2216481/1t.jpg // https://cdn.dogehls.xyz/galleries/2216481/1.jpg
         // cortePage = cortePage.reversed.toList();
         String modificatedImage = cortePage[5].replaceAll("t", "");
-        paginas.add("${cortePage[0]}//${cortePage[2]}/${cortePage[3]}/${cortePage[4]}/$modificatedImage");
+        paginas.add(
+            "${cortePage[0]}//${cortePage[2]}/${cortePage[3]}/${cortePage[4]}/$modificatedImage");
       }
       // debugPrint("pages: $paginas");
 
@@ -98,6 +110,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
+        authors: authors.toString(),
+        state: state ?? "Estado desconhecido",
         link: "https://nhentai.to/g/$link",
         idExtension: 5,
         genres: genres,
@@ -108,6 +122,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             id: "cap1",
             capitulo: "1",
             download: false,
+            description: "",
             readed: false,
             disponivel: true,
             downloadPages: [],

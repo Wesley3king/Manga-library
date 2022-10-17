@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/extension_mundo_manga_kun.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
@@ -11,7 +12,7 @@ void main() {
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
     var data = await extend.mangaDetail('shounen-no-abyss');
-    print(data);
+    debugPrint('$data');
   });
 
   // getPages
@@ -20,6 +21,7 @@ void main() {
       Capitulos(
         capitulo: "01",
         id: "shounen-no-abyss_cap-tulo-109",
+        description: "",
         disponivel: false,
         download: false,
         downloadPages: [],

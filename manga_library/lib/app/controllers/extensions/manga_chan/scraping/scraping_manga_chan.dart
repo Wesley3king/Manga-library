@@ -101,6 +101,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? authors;
+    String? status;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
@@ -116,6 +118,13 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // img
       img = parser.querySelector("div.thumb > img").src;
       // debugPrint("img: $img");
+      // authors
+      List<Result>? listaInfo = parser.querySelectorAll("table.infotable > tbody > tr");
+      authors = '${listaInfo[2].text?.replaceFirst("Autor", "").trim()}, ${listaInfo[3].text?.replaceFirst("Artista", "").trim()}';
+      // debugPrint("authors: $authors");
+      // status
+      status = listaInfo[0].text?.replaceFirst("Status", "").trim();
+      // debugPrint("state: $status");
       // genres
       List<Result>? genresResult = parser.querySelectorAll(
           "div.seriestucontent > div.seriestucontentr > div.seriestucont > div.seriestucontr > div.seriestugenre > a");
@@ -147,10 +156,15 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             .text;
         String chapter = capName!.replaceAll("Capítulo ", "");
         // debugPrint("chapetr name : $capName");
+        // description
+        String? capDescription = result
+            .querySelector("div > div.eph-num > a > span.chapterdate")!
+            .text;
 
         chapters.add(Capitulos(
           id: replacedLink,
           capitulo: chapter,
+          description: capDescription ?? "",
           download: false,
           readed: false,
           disponivel: true,
@@ -165,6 +179,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
+        authors: authors,
+        state: status ?? "Estado desconhecido",
         link: "https://mangaschan.com/manga/$link/",
         idExtension: 10,
         genres: genres,

@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/extension_union_mangas.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
@@ -11,7 +12,7 @@ void main() {
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {
     var data = await extend.mangaDetail('tales-of-demons-and-gods');
-    // print(data);
+    debugPrint('$data');
   });
 
   test("deve retornar um model Capitulos", () async {
@@ -19,6 +20,7 @@ void main() {
       Capitulos(
           capitulo: "398.5",
           id: "Tales_of_Demons_and_Gods--398.5",
+          description: "",
           disponivel: false,
           download: false,
           downloadPages: [],

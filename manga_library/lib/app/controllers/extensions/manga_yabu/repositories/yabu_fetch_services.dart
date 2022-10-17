@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
@@ -23,6 +22,7 @@ class YabuFetchServices {
         return Capitulos(
           id: lista[1],
           capitulo: corte[1],
+          description: "",
           pages: lista[4].map<String>((dynamic str) => str.toString()).toList(),
           disponivel: true,
           readed: false,

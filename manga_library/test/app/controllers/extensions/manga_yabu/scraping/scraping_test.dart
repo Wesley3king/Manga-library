@@ -10,7 +10,7 @@ void main() {
   test('aqui deve retornar uma lista de maps com os dados necessarios',
       () async {
     var result = await scrapingHomePage();
-    print(result);
+    debugPrint('$result');
     // expect(result is List, true);
   });
 
@@ -19,6 +19,6 @@ void main() {
     MangaInfoOffLineModel? result =
         await extensionManga.mangaDetail('dragon-ball-super');
 
-    print(result!.name);
+    debugPrint(result!.name);
   });
 }

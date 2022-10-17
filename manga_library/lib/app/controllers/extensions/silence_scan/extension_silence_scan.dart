@@ -37,8 +37,9 @@ class ExtensionSilenceScan implements Extension {
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
     Capitulos result = Capitulos(
-        capitulo: "error",
-        id: "error",
+        capitulo: "",
+        id: "",
+        description: "",
         disponivel: false,
         download: false,
         downloadPages: [],

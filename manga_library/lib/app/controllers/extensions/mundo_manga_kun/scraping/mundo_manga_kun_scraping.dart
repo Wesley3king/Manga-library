@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:chaleno/chaleno.dart';
 import 'package:flutter/rendering.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../../../models/home_page_model.dart';
 import '../../../../models/manga_info_offline_model.dart';
-import '../../../../models/search_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage() async {
   const String url = 'https://mundomangakun.com.br/';
@@ -84,6 +80,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? authors;
+    String? status;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
@@ -91,9 +89,19 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       name = parser.querySelector(".titulo_projeto").text;
       // description
       description = parser.querySelector("div.conteudo_projeto p").text;
-      print(description);
+      debugPrint(description);
       // img
       img = parser.querySelector(".imagens_projeto_container > img").src;
+      // authors
+      List<Result>? listaTabela =
+          parser.querySelectorAll("table.tabela_info_projeto > tbody > tr");
+      String? listaArtista = listaTabela[0].text?.replaceFirst("Arte", "").trim();
+      String? listaAutor = listaTabela[1].text?.replaceFirst("Roteiro", "").trim();
+
+      authors = '$listaAutor, $listaArtista';
+      // status
+      // List<Result>? listaStatus = .querySelectorAll("td > strong");
+      status = listaTabela[4].text?.replaceFirst("Status no país de origem", "").trim();
       // genres
       List<Result?> genresResult = parser.querySelectorAll(".link_genero");
 
@@ -128,6 +136,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           chapters.add(Capitulos(
             id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""),
             capitulo: corteCapitulo2[1],
+            description: "",
             download: false,
             readed: false,
             disponivel: true,
@@ -140,6 +149,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
+        authors: authors,
+        state: status ?? "Estado desconhecido",
         img: img ?? "erro",
         link: 'https://mundomangakun.com.br/projeto/$link/',
         idExtension: 3,

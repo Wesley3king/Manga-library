@@ -57,6 +57,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? authors;
     List<String> genres = [];
     List<String> paginas = [];
     if (parser != null) {
@@ -76,8 +77,12 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
       for (int i = 0; i < genresResult.length; ++i) {
         List<Result>? generos = genresResult[i].querySelectorAll("a");
-        for (Result result in generos!) {
-          genres.add("${result.text}");
+        if (i == 4 && (generos!.length == 1)) {
+          authors = generos[0].text;
+        } else {
+          for (Result result in generos!) {
+            genres.add("${result.text}");
+          }
         }
       }
       debugPrint("genres: $genres");
@@ -104,6 +109,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
+        state: "Estado desconhecido",
+        authors: authors ?? "Autor desconhecido",
         link: "https://nhentaibr.com/$link/",
         idExtension: 8,
         genres: genres,
@@ -114,6 +121,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             id: "cap1",
             capitulo: "1",
             download: false,
+            description: "",
             readed: false,
             disponivel: true,
             downloadPages: [],
@@ -142,10 +150,10 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       // print(projetoData);
       if (projetoData != null) {
         List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
-          List<Result>? result = data.querySelectorAll("div.thumb-conteudo > a");
+          List<Result>? result =
+              data.querySelectorAll("div.thumb-conteudo > a");
           // name
-          String? name = result![1].querySelector("span.thumb-titulo")!
-              .text;
+          String? name = result![1].querySelector("span.thumb-titulo")!.text;
           debugPrint("name: $name");
           // img
           String? img = result[1].querySelector("span.thumb-imagem > img")!.src;

@@ -11,8 +11,8 @@ void main() {
   });
   test("deve retornar um MangaInfoOffLineModel", () async {
     var data = await extend
-        .mangaDetail("2022_08_25_pack-de-imagens-genshin-impact-v2_");
-    debugPrint("data: $data");
+        .mangaDetail("2022_10_12_kyuujitsu-no-kaku_"); // 2022_10_12_kyuujitsu-no-kaku_ 2022_08_25_pack-de-imagens-genshin-impact-v2_
+    debugPrint("data: ${data?.toJson()}");
   });
 
   test("deve retornar um model Capitulos com as paginas", () async {
@@ -32,8 +32,8 @@ void main() {
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("dom");
-    if (data.books.isNotEmpty){
-       debugPrint("data: ${data.books[0].link}");
-    } 
+    if (data.books.isNotEmpty) {
+      debugPrint("data: ${data.books[0].link}");
+    }
   });
 }

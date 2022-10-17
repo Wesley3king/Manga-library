@@ -53,6 +53,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? authors;
     List<String> genres = [];
     List<String> linkChapter = [];
     if (parser != null) {
@@ -67,6 +68,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // img
       img = parser.querySelector("div.paginaPostThumb img").src;
       debugPrint("img: $img");
+      // authors
+      authors = itens[2].querySelector("a")?.text;
       // genres
       for (int cat = 3; cat < itens.length; ++cat) {
         List<Result>? generos = itens[cat].querySelectorAll("a");
@@ -89,6 +92,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "Descrição indisponivel",
+        state: "Finalizado",
+        authors: authors ?? "Autor desconhecido",
         img: img ?? "erro",
         link: "https://universohentai.com/$link/",
         idExtension: 6,
@@ -100,6 +105,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             id: linkChapter[1].replaceAll("/", ""),
             capitulo: "1",
             download: false,
+            description: "",
             readed: false,
             disponivel: true,
             downloadPages: [],
@@ -160,7 +166,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       books.add({
         "nome": name ?? "error",
         "link": corteLink[1].replaceAll("/", ""),
-        "capa1": img ?? "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg"
+        "capa1": img ??
+            "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg"
       });
     }
     return books;

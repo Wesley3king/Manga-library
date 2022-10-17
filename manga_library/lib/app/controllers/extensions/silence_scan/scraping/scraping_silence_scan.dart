@@ -9,8 +9,6 @@ Future<List<ModelHomePage>> scrapingHomePage() async {
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
-    // var result = parser?.querySelectorAll(indentify);
-    // debugPrint("lrngth: ${result?.length}");
     // ==================================================================
     //          -- LANCAMENTOS --
     Result? lancamentos =
@@ -151,6 +149,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? state;
+    String? authors;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
@@ -164,6 +164,12 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // img
       img = parser.querySelector("div.thumb > img").src;
       // debugPrint("img: $img");
+      // authors
+      List<Result>? info = parser.querySelectorAll("div.tsinfo > div");
+      authors = '${info[3].querySelector("i")!.text}, ${info[4].querySelector("i")!.text}';
+
+      // state
+      state = info[0].querySelector("i")!.text;
       // genres
       List<Result>? genresResult =
           parser.querySelectorAll("div.wd-full > span.mgen > a");
@@ -196,10 +202,15 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             .text;
         String chapter = capName!.replaceAll("Capítulo ", "");
         // debugPrint("chapetr name : $capName");
+        // description
+        String? date = chaptersResult[i]
+            .querySelector("div > div.eph-num > a > span.chapterdate")!
+            .text;
 
         chapters.add(Capitulos(
           id: replacedLink,
           capitulo: chapter,
+          description: date ?? "",
           download: false,
           readed: false,
           disponivel: true,
@@ -213,6 +224,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
+        state: state ?? "Estado desconhecido",
+        authors: authors,
         link: "https://silencescan.com.br/manga/$link/",
         idExtension: 9,
         genres: genres,

@@ -12,7 +12,7 @@ void main() {
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {
     var data = await extend.mangaDetail('houkago-no-goumon-shoujo');
-    // print(data);
+    debugPrint('$data');
   });
 
   test("deve retornar um model Capitulos", () async {
@@ -20,6 +20,7 @@ void main() {
       Capitulos(
           capitulo: "116",
           id: "houkago-no-goumon-shoujo-capitulo-116",
+          description: "",
           disponivel: false,
           download: false,
           downloadPages: [],

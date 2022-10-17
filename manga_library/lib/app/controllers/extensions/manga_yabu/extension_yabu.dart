@@ -12,9 +12,6 @@ import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 
-import '../../../models/download_model.dart';
-import '../../download/download_controller.dart';
-
 class ExtensionMangaYabu implements Extension {
   @override
   dynamic fetchServices = YabuFetchServices();
@@ -77,6 +74,7 @@ class ExtensionMangaYabu implements Extension {
       result.add(Capitulos(
           capitulo: "error",
           id: 0,
+          description: "",
           pages: [],
           disponivel: false,
           download: false,

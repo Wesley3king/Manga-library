@@ -20,6 +20,7 @@ void main() {
       Capitulos(
           id: "14859",
           capitulo: "1",
+          description: "",
           download: false,
           readed: false,
           disponivel: true,

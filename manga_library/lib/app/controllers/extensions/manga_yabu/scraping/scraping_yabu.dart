@@ -130,7 +130,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
     var dados = parser?.querySelector('script#manga-info').html.toString();
 
+    String? state;
     if (dados != null) {
+      // state - last update
+      state = parser!.querySelector("span.last-updated").text;
       // estes recortam a parte em html
       List<String> corteHtml1 = dados.split('type="application/json">');
       List<String> corteHtml2 = corteHtml1[1].split('</script>');
@@ -146,6 +149,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         return Capitulos(
           id: corteId[1].replaceFirst("/", ""),
           capitulo: element['num'],
+          description: element['date'],
           download: false,
           readed: false,
           disponivel: false,
@@ -156,11 +160,13 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // for (Capitulos cap in listCapitulos) {
       //   print(cap.id);
       // }
-      print("passou pelo model]!");
+      debugPrint("passou pelo model!");
       return MangaInfoOffLineModel(
           name: decoded['chapter_name'],
           description: decoded['description'],
           img: decoded['cover'],
+          authors: "Autor desconhecido",
+          state: state ?? "Estado desconhecido",
           link: 'https://mangayabu.top/manga/$link/',
           idExtension: 1,
           genres: decoded['genres']
@@ -175,7 +181,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return null;
     }
   } catch (e) {
-    print("erro no mangaInfo at MangaYabu Extension: $e");
+    debugPrint("erro no mangaInfo at MangaYabu Extension: $e");
     return null;
   }
 }

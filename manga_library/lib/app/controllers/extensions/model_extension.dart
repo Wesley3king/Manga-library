@@ -28,6 +28,7 @@ abstract class Extension {
     return Capitulos(
         capitulo: "",
         disponivel: false,
+        description: "",
         download: false,
         downloadPages: [],
         id: 0,

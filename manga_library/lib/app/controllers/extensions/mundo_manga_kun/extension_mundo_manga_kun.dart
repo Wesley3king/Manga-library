@@ -1,10 +1,8 @@
-import 'dart:developer';
 
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/scraping/mundo_manga_kun_scraping.dart';
 // import 'package:manga_library/app/models/extension_model.dart';
 
-import '../../../models/download_model.dart';
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 import '../../../models/search_model.dart';
@@ -40,9 +38,10 @@ class ExtensionMundoMangaKun implements Extension {
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
     Capitulos result = Capitulos(
-        capitulo: "error",
-        id: "error",
+        capitulo: "",
+        id: "",
         disponivel: false,
+        description: "",
         download: false,
         downloadPages: [],
         pages: [],

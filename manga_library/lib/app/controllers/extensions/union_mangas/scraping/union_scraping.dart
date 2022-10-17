@@ -111,6 +111,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? name;
     String? description;
     String? img;
+    String? authors;
+    String? state;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
@@ -127,6 +129,14 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // img
       img = parser.querySelector(".img-thumbnail").src;
       // debugPrint("img: $img");
+      // authors
+      List<Result>? infoResult =
+          parser.querySelectorAll("div.col-md-8 h4 label");
+      authors = '${infoResult[3].text}, ${infoResult[4].text}';
+      // state
+      state = parser.querySelector("div.col-md-8 h4 span").text;
+      // state = infoResult[5].text;
+
       // genres
       List<Result>? genresResult = parser.querySelectorAll("div.col-md-8 h4 a");
       // print(genresResult);
@@ -154,11 +164,20 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
         // name cap
         String? capName = chaptersResult[i].querySelector("a")!.text;
+        capName?.replaceFirst("Cap. ", "");
         // print("chapetr name : $capName");
+        // description date
+        List<Result>? listDate = chaptersResult[i].querySelectorAll("span");
+        String? date = listDate?[1].text;
+        date?.replaceAll("(", "");
+        date?.replaceAll(")", "");
+        // description scan
+        String? scan = chaptersResult[i].querySelector("div.col-xs-6 > a")?.text;
 
         chapters.add(Capitulos(
           id: replacedLink,
           capitulo: capName ?? "erro",
+          description: '$date - $scan',
           download: false,
           readed: false,
           disponivel: true,
@@ -171,6 +190,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
+        authors: authors,
+        state: state ?? "EStado desconhecido",
         img: img ?? "erro",
         link: "https://unionleitor.top/pagina-manga/$link",
         idExtension: 4,
@@ -180,6 +201,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         capitulos: chapters,
       );
     }
+    return null;
   } catch (e) {
     debugPrint("erro no scrapingMangaDetail at ExtensionUnionMangas: $e");
     return null;
