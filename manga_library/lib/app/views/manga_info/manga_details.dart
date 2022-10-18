@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
+import 'package:readmore/readmore.dart';
 
 import '../../controllers/system_config.dart';
 import '../../models/globais.dart';
@@ -28,22 +29,97 @@ class MangaDetails extends StatefulWidget {
 class _MangaDetailsState extends State<MangaDetails> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  Widget _showAdiminAtualizationBanner() {
-    //final MangaInfoController mangaInfoController = MangaInfoController();
-    // print(
-    //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
-    if (GlobalData.showAdiminAtualizationBanner) {
-      return TextButton(
-          onPressed: () {
-            widget.controller.addOrUpdateBook(
-                name: widget.dados.name,
-                link: widget.link,
-                idExtension: widget.dados.idExtension
-                );
-          },
-          child: const Text('Adicionar/Atualizar'));
+  // Widget _showAdiminAtualizationBanner() {
+  //   //final MangaInfoController mangaInfoController = MangaInfoController();
+  //   // print(
+  //   //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
+  //   if (GlobalData.showAdiminAtualizationBanner) {
+  //     return TextButton(
+  //         onPressed: () {
+  //           widget.controller.addOrUpdateBook(
+  //               name: widget.dados.name,
+  //               link: widget.link,
+  //               idExtension: widget.dados.idExtension
+  //               );
+  //         },
+  //         child: const Text('Adicionar/Atualizar'));
+  //   } else {
+  //     return Container();
+  //   }
+  // }
+  ValueNotifier<bool> isExpanded = ValueNotifier(false);
+
+  void setIsExpanded() {
+    setState(() {});
+    isExpanded.value = !isExpanded.value;
+    debugPrint("is showing: $isExpanded");
+  }
+
+  // ======== BUILD CATEGORIES =================
+  Widget buildCategories() {
+    if (isExpanded.value) {
+      List<Widget> categories = widget.dados.genres.map<Widget>((category) {
+        /*
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                  color: configSystemController.colorManagement(), width: 1),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 6.0, right: 7.0, left: 7.0),
+              child: Text(category),
+            ),
+          ),
+        );
+        */
+        return Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: SizedBox(
+            height: 25.0,
+            child: Chip(
+              // padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 1.0),
+              padding: const EdgeInsets.all(0),
+              // visualDensity: VisualDensity(),
+              labelStyle: const TextStyle(height: 0.3),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              backgroundColor: Colors.transparent,
+              side: BorderSide(width: 1.0, color: configSystemController.colorManagement(),),
+              label: Text(category),
+            ),
+          ),
+        );
+      }).toList();
+      return Wrap(
+        children: categories,
+      );
     } else {
-      return Container();
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 37,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.dados.genres.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: SizedBox(
+              height: 25.0,
+              child: Chip(
+                // padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 1.0),
+                padding: const EdgeInsets.all(0),
+                // visualDensity: VisualDensity(),
+                labelStyle: const TextStyle(height: 0.4),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                backgroundColor: Colors.transparent,
+                side: BorderSide(width: 1.0, color: configSystemController.colorManagement(),),
+                label: Text(widget.dados.genres[index]),
+              ),
+            ),
+          ),
+        ),
+      );
     }
   }
 
@@ -136,42 +212,30 @@ class _MangaDetailsState extends State<MangaDetails> {
                     textAlign: TextAlign.start,
                   ),
                 ),
-                _showAdiminAtualizationBanner(),
-                Flexible(child: Text(mapOfExtensions[widget.dados.idExtension]!.nome))
+                // _showAdiminAtualizationBanner(),
+                Flexible(
+                    child:
+                        Text(mapOfExtensions[widget.dados.idExtension]!.nome))
               ],
             )),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 37,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.dados.genres.length,
-            itemBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                      color: configSystemController.colorManagement(),
-                      width: 1),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 6.0, right: 7.0, left: 7.0),
-                  child: Text(widget.dados.genres[index]),
-                ),
-              ),
-            ),
-          ),
+        AnimatedBuilder(
+          animation: isExpanded,
+          builder: (context, child) => buildCategories(),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            widget.dados.description,
-            textAlign: TextAlign.justify,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ),
+            padding: const EdgeInsets.all(8.0),
+            child: ReadMoreText(
+              widget.dados.description,
+              callback: (val) => setIsExpanded(),
+              textAlign: TextAlign.justify,
+              style: const TextStyle(fontSize: 16),
+              delimiter: ' ... ',
+              colorClickableText: configSystemController.colorManagement(),
+              trimExpandedText: '  Menos',
+              trimCollapsedText: ' Mais',
+              trimLines: 3,
+              trimMode: TrimMode.Line,
+            )),
         const SizedBox(
           height: 10,
         ),
