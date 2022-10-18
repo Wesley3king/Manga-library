@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
-import '../views/components/manga_info/off_line/controller/off_line_widget_controller.dart';
+import '../views/manga_info/off_line/controller/off_line_widget_controller.dart';
 
 class DownloadModel {
   late final MangaInfoOffLineModel model;

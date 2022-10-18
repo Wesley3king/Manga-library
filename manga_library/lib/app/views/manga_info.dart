@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
-import 'package:manga_library/app/views/components/home_page/error.dart';
-import 'package:manga_library/app/views/components/manga_info/manga_info_sucess.dart';
+import 'package:manga_library/app/views/home_page/error.dart';
+import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
 
 import '../models/leitor_pages.dart';
 

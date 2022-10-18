@@ -91,7 +91,7 @@ class ExtensionHenSeason implements Extension {
       return SearchModel.fromJson(
           {"font": nome, "data": books, "idExtension": id});
     } catch (e) {
-      debugPrint("erro no search at ExtensionUnionMangas: $e");
+      debugPrint("erro no search at ExtensionHenSeason: $e");
       return SearchModel(books: [], font: nome, idExtension: id);
     }
   }

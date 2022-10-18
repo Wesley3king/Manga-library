@@ -29,11 +29,11 @@ void main() {
         readed: false // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
       )
     ]);
-    print(data.pages);
+    debugPrint('${data.pages}');
   });
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("sho");
-    print(data.books[0].name);
+    debugPrint(data.books[0].name);
   });
 }

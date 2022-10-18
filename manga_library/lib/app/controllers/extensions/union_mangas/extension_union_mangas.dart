@@ -91,8 +91,8 @@ class ExtensionUnionMangas implements Extension {
         Map book = data['items'][i];
 
         books.add({
-          "nome": book["titulo"],
-          "capa1": book['imagem'],
+          "name": book["titulo"],
+          "img": book['imagem'],
           "link": book['url']
         });
       }

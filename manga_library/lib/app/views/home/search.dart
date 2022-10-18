@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/views/components/search/search_result.dart';
+import 'package:manga_library/app/views/search/search_result.dart';
 
 import '../../controllers/search_controller.dart';
 

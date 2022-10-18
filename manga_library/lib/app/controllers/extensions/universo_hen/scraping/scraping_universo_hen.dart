@@ -164,9 +164,9 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       List<String> corteLink = link!.split("com/");
 
       books.add({
-        "nome": name ?? "error",
+        "name": name ?? "error",
         "link": corteLink[1].replaceAll("/", ""),
-        "capa1": img ??
+        "img": img ??
             "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg"
       });
     }

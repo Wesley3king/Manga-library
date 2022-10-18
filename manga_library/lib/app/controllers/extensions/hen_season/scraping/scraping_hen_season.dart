@@ -177,9 +177,9 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       String modicaredLink = corteLink[1].replaceAll("/", "_");
 
       books.add({
-        "nome": name ?? "error",
+        "name": name ?? "error",
         "link": modicaredLink,
-        "capa1": img ?? "erro: imagem"
+        "img": img ?? "erro: imagem"
       });
     }
     return books;

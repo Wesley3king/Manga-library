@@ -28,11 +28,11 @@ void main() {
           readed: false
           )
     ]);
-    print(data.pages);
+    debugPrint('$data.pages');
   });
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("ele");
-    print(data);
+    debugPrint('$data');
   });
 }

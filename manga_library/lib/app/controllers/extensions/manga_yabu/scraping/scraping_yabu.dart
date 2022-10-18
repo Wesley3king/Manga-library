@@ -142,8 +142,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       var decoded = json.decode(corteHtml2[0]);
       List capitulos = decoded['allposts'];
       // print("passou pelo model pt 1!");
-      // print("------ capitulos -------------");
-      // print(capitulos);
+  
       List<Capitulos> listCapitulos = capitulos.map((element) {
         List<String> corteId = element['id'].split("ler/"); // id posição 1
         return Capitulos(
@@ -152,7 +151,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           description: element['date'],
           download: false,
           readed: false,
-          disponivel: false,
+          disponivel: true,
           downloadPages: [],
           pages: [],
         );

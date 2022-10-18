@@ -33,6 +33,6 @@ void main() {
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("sono bisque Doll");
-    print(data);
+    debugPrint('$data');
   });
 }

@@ -14,10 +14,10 @@ class SearchModel {
     idExtension = json['idExtension'];
     // print("pt 2");
     books = json['data'].map<Books>((e) {
-      print(e);
+      // print(e);
       Map<String, dynamic> map = {
-        "name": e['nome'],
-        "img": e['capa1'],
+        "name": e['name'],
+        "img": e['img'],
         "link": e['link'],
         "idExtension": idExtension
       };

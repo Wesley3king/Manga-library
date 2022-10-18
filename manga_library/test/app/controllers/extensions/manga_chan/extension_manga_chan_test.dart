@@ -34,6 +34,6 @@ void main() {
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("elf w");
-    print(data);
+    debugPrint('$data');
   });
 }

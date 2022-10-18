@@ -20,11 +20,11 @@ class ExtensionMangaYabu implements Extension {
   @override
   int id = 1;
   @override
-  bool isTwoRequests = true;
+  bool isTwoRequests = false;
   @override
   bool enable = true;
   @override
-  bool nsfw = true;
+  bool nsfw = false;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

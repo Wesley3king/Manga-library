@@ -11,7 +11,7 @@ import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart'
 import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
-import '../../views/components/manga_info/off_line/controller/off_line_widget_controller.dart';
+import '../../views/manga_info/off_line/controller/off_line_widget_controller.dart';
 import '../manga_info_controller.dart';
 
 class DownloadController {

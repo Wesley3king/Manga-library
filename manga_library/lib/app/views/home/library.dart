@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/library_controller.dart';
-import 'package:manga_library/app/views/components/library/libraries_sucess_state.dart';
+import 'package:manga_library/app/views/library/libraries_sucess_state.dart';
 
 class LibraryPage extends StatefulWidget {
   final ScrollController scrollController;

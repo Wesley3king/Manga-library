@@ -304,9 +304,9 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
           List<String> corteLink = link!.split("manga/");
           // print(data.html);
           return {
-            "nome": name ?? "error",
+            "name": name ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
-            "capa1": img ?? ""
+            "img": img ?? ""
           };
         }).toList();
 
@@ -317,7 +317,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
     return books;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at EXtensionSilenceScan: $e");
-    print(s);
+    debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
   }

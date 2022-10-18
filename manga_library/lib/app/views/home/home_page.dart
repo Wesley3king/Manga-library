@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:manga_library/app/views/components/home_page/error.dart';
-import 'package:manga_library/app/views/components/home_page/sucess.dart';
+import 'package:manga_library/app/views/home_page/error.dart';
+import 'package:manga_library/app/views/home_page/sucess.dart';
 
 class HomePage extends StatefulWidget {
   final ScrollController scrollController;

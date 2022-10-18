@@ -148,36 +148,34 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       // projeto
       var projetoData = parser.querySelectorAll("div.lista > ul > li");
       // print(projetoData);
-      if (projetoData != null) {
-        List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
-          List<Result>? result =
-              data.querySelectorAll("div.thumb-conteudo > a");
-          // name
-          String? name = result![1].querySelector("span.thumb-titulo")!.text;
-          debugPrint("name: $name");
-          // img
-          String? img = result[1].querySelector("span.thumb-imagem > img")!.src;
-          debugPrint("img: $img");
-          // link
-          String? link = result[1].href;
-          List<String> corteLink = link!.split("com/");
-          debugPrint("link: ${corteLink[1]}");
+      List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
+        List<Result>? result =
+            data.querySelectorAll("div.thumb-conteudo > a");
+        // name
+        String? name = result![1].querySelector("span.thumb-titulo")!.text;
+        debugPrint("name: $name");
+        // img
+        String? img = result[1].querySelector("span.thumb-imagem > img")!.src;
+        debugPrint("img: $img");
+        // link
+        String? link = result[1].href;
+        List<String> corteLink = link!.split("com/");
+        debugPrint("link: ${corteLink[1]}");
 
-          return {
-            "nome": name ?? "error",
-            "link": corteLink[1].replaceAll("/", ""),
-            "capa1": "https://cdn.dogehls.xyz/$img"
-          };
-        }).toList();
+        return {
+          "name": name ?? "error",
+          "link": corteLink[1].replaceAll("/", ""),
+          "img": "https://cdn.dogehls.xyz/$img"
+        };
+      }).toList();
 
-        books.addAll(projetoBooks);
-      }
+      books.addAll(projetoBooks);
     }
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
-    print(s);
+    debugPrint('$s');
     return [];
   }
 }

@@ -229,9 +229,9 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
           List<String> corteLink = link!.split("projeto/");
           // print(data.html);
           return {
-            "nome": name ?? "error",
+            "name": name ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
-            "capa1": img ?? ""
+            "img": img ?? ""
           };
         }).toList();
 
@@ -268,16 +268,16 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
               if (alreadyExists) continue;
               // caso não tenha ele adicionara
               normalBooks.add({
-                "nome": name ?? "error",
+                "name": name ?? "error",
                 "link": corteLink2[0],
-                "capa1": img
+                "img": img
               });
             }
           } catch (e) {
             debugPrint("não é um manga; $e");
           }
         }
-        print(normalBooks);
+        debugPrint('$normalBooks');
         books.addAll(normalBooks);
       }
     }
@@ -287,7 +287,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
     return books;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
-    print(s);
+    debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
   }
