@@ -131,8 +131,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // debugPrint("img: $img");
       // authors
       List<Result>? infoResult =
-          parser.querySelectorAll("div.col-md-8 h4 label");
-      authors = '${infoResult[3].text}, ${infoResult[4].text}';
+          parser.querySelectorAll("div.col-md-8 h4");
+      authors = '${infoResult[2].text?.replaceFirst("Autor:", "")}, ${infoResult[3].text?.replaceFirst("Artista:", "")}';
       // state
       state = parser.querySelector("div.col-md-8 h4 span").text;
       // state = infoResult[5].text;
@@ -146,14 +146,14 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       }
       // print(genres);
       // chapters
-      List<Result> chaptersResult = parser.querySelectorAll("div.col-xs-6");
+      List<Result> chaptersResult = parser.querySelectorAll("div.capitulos");
       debugPrint("length de cap: ${chaptersResult.length}");
 
       for (int i = 0; i < chaptersResult.length; ++i) {
-        String? html = chaptersResult[i].html;
+        // String? html = chaptersResult[i].html;
         // print(html);
         // link
-        String? link = chaptersResult[i].querySelector("a")!.href;
+        String? link = chaptersResult[i].querySelector("div.col-xs-6 > a")!.href;
         // pula para o próximo em caso de já existir
         //print(link);
         if (!link!.contains("leitor/")) continue;
@@ -163,16 +163,16 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // print("replced link: $replacedLink");
 
         // name cap
-        String? capName = chaptersResult[i].querySelector("a")!.text;
+        String? capName = chaptersResult[i].querySelector("div.col-xs-6 > a")!.text;
         capName?.replaceFirst("Cap. ", "");
         // print("chapetr name : $capName");
         // description date
-        List<Result>? listDate = chaptersResult[i].querySelectorAll("span");
+        List<Result>? listDate = chaptersResult[i].querySelectorAll("div.col-xs-6 > span");
         String? date = listDate?[1].text;
-        date?.replaceAll("(", "");
-        date?.replaceAll(")", "");
+        date = date?.replaceAll("(", "");
+        date = date?.replaceAll(")", "");
         // description scan
-        String? scan = chaptersResult[i].querySelector("div.col-xs-6 > a")?.text;
+        String? scan = chaptersResult[i].querySelector("div.text-right > a")?.text;
 
         chapters.add(Capitulos(
           id: replacedLink,

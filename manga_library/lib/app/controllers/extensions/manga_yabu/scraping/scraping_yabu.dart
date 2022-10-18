@@ -145,7 +145,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // print("------ capitulos -------------");
       // print(capitulos);
       List<Capitulos> listCapitulos = capitulos.map((element) {
-        List<String> corteId = element['id'].split("-my"); // id posição 1
+        List<String> corteId = element['id'].split("ler/"); // id posição 1
         return Capitulos(
           id: corteId[1].replaceFirst("/", ""),
           capitulo: element['num'],
@@ -181,7 +181,31 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return null;
     }
   } catch (e) {
-    debugPrint("erro no mangaInfo at MangaYabu Extension: $e");
+    debugPrint("erro no scrapingMangaDetail at MangaYabu Extension: $e");
     return null;
+  }
+}
+
+// ==========================================================================
+//      ------------- SCRAPING LEITOR ---------------------
+// ==========================================================================
+
+Future<List<String>> scrapingLeitor(String id) async {
+  try {
+    Parser? parser = await Chaleno().load('https://mangayabu.top/ler/$id/');
+    List<String> pages = [];
+    if (parser != null) {
+      List<Result>? itens =
+          parser.querySelectorAll("div.table-of-contents > img");
+      for (Result result in itens) {
+        String? page = result.src;
+        pages.add(page ??
+            "https://cdn.hugocalixto.com.br/wp-content/uploads/sites/22/2020/07/error-404-1.png");
+      }
+    }
+    return pages;
+  } catch (e) {
+    debugPrint("erro no scrapingLeitor at MangaYabu Extension: $e");
+    return [];
   }
 }

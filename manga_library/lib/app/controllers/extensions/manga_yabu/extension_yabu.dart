@@ -42,53 +42,34 @@ class ExtensionMangaYabu implements Extension {
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
-    List<Capitulos> result = [];
-    bool adicionated = false;
-    // print("id: $id / cap: $listChapters");
-    try {
-      for (int i = 0; i < listChapters.length; ++i) {
-        // print(
-        //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
-        if (int.parse(listChapters[i].id) == int.parse(id)) {
-          result.add(listChapters[i]);
-          adicionated = true;
-          break;
-        }
-      }
-    } catch (e) {
-      print("não é de numero");
-      RegExp regex = RegExp(id, caseSensitive: false);
-      for (int i = 0; i < listChapters.length; ++i) {
-        // print(
-        //     "teste: cap: ${listChapters[i].capitulo} ${listChapters[i].id}, id: $id / ${listChapters[i].id.toString().contains(regex)}");
-        if (listChapters[i].id.toString().contains(regex)) {
-          print("achei o capitulo!");
-          result.add(listChapters[i]);
-          adicionated = true;
-          break;
-        }
+    Capitulos result = Capitulos(
+        capitulo: "",
+        id: "",
+        description: "",
+        disponivel: false,
+        download: false,
+        downloadPages: [],
+        pages: [],
+        readed: false);
+    for (int i = 0; i < listChapters.length; ++i) {
+      if (listChapters[i].id == id) {
+        result = listChapters[i];
+        break;
       }
     }
-    if (!adicionated) {
-      print("não achei o capitulo");
-      result.add(Capitulos(
-          capitulo: "error",
-          id: 0,
-          description: "",
-          pages: [],
-          disponivel: false,
-          download: false,
-          readed: false,
-          downloadPages: []));
+    if (!result.download) {
+      try {
+        result.pages = await scrapingLeitor(id);
+      } catch (e) {
+        debugPrint("erro - não foi possivel obter as paginas on-line: $e");
+      }
     }
-    // print("result final!!!");
-    // print(result);
-    return result[0];
+    return result;
   }
 
   @override
   Future<List<String>> getPagesForDownload(String url) async {
-    return [];
+    return await scrapingLeitor(url);
   }
 
   @override
@@ -107,22 +88,4 @@ class ExtensionMangaYabu implements Extension {
       );
     }
   }
-
-  // download
-  // @override
-  // Future<void> download(DownloadActions actionType, {DownloadModel? model, Capitulos? chapter, required int idExtension}) async {
-  //   switch (actionType) {
-  //     case DownloadActions.start:
-  //       break;
-  //     case DownloadActions.download:
-  //       if (model != null) {
-  //         DownloadController.addDownload(model);
-  //       }
-  //       break;
-  //     case DownloadActions.cancel:
-  //       break;
-  //     case DownloadActions.delete:
-  //       break;
-  //   }
-  // }
 }
