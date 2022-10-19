@@ -162,27 +162,27 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   }
 
   /// controla o height e os efeitos, como a rolagem e estilo do NativeBottomNavigation
-  double setHeight() {
+  double setHeight(bool isPortrait) {
     if (GlobalData.settings['Rolar a Barra']) {
       if (isVisible) {
         SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarContrastEnforced: false,
-          systemNavigationBarDividerColor: Colors.black,
-          systemNavigationBarColor: Colors.transparent
-          )
-        );
-        return (kBottomNavigationBarHeight + 48);
+            systemNavigationBarContrastEnforced: false,
+            systemNavigationBarDividerColor: Colors.black,
+            systemNavigationBarColor: Colors.transparent));
+        return isPortrait
+            ? (kBottomNavigationBarHeight + 48)
+            : kBottomNavigationBarHeight;
       } else {
         SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarContrastEnforced: false,
-          systemNavigationBarDividerColor: Colors.black26,
-          systemNavigationBarColor: Colors.black26
-          )
-        );
+            systemNavigationBarContrastEnforced: false,
+            systemNavigationBarDividerColor: Colors.black26,
+            systemNavigationBarColor: Colors.black26));
         return 0;
       }
     } else {
-      return (kBottomNavigationBarHeight + 48);
+      return isPortrait
+          ? (kBottomNavigationBarHeight + 48)
+          : kBottomNavigationBarHeight;
     }
   }
 
@@ -190,7 +190,7 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: widget.duration,
-      height: setHeight(),
+      height: setHeight(MediaQuery.of(context).orientation == Orientation.portrait),
       child: Wrap(
         children: [widget.child],
       ),

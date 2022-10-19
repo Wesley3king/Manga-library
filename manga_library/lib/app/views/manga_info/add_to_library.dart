@@ -237,8 +237,8 @@ class _AddToLibraryState extends State<AddToLibrary> {
       }, 
       child: Column(
         children: const [
-          Icon(Icons.favorite, size: 40,),
-          Text("Na Biblioteca",)
+          Icon(Icons.favorite, size: 26,),
+          Text("Na Biblioteca",  style: TextStyle(fontSize: 13))
         ],
       )
     );

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-// import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
-import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 
 enum HomeStates { start, loading, sucess, error }
@@ -20,14 +17,17 @@ class HomePageController {
     try {
       state.value = HomeStates.loading;
 
-      var dados = await hiveController.getHomePage();
+      List<ModelHomePage>? dados = await hiveController.getHomePage();
       // caso seja nulo atualiza os dados
       dados ??= await _updateHomePage();
-
       if (dados == null) {
         state.value = HomeStates.error;
       } else {
-        data = dados;
+        if (dados.isEmpty) {
+          dados = await _updateHomePage();
+
+        }
+         data = dados ?? [];
         state.value = HomeStates.sucess;
       }
     } catch (e) {

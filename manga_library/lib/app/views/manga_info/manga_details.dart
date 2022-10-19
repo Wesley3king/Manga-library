@@ -111,14 +111,14 @@ class _MangaDetailsState extends State<MangaDetails> {
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                         stops: [
-                      0.4,
-                      0.7,
+                      0.1,
+                      0.3,
                       1
                     ],
                         colors: [
                       Color.fromARGB(255, 48, 48, 48),
                       Color.fromARGB(237, 49, 49, 49),
-                      Colors.transparent
+                      Color.fromARGB(214, 71, 71, 71)
                     ])) : const BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
@@ -131,7 +131,7 @@ class _MangaDetailsState extends State<MangaDetails> {
                         colors: [
                       Color.fromARGB(255, 247, 247, 247),
                       Color.fromARGB(235, 218, 218, 218),
-                      Colors.transparent
+                      Color.fromARGB(80, 185, 185, 185)
                     ])),
               ),
               Row(children: [
@@ -140,7 +140,7 @@ class _MangaDetailsState extends State<MangaDetails> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: SizedBox(
-                      width: 190,
+                      width: 185,
                       height: 275,
                       child: Image(
                         image: CachedNetworkImageProvider(
@@ -155,34 +155,33 @@ class _MangaDetailsState extends State<MangaDetails> {
                   width: (MediaQuery.of(context).size.width - 206),
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 100,),
+                      const SizedBox(height: 80,),
                       Flexible(
                         child: Text(
                           widget.dados.name,
                           softWrap: true,
                           overflow: TextOverflow.visible,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 17,
+                            fontSize: widget.dados.name.length > 30 ? 13 : 17,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30,),
-                      Text(widget.dados.authors),
                       const SizedBox(height: 20,),
-                      Text(widget.dados.state),
+                      Text(widget.dados.authors, textAlign: TextAlign.start),
+                      const SizedBox(height: 20,),
+                      Text(widget.dados.state, textAlign: TextAlign.start,),
                       const SizedBox(height: 10,),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Capítulos: ${widget.dados.chapters}',
-                              textAlign: TextAlign.start,
-                            ),
+                          Text(
+                            'Capítulos: ${widget.dados.chapters}',
+                            textAlign: TextAlign.start,
                           ),
-                          // _showAdiminAtualizationBanner(),
+                          const SizedBox(width: 4,),
                           Flexible(
                               child:
                                   Text(mapOfExtensions[widget.dados.idExtension]!.nome))
@@ -220,8 +219,8 @@ class _MangaDetailsState extends State<MangaDetails> {
                   onPressed: (){}, 
                   child: Column(
                     children: const [
-                      Icon(Icons.public, size: 40,),
-                      Text("WebView")
+                      Icon(Icons.public, size: 26,),
+                      Text("WebView", style: TextStyle(fontSize: 13),)
                     ],
                   )
                 )

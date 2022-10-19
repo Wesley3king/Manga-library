@@ -85,7 +85,7 @@ class HiveController {
   // ---------------------------------------------------------------------------
 
   Future<List<ModelHomePage>?> getHomePage() async {
-    var data;
+    dynamic data;
     try {
       // print("box: $clientData");
       data = await clientData?.get("homePage") as List<dynamic>;

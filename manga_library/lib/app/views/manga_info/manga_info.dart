@@ -75,6 +75,16 @@ class _MangaInfoState extends State<MangaInfo> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalhes do Mangá'),
+        actions: [
+          ValueListenableBuilder(
+            valueListenable: mangaInfoController.state, 
+            builder: (context, value, child) => IconButton(onPressed: () {
+              // utilize url_launcher
+            },
+            tooltip: "Compartilhar",
+            icon: const Icon(Icons.share),
+          ),)
+        ],
       ),
       body: AnimatedBuilder(
         animation: mangaInfoController.state,

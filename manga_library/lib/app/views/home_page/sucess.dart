@@ -65,16 +65,22 @@ class _SucessState extends State<Sucess> {
                         fit: BoxFit.cover,
                       )),
                   Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
+                    decoration: BoxDecoration(
+                      gradient: ConfigSystemController.instance.isDarkTheme ? const LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
-                          colors: [Colors.black, Color.fromARGB(43, 0, 0, 0)],
-                          stops: [0.1, 1]),
+                          colors: [Color.fromARGB(255, 48, 48, 48), Color.fromARGB(43, 0, 0, 0)],
+                          stops: [0.1, 1]) : 
+                          const  LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [Color.fromARGB(255, 250, 250, 250), Color.fromARGB(43, 0, 0, 0)],
+                            stops: [0.1, 1]
+                          ),
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => print(GlobalData.settings["Tema"]),
+                    onTap: () => debugPrint(GlobalData.settings["Tema"]),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -101,7 +107,7 @@ class _SucessState extends State<Sucess> {
                           Flexible(
                             child: Text(widget.dados[0].books[0].name,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  // color: Colors.white,
                                   fontSize: 20,
                                 )),
                           ),
