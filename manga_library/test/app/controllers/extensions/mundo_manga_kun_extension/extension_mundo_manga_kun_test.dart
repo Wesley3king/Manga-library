@@ -7,7 +7,7 @@ void main() {
   final ExtensionMundoMangaKun extend = ExtensionMundoMangaKun();
   test("deve retornar um List<ModelHomePage>", () async {
     var data = await extend.homePage();
-    //print(data);
+    debugPrint('$data');
   });
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {

@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:manga_library/app/models/globais.dart';
 import '../../controllers/system_config.dart';
+import '../../controllers/system_navigation_and_app_bar_styles.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final ScrollController controller;
@@ -159,6 +160,7 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
       });
     }
   }
+
   /// controla o height e os efeitos, como a rolagem e estilo do NativeBottomNavigation
   double setHeight() {
     if (GlobalData.settings['Rolar a Barra']) {
@@ -166,14 +168,16 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
         SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
           systemNavigationBarContrastEnforced: false,
           systemNavigationBarDividerColor: Colors.black,
-          systemNavigationBarColor: Colors.transparent)
+          systemNavigationBarColor: Colors.transparent
+          )
         );
         return (kBottomNavigationBarHeight + 48);
       } else {
         SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
           systemNavigationBarContrastEnforced: false,
           systemNavigationBarDividerColor: Colors.black26,
-          systemNavigationBarColor: Colors.black26)
+          systemNavigationBarColor: Colors.black26
+          )
         );
         return 0;
       }

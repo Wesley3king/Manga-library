@@ -11,7 +11,7 @@ import 'package:manga_library/app/views/historic/historic_page.dart';
 import 'package:manga_library/app/views/library/ocult%20library/ocult_library.dart';
 import 'package:manga_library/app/views/home.dart';
 import 'package:manga_library/app/views/leitor/leitor.dart';
-import 'package:manga_library/app/views/manga_info.dart';
+import 'package:manga_library/app/views/manga_info/manga_info.dart';
 
 final AuthService authService = AuthService();
 

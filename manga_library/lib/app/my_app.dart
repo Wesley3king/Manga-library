@@ -34,25 +34,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   ThemeData themeSetter() {
     switch (GlobalData.settings["Tema"]) {
       case "auto":
-        print("theme automatic");
+        // print("theme automatic");
+        ConfigSystemController.instance.isDarkTheme = theme == darkTheme;
         return theme;
       case "light":
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          systemNavigationBarColor: Colors.white,
-          systemNavigationBarDividerColor: Colors.black12,
-          systemNavigationBarIconBrightness: Brightness.dark));
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.light,
+            systemNavigationBarColor: Colors.white,
+            systemNavigationBarDividerColor: Colors.black12,
+            systemNavigationBarIconBrightness: Brightness.light));
+        ConfigSystemController.instance.isDarkTheme = false;
         return lightTheme;
       case "dark":
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          systemNavigationBarColor:Color.fromARGB(255, 27, 27, 27),
-          systemNavigationBarDividerColor: Colors.black87,
-          systemNavigationBarIconBrightness: Brightness.light));
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarColor: Color.fromARGB(255, 27, 27, 27),
+            systemNavigationBarDividerColor: Colors.black87,
+            systemNavigationBarIconBrightness: Brightness.dark));
+        ConfigSystemController.instance.isDarkTheme = true;
         return darkTheme;
       default:
-        print("auto default");
-        print(GlobalData.settings["Tema"]);
+        debugPrint("auto default");
+        debugPrint(GlobalData.settings["Tema"]);
         return theme;
     }
   }

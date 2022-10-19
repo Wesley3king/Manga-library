@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/library/functions/library_functions.dart';
-import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 class LibraryItens extends StatefulWidget {
   final LibraryModel data;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
+import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/home_page/error.dart';
 import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
-
-import '../models/leitor_pages.dart';
 
 class MangaInfo extends StatefulWidget {
   final String link;
@@ -39,9 +39,6 @@ class _MangaInfoState extends State<MangaInfo> {
           controller: mangaInfoController,
         );
       case MangaInfoStates.sucess2:
-        //  for (ModelLeitor element in mangaInfoController.capitulosDisponiveis!) {
-        //   print("mangainfo cap: ${element.capitulo} / ${element.pages.length}");
-        // }
         return SucessMangaInfo(
           dados: mangaInfoController.data,
           sucess2: true,
@@ -59,12 +56,17 @@ class _MangaInfoState extends State<MangaInfo> {
     if (MangaInfoController.isAnOffLineBook) {
       DownloadController.mangaInfoController = mangaInfoController;
     }
-    //FullScreenController().exitFullScreen();
   }
 
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarContrastEnforced: false,
+      systemNavigationBarDividerColor: Colors.black26,
+      systemNavigationBarColor: Colors.black26
+      )
+    );
     initialStart();
   }
 

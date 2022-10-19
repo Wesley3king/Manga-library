@@ -5,8 +5,6 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:readmore/readmore.dart';
 
 import '../../controllers/system_config.dart';
-import '../../models/globais.dart';
-// import '../../../models/leitor_pages.dart';
 import '../../models/manga_info_offline_model.dart';
 import 'add_to_library.dart';
 
@@ -29,24 +27,6 @@ class MangaDetails extends StatefulWidget {
 class _MangaDetailsState extends State<MangaDetails> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  // Widget _showAdiminAtualizationBanner() {
-  //   //final MangaInfoController mangaInfoController = MangaInfoController();
-  //   // print(
-  //   //     GlobalData.showAdiminAtualizationBanner ? "é adimin" : "não é adimin");
-  //   if (GlobalData.showAdiminAtualizationBanner) {
-  //     return TextButton(
-  //         onPressed: () {
-  //           widget.controller.addOrUpdateBook(
-  //               name: widget.dados.name,
-  //               link: widget.link,
-  //               idExtension: widget.dados.idExtension
-  //               );
-  //         },
-  //         child: const Text('Adicionar/Atualizar'));
-  //   } else {
-  //     return Container();
-  //   }
-  // }
   ValueNotifier<bool> isExpanded = ValueNotifier(false);
 
   void setIsExpanded() {
@@ -59,30 +39,12 @@ class _MangaDetailsState extends State<MangaDetails> {
   Widget buildCategories() {
     if (isExpanded.value) {
       List<Widget> categories = widget.dados.genres.map<Widget>((category) {
-        /*
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(
-                  color: configSystemController.colorManagement(), width: 1),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 6.0, right: 7.0, left: 7.0),
-              child: Text(category),
-            ),
-          ),
-        );
-        */
         return Padding(
           padding: const EdgeInsets.all(3.0),
           child: SizedBox(
             height: 25.0,
             child: Chip(
-              // padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 1.0),
               padding: const EdgeInsets.all(0),
-              // visualDensity: VisualDensity(),
               labelStyle: const TextStyle(height: 0.3),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               backgroundColor: Colors.transparent,
@@ -98,19 +60,17 @@ class _MangaDetailsState extends State<MangaDetails> {
     } else {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: 37,
+        height: 31,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: widget.dados.genres.length,
           itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(3.0),
             child: SizedBox(
-              height: 25.0,
+              height: 31.0,
               child: Chip(
-                // padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 1.0),
                 padding: const EdgeInsets.all(0),
-                // visualDensity: VisualDensity(),
-                labelStyle: const TextStyle(height: 0.4),
+                labelStyle: const TextStyle(height: 0.3),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 backgroundColor: Colors.transparent,
                 side: BorderSide(width: 1.0, color: configSystemController.colorManagement(),),
@@ -129,13 +89,13 @@ class _MangaDetailsState extends State<MangaDetails> {
       children: [
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 400,
+          height: 300,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 400,
+                height: 300,
                 child: Image(
                   image: CachedNetworkImageProvider(
                     widget.dados.img,
@@ -145,34 +105,93 @@ class _MangaDetailsState extends State<MangaDetails> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 400,
-                decoration: const BoxDecoration(
+                height: 300,
+                decoration: ConfigSystemController.instance.isDarkTheme ? const BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                         stops: [
-                      0.1,
-                      0.2,
+                      0.4,
+                      0.7,
                       1
                     ],
                         colors: [
                       Color.fromARGB(255, 48, 48, 48),
                       Color.fromARGB(237, 49, 49, 49),
                       Colors.transparent
+                    ])) : const BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        stops: [
+                      0.4,
+                      0.7,
+                      1
+                    ],
+                        colors: [
+                      Color.fromARGB(255, 247, 247, 247),
+                      Color.fromARGB(235, 218, 218, 218),
+                      Colors.transparent
                     ])),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: 210,
-                  height: 315,
-                  child: Image(
-                    image: CachedNetworkImageProvider(
-                      widget.dados.img,
+              Row(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: SizedBox(
+                      width: 190,
+                      height: 275,
+                      child: Image(
+                        image: CachedNetworkImageProvider(
+                          widget.dados.img,
+                        ),
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                    fit: BoxFit.fill,
                   ),
                 ),
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 206),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(height: 100,),
+                      Flexible(
+                        child: Text(
+                          widget.dados.name,
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30,),
+                      Text(widget.dados.authors),
+                      const SizedBox(height: 20,),
+                      Text(widget.dados.state),
+                      const SizedBox(height: 10,),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Capítulos: ${widget.dados.chapters}',
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          // _showAdiminAtualizationBanner(),
+                          Flexible(
+                              child:
+                                  Text(mapOfExtensions[widget.dados.idExtension]!.nome))
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
               )
             ],
           ),
@@ -180,44 +199,38 @@ class _MangaDetailsState extends State<MangaDetails> {
         const SizedBox(
           width: 12,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AddToLibrary(
-              link: widget.link,
-              dados: widget.dados,
-              capitulos: widget.capitulosDisponiveis ?? [],
+        TextButtonTheme(
+            data: TextButtonThemeData(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  ConfigSystemController.instance.isDarkTheme ? Colors.white : const Color.fromARGB(255, 51, 51, 51)
+                )
+              )
             ),
-            Flexible(
-              child: Text(
-                widget.dados.name,
-                // maxLines: 4,
-                softWrap: true,
-                style: const TextStyle(
-                  fontSize: 22,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AddToLibrary(
+                  link: widget.link,
+                  dados: widget.dados,
+                  capitulos: widget.capitulosDisponiveis ?? [],
                 ),
-              ),
+                TextButton(
+                  onPressed: (){}, 
+                  child: Column(
+                    children: const [
+                      Icon(Icons.public, size: 40,),
+                      Text("WebView")
+                    ],
+                  )
+                )
+              ],
             ),
-          ],
-        ),
+          ),
         SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Capítulos: ${widget.dados.chapters}',
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                // _showAdiminAtualizationBanner(),
-                Flexible(
-                    child:
-                        Text(mapOfExtensions[widget.dados.idExtension]!.nome))
-              ],
-            )),
+          ),
         AnimatedBuilder(
           animation: isExpanded,
           builder: (context, child) => buildCategories(),
@@ -244,3 +257,19 @@ class _MangaDetailsState extends State<MangaDetails> {
     );
   }
 }
+/*
+Padding(
+  padding: const EdgeInsets.all(4.0),
+  child: Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      border: Border.all(
+          color: configSystemController.colorManagement(), width: 1),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.only(top: 6.0, right: 7.0, left: 7.0),
+      child: Text(category),
+    ),
+  ),
+);
+*/

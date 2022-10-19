@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
-import '../../models/leitor_pages.dart';
 import '../../models/libraries_model.dart';
 
 class AddToLibrary extends StatefulWidget {
@@ -230,19 +229,19 @@ class _AddToLibraryState extends State<AddToLibrary> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 55,
-        height: 55,
-        child: IconButton(
-            onPressed: () {
-              isOcultLibrary
-                  ? buidDialogForOcultLibrary(context)
-                  : buildDialogForLibrary(context);
-            },
-            icon: const Icon(
-              Icons.favorite,
-              size: 40,
-            )));
+    return TextButton(
+      onPressed: (){
+        isOcultLibrary
+        ? buidDialogForOcultLibrary(context)
+        : buildDialogForLibrary(context);
+      }, 
+      child: Column(
+        children: const [
+          Icon(Icons.favorite, size: 40,),
+          Text("Na Biblioteca",)
+        ],
+      )
+    );
   }
 }
 

@@ -26,7 +26,7 @@ class MangaInfoOffLineModel {
 
   MangaInfoOffLineModel.fromJson(Map<dynamic, dynamic> json) {
     name = json['name'];
-    authors = json[' authors'];
+    authors = json['authors'];
     state = json['state'];
     description = json['description'];
     img = json['img'];

@@ -330,8 +330,7 @@ class HiveController {
       } else {
         debugPrint(" - dados do Hive:");
         debugPrint('$data');
-        return data
-            .map((book) => MangaInfoOffLineModel.fromJson(book))
+        return data.map((book) => MangaInfoOffLineModel.fromJson(book))
             .toList();
       }
     } catch (e) {

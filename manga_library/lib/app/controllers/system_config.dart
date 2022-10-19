@@ -51,6 +51,7 @@ class SystemController {
   /// restaura as configurações originais
   Future<void> restartApp() async {
     _hiveController.writeClientData();
+    await _hiveController.updateHomePage([]);
     await _hiveController.writeLibraryData();
     await _hiveController.writeBook();
     await _hiveController.writeSettings();
@@ -61,6 +62,7 @@ class SystemController {
 
 class ConfigSystemController extends ChangeNotifier {
   final HiveController _hiveController = HiveController();
+  bool isDarkTheme = true;
   static ConfigSystemController instance = ConfigSystemController();
 
   start() {
