@@ -12,6 +12,7 @@ import 'package:manga_library/app/views/library/ocult%20library/ocult_library.da
 import 'package:manga_library/app/views/home.dart';
 import 'package:manga_library/app/views/leitor/leitor.dart';
 import 'package:manga_library/app/views/manga_info/manga_info.dart';
+import 'package:manga_library/app/views/webview/webview.dart';
 
 final AuthService authService = AuthService();
 
@@ -102,5 +103,16 @@ final routes = GoRouter(
       GoRoute(
         path: '/historic',
         builder: (context, state) => const HistoricPage(),
+      ),
+      GoRoute(
+        path: '/webview/:link/:extension',
+        builder: (context, state) {
+          int idExtension = int.parse(state.params['extension']!);
+          String link = state.params['link']!;
+          return MyWebView(
+            url: link,
+            idExtension: idExtension,
+          );
+        },
       ),
     ]);

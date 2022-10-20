@@ -165,6 +165,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                                               .downloadPages.length
                                               .toDouble()
                                           : leitorController
+                                              .capitulosEmCarga[0].pages.isEmpty ? 1.0 : leitorController
                                               .capitulosEmCarga[0].pages.length
                                               .toDouble(),
                                   min: 1.0,

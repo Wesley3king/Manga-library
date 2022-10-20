@@ -62,6 +62,8 @@ class _MangaInfoState extends State<MangaInfo> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemStatusBarContrastEnforced: false,
+      statusBarColor: Colors.transparent,
       systemNavigationBarContrastEnforced: false,
       systemNavigationBarDividerColor: Colors.black26,
       systemNavigationBarColor: Colors.black26
@@ -73,8 +75,12 @@ class _MangaInfoState extends State<MangaInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Detalhes do Mangá'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        // flexibleSpace: const SizedBox(height: 0,),
         actions: [
           ValueListenableBuilder(
             valueListenable: mangaInfoController.state, 
