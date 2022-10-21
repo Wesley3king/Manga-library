@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/home_page/error.dart';
 import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
@@ -81,8 +82,11 @@ class _MangaInfoState extends State<MangaInfo> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        leading: IconButton(onPressed: () => GoRouter.of(context).pop(), icon: Icon(Icons.arrow_back, color: ConfigSystemController.instance.isDarkTheme ? Colors.white: const Color.fromARGB(255, 51, 51, 51),),),
+        actionsIconTheme: IconThemeData(color: ConfigSystemController.instance.isDarkTheme ? Colors.white: const Color.fromARGB(255, 51, 51, 51)),
         elevation: 0,
-        title: const Text('Detalhes do Mangá'),
+        title: Text('Detalhes do Mangá', style: TextStyle(color: ConfigSystemController.instance.isDarkTheme ? Colors.white: const Color.fromARGB(255, 51, 51, 51)),),
         actions: [
           ValueListenableBuilder(
             valueListenable: mangaInfoController.state,

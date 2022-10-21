@@ -170,7 +170,7 @@ class _MangaDetailsState extends State<MangaDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(
-                          height: 70,
+                          height: 55,
                         ),
                         Flexible(
                           child: Text(
@@ -191,27 +191,23 @@ class _MangaDetailsState extends State<MangaDetails> {
                           height: 20,
                         ),
                         Text(
-                          widget.dados.state,
+                          'Estado: ${widget.dados.state}',
                           textAlign: TextAlign.start,
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Capítulos: ${widget.dados.chapters}',
-                              textAlign: TextAlign.start,
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Flexible(
-                                child: Text(
-                                    mapOfExtensions[widget.dados.idExtension]!
-                                        .nome))
-                          ],
+                        Text(
+                          'Capítulos: ${widget.dados.chapters}',
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Flexible(
+                          child: Text(
+                            mapOfExtensions[widget.dados.idExtension]!.nome
+                          )
                         )
                       ],
                     ),

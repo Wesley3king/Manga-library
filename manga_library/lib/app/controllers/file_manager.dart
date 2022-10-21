@@ -105,9 +105,9 @@ class FileManager {
         debugPrint("não selecionou um arquivo!");
         return false;
       } else {
-        // modifique o caminho  com.example.manga_library com.king.manga_library
+        // modifique o caminho  com.example.manga_library com.king.manga_library com.king.manga_library.teste
         final path = data.files.single.path!
-            .replaceFirst("Android/data/com.example.manga_library/files/", "");
+            .replaceFirst("Android/data/com.king.manga_library.teste/files/", "");
         log("arquive - path: $path");
         //status += "p= $path";
         //File file = File(path);

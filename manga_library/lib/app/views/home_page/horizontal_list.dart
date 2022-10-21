@@ -33,17 +33,17 @@ class _HorizontalListState extends State<HorizontalList>
               SizedBox(
                   width: 145.0,
                   height: 176.0,
-                  // child: CachedNetworkImage(
-                  //   imageUrl: data.img,
-                  //   placeholder: (context, url) => Container(
-                  //     color: Colors.grey,
-                  //   ),
-                  //   errorWidget: (context, url, error) => const Center(
-                  //     child: Icon(Icons.report_problem),
-                  //   ),
-                  //   // useOldImageOnUrlChange: true,
-                  //   fit: BoxFit.fill,
-                  // )
+                  child: CachedNetworkImage(
+                    imageUrl: data.img,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey,
+                    ),
+                    errorWidget: (context, url, error) => const Center(
+                      child: Icon(Icons.report_problem),
+                    ),
+                    // useOldImageOnUrlChange: true,
+                    fit: BoxFit.fill,
+                  )
                 ),
               Flexible(
                 child: Text(data.name,

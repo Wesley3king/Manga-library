@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 import '../../controllers/manga_info_controller.dart';
@@ -20,6 +21,8 @@ class AddToLibrary extends StatefulWidget {
 }
 
 class _AddToLibraryState extends State<AddToLibrary> {
+  final ConfigSystemController configSystemController =
+      ConfigSystemController();
   final DialogController _dialogController = DialogController();
   bool isOcultLibrary = false;
   ValueNotifier<bool> isOnTheLibrary = ValueNotifier<bool>(false);
@@ -211,25 +214,30 @@ class _AddToLibraryState extends State<AddToLibrary> {
             },
             child: const Text('Cancelar')),
         TextButton(
-            onPressed: () {
-              _dialogController.addOrRemoveFromLibrary(
-                resultado,
-                {
-                  "name": widget.dados.name,
-                  "link": widget.link, // '${widget.link}/'
-                  "img": widget.dados.img,
-                  "idExtension": widget.dados.idExtension
-                },
-                link: widget.link,
-                capitulos: widget.capitulos,
-                model: widget.dados,
-              );
+            onPressed: () async {
+              doAsyncAddOrRemoveFromLibrary();
               Navigator.of(context).pop();
             },
             child: const Text('Confirmar')),
       ],
     ));
     return checkboxes;
+  }
+
+  void doAsyncAddOrRemoveFromLibrary() async {
+    await _dialogController.addOrRemoveFromLibrary(
+      resultado,
+      {
+        "name": widget.dados.name,
+        "link": widget.link, // '${widget.link}/'
+        "img": widget.dados.img,
+        "idExtension": widget.dados.idExtension
+      },
+      link: widget.link,
+      capitulos: widget.capitulos,
+      model: widget.dados,
+    );
+    startDialog();
   }
 
   buildDialogForLibrary(BuildContext context) async {
@@ -265,18 +273,32 @@ class _AddToLibraryState extends State<AddToLibrary> {
               ? buidDialogForOcultLibrary(context)
               : buildDialogForLibrary(context);
         },
-        child: Column(
-          children: [
-            AnimatedBuilder(
-              animation: isOnTheLibrary,
-              builder: (context, child) => Icon(
-                isOnTheLibrary.value ? Icons.favorite : Icons.favorite_border,
-                size: 26,
-              ),
-            ),
-            const Text("Na Biblioteca", style: TextStyle(fontSize: 13))
-          ],
-        ));
+        child: AnimatedBuilder(
+            animation: isOnTheLibrary,
+            builder: (context, child) => isOnTheLibrary.value
+                ? Column(
+                    children: [
+                      Icon(
+                        Icons.favorite,
+                        color: configSystemController.colorManagement(),
+                        size: 26,
+                      ),
+                      Text("Na Biblioteca",
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: configSystemController.colorManagement()))
+                    ],
+                  )
+                : Column(
+                    children: const [
+                      Icon(
+                        Icons.favorite_border,
+                        size: 26,
+                      ),
+                      Text("Adicionar a Biblioteca",
+                          style: TextStyle(fontSize: 13))
+                    ],
+                  )));
   }
 }
 

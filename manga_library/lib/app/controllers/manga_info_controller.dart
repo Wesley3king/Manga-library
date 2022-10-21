@@ -798,4 +798,4 @@ class DialogController {
   }
 }
 
-enum DialogStates { start, loading, sucess, error }
+// enum DialogStates { start, loading, sucess, error }
