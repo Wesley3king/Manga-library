@@ -6,6 +6,7 @@ import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/manga_info/manga_details.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../controllers/system_config.dart';
@@ -45,11 +46,11 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   //   final List<ModelLeitor>? listaCapitulosDisponiveis;
   // trailings
   IconButton naoLido(String id, String link, String chapter) {
-    Map<String, String> nameImageLink = {
-      "name": widget.dados.name,
-      "img": widget.dados.img,
-      "link": widget.link
-    };
+    // Map<String, String> nameImageLink = {
+    //   "name": widget.dados.name,
+    //   "img": widget.dados.img,
+    //   "link": widget.link
+    // };
     return IconButton(
       onPressed: () => markOrRemoveMark(id, link, chapter),
       icon: const Icon(Icons.check),
@@ -132,7 +133,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       onTap: () async {
         if (!capitulo.readed) {
           markOrRemoveMark(
-            capitulo.id.toString(), widget.link, capitulo.capitulo);
+              capitulo.id.toString(), widget.link, capitulo.capitulo);
         }
         GoRouter.of(context).push(
             '/leitor/${widget.link}/${capitulo.id}/${widget.dados.idExtension}');
@@ -228,16 +229,14 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                     child: ListView.builder(
                       controller: _scrollController,
                       itemCount:
-                          ChaptersController.capitulosCorrelacionados.length +
-                              1,
+                          ChaptersController.capitulosCorrelacionados.length + 1,
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return MangaDetails(
                               link: widget.link,
                               dados: widget.dados,
                               controller: widget.controller,
-                              capitulosDisponiveis:
-                                  widget.capitulosDisponiveis);
+                              capitulosDisponiveis: widget.capitulosDisponiveis);
                         } else {
                           return _buildChapter(context, index);
                         }
@@ -289,4 +288,12 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       );
     }
   }
+}
+
+Widget tst() {
+  // return ScrollablePositionedList.builder(
+  //   itemScrollController: ,
+  //   itemCount: 1,
+  //   itemBuilder: (context, index) => Text('$index'));
+  return Container();
 }

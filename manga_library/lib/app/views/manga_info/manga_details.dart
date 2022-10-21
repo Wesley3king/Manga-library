@@ -96,13 +96,13 @@ class _MangaDetailsState extends State<MangaDetails> {
       children: [
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 380,
+          height: 320,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 380,
+                height: 320,
                 child: Image(
                   image: CachedNetworkImageProvider(
                     widget.dados.img,
@@ -112,7 +112,7 @@ class _MangaDetailsState extends State<MangaDetails> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 380,
+                height: 320,
                 decoration: ConfigSystemController.instance.isDarkTheme
                     ? const BoxDecoration(
                         gradient: LinearGradient(
@@ -170,7 +170,7 @@ class _MangaDetailsState extends State<MangaDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(
-                          height: 80,
+                          height: 70,
                         ),
                         Flexible(
                           child: Text(

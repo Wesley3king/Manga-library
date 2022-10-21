@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:webviewx/webviewx.dart';
@@ -16,6 +17,12 @@ class _MyWebViewState extends State<MyWebView> {
   ValueNotifier<bool> showOptions = ValueNotifier<bool>(true);
   FullScreenController screenController = FullScreenController();
   late WebViewXController webViewController;
+
+  @override
+  void dispose() {
+    webViewController.clearCache();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +50,42 @@ class _MyWebViewState extends State<MyWebView> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 500),
                         height: showOptions.value ? 70 : 0,
                         child: Container(
                           height: 70,
-                          color: Colors.black26,
+                          color: Colors.black45,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () => GoRouter.of(context).pop(),
+                                  icon: const Icon(Icons.arrow_back)),
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width - 60,
+                                  child: Text(
+                                    url,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.white),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(top: showOptions.value ? 5 : 75),
+                        child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: GestureDetector(
+                            onTap: () => showOptions.value = !showOptions.value,
+                          ),
                         ),
                       )
                     ],

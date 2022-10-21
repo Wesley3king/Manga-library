@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
+import '../../controllers/manga_info_controller.dart';
 import '../../models/libraries_model.dart';
 
 class AddToLibrary extends StatefulWidget {
@@ -22,6 +22,7 @@ class AddToLibrary extends StatefulWidget {
 class _AddToLibraryState extends State<AddToLibrary> {
   final DialogController _dialogController = DialogController();
   bool isOcultLibrary = false;
+  ValueNotifier<bool> isOnTheLibrary = ValueNotifier<bool>(false);
 
   // ========================================================================
   // ------------------------- OCULT LIBRARY --------------------------------
@@ -68,8 +69,11 @@ class _AddToLibraryState extends State<AddToLibrary> {
         title: Text(resultadoForOcultLibrary[i]['library']),
         value: resultadoForOcultLibrary[i]['selected'],
         onChanged: (value) => setState(() {
-          resultadoForOcultLibrary[i]['selected'] = !resultadoForOcultLibrary[i]['selected'];
-          debugPrint(resultadoForOcultLibrary[i]['selected'] ? "adicionado!" : "removido!");
+          resultadoForOcultLibrary[i]['selected'] =
+              !resultadoForOcultLibrary[i]['selected'];
+          debugPrint(resultadoForOcultLibrary[i]['selected']
+              ? "adicionado!"
+              : "removido!");
         }),
       ));
     }
@@ -126,6 +130,27 @@ class _AddToLibraryState extends State<AddToLibrary> {
   // ========================================================================
   // ------------------------- LIBRARY --------------------------------
   // ========================================================================
+
+  void verifyIfInLibraryToShowIcon(List<LibraryModel> lista) {
+    RegExp regex = RegExp(widget.link, caseSensitive: false);
+    for (int i = 0; i < lista.length; ++i) {
+      bool existe = false;
+      for (int iManga = 0; iManga < lista[i].books.length; ++iManga) {
+        // debugPrint(
+        //     '${lista[i].books[iManga].link} == ${widget.link}/ -- ${lista[i].books[iManga].idExtension} == ${widget.dados.idExtension}');
+        if (lista[i].books[iManga].link.contains(regex) &&
+            lista[i].books[iManga].idExtension == widget.dados.idExtension) {
+          isOnTheLibrary.value = true;
+          debugPrint("is on The LIBRARY!");
+          existe = true;
+          break;
+        }
+      }
+      if (existe) {
+        break;
+      }
+    }
+  }
 
   List<Map> resultado = [];
   generateValues(
@@ -220,28 +245,38 @@ class _AddToLibraryState extends State<AddToLibrary> {
             ));
   }
 
+  void startDialog() async {
+    await _dialogController.start();
+    verifyIfInLibraryToShowIcon(_dialogController.dataLibrary);
+  }
+
   @override
   void initState() {
     super.initState();
-    //_dialogController.start();
+    startDialog();
     // startar();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: (){
-        isOcultLibrary
-        ? buidDialogForOcultLibrary(context)
-        : buildDialogForLibrary(context);
-      }, 
-      child: Column(
-        children: const [
-          Icon(Icons.favorite, size: 26,),
-          Text("Na Biblioteca",  style: TextStyle(fontSize: 13))
-        ],
-      )
-    );
+        onPressed: () {
+          isOcultLibrary
+              ? buidDialogForOcultLibrary(context)
+              : buildDialogForLibrary(context);
+        },
+        child: Column(
+          children: [
+            AnimatedBuilder(
+              animation: isOnTheLibrary,
+              builder: (context, child) => Icon(
+                isOnTheLibrary.value ? Icons.favorite : Icons.favorite_border,
+                size: 26,
+              ),
+            ),
+            const Text("Na Biblioteca", style: TextStyle(fontSize: 13))
+          ],
+        ));
   }
 }
 

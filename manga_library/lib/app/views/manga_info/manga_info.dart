@@ -78,60 +78,30 @@ class _MangaInfoState extends State<MangaInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   title: const Text('Detalhes do Mangá'),
-      //   actions: [
-      //     ValueListenableBuilder(
-      //       valueListenable: mangaInfoController.state,
-      //       builder: (context, value, child) => IconButton(
-      //         onPressed: () {
-      //           // utilize url_launcher
-      //         },
-      //         tooltip: "Compartilhar",
-      //         icon: const Icon(Icons.share),
-      //       ),
-      //     )
-      //   ],
-      // ),
-      body: Stack(
-        children: [
-          AnimatedBuilder(
-            animation: mangaInfoController.state,
-            builder: (context, child) =>
-                stateManagement(mangaInfoController.state.value),
-          ),
-          SizedBox(
-            height: 90,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () => GoRouter.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back)),
-                const Text(
-                  'Detalhes do Mangá',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                ValueListenableBuilder(
-                  valueListenable: mangaInfoController.state,
-                  builder: (context, value, child) => IconButton(
-                    onPressed: () {
-                      // utilize url_launcher
-                      Uri url = Uri.parse(mapOfExtensions[widget.idExtension]!
-                          .getLink(widget.link));
-                      launchUrl(url);
-                    },
-                    tooltip: "Compartilhar",
-                    icon: const Icon(Icons.share),
-                  ),
-                )
-              ],
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Detalhes do Mangá'),
+        actions: [
+          ValueListenableBuilder(
+            valueListenable: mangaInfoController.state,
+            builder: (context, value, child) => IconButton(
+              onPressed: () {
+                // utilize url_launcher
+                Uri url = Uri.parse(mapOfExtensions[widget.idExtension]!.getLink(widget.link));
+                launchUrl(url);
+              },
+              tooltip: "Compartilhar",
+              icon: const Icon(Icons.share),
             ),
-          ),
+          )
         ],
+      ),
+      body: AnimatedBuilder(
+        animation: mangaInfoController.state,
+        builder: (context, child) =>
+            stateManagement(mangaInfoController.state.value),
       ),
     );
   }
