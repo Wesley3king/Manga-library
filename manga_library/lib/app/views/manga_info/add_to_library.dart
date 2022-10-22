@@ -136,8 +136,8 @@ class _AddToLibraryState extends State<AddToLibrary> {
 
   void verifyIfInLibraryToShowIcon(List<LibraryModel> lista) {
     RegExp regex = RegExp(widget.link, caseSensitive: false);
+    bool existe = false;
     for (int i = 0; i < lista.length; ++i) {
-      bool existe = false;
       for (int iManga = 0; iManga < lista[i].books.length; ++iManga) {
         // debugPrint(
         //     '${lista[i].books[iManga].link} == ${widget.link}/ -- ${lista[i].books[iManga].idExtension} == ${widget.dados.idExtension}');
@@ -152,6 +152,9 @@ class _AddToLibraryState extends State<AddToLibrary> {
       if (existe) {
         break;
       }
+    }
+    if (!existe) {
+      isOnTheLibrary.value = false;
     }
   }
 

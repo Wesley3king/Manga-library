@@ -84,11 +84,10 @@ class FileManager {
       var bytes = decode.decoder;
       var stringUtf8 = utf8.decode(bytes.convert(bin));
       var data = json.decode(stringUtf8);
-      debugPrint(data);
       return data;
     } catch (e) {
       debugPrint("erro no readGzArchive: $e");
-      return "$e";
+      // return "$e";
     }
   }
 
@@ -107,7 +106,7 @@ class FileManager {
       } else {
         // modifique o caminho  com.example.manga_library com.king.manga_library com.king.manga_library.teste
         final path = data.files.single.path!
-            .replaceFirst("Android/data/com.king.manga_library.teste/files/", "");
+            .replaceFirst("Android/data/com.example.manga_library/files/", "");
         log("arquive - path: $path");
         //status += "p= $path";
         //File file = File(path);
