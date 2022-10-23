@@ -52,7 +52,7 @@ class HiveController {
         return data;
       }
     } catch (e) {
-      print(e);
+      debugPrint('$e');
       return null;
     }
   }
@@ -246,7 +246,8 @@ class HiveController {
     Map<String, dynamic> model = {
       "Ordenação": "oldtonew",
       "Tamanho dos quadros": "normal",
-      "Atualizar as Capas": false,
+      "Atualizar": "0",
+      "Atualizar as Capas": true,
       "Tema": "auto",
       "Cor da Interface": "blue",
       "Idioma": "ptbr",

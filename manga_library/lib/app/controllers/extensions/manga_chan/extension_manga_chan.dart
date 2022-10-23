@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/manga_chan/scraping/scraping_manga_chan.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
@@ -22,12 +23,12 @@ class ExtensionMangaChan implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -55,7 +56,7 @@ class ExtensionMangaChan implements Extension {
     }
     if (!result.download) {
       try {
-        result.pages = await scrapingLeitor(id);
+        result.pages = await compute(scrapingLeitor, id);
       } catch (e) {
         debugPrint("erro - não foi possivel obter as paginas on-line: $e");
       }
@@ -65,7 +66,7 @@ class ExtensionMangaChan implements Extension {
 
   @override
   Future<List<String>> getPagesForDownload(String id) async {
-    return await scrapingLeitor(id);
+    return await compute(scrapingLeitor, id);
   }
 
   @override
@@ -77,18 +78,6 @@ class ExtensionMangaChan implements Extension {
 
       for (int i = 0; i < cortes.length; ++i) {
         final String str = cortes[i];
-        // caso seja a primeira vez não modifica o texto
-        // if (i == 0) {
-        //   buffer.write(str);
-        // } else {
-        // caso tenha caracteres maisculos
-        // if (str.contains(RegExp(r'^[A-Z]'))) {
-        //   debugPrint("tem maiuscula");
-        //   buffer.write('+$str');
-        // } else {
-        //   debugPrint("não tem maiuscula");
-        //   buffer.write('%20$str');
-        // }
         if (i == (cortes.length - 1)) {
           buffer.write(str);
         } else {
@@ -97,7 +86,7 @@ class ExtensionMangaChan implements Extension {
         // }
       }
       // print(buffer.toString());
-      List<Map<String, String>> data = await scrapingSearch(buffer.toString());
+      List<Map<String, String>> data = await compute(scrapingSearch, buffer.toString());
 
       // print('---------------------------------------------');
       // print(data);

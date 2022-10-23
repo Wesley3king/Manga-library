@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/repositories/fetch_services.dart';
@@ -23,7 +24,7 @@ class ExtensionUnionMangas implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override

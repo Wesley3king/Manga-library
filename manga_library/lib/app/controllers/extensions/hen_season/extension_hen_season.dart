@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/hen_season/scraping/scraping_hen_season.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
@@ -22,13 +23,13 @@ class ExtensionHenSeason implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
     link = link.replaceAll("_", "/");
-    return await scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -39,29 +40,6 @@ class ExtensionHenSeason implements Extension {
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
-    // Capitulos result = Capitulos(
-    //     capitulo: "error",
-    //     id: "error",
-    //     disponivel: false,
-    //     download: false,
-    //     downloadPages: [],
-    //     pages: [],
-    //     readed: false);
-    // for (int i = 0; i < listChapters.length; ++i) {
-    //   // print(
-    //   //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
-    //   if (listChapters[i].id == id) {
-    //     result = listChapters[i];
-    //     break;
-    //   }
-    // }
-    // if (!result.download) {
-    //   try {
-    //     result.pages = []; // await scrapingLeitor(id);
-    //   } catch (e) {
-    //     debugPrint("erro - não foi possivel obter as paginas on-line: $e");
-    //   }
-    // }
     return listChapters[0];
   }
 
@@ -86,7 +64,7 @@ class ExtensionHenSeason implements Extension {
         }
       }
       
-      List<Map> books = await scrapingSearch(buffer.toString());
+      List<Map> books = await compute(scrapingSearch, buffer.toString());
 
       return SearchModel.fromJson(
           {"font": nome, "data": books, "idExtension": id});

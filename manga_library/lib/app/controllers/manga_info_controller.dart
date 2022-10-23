@@ -49,7 +49,7 @@ class MangaInfoController {
       MangaInfoOffLineModel? localData =
           await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
       if (localData != null) {
-        print("existe na base de dados! / l= $url");
+        debugPrint("existe na base de dados! / l= $url");
         // testa para definir isTwoRequests
         isTwoRequests = mapOfExtensions[idExtension]!.isTwoRequests;
 
@@ -66,7 +66,7 @@ class MangaInfoController {
         state.value = MangaInfoStates.sucess2;
       } else {
         // operação OnLine
-        print("iniciando o fetch! / l= $url");
+        debugPrint("iniciando o fetch! / l= $url");
 
         // identificar se a extensão trabalha em duas requisições
         final MangaInfoOffLineModel? dados;
@@ -106,15 +106,16 @@ class MangaInfoController {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint('$e');
       HomePageController.errorMessage = 'erro no MangaInfo: $e';
       state.value = MangaInfoStates.error;
     }
   }
 
-  Future updateBook(String url, int idExtension) async {
+  Future<bool> updateBook(String url, int idExtension,
+      {bool isAnUpdateFromCore = false}) async {
     try {
-      print("l= $url  - atualizando...");
+      debugPrint("l= $url  - atualizando...");
 
       final MangaInfoOffLineModel? dados =
           await mapOfExtensions[idExtension]!.mangaDetail(url);
@@ -123,6 +124,20 @@ class MangaInfoController {
         data = dados;
       } else {
         state.value = MangaInfoStates.error;
+        return false;
+      }
+
+      MangaInfoOffLineModel? offLineBook;
+
+      if (isAnUpdateFromCore) {
+        offLineBook =
+            await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
+        if (offLineBook == null) {
+          /// aqui retorno true -- MAS O MANGA NÃO É ATUALIZADO, já que não existe ná memória
+          return true;
+        } else {
+          
+        }
       }
 
       if (isAnOffLineBook) {
@@ -133,19 +148,18 @@ class MangaInfoController {
               await fetchServiceExtensions[idExtension].fetchChapters(url);
         } else {
           /// isn't TwoRequests
-          capitulosDisponiveis = dados?.capitulos ?? [];
+          capitulosDisponiveis = dados.capitulos;
           debugPrint("nao é twoRequests: $capitulosDisponiveis");
         }
 
-        List<Capitulos> capitulosFromOriginalServer =
-            dados == null ? [] : dados.capitulos;
-        if (dados == null) {
-          print("dd off-line true");
-          capitulosFromOriginalServer = [];
-        } else {
-          print("dd off-line false");
-          capitulosFromOriginalServer = dados.capitulos;
-        }
+        List<Capitulos> capitulosFromOriginalServer = dados.capitulos;
+        // if (dados == null) {
+        //   debugPrint("dd off-line true");
+        //   capitulosFromOriginalServer = [];
+        // } else {
+        //   debugPrint("dd off-line false");
+        //   capitulosFromOriginalServer = dados.capitulos;
+        // }
         // mapOfExtensions[idExtension].isTwoRequests;
         await chaptersController?.update(capitulosDisponiveis,
             capitulosFromOriginalServer, url, idExtension);
@@ -165,19 +179,18 @@ class MangaInfoController {
               await fetchServiceExtensions[idExtension].fetchChapters(url);
         } else {
           /// isn't TwoRequests
-          capitulosDisponiveis = dados?.capitulos ?? [];
+          capitulosDisponiveis = dados.capitulos;
           debugPrint("nao é twoRequests: $capitulosDisponiveis");
         }
 
-        List<Capitulos> capitulosFromOriginalServer =
-            dados == null ? [] : dados.capitulos;
-        if (dados == null) {
-          print("dd true");
-          capitulosFromOriginalServer = [];
-        } else {
-          print("dd false");
-          capitulosFromOriginalServer = dados.capitulos;
-        }
+        List<Capitulos> capitulosFromOriginalServer = dados.capitulos;
+        // if (dados == null) {
+        //   debugPrint("dd true");
+        //   capitulosFromOriginalServer = [];
+        // } else {
+        //   debugPrint("dd false");
+        //   capitulosFromOriginalServer = dados.capitulos;
+        // }
 
         await chaptersController?.update(capitulosDisponiveis,
             capitulosFromOriginalServer, url, idExtension);
@@ -185,9 +198,11 @@ class MangaInfoController {
       state.value = MangaInfoStates.sucess1;
       // aqui deve atualizar a view totalmente
       state.value = MangaInfoStates.sucess2;
+      return true;
     } catch (e) {
-      print("erro no update book at mangaInfoController: $e");
+      debugPrint("erro no update book at mangaInfoController: $e");
       state.value = MangaInfoStates.error;
+      return false;
     }
   }
 
@@ -201,7 +216,8 @@ class MangaInfoController {
         capitulosDisponiveis = localData.capitulos;
         GlobalData.capitulosDisponiveis =
             List.unmodifiable(capitulosDisponiveis ?? []);
-        await chaptersController?.updateChapters(capitulosDisponiveis, url, idExtension);
+        await chaptersController?.updateChapters(
+            capitulosDisponiveis, url, idExtension);
       }
     } catch (e) {
       debugPrint(
@@ -338,11 +354,10 @@ class ChaptersController {
   }
 
   updateChapters(
-    List<Capitulos>? listaCapitulosDisponiveis,
-    //List<Capitulos> listaCapitulos,
-    String link,
-    int idExtension
-  ) async {
+      List<Capitulos>? listaCapitulosDisponiveis,
+      //List<Capitulos> listaCapitulos,
+      String link,
+      int idExtension) async {
     state.value = ChaptersStates.loading;
     try {
       debugPrint('update chapters');
@@ -728,7 +743,8 @@ class DialogController {
         //     "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
         if ((dataOcultLibrary[i].library == lista[i]['library']) &&
             (dataOcultLibrary[i].books[iBook].link == book['link']) &&
-            (dataOcultLibrary[i].books[iBook].idExtension == book['idExtension'])) {
+            (dataOcultLibrary[i].books[iBook].idExtension ==
+                book['idExtension'])) {
           debugPrint("achei o manga na OCULT library");
           offLine = true;
           if (!lista[i]['selected']) {

@@ -23,8 +23,24 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
+  "Atualizar":
+      (dynamic value, SettingsOptionsController controller) {
+        debugPrint("alterar o valor de Atualizar: $value");
+        GlobalData.settings['Atualizar'] = value;
+        final ConfigSystemController configSystemController =
+            ConfigSystemController();
+        configSystemController.update(settings);
+        controller.updateSetting();
+      },
   "Atualizar as Capas":
-      (dynamic value, SettingsOptionsController controller) {},
+      (dynamic value, SettingsOptionsController controller) {
+        debugPrint("alterar o valor de Tamanho dos quadros: $value");
+        GlobalData.settings['Atualizar as Capas'] = value;
+        final ConfigSystemController configSystemController =
+            ConfigSystemController();
+        configSystemController.update(settings);
+        controller.updateSetting();
+      },
   "Tema": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Tema'] = value;

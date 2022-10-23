@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/scraping/mundo_manga_kun_scraping.dart';
 // import 'package:manga_library/app/models/extension_model.dart';
@@ -24,12 +25,12 @@ class ExtensionMundoMangaKun implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 1);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -56,7 +57,7 @@ class ExtensionMundoMangaKun implements Extension {
     }
     if (!result.download) {
       try {
-        result.pages = await scrapingLeitor(id);
+        result.pages = await compute(scrapingLeitor, id);
       } catch (e) {
         debugPrint("erro - não foi possivel obter as paginas on-line: $e");
       }
@@ -84,8 +85,8 @@ class ExtensionMundoMangaKun implements Extension {
           buffer.write('$str+');
         }
       }
-      List<Map<String, String>> data = await scrapingSearch(buffer.toString().toLowerCase());
-      print(data);
+      List<Map<String, String>> data = await compute(scrapingSearch, buffer.toString().toLowerCase());
+      debugPrint('$data');
       return SearchModel.fromJson(
           {"font": nome, "data": data, "idExtension": id});
     } catch (e) {

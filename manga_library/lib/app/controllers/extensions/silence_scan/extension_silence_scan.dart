@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/silence_scan/scraping/scraping_silence_scan.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
@@ -22,12 +23,12 @@ class ExtensionSilenceScan implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -55,7 +56,7 @@ class ExtensionSilenceScan implements Extension {
     }
     if (!result.download) {
       try {
-        result.pages = await scrapingLeitor(id);
+        result.pages = await compute(scrapingLeitor, id);
       } catch (e) {
         debugPrint("erro - não foi possivel obter as paginas on-line: $e");
       }
@@ -65,7 +66,7 @@ class ExtensionSilenceScan implements Extension {
 
   @override
   Future<List<String>> getPagesForDownload(String id) async {
-    return await scrapingLeitor(id);
+    return await compute(scrapingLeitor, id);
   }
 
   @override
@@ -97,7 +98,7 @@ class ExtensionSilenceScan implements Extension {
         // }
       }
       // print(buffer.toString());
-      List<Map<String, String>> data = await scrapingSearch(buffer.toString());
+      List<Map<String, String>> data = await compute(scrapingSearch, buffer.toString());
       
       // print('---------------------------------------------');
       // print(data);

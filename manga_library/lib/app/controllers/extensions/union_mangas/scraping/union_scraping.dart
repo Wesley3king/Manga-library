@@ -8,7 +8,7 @@ import '../../../../models/home_page_model.dart';
 import '../../../../models/manga_info_offline_model.dart';
 // import '../../../../models/search_model.dart';
 
-Future<List<ModelHomePage>> scrapingHomePage() async {
+Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
   const String url = 'https://unionleitor.top/';
   const String indentify = 'div.col-md-2';
   List<ModelHomePage> models = [];

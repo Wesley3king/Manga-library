@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
+import 'package:manga_library/app/controllers/updates/updates_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/routes/routes.dart';
 
@@ -34,7 +35,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   ThemeData themeSetter() {
     switch (GlobalData.settings["Tema"]) {
       case "auto":
-        // print("theme automatic");
         ConfigSystemController.instance.isDarkTheme = theme == darkTheme;
         return theme;
       case "light":
@@ -64,6 +64,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // UpdatesCore.start();
     detectTheme();
   }
 

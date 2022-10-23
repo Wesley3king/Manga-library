@@ -8,7 +8,7 @@ import '../../../../models/home_page_model.dart';
 import '../../../../models/manga_info_offline_model.dart';
 import '../../../home_page_controller.dart';
 
-Future<List<ModelHomePage>> scrapingHomePage() async {
+Future<List<ModelHomePage>> scrapingHomePage(int indiceCompute) async {
   const String url = 'https://mangayabu.top/';
   const String indentify = '.manga-card';
   try {

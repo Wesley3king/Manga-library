@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/nhen/scraping/nhen_scraping.dart';
@@ -22,13 +23,12 @@ class ExtensionNHen implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await scrapingMangaDetail(link);
-     // scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -43,7 +43,6 @@ class ExtensionNHen implements Extension {
   @override
   Future<List<String>> getPagesForDownload(String url) async {
     return [];
-    //await scrapingLeitor(url);
   }
 
   @override
@@ -62,7 +61,7 @@ class ExtensionNHen implements Extension {
         }
       }
       
-      List<Map> books = await scrapingSearch(buffer.toString());
+      List<Map> books = await compute(scrapingSearch, buffer.toString());
       
       return SearchModel.fromJson(
           {"font": nome, "data": books, "idExtension": id});

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/universo_hen/scraping/scraping_universo_hen.dart';
@@ -22,12 +23,12 @@ class ExtensionUniversoHen implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -55,7 +56,7 @@ class ExtensionUniversoHen implements Extension {
     }
     if (!result.download) {
       try {
-        result.pages = await scrapingLeitor(id);
+        result.pages = await compute(scrapingLeitor, id);
       } catch (e) {
         debugPrint("erro - não foi possivel obter as paginas on-line: $e");
       }
@@ -65,7 +66,7 @@ class ExtensionUniversoHen implements Extension {
 
   @override
   Future<List<String>> getPagesForDownload(String url) async {
-    return await scrapingLeitor(url);
+    return await compute(scrapingLeitor, url);
   }
 
   @override
@@ -84,7 +85,7 @@ class ExtensionUniversoHen implements Extension {
         }
       }
 
-      List<Map> books = await scrapingSearch(buffer.toString());
+      List<Map> books = await compute(scrapingSearch, buffer.toString());
 
       return SearchModel.fromJson({"font": nome, "data": books, "idExtension": id});
     } catch (e) {

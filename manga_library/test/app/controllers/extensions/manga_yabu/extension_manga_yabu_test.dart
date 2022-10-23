@@ -13,7 +13,7 @@ void main() {
   test('aqui deve retornar uma lista de maps com os dados necessarios',
       () async {
     var result = await extensionManga.homePage();
-    print(result);
+    debugPrint('$result');
     // expect(result is List, true);
   });
 

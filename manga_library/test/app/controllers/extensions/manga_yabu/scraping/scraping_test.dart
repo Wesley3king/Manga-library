@@ -9,7 +9,7 @@ void main() {
   ExtensionMangaYabu extensionManga = ExtensionMangaYabu();
   test('aqui deve retornar uma lista de maps com os dados necessarios',
       () async {
-    var result = await scrapingHomePage();
+    var result = await scrapingHomePage(0);
     debugPrint('$result');
     // expect(result is List, true);
   });

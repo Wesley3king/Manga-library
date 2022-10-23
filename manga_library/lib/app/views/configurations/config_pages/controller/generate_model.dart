@@ -37,15 +37,43 @@ buildSettingsModel() {
             {"option": "Grandes", "value": "big"}
           ]
         },
+        // {
+        //   "nameConfig": "Atualizar as Capas",
+        //   "description": "Atualiza as capas da Biblioteca",
+        //   "type": "confirm",
+        //   "value": data['Atualizar as Capas'],
+        //   "function": functions['Atualizar as Capas'],
+        //   "optionsAndValues": [
+        //     {"option": "Cancelar", "value": false},
+        //     {"option": "Confirmar", "value": true}
+        //   ]
+        // },
         {
-          "nameConfig": "Atualizar as Capas",
-          "description": "Atualiza as capas da Biblioteca",
-          "type": "confirm",
-          "value": data['Atualizar as Capas'],
-          "function": functions['Atualizar as Capas'],
-          "optionsAndValues": [
-            {"option": "Cancelar", "value": false},
-            {"option": "Confirmar", "value": true}
+          "type": "class",
+          "nameClass": "Atualização",
+          "children": [
+            {
+              "nameConfig": "Atualizar",
+              "description": "Atualiza a Biblioteca automaticamente ao abrir o app",
+              "type": "radio",
+              "value": data['Atualizar'],
+              "function": functions['Atualizar'],
+              "optionsAndValues": [
+                {"option": "Nunca", "value": "0"},
+                {"option": "A cada 6 Horas", "value": "6"},
+                {"option": "A cada 12 Horas", "value": "12"},
+                {"option": "Uma vez no Dia", "value": "24"},
+                {"option": "Uma vez na Semana", "value": "1"}
+              ]
+            },
+            {
+              "nameConfig": "Atualizar as Capas",
+              "description": "Caso não queira que as capas sejam atualizadas desligue.",
+              "type": "switch",
+              "value": data['Atualizar as Capas'],
+              "function": functions['Atualizar as Capas'],
+              "optionsAndValues": []
+            },
           ]
         }
       ]

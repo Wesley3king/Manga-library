@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // import 'package:chaleno/chaleno.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/repositories/yabu_fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/scraping/scraping_yabu.dart';
@@ -28,12 +29,12 @@ class ExtensionMangaYabu implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await scrapingHomePage();
+    return await compute(scrapingHomePage, 0);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await scrapingMangaDetail(link);
+    return await compute(scrapingMangaDetail, link);
   }
 
   @override
@@ -59,7 +60,7 @@ class ExtensionMangaYabu implements Extension {
     }
     if (!result.download) {
       try {
-        result.pages = await scrapingLeitor(id);
+        result.pages = await compute(scrapingLeitor, id);
       } catch (e) {
         debugPrint("erro - não foi possivel obter as paginas on-line: $e");
       }
@@ -69,7 +70,7 @@ class ExtensionMangaYabu implements Extension {
 
   @override
   Future<List<String>> getPagesForDownload(String url) async {
-    return await scrapingLeitor(url);
+    return await compute(scrapingLeitor, url);
   }
 
   @override
