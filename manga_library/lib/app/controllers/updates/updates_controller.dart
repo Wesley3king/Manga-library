@@ -47,7 +47,9 @@ class UpdatesCore {
       bool verify6() {
         if ((int.parse(dateNow[0][0]) - int.parse(dateLastUpdate[0][0])) >= 6) {
           return true;
-        } else if ((int.parse(dateNow[0][0]) + (24 - int.parse(dateLastUpdate[0][0]))) >= 6){
+        } else if ((int.parse(dateNow[0][0]) +
+                (24 - int.parse(dateLastUpdate[0][0]))) >=
+            6) {
           return true;
         }
         return false;
@@ -55,24 +57,64 @@ class UpdatesCore {
 
       /// A cada 12 Horas
       bool verify12() {
-        if (int.parse(dateNow[1][2]) >= (int.parse(dateLastUpdate[1][2]) + 1)) {
+        if ((int.parse(dateNow[0][0]) - int.parse(dateLastUpdate[0][0])) >=
+            12) {
           return true;
-        } else if ((int.parse(dateNow[1][2]) + (30 - int.parse(dateLastUpdate[1][2]))) >= 1){
+        } else if ((int.parse(dateNow[0][0]) +
+                (24 - int.parse(dateLastUpdate[0][0]))) >=
+            12) {
           return true;
         }
         return false;
       }
+
+      /// Uma vez ao dia
+      bool verify24() {
+        if (int.parse(dateNow[1][2]) >= (int.parse(dateLastUpdate[1][2]) + 1)) {
+          return true;
+        } else if ((int.parse(dateNow[1][2]) +
+                (30 - int.parse(dateLastUpdate[1][2]))) >=
+            1) {
+          return true;
+        }
+        return false;
+      }
+
+      /// uma vez por semana
+      bool verifyOneTimeOnWeek() {
+        if (int.parse(dateNow[1][2]) - int.parse(dateLastUpdate[1][2]) >= 7) {
+          return true;
+        } else if ((int.parse(dateNow[1][2]) +
+                (30 - int.parse(dateLastUpdate[1][2]))) >=
+            7) {
+          return true;
+        }
+        return false;
+      }
+
       /// vericar o intervalo de atualização
       switch (GlobalData.settings['Atualizar']) {
         case "0": // never
           break;
         case "6":
+          if (verify6()) {
+            start();
+          }
           break;
         case "12":
+          if (verify12()) {
+            start();
+          }
           break;
         case "24":
+          if (verify24()) {
+            start();
+          }
           break;
         case "1":
+          if (verifyOneTimeOnWeek()) {
+            start();
+          }
           break;
       }
     }
@@ -107,9 +149,9 @@ class UpdatesCore {
 
         if (!isUpdated) {
           /// implement update
-          bool response =
-              await compute(updateAnBook, models[model].books[bookIndice]);
-          debugPrint("resposta do update: $response");
+          bool response = await updateAnBook(models[model].books[bookIndice]);
+          //compute(updateAnBook, models[model].books[bookIndice]);
+          //debugPrint("resposta do update: $response");
           if (response) {
             alreadyUpdated.add({
               "link": models[model].books[bookIndice].link,

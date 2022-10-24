@@ -5,11 +5,9 @@ import 'package:manga_library/app/controllers/download/download_controller.dart'
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/home_page/error.dart';
 import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class MangaInfo extends StatefulWidget {
   final String link;
@@ -26,6 +24,35 @@ class _MangaInfoState extends State<MangaInfo> {
   Widget _loading() {
     return const Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  /// generate an Message
+  void generateMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 17, 17, 17) : Colors.white,
+      content: Text(message, style: TextStyle(color: ConfigSystemController.instance.isDarkTheme ? Colors.white : Colors.black),),
+    ));
+  }
+
+  /// menu
+  Widget _generateMenu() {
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: const Text('Atualizar'),
+          onTap: () async {
+            if (mangaInfoController.state.value == MangaInfoStates.sucess2) {
+              generateMessage(context, "Atualizando...");
+              await mangaInfoController.updateBook(
+                      widget.link, widget.idExtension)
+                  ? generateMessage(context, "Atualizado com Sucesso!")
+                  : generateMessage(context, 'Falha ao atualizar!');
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -83,23 +110,42 @@ class _MangaInfoState extends State<MangaInfo> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        leading: IconButton(onPressed: () => GoRouter.of(context).pop(), icon: Icon(Icons.arrow_back, color: ConfigSystemController.instance.isDarkTheme ? Colors.white: const Color.fromARGB(255, 51, 51, 51),),),
-        actionsIconTheme: IconThemeData(color: ConfigSystemController.instance.isDarkTheme ? Colors.white: const Color.fromARGB(255, 51, 51, 51)),
+        leading: IconButton(
+          onPressed: () => GoRouter.of(context).pop(),
+          icon: Icon(
+            Icons.arrow_back,
+            color: ConfigSystemController.instance.isDarkTheme
+                ? Colors.white
+                : const Color.fromARGB(255, 51, 51, 51),
+          ),
+        ),
+        actionsIconTheme: IconThemeData(
+            color: ConfigSystemController.instance.isDarkTheme
+                ? Colors.white
+                : const Color.fromARGB(255, 51, 51, 51)),
         elevation: 0,
-        title: Text('Detalhes do Mangá', style: TextStyle(color: ConfigSystemController.instance.isDarkTheme ? Colors.white: const Color.fromARGB(255, 51, 51, 51)),),
+        title: Text(
+          'Detalhes do Mangá',
+          style: TextStyle(
+              color: ConfigSystemController.instance.isDarkTheme
+                  ? Colors.white
+                  : const Color.fromARGB(255, 51, 51, 51)),
+        ),
         actions: [
           ValueListenableBuilder(
             valueListenable: mangaInfoController.state,
             builder: (context, value, child) => IconButton(
               onPressed: () {
                 // utilize url_launcher
-                Uri url = Uri.parse(mapOfExtensions[widget.idExtension]!.getLink(widget.link));
+                Uri url = Uri.parse(
+                    mapOfExtensions[widget.idExtension]!.getLink(widget.link));
                 launchUrl(url);
               },
               tooltip: "Compartilhar",
               icon: const Icon(Icons.share),
             ),
-          )
+          ),
+          _generateMenu(),
         ],
       ),
       body: AnimatedBuilder(

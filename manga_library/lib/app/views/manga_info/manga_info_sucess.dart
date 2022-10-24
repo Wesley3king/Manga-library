@@ -290,10 +290,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   }
 }
 
-Widget tst() {
-  // return ScrollablePositionedList.builder(
-  //   itemScrollController: ,
-  //   itemCount: 1,
-  //   itemBuilder: (context, index) => Text('$index'));
-  return Container();
-}
+// Widget tst() {
+//   // return ScrollablePositionedList.builder(
+//   //   itemScrollController: ,
+//   //   itemCount: 1,
+//   //   itemBuilder: (context, index) => Text('$index'));
+//   return Container();
+// }
