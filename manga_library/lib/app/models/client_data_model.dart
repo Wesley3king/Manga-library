@@ -7,6 +7,7 @@ class ClientDataModel {
     required this.mail,
     required this.password,
     required this.isAdimin,
+    required this.lastUpdate,
     required this.capitulosLidos,
   });
   late final int id;
@@ -14,12 +15,14 @@ class ClientDataModel {
   late final String mail;
   late final String password;
   late final bool isAdimin;
+  late final String lastUpdate;
   late final List<dynamic> capitulosLidos; //Map<String, dynamic>
 
   ClientDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     mail = json['mail'];
+    lastUpdate = json['lastUpdate'];
     password = json['password'];
     isAdimin = json['isadimin'];
     // favoritos = json['favoritos'];
@@ -27,15 +30,16 @@ class ClientDataModel {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    _data['mail'] = mail;
-    _data['password'] = password;
-    _data['isadimin'] = isAdimin;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['mail'] = mail;
+    data['lastUpdate'] = lastUpdate;
+    data['password'] = password;
+    data['isadimin'] = isAdimin;
     // _data['favoritos'] = favoritos;
-    _data['capitulosLidos'] = capitulosLidos;
-    return _data;
+    data['capitulosLidos'] = capitulosLidos;
+    return data;
   }
 }
 // {

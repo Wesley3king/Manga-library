@@ -1,14 +1,80 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
+import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 
 class UpdatesCore {
   static bool isUpdating = false;
 
   static void verifyIfIsTimeToUpdate() async {
+    HiveController hiveController = HiveController();
     if (true) {
       /// implemet teste
+      /*
+      {"option": "Nunca", "value": "0"},
+                {"option": "A cada 6 Horas", "value": "6"},
+                {"option": "A cada 12 Horas", "value": "12"},
+                {"option": "Uma vez no Dia", "value": "24"},
+                {"option": "Uma vez na Semana", "value": "1"}
+                
+                (int.parse(dateNow[1][1]) >= (int.parse(dateLastUpdate[1][1]) + 1)) && 
+          (int.parse(dateNow[1][2]) >= (int.parse(dateLastUpdate[1][2]) + 1)) && (*/
+      ClientDataModel clientData = await hiveController.getClientData();
+
+      /// get time
+      String getDateTime() => '${DateTime.now()}';
+
+      List<List<String>> processDate(String date) {
+        List<String> splitedDate = date.split('.');
+        List<String> dateAndHours = splitedDate[0].split(" ");
+
+        /// hours
+        List<String> hours = dateAndHours[1].split(":");
+
+        /// date
+        List<String> dates = dateAndHours[0].split("-");
+        return [hours, dates];
+      }
+
+      // now
+      List<List<String>> dateNow = processDate(getDateTime());
+      // last
+      List<List<String>> dateLastUpdate = processDate(clientData.lastUpdate);
+
+      /// A cada 6 Horas
+      bool verify6() {
+        if ((int.parse(dateNow[0][0]) - int.parse(dateLastUpdate[0][0])) >= 6) {
+          return true;
+        } else if ((int.parse(dateNow[0][0]) + (24 - int.parse(dateLastUpdate[0][0]))) >= 6){
+          return true;
+        }
+        return false;
+      }
+
+      /// A cada 12 Horas
+      bool verify12() {
+        if (int.parse(dateNow[1][2]) >= (int.parse(dateLastUpdate[1][2]) + 1)) {
+          return true;
+        } else if ((int.parse(dateNow[1][2]) + (30 - int.parse(dateLastUpdate[1][2]))) >= 1){
+          return true;
+        }
+        return false;
+      }
+      /// vericar o intervalo de atualização
+      switch (GlobalData.settings['Atualizar']) {
+        case "0": // never
+          break;
+        case "6":
+          break;
+        case "12":
+          break;
+        case "24":
+          break;
+        case "1":
+          break;
+      }
     }
   }
 
@@ -60,9 +126,8 @@ class UpdatesCore {
   static Future<bool> updateAnBook(Books book) async {
     MangaInfoController controller = MangaInfoController();
     try {
-      final bool data =
-          await controller.updateBook(book.link, book.idExtension);
-
+      final bool data = await controller.updateBook(book.link, book.idExtension,
+          isAnUpdateFromCore: true);
       if (data) {
         return true;
       }

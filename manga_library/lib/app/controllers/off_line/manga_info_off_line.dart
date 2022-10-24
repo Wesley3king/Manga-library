@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_pages.dart';
 import 'package:manga_library/app/models/manga_info_model.dart';
 
@@ -150,10 +151,12 @@ class MangaInfoOffLineController {
 
   Future<bool> updateBook(
       {required MangaInfoOffLineModel model,
-      required List<Capitulos> capitulos}) async {
+      required List<Capitulos> capitulos,
+      String? img}) async {
     try {
       RegExp regex = RegExp(model.link, caseSensitive: false);
       List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
+      /// verificar se deve atualizar as capas
 
       if (data != null) {
         for (int i = 0; i < data.length; ++i) {
@@ -162,6 +165,9 @@ class MangaInfoOffLineController {
             log("manga off-line found!!! == doing changes");
             model.capitulos = capitulos;
             data[i] = model;
+            if (!GlobalData.settings['Atualizar as Capas']) {
+              data[i].img = img!;
+            }
             break;
           }
         }
@@ -172,7 +178,7 @@ class MangaInfoOffLineController {
         return false;
       }
     } catch (e) {
-      print("erro no updateBook at MangaInfoOffLineController: $e");
+      debugPrint("erro no updateBook at MangaInfoOffLineController: $e");
       return false;
     }
   }

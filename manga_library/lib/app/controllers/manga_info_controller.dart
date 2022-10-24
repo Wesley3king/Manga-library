@@ -169,6 +169,7 @@ class MangaInfoController {
         debugPrint("inserindo na base de dados!");
         await mangaInfoOffLineController.updateBook(
             model: data,
+            img: offLineBook?.img,
             capitulos: ChaptersController.capitulosCorrelacionados);
         debugPrint("inserindo com SUCESSO na base de dados!");
       } else {
