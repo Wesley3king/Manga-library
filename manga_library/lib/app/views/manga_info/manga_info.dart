@@ -6,8 +6,7 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/views/home_page/error.dart';
 import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+import 'package:share_plus/share_plus.dart';
 import '../../controllers/system_navigation_and_app_bar_styles.dart';
 
 class MangaInfo extends StatefulWidget {
@@ -107,7 +106,9 @@ class _MangaInfoState extends State<MangaInfo> {
   }
 
   void _customNavigationBar() {
-    StylesFromSystemNavigation.setSystemNavigationBarBlack26();
+    ConfigSystemController.instance.isDarkTheme ? 
+    StylesFromSystemNavigation.setSystemNavigationBarBlack26() :
+    StylesFromSystemNavigation.setSystemNavigationBarWhite24();
   }
 
   @override
@@ -144,9 +145,11 @@ class _MangaInfoState extends State<MangaInfo> {
             builder: (context, value, child) => IconButton(
               onPressed: () {
                 // utilize url_launcher
-                Uri url = Uri.parse(
+                // Uri url = Uri.parse(
+                //     mapOfExtensions[widget.idExtension]!.getLink(widget.link));
+                // launchUrl(url, mode: LaunchMode.externalApplication);
+                Share.share(
                     mapOfExtensions[widget.idExtension]!.getLink(widget.link));
-                launchUrl(url);
               },
               tooltip: "Compartilhar",
               icon: const Icon(Icons.share),

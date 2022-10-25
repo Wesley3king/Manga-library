@@ -15,4 +15,10 @@ class StylesFromSystemNavigation {
     // debugPrint("invisivel!");
     fullScreenController.setSystemNavigationBarTransparent();
   }
+
+  /// set the style(Color) of SystemNavigationBar to white24
+  static void setSystemNavigationBarWhite24() async {
+    // debugPrint("invisivel!");
+    fullScreenController.setSystemNavigationBarWhite24();
+  }
 }

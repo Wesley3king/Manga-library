@@ -130,6 +130,7 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           title: const Text('Biblioteca'),
+          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           actions: [
             IconButton(

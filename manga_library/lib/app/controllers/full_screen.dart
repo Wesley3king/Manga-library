@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 // import 'package:flutter/material.dart';
 
 class FullScreenController {
@@ -64,19 +65,35 @@ class FullScreenController {
   // ==========================================================================
   //                      STYLES
   // ==========================================================================
+  // set the style(Color) of SystemNavigationBar to black26
   void setSystemNavigationBarBlack26() async {
     debugPrint("visivel!");
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    /*
+    ConfigSystemController.instance.isDarkTheme ? 
+    */
+    SystemChrome.setSystemUIOverlayStyle( const SystemUiOverlayStyle(
         systemNavigationBarContrastEnforced: false,
+        systemNavigationBarIconBrightness: Brightness.light,
         systemNavigationBarDividerColor: Colors.black26,
         systemNavigationBarColor: Colors.black26));
+  }
+
+  /// set the style(Color) of SystemNavigationBar to white24
+  void setSystemNavigationBarWhite24() async {
+    debugPrint("visivel!");
+    SystemChrome.setSystemUIOverlayStyle( const SystemUiOverlayStyle(
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarDividerColor: Colors.white24,
+        systemNavigationBarColor: Colors.white24));
   }
 
   /// set the style(Color) of SystemNavigationBar to trasnparent
   void setSystemNavigationBarTransparent() async {
     debugPrint("invisivel!");
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
             systemNavigationBarContrastEnforced: false,
+            systemNavigationBarIconBrightness: ConfigSystemController.instance.isDarkTheme ? Brightness.light : Brightness.dark,
             systemNavigationBarDividerColor: Colors.black,
             systemNavigationBarColor: Colors.transparent));
   }

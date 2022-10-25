@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
         return null;
       case 2:
         return AppBar(
-          backgroundColor: configSystemController.colorManagement(),
+          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
           title: const Text('Pesquisar'),
           actions: [
             IconButton(
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
         );
       case 3:
         return AppBar(
-          backgroundColor: configSystemController.colorManagement(),
+          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
           title: const Text('Outros'),
         );
     }

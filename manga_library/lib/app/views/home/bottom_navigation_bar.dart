@@ -49,10 +49,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
         widget.currentIndex.value = 3;
         break;
     }
-
-    // Future.delayed(const Duration(seconds: 2), () {
-
-    // });
   }
 
   @override
@@ -135,7 +131,9 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
       show();
     } else if (direction == ScrollDirection.reverse) {
       // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
-      StylesFromSystemNavigation.setSystemNavigationBarBlack26();
+      ConfigSystemController.instance.isDarkTheme ?
+      StylesFromSystemNavigation.setSystemNavigationBarBlack26() :
+      StylesFromSystemNavigation.setSystemNavigationBarWhite24();
       hide();
     }
   }

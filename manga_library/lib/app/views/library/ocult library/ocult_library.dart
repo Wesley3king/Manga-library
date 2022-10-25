@@ -95,6 +95,7 @@ class _LibraryOcultState extends State<LibraryOcult> with SingleTickerProviderSt
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           title: const Text('Biblioteca'),
+          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           pinned: true,
           snap: true,
