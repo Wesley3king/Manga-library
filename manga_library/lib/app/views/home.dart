@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/views/home/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/home/home_page.dart';
 import 'package:manga_library/app/views/home/library.dart';
 import 'package:manga_library/app/views/home/others.dart';
 import 'package:manga_library/app/views/home/search.dart';
-
-import '../models/globais.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,6 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final ConfigSystemController configSystemController = ConfigSystemController();
   late ScrollController scrollController;
   ValueNotifier<int> currentRoute = ValueNotifier<int>(0);
 
@@ -27,6 +26,7 @@ class _HomeState extends State<Home> {
         return null;
       case 2:
         return AppBar(
+          backgroundColor: configSystemController.colorManagement(),
           title: const Text('Pesquisar'),
           actions: [
             IconButton(
@@ -37,6 +37,7 @@ class _HomeState extends State<Home> {
         );
       case 3:
         return AppBar(
+          backgroundColor: configSystemController.colorManagement(),
           title: const Text('Outros'),
         );
     }

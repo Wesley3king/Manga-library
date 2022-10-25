@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
@@ -8,6 +7,8 @@ import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/views/home_page/error.dart';
 import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../controllers/system_navigation_and_app_bar_styles.dart';
 
 class MangaInfo extends StatefulWidget {
   final String link;
@@ -31,8 +32,16 @@ class _MangaInfoState extends State<MangaInfo> {
   void generateMessage(BuildContext context, String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 17, 17, 17) : Colors.white,
-      content: Text(message, style: TextStyle(color: ConfigSystemController.instance.isDarkTheme ? Colors.white : Colors.black),),
+      backgroundColor: ConfigSystemController.instance.isDarkTheme
+          ? const Color.fromARGB(255, 17, 17, 17)
+          : Colors.white,
+      content: Text(
+        message,
+        style: TextStyle(
+            color: ConfigSystemController.instance.isDarkTheme
+                ? Colors.white
+                : Colors.black),
+      ),
     ));
   }
 
@@ -93,14 +102,12 @@ class _MangaInfoState extends State<MangaInfo> {
   @override
   void initState() {
     super.initState();
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        systemStatusBarContrastEnforced: false,
-        statusBarColor: Colors.transparent,
-        systemNavigationBarContrastEnforced: false,
-        systemNavigationBarDividerColor: Colors.black26,
-        systemNavigationBarColor: Colors.black26));
+    _customNavigationBar();
     initialStart();
+  }
+
+  void _customNavigationBar() {
+    StylesFromSystemNavigation.setSystemNavigationBarBlack26();
   }
 
   @override

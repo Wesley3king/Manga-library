@@ -27,6 +27,7 @@ class HistoricProcessBuilders {
     debugPrint("datas: atual ${model.date} - last $lastDateTime");
     List<String>? atualDateAndHour = lastDateTime?.split(' ');
     List<String> modelDateAndHour = model.date.split(' ');
+    //debugPrint("teste historico: ${modelDateAndHour[0] == atualDateAndHour![0]} / v1 = ${modelDateAndHour[0]}, v2 = ${atualDateAndHour[0]}");
     if (lastDateTime == null) {
       buildReferenceTime(model.date);
       buildListTile(model);
@@ -160,7 +161,8 @@ class CustomListTile extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   child: GestureDetector(
-                    onTap: () => goToMangaDetail(context, model.link, model.idExtension),
+                    onTap: () =>
+                        goToMangaDetail(context, model.link, model.idExtension),
                     child: SizedBox(
                       width: 80,
                       height: 110,
@@ -175,7 +177,8 @@ class CustomListTile extends StatelessWidget {
               SizedBox(
                 width: (MediaQuery.of(context).size.width - 150),
                 child: GestureDetector(
-                  onTap: () => goToMangaDetail(context, model.link, model.idExtension),
+                  onTap: () =>
+                      goToMangaDetail(context, model.link, model.idExtension),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

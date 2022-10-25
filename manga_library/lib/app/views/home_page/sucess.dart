@@ -121,7 +121,8 @@ class _SucessState extends State<Sucess> {
                 ],
               ),
             ),
-            buildLists()
+            buildLists(),
+            const SizedBox(height: 50,)
           ],
         ),
       ),

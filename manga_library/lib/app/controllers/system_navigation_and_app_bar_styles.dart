@@ -1,23 +1,18 @@
+// import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/full_screen.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+class StylesFromSystemNavigation {
+  static FullScreenController fullScreenController = FullScreenController();
 
-/// set the style(Color) of SystemNavigationBar to Black26
-  void setSystemNavigationBarBlack26() {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarContrastEnforced: false,
-      systemNavigationBarDividerColor: Colors.black26,
-      systemNavigationBarColor: Colors.black26
-      )
-    );
+  /// set the style(Color) of SystemNavigationBar to Black26
+  static void setSystemNavigationBarBlack26() async {
+    // debugPrint("visivel!");
+    fullScreenController.setSystemNavigationBarBlack26();
   }
 
   /// set the style(Color) of SystemNavigationBar to trasnparent
-  void setSystemNavigationBarTransparent() {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarContrastEnforced: false,
-      systemNavigationBarDividerColor: Colors.black,
-      systemNavigationBarColor: Colors.transparent
-      )
-    );
+  static void setSystemNavigationBarTransparent() async {
+    // debugPrint("invisivel!");
+    fullScreenController.setSystemNavigationBarTransparent();
   }
+}

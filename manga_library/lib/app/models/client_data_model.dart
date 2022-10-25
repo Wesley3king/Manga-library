@@ -15,7 +15,7 @@ class ClientDataModel {
   late final String mail;
   late final String password;
   late final bool isAdimin;
-  late final String lastUpdate;
+  late String lastUpdate;
   late final List<dynamic> capitulosLidos; //Map<String, dynamic>
 
   ClientDataModel.fromJson(Map<String, dynamic> json) {

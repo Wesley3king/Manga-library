@@ -31,7 +31,7 @@ void main() {
   });
 
   test("deve retornar um SearchModel", () async {
-    var data =await extend.search("mesmo que");
+    var data = await extend.search("mesmo que");
     debugPrint("data: $data");
   });
 }

@@ -64,7 +64,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    UpdatesCore.start();
+    //UpdatesCore.start();
+    UpdatesCore.verifyIfIsTimeToUpdate();
     detectTheme();
   }
 

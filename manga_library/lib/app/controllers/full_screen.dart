@@ -16,8 +16,8 @@ class FullScreenController {
   // }
 
   void enterFullScreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
-        overlays: [SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    // ,overlays: [SystemUiOverlay.top]
     // activedFullScreen
   }
 
@@ -59,6 +59,26 @@ class FullScreenController {
         systemNavigationBarDividerColor: color,
         systemNavigationBarColor: color));
     // isFullScreen = false;
+  }
+
+  // ==========================================================================
+  //                      STYLES
+  // ==========================================================================
+  void setSystemNavigationBarBlack26() async {
+    debugPrint("visivel!");
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarDividerColor: Colors.black26,
+        systemNavigationBarColor: Colors.black26));
+  }
+
+  /// set the style(Color) of SystemNavigationBar to trasnparent
+  void setSystemNavigationBarTransparent() async {
+    debugPrint("invisivel!");
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            systemNavigationBarContrastEnforced: false,
+            systemNavigationBarDividerColor: Colors.black,
+            systemNavigationBarColor: Colors.transparent));
   }
 }
 

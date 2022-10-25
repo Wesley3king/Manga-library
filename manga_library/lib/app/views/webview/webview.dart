@@ -65,7 +65,7 @@ class _MyWebViewState extends State<MyWebView> {
                                   onPressed: () => GoRouter.of(context).pop(),
                                   icon: const Icon(Icons.arrow_back)),
                               SizedBox(
-                                  width: MediaQuery.of(context).size.width - 60,
+                                  width: MediaQuery.of(context).size.width - 180,
                                   child: Text(
                                     url,
                                     style: const TextStyle(
@@ -73,6 +73,14 @@ class _MyWebViewState extends State<MyWebView> {
                                         overflow: TextOverflow.ellipsis,
                                         color: Colors.white),
                                   )),
+                              IconButton(
+                                onPressed: () => webViewController.goBack(),
+                                icon: const Icon(Icons.arrow_back_ios)
+                              ),
+                              IconButton(
+                                onPressed: () => webViewController.goForward(),
+                                icon: const Icon(Icons.arrow_forward_ios)
+                              ),
                             ],
                           ),
                         ),

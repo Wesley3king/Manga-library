@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/models/globais.dart';
 import '../../controllers/system_config.dart';
 import '../../controllers/system_navigation_and_app_bar_styles.dart';
@@ -20,22 +20,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     with SingleTickerProviderStateMixin {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  //late AnimationController _animation;
-  // Map<int, ValueNotifier<bool>> animatedIcons = {
-  //   0: ValueNotifier<bool>(false),
-  //   1: ValueNotifier<bool>(false),
-  //   2: ValueNotifier<bool>(false),
-  //   3: ValueNotifier<bool>(false),
-  // };
+  final FullScreenController fullScreenController = FullScreenController();
 
   @override
   void initState() {
     super.initState();
     // set UI Style
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        systemNavigationBarContrastEnforced: false,
-        systemNavigationBarColor: Colors.transparent));
+    fullScreenController.exitEdgeFullScreen();
+    // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
   }
 
   // toggle() {}
@@ -75,7 +67,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
             selectedItemColor: configSystemController.colorManagement(),
             showUnselectedLabels: true),
         child: BottomNavigationBar(
-          backgroundColor: const Color.fromARGB(255, 37, 37, 37),
+          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 37, 37, 37) : const Color.fromARGB(255, 240, 240, 240),
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 13,
           unselectedFontSize: 13,
@@ -139,8 +131,11 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   void listen() {
     final direction = widget.controller.position.userScrollDirection;
     if (direction == ScrollDirection.forward) {
+      StylesFromSystemNavigation.setSystemNavigationBarTransparent();
       show();
     } else if (direction == ScrollDirection.reverse) {
+      // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
+      StylesFromSystemNavigation.setSystemNavigationBarBlack26();
       hide();
     }
   }
@@ -165,18 +160,22 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   double setHeight(bool isPortrait) {
     if (GlobalData.settings['Rolar a Barra']) {
       if (isVisible) {
-        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-            systemNavigationBarContrastEnforced: false,
-            systemNavigationBarDividerColor: Colors.black,
-            systemNavigationBarColor: Colors.transparent));
+        // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        //     systemNavigationBarContrastEnforced: false,
+        //     systemNavigationBarDividerColor: Colors.black,
+        //     systemNavigationBarColor: Colors.transparent));
+        // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
+        // debugPrint("visivel!");
         return isPortrait
             ? (kBottomNavigationBarHeight + 48)
             : kBottomNavigationBarHeight;
       } else {
-        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-            systemNavigationBarContrastEnforced: false,
-            systemNavigationBarDividerColor: Colors.black26,
-            systemNavigationBarColor: Colors.black26));
+        // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        //     systemNavigationBarContrastEnforced: false,
+        //     systemNavigationBarDividerColor: Colors.black26,
+        //     systemNavigationBarColor: Colors.black26));
+        // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
+        // debugPrint("INVISIVEL!");
         return 0;
       }
     } else {
@@ -190,7 +189,8 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: widget.duration,
-      height: setHeight(MediaQuery.of(context).orientation == Orientation.portrait),
+      height:
+          setHeight(MediaQuery.of(context).orientation == Orientation.portrait),
       child: Wrap(
         children: [widget.child],
       ),
