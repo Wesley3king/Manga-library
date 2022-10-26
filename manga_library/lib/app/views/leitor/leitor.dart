@@ -262,51 +262,54 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            SizedBox(
+        child: IconTheme(
+          data: IconThemeData(color: Colors.white),
+          child: Stack(
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: PagesLeitor(
+                    showOrHideInfo: removeOrAddInfo,
+                    leitorController: leitorController,
+                    controller: controller,
+                    link: widget.link,
+                    id: widget.id,
+                  )),
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: PagesLeitor(
-                  showOrHideInfo: removeOrAddInfo,
-                  leitorController: leitorController,
-                  controller: controller,
-                  link: widget.link,
-                  id: widget.id,
-                )),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: buildInfo(context),
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: AnimatedContainer(
-                padding: isVisible
-                    ? const EdgeInsets.only(bottom: 100)
-                    : const EdgeInsets.only(bottom: 0),
-                duration: const Duration(milliseconds: 200),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AnimatedBuilder(
-                      animation: controller.state,
-                      builder: (context, child) => Text(
-                        "${controller.state.value}/${leitorController.capitulosEmCarga.isEmpty ? 0 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length : leitorController.capitulosEmCarga[0].pages.length}",
-                        style: const TextStyle(shadows: [
-                          Shadow(color: Colors.black45, offset: Offset(1, 1))
-                        ]),
-                      ),
-                    ),
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: buildInfo(context),
                 ),
               ),
-            )
-          ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: AnimatedContainer(
+                  padding: isVisible
+                      ? const EdgeInsets.only(bottom: 100)
+                      : const EdgeInsets.only(bottom: 0),
+                  duration: const Duration(milliseconds: 200),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AnimatedBuilder(
+                        animation: controller.state,
+                        builder: (context, child) => Text(
+                          "${controller.state.value}/${leitorController.capitulosEmCarga.isEmpty ? 0 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length : leitorController.capitulosEmCarga[0].pages.length}",
+                          style: const TextStyle(shadows: [
+                            Shadow(color: Colors.black45, offset: Offset(1, 1))
+                          ]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

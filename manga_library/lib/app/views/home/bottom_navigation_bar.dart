@@ -26,7 +26,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
   void initState() {
     super.initState();
     // set UI Style
-    fullScreenController.exitEdgeFullScreen();
     // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
   }
 

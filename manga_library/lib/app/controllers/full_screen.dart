@@ -43,6 +43,7 @@ class FullScreenController {
       systemStatusBarContrastEnforced: false,
       systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
       systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
+      systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarContrastEnforced: false,
     ));
     // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
