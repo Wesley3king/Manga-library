@@ -94,9 +94,10 @@ class _LibraryOcultState extends State<LibraryOcult> with SingleTickerProviderSt
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
-          title: const Text('Biblioteca'),
-          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          // iconTheme: IconThemeData(color: ConfigSystemController.instance.isDarkTheme ? Colors.white : Colors.black),
+          title: const Text('Biblioteca Oculta'),
+          // backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : const Color.fromARGB(255, 230, 230, 230),
+          //systemOverlayStyle: SystemUiOverlayStyle.dark,
           pinned: true,
           snap: true,
           floating: true,
@@ -106,6 +107,7 @@ class _LibraryOcultState extends State<LibraryOcult> with SingleTickerProviderSt
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(35),
             child: TabBar(
+              labelColor: ConfigSystemController.instance.isDarkTheme ? Colors.white : Colors.black,
               isScrollable: true,
               indicatorWeight: 2.5,
               controller: tabController,

@@ -130,8 +130,8 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           title: const Text('Biblioteca'),
-          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          // backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
+
           actions: [
             IconButton(
                 onPressed: () => goToOcultLibrary(),
@@ -146,6 +146,7 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
             child: TabBar(
               isScrollable: true,
               // indicatorSize: TabBarIndicatorSize.tab,
+              labelColor: ConfigSystemController.instance.isDarkTheme ? Colors.white : Colors.black,
               indicatorWeight: 2.5,
               controller: tabController,
               indicatorColor: configSystemController.colorManagement(),

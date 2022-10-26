@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/views/home/bottom_navigation_bar.dart';
 import 'package:manga_library/app/views/home/home_page.dart';
@@ -26,7 +27,7 @@ class _HomeState extends State<Home> {
         return null;
       case 2:
         return AppBar(
-          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
+          // backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
           title: const Text('Pesquisar'),
           actions: [
             IconButton(
@@ -37,7 +38,6 @@ class _HomeState extends State<Home> {
         );
       case 3:
         return AppBar(
-          backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : Colors.white70,
           title: const Text('Outros'),
         );
     }

@@ -7,10 +7,26 @@ import 'package:manga_library/app/views/routes/routes.dart';
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
+  appBarTheme: const AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle.light
+  )
 );
 ThemeData lightTheme = ThemeData(
   visualDensity: VisualDensity.adaptivePlatformDensity,
   brightness: Brightness.light,
+  appBarTheme: AppBarTheme(
+    actionsIconTheme: IconThemeData(color: ConfigSystemController.instance.isDarkTheme ? Colors.white : const Color.fromARGB(255, 48, 48, 48)),
+    
+    titleTextStyle: TextStyle(
+      color: ConfigSystemController.instance.isDarkTheme ? Colors.white : const Color.fromARGB(255, 48, 48, 48),
+      fontWeight: FontWeight.bold,
+      fontSize: 20
+    ),
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+    iconTheme: IconThemeData(color: ConfigSystemController.instance.isDarkTheme ? Colors.white : const Color.fromARGB(255, 48, 48, 48)),
+    backgroundColor: ConfigSystemController.instance.isDarkTheme ? const Color.fromARGB(255, 54, 54, 54) : const Color.fromARGB(255, 230, 230, 230),
+
+  )
 );
 
 class MyApp extends StatefulWidget {
