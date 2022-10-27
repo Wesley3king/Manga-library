@@ -75,6 +75,20 @@ buildSettingsModel() {
               "optionsAndValues": []
             },
           ]
+        },
+        {
+          "type": "class",
+          "nameClass": "Biblioteca Oculta",
+          "children": [
+            {
+              "nameConfig": "Senha da Biblioteca Oculta",
+              "description": "Define a senha da Biblioteca Oculta",
+              "type": "input",
+              "value": data['Senha da Biblioteca Oculta'],
+              "function": functions['Senha da Biblioteca Oculta'],
+              "optionsAndValues": []
+            },
+          ]
         }
       ]
     },

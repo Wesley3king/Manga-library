@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/settings_model.dart';
 import 'package:manga_library/app/views/configurations/config_pages/controller/page_config_controller.dart';
 
@@ -177,40 +178,86 @@ class InputTypes {
         title: Text(data.nameConfig),
         subtitle: Text(data.description),
         enabled: isNotDisponible ? false : true,
-        onTap: () {
-          String text = "";
-          showDialog(
-            context: context,
-            builder: (context) => SimpleDialog(
-              title: const Text("Insira a senha"),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 6.0),
-                  child: TextField(
-                    autofocus: true,
-                    // decoration: const InputDecoration(
-                    //     label: Text("Nome da Biblioteca")),
-                    onChanged: (value) => text = value,
+        onTap: () async {
+          bool isAuthorized = false;
+          if (data.nameConfig == "Senha da Biblioteca Oculta") {
+            String oldPassword = "";
+            await showDialog(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Text("Insira a senha Antiga"),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 6.0),
+                    child: TextField(
+                      autofocus: true,
+                      // decoration: const InputDecoration(
+                      //     label: Text("Nome da Biblioteca")),
+                      onChanged: (value) => oldPassword = value,
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("Cancelar")),
-                    TextButton(
-                        onPressed: () {
-                          data.function(text, controller);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Salvar")),
-                  ],
-                )
-              ],
-            ),
-          );
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Cancelar")),
+                      TextButton(
+                          onPressed: () {
+                            if (oldPassword !=
+                                GlobalData
+                                    .settings["Senha da Biblioteca Oculta"]) {
+                              showSnackBar(context, "Senha Incorreta!");
+                            } else {
+                              isAuthorized = true;
+                            }
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Confirmar")),
+                    ],
+                  )
+                ],
+              ),
+            );
+          } else {
+            isAuthorized = true;
+          }
+          if (isAuthorized) {
+            String text = "";
+            showDialog(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Text("Insira a senha"),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 6.0),
+                    child: TextField(
+                      autofocus: true,
+                      // decoration: const InputDecoration(
+                      //     label: Text("Nome da Biblioteca")),
+                      onChanged: (value) => text = value,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Cancelar")),
+                      TextButton(
+                          onPressed: () {
+                            data.function(text, controller);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Salvar")),
+                    ],
+                  )
+                ],
+              ),
+            );
+          }
         });
   }
 
@@ -241,5 +288,9 @@ class InputTypes {
                 ));
       },
     );
+  }
+
+  void showSnackBar(BuildContext context, String txt) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(txt)));
   }
 }

@@ -250,6 +250,7 @@ class HiveController {
       "Tamanho dos quadros": "normal",
       "Atualizar": "0",
       "Atualizar as Capas": true,
+      "Senha da Biblioteca Oculta": "0000",
       "Tema": "auto",
       "Cor da Interface": "blue",
       "Idioma": "ptbr",

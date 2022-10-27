@@ -41,6 +41,14 @@ Map<String, Function> settingsFunctions = {
         configSystemController.update(settings);
         controller.updateSetting();
       },
+  "Senha da Biblioteca Oculta": (dynamic value, SettingsOptionsController controller) {
+        debugPrint("alterar o valor deSenha da Biblioteca Oculta: $value");
+        GlobalData.settings['Senha da Biblioteca Oculta'] = value;
+        final ConfigSystemController configSystemController =
+            ConfigSystemController();
+        configSystemController.update(settings);
+        controller.updateSetting();
+      },
   "Tema": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings['Tema'] = value;

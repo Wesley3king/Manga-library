@@ -77,7 +77,10 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                       size: isVisible ? sizeOfButtons : 0)),
               Text(
                 "Capítulo ${leitorController.capitulosEmCarga.isEmpty ? "..." : leitorController.capitulosEmCarga[0].capitulo}",
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20
+                ),
               ),
               IconButton(
                 onPressed: () {},
@@ -263,7 +266,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: IconTheme(
-          data: IconThemeData(color: Colors.white),
+          data: const IconThemeData(color: Colors.white),
           child: Stack(
             children: [
               SizedBox(
@@ -299,7 +302,9 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                         animation: controller.state,
                         builder: (context, child) => Text(
                           "${controller.state.value}/${leitorController.capitulosEmCarga.isEmpty ? 0 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length : leitorController.capitulosEmCarga[0].pages.length}",
-                          style: const TextStyle(shadows: [
+                          style: const TextStyle(
+                            color: Colors.white,
+                            shadows: [
                             Shadow(color: Colors.black45, offset: Offset(1, 1))
                           ]),
                         ),
