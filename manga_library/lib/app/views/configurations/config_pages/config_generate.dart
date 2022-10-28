@@ -228,7 +228,7 @@ class InputTypes {
             showDialog(
               context: context,
               builder: (context) => SimpleDialog(
-                title: const Text("Insira a senha"),
+                title: const Text("Insira a Nova senha"),
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(

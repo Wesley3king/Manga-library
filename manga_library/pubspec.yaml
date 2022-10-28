@@ -80,12 +80,12 @@ flutter_native_splash:
 
 #flutter_launcher_icons config
 flutter_icons:
-  image_path: "assets/imgs/new-icon-manga-mini-teste-number-two.png"
+  image_path: "assets/imgs/new-teste-icon.png"
   ios: true
   remove_alpha_ios: true
   android: "launcher_icon"
   adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/imgs/new-icon-manga-mini-teste-number-two.png"
+  adaptive_icon_foreground: "assets/imgs/new-teste-icon.png"
 
 # The following section is specific to Flutter packages.
 flutter:

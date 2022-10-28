@@ -157,7 +157,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       // debugPrint("name: $name");
       // img
       String? img = book.querySelector("a img")!.src;
-      // debugPrint("img: $img");
+      debugPrint("img: $img");
       // link
       String? link = book.querySelector("a")!.href;
       //  debugPrint("link: $link");

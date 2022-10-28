@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/library/library_grid.dart';
 
@@ -144,6 +145,9 @@ class _LibraryOcultState extends State<LibraryOcult> with SingleTickerProviderSt
     super.initState();
     libraryController.start();
     controllerScroll = ScrollController();
+    ConfigSystemController.instance.isDarkTheme ?
+      StylesFromSystemNavigation.setSystemNavigationBarBlack26() :
+      StylesFromSystemNavigation.setSystemNavigationBarWhite24();
   }
 
   @override

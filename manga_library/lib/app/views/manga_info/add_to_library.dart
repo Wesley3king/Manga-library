@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 import '../../controllers/manga_info_controller.dart';
@@ -202,12 +203,50 @@ class _AddToLibraryState extends State<AddToLibrary> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
-            onPressed: () {
+            onPressed: () async {
               resultado = [];
               Navigator.of(context).pop();
-              setState(() {
-                isOcultLibrary = true;
-              });
+              // bool isAuthorized = false;
+              String oldPassword = "";
+              await showDialog(
+                context: context,
+                builder: (context) => SimpleDialog(
+                  title: const Text("Insira a senha"),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 6.0),
+                      child: TextField(
+                        autofocus: true,
+                        // decoration: const InputDecoration(
+                        //     label: Text("Nome da Biblioteca")),
+                        onChanged: (value) => oldPassword = value,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text("Cancelar")),
+                        TextButton(
+                            onPressed: () {
+                              if (oldPassword !=
+                                  GlobalData
+                                      .settings["Senha da Biblioteca Oculta"]) {
+                                showMessage(context, "Senha Incorreta!");
+                                Navigator.of(context).pop();
+                              } else {
+                                Navigator.of(context).pop();
+                                buidDialogForOcultLibrary(context);
+                              }
+                            },
+                            child: const Text("Confirmar")),
+                      ],
+                    )
+                  ],
+                ),
+              );
             },
             child: const Text('Library')),
         TextButton(
@@ -261,6 +300,12 @@ class _AddToLibraryState extends State<AddToLibrary> {
     verifyIfInLibraryToShowIcon(_dialogController.dataLibrary);
   }
 
+  // ========== SHOW MESSAGES ============
+  void showMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -272,9 +317,10 @@ class _AddToLibraryState extends State<AddToLibrary> {
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          isOcultLibrary
-              ? buidDialogForOcultLibrary(context)
-              : buildDialogForLibrary(context);
+          // isOcultLibrary
+          //     ? buidDialogForOcultLibrary(context)
+          //     : buildDialogForLibrary(context);
+          buildDialogForLibrary(context);
         },
         child: AnimatedBuilder(
             animation: isOnTheLibrary,

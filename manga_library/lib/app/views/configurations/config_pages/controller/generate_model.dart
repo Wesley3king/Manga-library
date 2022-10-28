@@ -89,6 +89,23 @@ buildSettingsModel() {
               "optionsAndValues": []
             },
           ]
+        },
+        {
+          "type": "container",
+          "children": [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                children: const <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.info),
+                  ),
+                  Flexible(child: Text("Caso nunca tenha configurado uma senha por padrão ela é '0000'", softWrap: true,))
+                ],
+              ),
+            )
+          ]
         }
       ]
     },
