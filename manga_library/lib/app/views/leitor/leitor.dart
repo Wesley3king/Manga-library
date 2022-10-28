@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/views/leitor/components/bottom_sheet.dart';
 import 'package:manga_library/app/views/leitor/config_components.dart';
 // import 'package:flutter/services.dart';

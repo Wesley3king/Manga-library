@@ -158,7 +158,7 @@ class LeitorController {
 
     if (keepFullScreen!) {
       if (isFullScreen) {
-        screenController.enterEdgeFullScreen();
+        screenController.exitEdgeFullScreen();
       } else {
         screenController.enterFullScreen();
       }

@@ -101,7 +101,7 @@ buildSettingsModel() {
                     padding: EdgeInsets.all(8.0),
                     child: Icon(Icons.info),
                   ),
-                  Flexible(child: Text("Caso nunca tenha configurado uma senha por padrão ela é '0000'", softWrap: true,))
+                  Flexible(child: Text("Caso nunca tenha configurado uma senha, por padrão ela é '0000'", softWrap: true,))
                 ],
               ),
             )

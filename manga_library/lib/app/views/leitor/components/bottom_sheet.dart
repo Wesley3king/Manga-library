@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/leitor_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 
 customBottomSheetForLeitor(
@@ -122,6 +123,39 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
 //    -------------------- Pages controller --------------------------------
 // ============================================================================
 
-Widget buildCustomControllerPages() {
-  return Container();
+///final List<Map<String, String>> options = [
+  //   {"option": "Padrão", "value": "pattern"},
+  //   {"option": "Vertical", "value": "vertical"},
+  //   {"option": "Esquerda para Direita", "value": "ltr"},
+  //   {"option": "Direita para esquerda", "value": "rtl"},
+  //   {"option": "Lista ltr", "value": "ltrlist"},
+  //   {"option": "Lista rtl", "value": "rtllist"},
+  //   {"option": "Webtoon", "value": "webtoon"},
+  //   {"option": "Webview (on-line)", "value": "webview"}
+  // ];
+Widget getFirstPage(LeitorController controller) {
+  return Column(
+    children: [
+      const Text("Para este Capítulo"),
+      Row(children: [
+        const Text('Tipo do leitor'),
+        DropdownButton(
+          value: "pattern",
+          onChanged: (value) {
+            controller.setReaderType(value as String);
+          },
+          items: const [
+            DropdownMenuItem(value: "pattern", child: Text('Padrão'),),
+            DropdownMenuItem(value: "vertical", child: Text('Vertical'),),
+            DropdownMenuItem(value: "ltr", child: Text('Esquerda para Direita'),),
+            DropdownMenuItem(value: "rtl", child: Text('Direita para esquerda'),),
+            DropdownMenuItem(value: "ltrlist", child: Text('Lista ltr'),),
+            DropdownMenuItem(value: "rtllist", child: Text('Lista rtl'),),
+            DropdownMenuItem(value: "webtoon", child: Text('Webtoon'),),
+            DropdownMenuItem(value: "webview", child: Text('Webview (on-line)'),),
+          ],
+        )
+      ],)
+    ],
+  );
 }
