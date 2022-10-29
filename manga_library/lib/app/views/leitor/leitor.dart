@@ -225,7 +225,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                     builder: (context) {
                       return IconButton(
                           onPressed: () => customBottomSheetForLeitor(
-                              context, bottomSheetController),
+                              context, bottomSheetController, leitorController
+                            ),
                           icon: Icon(
                             Icons.settings,
                             size: sizeOfButtons,

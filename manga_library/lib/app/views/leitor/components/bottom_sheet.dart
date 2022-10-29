@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
+import 'package:wakelock/wakelock.dart';
 
-customBottomSheetForLeitor(
-    BuildContext context, AnimationController animationController) {
+customBottomSheetForLeitor(BuildContext context,
+    AnimationController animationController, LeitorController controller) {
   // AnimationController animationController = AnimationController(vsync: vsync)
   const double radiusBottomSheet = 16.0;
   // const double radiusContent = 40.0;
@@ -20,17 +21,20 @@ customBottomSheetForLeitor(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(radiusBottomSheet),
                   topRight: Radius.circular(radiusBottomSheet))),
-          child: const Padding(
-            padding: EdgeInsets.only(top: 15.0),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15.0),
             child: SizedBox(
               height: 485,
-              child: CustomReaderConfigurations(),
+              child: CustomReaderConfigurations(
+                controller: controller,
+              ),
             ),
           )));
 }
 
 class CustomReaderConfigurations extends StatefulWidget {
-  const CustomReaderConfigurations({super.key});
+  final LeitorController controller;
+  const CustomReaderConfigurations({super.key, required this.controller});
 
   @override
   State<CustomReaderConfigurations> createState() =>
@@ -43,12 +47,8 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
   late TabController controller;
   List<Widget> _getPages() {
     List<Widget> pages = [
-      const Center(
-        child: Text("Leitor"),
-      ),
-      const Center(
-        child: Text("Geral"),
-      ),
+      getFirstPage(widget.controller, setState),
+      getSecondPage(context),
       const Center(
         child: Text("Filtros"),
       )
@@ -124,38 +124,133 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
 // ============================================================================
 
 ///final List<Map<String, String>> options = [
-  //   {"option": "Padrão", "value": "pattern"},
-  //   {"option": "Vertical", "value": "vertical"},
-  //   {"option": "Esquerda para Direita", "value": "ltr"},
-  //   {"option": "Direita para esquerda", "value": "rtl"},
-  //   {"option": "Lista ltr", "value": "ltrlist"},
-  //   {"option": "Lista rtl", "value": "rtllist"},
-  //   {"option": "Webtoon", "value": "webtoon"},
-  //   {"option": "Webview (on-line)", "value": "webview"}
-  // ];
-Widget getFirstPage(LeitorController controller) {
-  return Column(
-    children: [
-      const Text("Para este Capítulo"),
-      Row(children: [
-        const Text('Tipo do leitor'),
-        DropdownButton(
-          value: "pattern",
-          onChanged: (value) {
-            controller.setReaderType(value as String);
-          },
-          items: const [
-            DropdownMenuItem(value: "pattern", child: Text('Padrão'),),
-            DropdownMenuItem(value: "vertical", child: Text('Vertical'),),
-            DropdownMenuItem(value: "ltr", child: Text('Esquerda para Direita'),),
-            DropdownMenuItem(value: "rtl", child: Text('Direita para esquerda'),),
-            DropdownMenuItem(value: "ltrlist", child: Text('Lista ltr'),),
-            DropdownMenuItem(value: "rtllist", child: Text('Lista rtl'),),
-            DropdownMenuItem(value: "webtoon", child: Text('Webtoon'),),
-            DropdownMenuItem(value: "webview", child: Text('Webview (on-line)'),),
+//   {"option": "Padrão", "value": "pattern"},
+//   {"option": "Vertical", "value": "vertical"},
+//   {"option": "Esquerda para Direita", "value": "ltr"},
+//   {"option": "Direita para esquerda", "value": "rtl"},
+//   {"option": "Lista ltr", "value": "ltrlist"},
+//   {"option": "Lista rtl", "value": "rtllist"},
+//   {"option": "Webtoon", "value": "webtoon"},
+//   {"option": "Webview (on-line)", "value": "webview"}
+// ];
+Widget getFirstPage(LeitorController controller, Function setState) {
+  ValueNotifier<String> notifier = ValueNotifier<String>("pattern");
+  return AnimatedBuilder(
+    animation: notifier,
+    builder: (context, child) => Column(
+      children: [
+        const Text("Para este Capítulo"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text('Tipo do leitor'),
+            DropdownButton<String>(
+              value: controller.leitorTypeUi,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              onChanged: (value) {
+                controller.setReaderType(value as String);
+                notifier.value = value;
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: "pattern",
+                  child: Text('Padrão'),
+                ),
+                DropdownMenuItem(
+                  value: "vertical",
+                  child: Text('Vertical'),
+                ),
+                DropdownMenuItem(
+                  value: "ltr",
+                  child: Text('Esquerda para Direita'),
+                ),
+                DropdownMenuItem(
+                  value: "rtl",
+                  child: Text('Direita para esquerda'),
+                ),
+                DropdownMenuItem(
+                  value: "ltrlist",
+                  child: Text('Lista ltr'),
+                ),
+                DropdownMenuItem(
+                  value: "rtllist",
+                  child: Text('Lista rtl'),
+                ),
+                DropdownMenuItem(
+                  value: "webtoon",
+                  child: Text('Webtoon'),
+                ),
+                DropdownMenuItem(
+                  value: "webview",
+                  child: Text('Webview (on-line)'),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text('Rotação da tela'),
+            DropdownButton<String>(
+              value: controller.orientacionUi,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              onChanged: (value) {
+                controller.setOrientacion(value as String);
+                notifier.value = value;
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: "pattern",
+                  child: Text('Padrão'),
+                ),
+                DropdownMenuItem(
+                  value: "auto",
+                  child: Text('Seguir o Sistema'),
+                ),
+                DropdownMenuItem(
+                  value: "portraitup",
+                  child: Text('Retrato'),
+                ),
+                DropdownMenuItem(
+                  value: "portraitdown",
+                  child: Text('Retrato Invertido'),
+                ),
+                DropdownMenuItem(
+                  value: "landscapeleft",
+                  child: Text('Paisagem Esquerda'),
+                ),
+                DropdownMenuItem(
+                  value: "landscaperight",
+                  child: Text('Paisagem Direita'),
+                ),
+              ],
+            )
           ],
         )
-      ],)
-    ],
+      ],
+    ),
+  );
+}
+
+Widget getSecondPage(BuildContext context) {
+  ValueNotifier<int> notifier = ValueNotifier<int>(0);
+  bool wakeLock = false;
+  return AnimatedBuilder(
+    animation: notifier,
+    builder: (context, child) => Column(
+      children: [
+        // const Text("Para este Capítulo"),
+        SwitchListTile(
+          value: wakeLock,
+          title: const Text("Manter a tela ligada"),
+          onChanged: (value) {
+            wakeLock = value;
+            Wakelock.toggle(enable: wakeLock);
+            notifier.value++;
+          },
+        ),
+      ],
+    ),
   );
 }
