@@ -175,6 +175,14 @@ buildSettingsModel() {
           "optionsAndValues": [
             {"option": "switch", "value": true}
           ]
+        },
+        {
+          "nameConfig": "Manter a tela ligada",
+          "description": "Se o Leitor manterá a tela ligada durante todo o tempo",
+          "type": "switch",
+          "value": data['Manter a tela ligada'],
+          "function": functions['Manter a tela ligada'],
+          "optionsAndValues": []
         }
       ]
     },

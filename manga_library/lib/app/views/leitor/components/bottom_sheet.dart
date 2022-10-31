@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:wakelock/wakelock.dart';
 
 customBottomSheetForLeitor(BuildContext context,
     AnimationController animationController, LeitorController controller) {
@@ -47,8 +46,8 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
   late TabController controller;
   List<Widget> _getPages() {
     List<Widget> pages = [
-      getFirstPage(widget.controller, setState),
-      getSecondPage(context),
+      getFirstPage(widget.controller),
+      getSecondPage(context, widget.controller),
       const Center(
         child: Text("Filtros"),
       )
@@ -133,7 +132,7 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
 //   {"option": "Webtoon", "value": "webtoon"},
 //   {"option": "Webview (on-line)", "value": "webview"}
 // ];
-Widget getFirstPage(LeitorController controller, Function setState) {
+Widget getFirstPage(LeitorController controller) {
   ValueNotifier<String> notifier = ValueNotifier<String>("pattern");
   return AnimatedBuilder(
     animation: notifier,
@@ -233,23 +232,53 @@ Widget getFirstPage(LeitorController controller, Function setState) {
   );
 }
 
-Widget getSecondPage(BuildContext context) {
+Widget getSecondPage(BuildContext context, LeitorController controller) {
   ValueNotifier<int> notifier = ValueNotifier<int>(0);
-  bool wakeLock = false;
   return AnimatedBuilder(
     animation: notifier,
     builder: (context, child) => Column(
       children: [
         // const Text("Para este Capítulo"),
         SwitchListTile(
-          value: wakeLock,
+          value: controller.wakeLock,
           title: const Text("Manter a tela ligada"),
           onChanged: (value) {
-            wakeLock = value;
-            Wakelock.toggle(enable: wakeLock);
+            // controller.wakeLock = value;
+            // Wakelock.toggle(enable: controller.wakeLock);
+            controller.setWakeLock(value);
             notifier.value++;
           },
         ),
+        SwitchListTile(
+          value: controller.isFullScreen ?? true,
+          title: const Text("Tela cheia"),
+          onChanged: (value) {
+            controller.isFullScreen = value;
+            notifier.value++;
+          },
+        ),
+        DropdownButton<String>(
+              value: controller.leitorTypeUi,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              onChanged: (value) {
+                controller.setReaderType(value as String);
+                notifier.value++;
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: "pattern",
+                  child: Text('Padrão'),
+                ),
+                DropdownMenuItem(
+                  value: "black",
+                  child: Text('Preto'),
+                ),
+                DropdownMenuItem(
+                  value: "white",
+                  child: Text('Branco'),
+                ),
+              ],
+            )
       ],
     ),
   );

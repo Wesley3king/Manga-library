@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -72,22 +71,22 @@ class _PagesLeitorState extends State<PagesLeitor> {
       FilterQuality filterQuality, Color color) {
     /// esta função determina o tipo de image privider ao decodificar as imagens
     ImageProvider<Object> returnAnImageProvider(int index) {
-      if (widget.leitorController.capitulosEmCarga[0].download) {
+      if (widget.leitorController.atualChapter.download) {
         return FileImage(File(
-            widget.leitorController.capitulosEmCarga[0].downloadPages[index]));
+            widget.leitorController.atualChapter.downloadPages[index]));
       } else {
         return NetworkImage(
-            widget.leitorController.capitulosEmCarga[0].pages[index]);
+            widget.leitorController.atualChapter.pages[index]);
       }
     }
 
     // Color(0xff000000);
     debugPrint(
-        "length pages: ${widget.leitorController.capitulosEmCarga[0].pages.length}");
+        "length pages: ${widget.leitorController.atualChapter.pages.length}");
     return PhotoViewGallery.builder(
-      itemCount: widget.leitorController.capitulosEmCarga[0].download
-          ? widget.leitorController.capitulosEmCarga[0].downloadPages.length
-          : widget.leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.atualChapter.download
+          ? widget.leitorController.atualChapter.downloadPages.length
+          : widget.leitorController.atualChapter.pages.length,
       gaplessPlayback: true,
       scrollDirection: scrollDirection,
       pageController: widget.controller.pageController,
@@ -106,7 +105,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   Widget listViewLeitor(FilterQuality filterQuality) {
     return ScrollablePositionedList.builder(
-      itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.atualChapter.pages.length,
       itemPositionsListener: itemPositionsListener,
       itemScrollController: widget.controller.scrollControllerList,
       // cacheExtent: 8000.0,
@@ -116,7 +115,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
           // widget.showOrHideInfo();
         },
         child: MyPageImage(
-          capitulo: widget.leitorController.capitulosEmCarga[0],
+          capitulo: widget.leitorController.atualChapter,
           index: index,
           filterQuality: filterQuality,
         ),
@@ -128,15 +127,15 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget newLeitor(FilterQuality filterQuality, Color color) {
     return Container(
       color: color,
-      child: widget.leitorController.capitulosEmCarga[0].download
+      child: widget.leitorController.atualChapter.download
           ? ScrollablePositionedList.builder(
               itemScrollController: widget.controller.scrollControllerList,
               itemPositionsListener: itemPositionsListener,
               itemCount:
-                  widget.leitorController.capitulosEmCarga[0].pages.length,
+                  widget.leitorController.atualChapter.pages.length,
               itemBuilder: (context, index) => ExtendedImage.file(
                 File(widget
-                    .leitorController.capitulosEmCarga[0].downloadPages[index]),
+                    .leitorController.atualChapter.downloadPages[index]),
                 clearMemoryCacheWhenDispose: true,
                 filterQuality: filterQuality,
                 maxBytes: 30,
@@ -147,9 +146,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
               itemScrollController: widget.controller.scrollControllerList,
               itemPositionsListener: itemPositionsListener,
               itemCount:
-                  widget.leitorController.capitulosEmCarga[0].pages.length,
+                  widget.leitorController.atualChapter.pages.length,
               itemBuilder: (context, index) => ExtendedImage.network(
-                widget.leitorController.capitulosEmCarga[0].pages[index],
+                widget.leitorController.atualChapter.pages[index],
                 clearMemoryCacheWhenDispose: true,
                 filterQuality: filterQuality,
                 maxBytes: 30,
@@ -162,12 +161,12 @@ class _PagesLeitorState extends State<PagesLeitor> {
   // novo Leitor
   Widget webtoonReader(FilterQuality filterQuality, Color color) {
     return ScrollablePositionedListPage(
-        lista: widget.leitorController.capitulosEmCarga[0].download
-            ? widget.leitorController.capitulosEmCarga[0].downloadPages
-            : widget.leitorController.capitulosEmCarga[0].pages,
+        lista: widget.leitorController.atualChapter.download
+            ? widget.leitorController.atualChapter.downloadPages
+            : widget.leitorController.atualChapter.pages,
         color: color,
         filterQuality: filterQuality,
-        isOffLine: widget.leitorController.capitulosEmCarga[0].download,
+        isOffLine: widget.leitorController.atualChapter.download,
         controller: widget.controller);
   }
 
@@ -176,7 +175,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
       required FilterQuality filterQuality,
       required Color color}) {
     return PageView.builder(
-      itemCount: widget.leitorController.capitulosEmCarga[0].pages.length,
+      itemCount: widget.leitorController.atualChapter.pages.length,
       scrollDirection: Axis.horizontal,
       controller: widget.controller.pageController,
       onPageChanged: (index) => widget.controller.setPage = (index + 1),
@@ -189,7 +188,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
         child: ListView(
           children: [
             MyPageImage(
-              capitulo: widget.leitorController.capitulosEmCarga[0],
+              capitulo: widget.leitorController.atualChapter,
               index: index,
               filterQuality: filterQuality,
             )
@@ -199,28 +198,17 @@ class _PagesLeitorState extends State<PagesLeitor> {
     );
   }
 
-  Widget _filterQuality(LeitorTypes type) {
-    FilterQuality filterQuality = FilterQuality.none;
-    switch (widget.leitorController.filterQualityState.value) {
+  FilterQuality _getFilterQuality() {
+    switch (widget.leitorController.filterQuality) {
       case LeitorFilterQuality.none:
-        // return _leitorType(type, FilterQuality.none);
-        filterQuality = FilterQuality.none;
-        break;
+        return  FilterQuality.none;
       case LeitorFilterQuality.low:
-        filterQuality = FilterQuality.low;
-        break;
+        return  FilterQuality.low;
       case LeitorFilterQuality.medium:
-        filterQuality = FilterQuality.medium;
-        break;
+        return  FilterQuality.medium;
       case LeitorFilterQuality.hight:
-        filterQuality = FilterQuality.high;
-        break;
+        return  FilterQuality.high;
     }
-    return AnimatedBuilder(
-      animation: widget.leitorController.backgroundColorState,
-      builder: (context, child) => _backgroundColor(
-          widget.leitorController.leitorTypeState.value, filterQuality),
-    );
   }
 
   Widget _leitorType(
@@ -237,7 +225,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return webtoonReader(filterQuality, color);
       case LeitorTypes.webview:
         return MyWebviewx(
-          pages: widget.leitorController.capitulosEmCarga[0].pages,
+          pages: widget.leitorController.atualChapter.pages,
           controller: widget.controller,
           color: color,
         );
@@ -249,23 +237,11 @@ class _PagesLeitorState extends State<PagesLeitor> {
     }
   }
 
-  Widget _backgroundColor(LeitorTypes type, FilterQuality filterQuality) {
-    return AnimatedBuilder(
-      animation: widget.leitorController.leitorTypeState,
-      builder: (context, child) {
-        Color color = widget.leitorController.backgroundColorState.value ==
-                LeitorBackgroundColor.black
+  /// obtem a cor de fundo
+  Color _getColor() {
+    return widget.leitorController.backgroundColor == LeitorBackgroundColor.black
             ? Colors.black
             : Colors.white;
-        return AnimatedBuilder(
-          animation: widget.leitorController.leitorTypeState,
-          builder: (context, child) => _leitorType(
-              widget.leitorController.leitorTypeState.value,
-              filterQuality,
-              color),
-        );
-      },
-    );
   }
 
   Widget _stateManagement(LeitorStates state) {
@@ -276,9 +252,12 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return loading();
       case LeitorStates.sucess:
         return AnimatedBuilder(
-          animation: widget.leitorController.filterQualityState,
-          builder: (context, child) =>
-              _filterQuality(widget.leitorController.leitorTypeState.value),
+          animation: ReaderNotifier.instance,
+          builder: (context, child) => _leitorType(
+            widget.leitorController.leitorType,
+            _getFilterQuality(),
+            _getColor()
+          ),
         );
       case LeitorStates.error:
         return error();
@@ -307,8 +286,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: widget.leitorController.state,
-      builder: (context, child) =>
-          _stateManagement(widget.leitorController.state.value),
+      builder: (context, child) => _stateManagement(widget.leitorController.state.value),
     );
   }
 }

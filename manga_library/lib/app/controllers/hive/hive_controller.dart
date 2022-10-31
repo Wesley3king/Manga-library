@@ -260,6 +260,7 @@ class HiveController {
       "Orientação do Leitor": "auto",
       "Qualidade": "medium",
       "Tela cheia": true,
+      "Manter a tela ligada": false,
       "Local de armazenamento": "intern",
       "Autenticação": false,
       "Tipo de Autenticação": "text",

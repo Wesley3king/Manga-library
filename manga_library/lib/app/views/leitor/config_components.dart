@@ -26,7 +26,7 @@ Widget buildSetLeitorType(LeitorController controller) {
   ];
 
   String type = "";
-  switch (controller.leitorTypeState.value) {
+  switch (controller.leitorType) {
     // case LeitorTypes.pattern:
     //   type = "pattern";
     //   break;
@@ -99,7 +99,7 @@ Widget buildFilterQuality(LeitorController controller) {
   }
 
   String type = "";
-  switch (controller.filterQualityState.value) {
+  switch (controller.filterQuality) {
     case LeitorFilterQuality.none:
       type = "none";
       break;

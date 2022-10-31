@@ -57,8 +57,7 @@ class MangaInfoController {
         capitulosDisponiveis = localData.capitulos;
 
         log("at offline start length: ${capitulosDisponiveis!.length}");
-        GlobalData.capitulosDisponiveis =
-            List.unmodifiable(capitulosDisponiveis ?? []);
+        GlobalData.mangaModel = localData;
         isAnOffLineBook = true;
         // await _chaptersController.correlacionarCapitulos(
         //     capitulosDisponiveis ?? [], data.capitulos, url
@@ -94,8 +93,7 @@ class MangaInfoController {
         }
 
         // log("at online start: ${capitulosDisponiveis!.length}");
-        GlobalData.capitulosDisponiveis =
-            List.unmodifiable(capitulosDisponiveis ?? []);
+        GlobalData.mangaModel = data;
 
         isAnOffLineBook = false;
         if (state.value != MangaInfoStates.error) {
@@ -135,9 +133,7 @@ class MangaInfoController {
         if (offLineBook == null) {
           /// aqui retorno true -- MAS O MANGA NÃO É ATUALIZADO, já que não existe ná memória
           return true;
-        } else {
-          
-        }
+        } else {}
       }
 
       if (isAnOffLineBook) {
@@ -214,9 +210,10 @@ class MangaInfoController {
       if (localData != null) {
         //print("existe na base de dados! / l= $url");
         data = localData;
-        capitulosDisponiveis = localData.capitulos;
-        GlobalData.capitulosDisponiveis =
-            List.unmodifiable(capitulosDisponiveis ?? []);
+        // capitulosDisponiveis = localData.capitulos;
+        // GlobalData.capitulosDisponiveis =
+        //     List.unmodifiable(capitulosDisponiveis ?? []);
+        GlobalData.mangaModel = localData;
         await chaptersController?.updateChapters(
             capitulosDisponiveis, url, idExtension);
       }

@@ -5,66 +5,67 @@ import 'package:manga_library/app/models/globais.dart';
 
 // import '../models/leitor_pages.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/models/reader_chapter_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:webviewx/webviewx.dart';
 import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
   final FullScreenController screenController = FullScreenController();
   List<Capitulos> capitulos = [];
-  List<Capitulos> capitulosEmCarga = [];
+  Capitulos atualChapter = Capitulos(
+      id: "",
+      capitulo: "",
+      description: "",
+      download: false,
+      readed: false,
+      disponivel: false,
+      downloadPages: [],
+      pages: []);
+  ReaderChapter atualInfo = ReaderChapter(index: 0, id: '');
+
   // ===== State =====
   ValueNotifier<LeitorStates> state =
       ValueNotifier<LeitorStates>(LeitorStates.start);
   // ===== Reader Type =====
-  ValueNotifier<LeitorTypes> leitorTypeState =
-      ValueNotifier<LeitorTypes>(LeitorTypes.ltr);
+  LeitorTypes leitorType = LeitorTypes.ltr;
   // ===== Reader Type UI =====
   String leitorTypeUi = "pattern";
   // ===== Filter Quality =====
-  ValueNotifier<LeitorFilterQuality> filterQualityState =
-      ValueNotifier<LeitorFilterQuality>(LeitorFilterQuality.none);
+  LeitorFilterQuality filterQuality = LeitorFilterQuality.none;
   // ===== Filter Quality Ui ============
   String filterQualityUi = "pattern";
   // ===== Orientacion Ui =====
   String orientacionUi = "pattern";
   // ===== Background Color ======
-  ValueNotifier<LeitorBackgroundColor> backgroundColorState =
-      ValueNotifier<LeitorBackgroundColor>(LeitorBackgroundColor.black);
+  LeitorBackgroundColor backgroundColor = LeitorBackgroundColor.black;
+  // =========== WAKE LOCK ===================
+  bool wakeLock = false;
+  // ========= FULL SCREEN =======================
+  bool? isFullScreen;
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
     try {
-      capitulos = GlobalData.capitulosDisponiveis;
+      capitulos = GlobalData.mangaModel.capitulos;
       // configurar o leitor
       setFilterQuality("pattern");
       setOrientacion("pattern");
       setBackgroundColor();
       setReaderType("pattern");
+      setWakeLock(null);
 
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
       Capitulos cap =
           await mapOfExtensions[idExtension]!.getPages(id, capitulos);
       // debugPrint("$cap");
-      capitulosEmCarga.add(cap);
+      atualChapter = cap;
+      atualInfo =
+          getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
       debugPrint("=========== em carga =============");
-      debugPrint('$capitulosEmCarga');
-      // try {
-      //   setFilterQuality("pattern");
-      // } catch (e) {
-      //   debugPrint("erro 1: $e");
-      // }
-      // try {
-      //   setOrientacion("pattern");
-      // } catch (e) {
-      //   debugPrint("erro 2: $e");
-      // }
-      // try {
-      //   setReaderType("pattern");
-      // } catch (e) {
-      //   debugPrint("erro 3: $e");
-      // }
+
       state.value = LeitorStates.sucess;
     } catch (e) {
       debugPrint('erro em start LeitorController');
@@ -73,8 +74,30 @@ class LeitorController {
     }
   }
 
+  static ReaderChapter? getReaderModel(
+      String id, List<Capitulos> listChapters) {
+    for (int i = 0; i < listChapters.length; ++i) {
+      if (listChapters[i].id == id) {
+        return ReaderChapter(
+            index: i,
+            id: id,
+            prevId: listChapters.length == (i + 1) ? null : listChapters[i + 1].id,
+            nextId: i == 0 ? null : listChapters[i - 1].id
+          );
+      }
+    }
+    return null;
+  }
+
+  void prevChapter(String link, int idExtension) {
+    start(link, atualInfo.prevId!, idExtension);
+  }
+
+  void nextChapter(String link, int idExtension) {
+    start(link, atualInfo.nextId!, idExtension);
+  }
+
   void setReaderType(String type) {
-    // type ??= GlobalData.settings['Tipo do Leitor'];
     leitorTypeUi = type;
     if (type == "pattern") {
       type = GlobalData.settings['Tipo do Leitor'];
@@ -84,27 +107,28 @@ class LeitorController {
       //   leitorTypeState.value = LeitorTypes.pattern;
       //   break;
       case "vertical":
-        leitorTypeState.value = LeitorTypes.vertical;
+        leitorType = LeitorTypes.vertical;
         break;
       case "ltr":
-        leitorTypeState.value = LeitorTypes.ltr;
+        leitorType = LeitorTypes.ltr;
         break;
       case "rtl":
-        leitorTypeState.value = LeitorTypes.rtl;
+        leitorType = LeitorTypes.rtl;
         break;
       case "ltrlist":
-        leitorTypeState.value = LeitorTypes.ltrlist;
+        leitorType = LeitorTypes.ltrlist;
         break;
       case "rtllist":
-        leitorTypeState.value = LeitorTypes.rtllist;
+        leitorType = LeitorTypes.rtllist;
         break;
       case "webtoon":
-        leitorTypeState.value = LeitorTypes.webtoon;
+        leitorType = LeitorTypes.webtoon;
         break;
       case "webview":
-        leitorTypeState.value = LeitorTypes.webview;
+        leitorType = LeitorTypes.webview;
         break;
     }
+    ReaderNotifier.instance.notify();
   }
 
   void setFilterQuality(String type) {
@@ -115,18 +139,19 @@ class LeitorController {
     }
     switch (type) {
       case "none":
-        filterQualityState.value = LeitorFilterQuality.none;
+        filterQuality = LeitorFilterQuality.none;
         break;
       case "low":
-        filterQualityState.value = LeitorFilterQuality.low;
+        filterQuality = LeitorFilterQuality.low;
         break;
       case "medium":
-        filterQualityState.value = LeitorFilterQuality.medium;
+        filterQuality = LeitorFilterQuality.medium;
         break;
       case "hight":
-        filterQualityState.value = LeitorFilterQuality.hight;
+        filterQuality = LeitorFilterQuality.hight;
         break;
     }
+    ReaderNotifier.instance.notify();
   }
 
   void setOrientacion(String type) {
@@ -145,26 +170,44 @@ class LeitorController {
     type ??= GlobalData.settings['Cor de fundo'];
     switch (type) {
       case "black":
-        backgroundColorState.value = LeitorBackgroundColor.black;
+        backgroundColor = LeitorBackgroundColor.black;
         break;
       case "white":
-        backgroundColorState.value = LeitorBackgroundColor.white;
+        backgroundColor = LeitorBackgroundColor.white;
         break;
     }
+    ReaderNotifier.instance.notify();
   }
 
-  setFullScreen(bool isFullScreen, {bool? keepFullScreen}) {
-    keepFullScreen ??= GlobalData.settings['Tela cheia'];
+  void setFullScreen(bool isFullScreenTemporally) {
+    isFullScreen ??= GlobalData.settings['Tela cheia'];
 
-    if (keepFullScreen!) {
-      if (isFullScreen) {
+    if (isFullScreen!) {
+      if (isFullScreenTemporally) {
         screenController.exitEdgeFullScreen();
       } else {
         screenController.enterFullScreen();
       }
+      isFullScreen = true;
     } else {
       screenController.exitEdgeFullScreenToReader();
+      isFullScreen = false;
     }
+    // debugPrint("full screen: $isFullScreen");
+  }
+
+  void setWakeLock(bool? value) {
+    value ??= GlobalData.settings['Manter a tela ligada'];
+    wakeLock = value!;
+    Wakelock.toggle(enable: value);
+  }
+}
+
+class ReaderNotifier extends ChangeNotifier {
+  static final ReaderNotifier instance = ReaderNotifier();
+
+  void notify() {
+    notifyListeners();
   }
 }
 

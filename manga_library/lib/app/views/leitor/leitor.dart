@@ -75,11 +75,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                   icon: Icon(Icons.arrow_back,
                       size: isVisible ? sizeOfButtons : 0)),
               Text(
-                "Capítulo ${leitorController.capitulosEmCarga.isEmpty ? "..." : leitorController.capitulosEmCarga[0].capitulo}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20
-                ),
+                "Capítulo ${leitorController.atualChapter.id == '' ? "..." : leitorController.atualChapter.capitulo}",
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               IconButton(
                 onPressed: () {},
@@ -138,7 +135,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                                   BorderRadius.all(Radius.circular(40)),
                             ),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () => leitorController.prevChapter(widget.link, widget.idExtension),
                                 icon: const Icon(
                                   Icons.skip_previous,
                                   size: 25,
@@ -159,21 +156,25 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                                 ),
                                 child: Slider(
                                   value: controller.state.value.toDouble(),
-                                  max: leitorController.capitulosEmCarga.isEmpty
+                                  max: leitorController.atualChapter.id == ""
                                       ? 1.0
                                       : leitorController
-                                              .capitulosEmCarga[0].download
-                                          ? leitorController.capitulosEmCarga[0]
+                                              .atualChapter.download
+                                          ? leitorController.atualChapter
                                               .downloadPages.length
                                               .toDouble()
-                                          : leitorController
-                                              .capitulosEmCarga[0].pages.isEmpty ? 1.0 : leitorController
-                                              .capitulosEmCarga[0].pages.length
-                                              .toDouble(),
+                                          : leitorController.atualChapter
+                                                  .pages.isEmpty
+                                              ? 1.0
+                                              : leitorController
+                                                  .atualChapter
+                                                  .pages
+                                                  .length
+                                                  .toDouble(),
                                   min: 1.0,
                                   onChanged: (value) => controller.scrollTo(
                                       value.toInt(),
-                                      leitorController.leitorTypeState.value),
+                                      leitorController.leitorType),
                                 ))),
                       ),
                     ),
@@ -189,7 +190,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                             borderRadius: BorderRadius.all(Radius.circular(40)),
                           ),
                           child: IconButton(
-                              onPressed: () {},
+                              disabledColor: Colors.red,
+                              onPressed: () => leitorController.nextChapter(widget.link, widget.idExtension),
                               icon: const Icon(
                                 Icons.skip_next,
                                 size: 25,
@@ -211,12 +213,12 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AnimatedBuilder(
-                    animation: leitorController.leitorTypeState,
+                    animation: ReaderNotifier.instance,
                     builder: (context, child) =>
                         buildSetLeitorType(leitorController),
                   ),
                   AnimatedBuilder(
-                    animation: leitorController.filterQualityState,
+                    animation: ReaderNotifier.instance,
                     builder: (context, child) =>
                         buildFilterQuality(leitorController),
                   ),
@@ -225,8 +227,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                     builder: (context) {
                       return IconButton(
                           onPressed: () => customBottomSheetForLeitor(
-                              context, bottomSheetController, leitorController
-                            ),
+                              context, bottomSheetController, leitorController),
                           icon: Icon(
                             Icons.settings,
                             size: sizeOfButtons,
@@ -252,6 +253,9 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     leitorController.setFullScreen(true);
+    leitorController.setOrientacion("auto");
+    // Wakelock.toggle(enable: false);
+    leitorController.setWakeLock(false);
     super.dispose();
   }
 
@@ -301,10 +305,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                       AnimatedBuilder(
                         animation: controller.state,
                         builder: (context, child) => Text(
-                          "${controller.state.value}/${leitorController.capitulosEmCarga.isEmpty ? 0 : leitorController.capitulosEmCarga[0].download ? leitorController.capitulosEmCarga[0].downloadPages.length : leitorController.capitulosEmCarga[0].pages.length}",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            shadows: [
+                          "${controller.state.value}/${leitorController.atualChapter.id == '' ? 0 : leitorController.atualChapter.download ? leitorController.atualChapter.downloadPages.length : leitorController.atualChapter.pages.length}",
+                          style: const TextStyle(color: Colors.white, shadows: [
                             Shadow(color: Colors.black45, offset: Offset(1, 1))
                           ]),
                         ),

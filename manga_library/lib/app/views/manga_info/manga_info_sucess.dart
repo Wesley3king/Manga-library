@@ -104,9 +104,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   }
 
   Widget _buildChapter(BuildContext context, int index) {
-    final Capitulos capitulo =
-        ChaptersController.capitulosCorrelacionados[index - 1];
-    GlobalData.capitulosDisponiveis;
+    final Capitulos capitulo = ChaptersController.capitulosCorrelacionados[index - 1];
+    // GlobalData.capitulosDisponiveis;
 
     return ListTile(
       title: Text(

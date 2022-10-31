@@ -113,6 +113,14 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
+  "Manter a tela ligada": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("valor de Manter a tela ligada: $value");
+    GlobalData.settings['Manter a tela ligada'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Local de armazenamento":
       (dynamic value, SettingsOptionsController controller) {},
   "Autenticação": (dynamic value, SettingsOptionsController controller) {
