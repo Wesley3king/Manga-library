@@ -183,7 +183,21 @@ buildSettingsModel() {
           "value": data['Manter a tela ligada'],
           "function": functions['Manter a tela ligada'],
           "optionsAndValues": []
-        }
+        },
+        {
+          "type": "class",
+          "nameClass": "Brilho e Filtros",
+          "children": [
+            {
+              "nameConfig": "Custom Shine",
+              "description": "Define se o brilho da tela será personalizado",
+              "type": "switch",
+              "value": data['Custom Shine'],
+              "function": functions['Custom Shine'],
+              "optionsAndValues": []
+            },
+          ]
+        },
       ]
     },
     {

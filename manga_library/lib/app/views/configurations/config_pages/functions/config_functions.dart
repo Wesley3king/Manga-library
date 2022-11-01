@@ -121,6 +121,22 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
+  "Custom Shine": (dynamic value, SettingsOptionsController? controller) {
+    debugPrint("valor de Custom Shine: $value");
+    GlobalData.settings['Custom Shine'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller?.updateSetting();
+  },
+  "Custom Shine Value": (dynamic value) {
+    debugPrint("valor de Custom Shine Value: $value");
+    GlobalData.settings['Custom Shine Value'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+  },
+
   "Local de armazenamento":
       (dynamic value, SettingsOptionsController controller) {},
   "Autenticação": (dynamic value, SettingsOptionsController controller) {

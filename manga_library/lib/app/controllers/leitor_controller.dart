@@ -6,12 +6,15 @@ import 'package:manga_library/app/models/globais.dart';
 // import '../models/leitor_pages.dart';
 import 'package:manga_library/app/controllers/extensions/extensions.dart';
 import 'package:manga_library/app/models/reader_chapter_model.dart';
+import 'package:manga_library/app/views/configurations/config_pages/functions/config_functions.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:webviewx/webviewx.dart';
 import '../models/manga_info_offline_model.dart';
 
 class LeitorController {
+  final ScreenBrightness screenBrightness = ScreenBrightness();
   final FullScreenController screenController = FullScreenController();
   List<Capitulos> capitulos = [];
   Capitulos atualChapter = Capitulos(
@@ -40,10 +43,16 @@ class LeitorController {
   String orientacionUi = "pattern";
   // ===== Background Color ======
   LeitorBackgroundColor backgroundColor = LeitorBackgroundColor.black;
+  // ===== Background Color Ui ======
+  String backgroundColorUi = "pattern";
   // =========== WAKE LOCK ===================
   bool wakeLock = false;
   // ========= FULL SCREEN =======================
   bool? isFullScreen;
+  // ===== CUSTOM SHINE =======
+  bool isCustomShine = GlobalData.settings['Custom Shine'];
+  // ======= SHINE VALUE ===========
+  double shineValueUi = GlobalData.settings['Custom Shine Value'];
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
@@ -55,6 +64,9 @@ class LeitorController {
       setBackgroundColor();
       setReaderType("pattern");
       setWakeLock(null);
+      if (isCustomShine) {
+        setShine(shineValueUi);
+      }
 
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
@@ -81,9 +93,9 @@ class LeitorController {
         return ReaderChapter(
             index: i,
             id: id,
-            prevId: listChapters.length == (i + 1) ? null : listChapters[i + 1].id,
-            nextId: i == 0 ? null : listChapters[i - 1].id
-          );
+            prevId:
+                listChapters.length == (i + 1) ? null : listChapters[i + 1].id,
+            nextId: i == 0 ? null : listChapters[i - 1].id);
       }
     }
     return null;
@@ -167,7 +179,10 @@ class LeitorController {
   }
 
   void setBackgroundColor([String? type]) {
-    type ??= GlobalData.settings['Cor de fundo'];
+    type == null ? backgroundColorUi = "pattern" : backgroundColorUi = type;
+    if (type == null || type == "pattern") {
+      type = GlobalData.settings['Cor de fundo'];
+    }
     switch (type) {
       case "black":
         backgroundColor = LeitorBackgroundColor.black;
@@ -200,6 +215,27 @@ class LeitorController {
     value ??= GlobalData.settings['Manter a tela ligada'];
     wakeLock = value!;
     Wakelock.toggle(enable: value);
+  }
+
+  void setShine(double? value, {bool? setShine}) async {
+    /// set shine
+    if (setShine != null && setShine) {
+      await settingsFunctions['Custom Shine']!(true);
+      isCustomShine = true;
+      value = shineValueUi;
+    } else if (setShine != null && !setShine) {
+      await settingsFunctions['Custom Shine']!(false);
+      isCustomShine = false;
+      value = null;
+    }
+    if (value == null) {
+      screenBrightness.resetScreenBrightness();
+    } else if (isCustomShine) {
+      shineValueUi = value;
+      screenBrightness.setScreenBrightness(shineValueUi);
+      await settingsFunctions['Custom Shine Value']!(shineValueUi);
+    }
+    ReaderNotifier.instance.notify();
   }
 }
 

@@ -48,9 +48,7 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
     List<Widget> pages = [
       getFirstPage(widget.controller),
       getSecondPage(context, widget.controller),
-      const Center(
-        child: Text("Filtros"),
-      )
+      getFiltersPage(context, widget.controller)
     ];
 
     return pages;
@@ -85,7 +83,9 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 27, 27, 27),
+      backgroundColor: ConfigSystemController.instance.isDarkTheme
+          ? const Color.fromARGB(255, 27, 27, 27)
+          : Colors.white,
       // body: Center(child: Text("Scaffold"),),
       body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -257,11 +257,18 @@ Widget getSecondPage(BuildContext context, LeitorController controller) {
             notifier.value++;
           },
         ),
-        DropdownButton<String>(
-              value: controller.leitorTypeUi,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text(
+              "Cor de fundo",
+              style: TextStyle(fontSize: 16),
+            ),
+            DropdownButton<String>(
+              value: controller.backgroundColorUi,
               icon: const Icon(Icons.keyboard_arrow_down),
               onChanged: (value) {
-                controller.setReaderType(value as String);
+                controller.setBackgroundColor(value);
                 notifier.value++;
               },
               items: const [
@@ -279,6 +286,93 @@ Widget getSecondPage(BuildContext context, LeitorController controller) {
                 ),
               ],
             )
+          ],
+        )
+      ],
+    ),
+  );
+}
+
+Widget getFiltersPage(BuildContext context, LeitorController controller) {
+  // ValueNotifier<int> notifier = ValueNotifier<int>(0);
+  return AnimatedBuilder(
+    animation: ReaderNotifier.instance,
+    builder: (context, child) => Column(
+      children: [
+        SwitchListTile(
+          value: false,
+          onChanged: (value) {
+            controller.setShine(null, setShine: value);
+          },
+          title: const Text('Brilho personalizado'),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              width: 330,
+              child: Slider(
+                value: 0.5,
+                min: 0.0,
+                max: 1.0,
+                onChanged: (value) {
+                  controller.setShine(value);
+                },
+              ),
+            ),
+            Text('${controller.shineValueUi}'),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text('R'),
+            SizedBox(
+              width: 330,
+              child: Slider(
+                value: 0,
+                min: 0,
+                max: 255,
+                onChanged: (value) {},
+              ),
+            )
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text('G'),
+            SizedBox(
+              width: 330,
+              child: Slider(
+                value: 0,
+                min: 0,
+                max: 255,
+                onChanged: (value) {},
+              ),
+            )
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text('B'),
+            SizedBox(
+              width: 330,
+              child: Slider(
+                value: 0,
+                min: 0,
+                max: 255,
+                onChanged: (value) {},
+              ),
+            )
+          ],
+        ),
+        SwitchListTile(
+          value: false,
+          onChanged: (value) {},
+          title: const Text('Filtro Preto e Branco'),
+        )
       ],
     ),
   );
