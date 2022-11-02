@@ -300,7 +300,7 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
     builder: (context, child) => Column(
       children: [
         SwitchListTile(
-          value: false,
+          value: controller.isCustomShine,
           onChanged: (value) {
             controller.setShine(null, setShine: value);
           },
@@ -312,7 +312,7 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
             SizedBox(
               width: 330,
               child: Slider(
-                value: 0.5,
+                value: controller.shineValueUi,
                 min: 0.0,
                 max: 1.0,
                 onChanged: (value) {
@@ -320,8 +320,19 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
                 },
               ),
             ),
-            Text('${controller.shineValueUi}'),
+            Flexible(
+                child: Text(controller.shineValueUi
+                    .toStringAsFixed(2)
+                    .replaceFirst("0.", "")
+                    .replaceFirst(".", ""))),
           ],
+        ),
+        SwitchListTile(
+          value: controller.isCustomFilter,
+          onChanged: (value) {
+            controller.setCustomFilter(0, null, setFilter: value);
+          },
+          title: const Text('Filtro personalizado'),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -330,10 +341,12 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
             SizedBox(
               width: 330,
               child: Slider(
-                value: 0,
+                value: controller.customFilterValues[0].toDouble(),
                 min: 0,
                 max: 255,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.setCustomFilter(value.toInt(), "R");
+                },
               ),
             )
           ],
@@ -345,10 +358,12 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
             SizedBox(
               width: 330,
               child: Slider(
-                value: 0,
+                value: controller.customFilterValues[1].toDouble(),
                 min: 0,
                 max: 255,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.setCustomFilter(value.toInt(), "G");
+                },
               ),
             )
           ],
@@ -360,17 +375,22 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
             SizedBox(
               width: 330,
               child: Slider(
-                value: 0,
+                value: controller.customFilterValues[2].toDouble(),
                 min: 0,
                 max: 255,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.setCustomFilter(value.toInt(), "B");
+                },
               ),
             )
           ],
         ),
         SwitchListTile(
-          value: false,
-          onChanged: (value) {},
+          value: controller.isblackAndWhiteFilter,
+          onChanged: (value) {
+            // implemet this!
+            // controller
+          },
           title: const Text('Filtro Preto e Branco'),
         )
       ],

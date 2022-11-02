@@ -65,6 +65,7 @@ Widget buildSetLeitorType(LeitorController controller) {
   return PopupMenuButton<String>(
     icon: readerTypeIcons[type],
     initialValue: "pattern",
+    tooltip: "Tipo de Leitor",
     itemBuilder: (context) => popUpMenuItens,
   );
 }
@@ -116,6 +117,7 @@ Widget buildFilterQuality(LeitorController controller) {
   return PopupMenuButton<String>(
     icon: filterQualityIcons[type],
     initialValue: "pattern",
+    tooltip: "Filtro de qualidade",
     itemBuilder: (context) => popUpMenuItens,
   );
 }
@@ -149,6 +151,7 @@ Widget buildOrientacion(LeitorController controller, Function setState) {
   return PopupMenuButton<String>(
     icon: const Icon(Icons.screen_rotation),
     initialValue: "pattern",
+    tooltip: "Orientação do leitor",
     itemBuilder: (context) => popUpMenuItens,
   );
 }

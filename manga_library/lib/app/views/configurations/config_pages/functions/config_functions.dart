@@ -136,7 +136,39 @@ Map<String, Function> settingsFunctions = {
         ConfigSystemController();
     configSystemController.update(settings);
   },
-
+  "Custom Filter": (dynamic value, SettingsOptionsController? controller) {
+    debugPrint("valor de Custom Filter: $value");
+    GlobalData.settings['Custom Filter'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller?.updateSetting();
+  },
+  "Custom Filter Values": (int value, String type) {
+    // debugPrint("valor de Custom Shine Value: $value");
+    switch (type) {
+      case "R":
+        GlobalData.settings['R'] = value;
+        break;
+      case "G":
+        GlobalData.settings['G'] = value;
+        break;
+      case "B":
+        GlobalData.settings['B'] = value;
+        break;
+    }
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+  },
+  "Black and White filter": (dynamic value, SettingsOptionsController? controller) {
+    debugPrint("valor de Black and White filter: $value");
+    GlobalData.settings['Black and White filter'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller?.updateSetting();
+  },
   "Local de armazenamento":
       (dynamic value, SettingsOptionsController controller) {},
   "Autenticação": (dynamic value, SettingsOptionsController controller) {

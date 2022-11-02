@@ -57,6 +57,7 @@ class SystemController {
     await _hiveController.writeSettings();
     await _hiveController.writeOcultLibraryData();
     await _hiveController.writeHistoric();
+    updateConfig();
   }
 }
 

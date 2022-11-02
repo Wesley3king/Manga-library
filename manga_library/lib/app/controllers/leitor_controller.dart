@@ -53,6 +53,16 @@ class LeitorController {
   bool isCustomShine = GlobalData.settings['Custom Shine'];
   // ======= SHINE VALUE ===========
   double shineValueUi = GlobalData.settings['Custom Shine Value'];
+  // ======= CUSTOM FILTER ==========
+  bool isCustomFilter = GlobalData.settings['Custom Filter'];
+  // ======= CUSTOM FLITER VALUES ========
+  List<int> customFilterValues = [
+    GlobalData.settings['R'],
+    GlobalData.settings['G'],
+    GlobalData.settings['B']
+  ];
+  // ======= Black AND WHITE FILTER ==========
+  bool isblackAndWhiteFilter = GlobalData.settings['Black and White filter'];
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
@@ -220,11 +230,11 @@ class LeitorController {
   void setShine(double? value, {bool? setShine}) async {
     /// set shine
     if (setShine != null && setShine) {
-      await settingsFunctions['Custom Shine']!(true);
+      await settingsFunctions['Custom Shine']!(true, null);
       isCustomShine = true;
       value = shineValueUi;
     } else if (setShine != null && !setShine) {
-      await settingsFunctions['Custom Shine']!(false);
+      await settingsFunctions['Custom Shine']!(false, null);
       isCustomShine = false;
       value = null;
     }
@@ -234,6 +244,32 @@ class LeitorController {
       shineValueUi = value;
       screenBrightness.setScreenBrightness(shineValueUi);
       await settingsFunctions['Custom Shine Value']!(shineValueUi);
+    }
+    ReaderNotifier.instance.notify();
+  }
+
+  void setCustomFilter(int value, String? type, {bool? setFilter}) async {
+    if (setFilter != null && setFilter) {
+      await settingsFunctions['Custom Filter']!(true, null);
+      isCustomFilter = true;
+    } else if (setFilter != null && !setFilter) {
+      await settingsFunctions['Custom Filter']!(false, null);
+      isCustomFilter = false;
+    }
+
+    if (type != null) {
+      switch (type) {
+        case "R":
+          customFilterValues[0] = value;
+          break;
+        case "G":
+          customFilterValues[1] = value;
+          break;
+        case "B":
+          customFilterValues[2] = value;
+          break;
+      }
+      await settingsFunctions['Custom Filter Values']!(value, type);
     }
     ReaderNotifier.instance.notify();
   }

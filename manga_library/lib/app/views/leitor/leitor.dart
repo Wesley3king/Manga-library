@@ -6,6 +6,7 @@ import 'package:manga_library/app/views/leitor/config_components.dart';
 import 'package:manga_library/app/views/leitor/pages_leitor.dart';
 
 import '../../controllers/leitor_controller.dart';
+import '../../models/globais.dart';
 
 class Leitor extends StatefulWidget {
   final String link;
@@ -74,9 +75,20 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                   onPressed: () => GoRouter.of(context).pop(),
                   icon: Icon(Icons.arrow_back,
                       size: isVisible ? sizeOfButtons : 0)),
-              Text(
-                "Capítulo ${leitorController.atualChapter.id == '' ? "..." : leitorController.atualChapter.capitulo}",
-                style: const TextStyle(color: Colors.white, fontSize: 20),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    GlobalData.mangaModel.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  Text(
+                    "Capítulo ${leitorController.atualChapter.id == '' ? "..." : leitorController.atualChapter.capitulo}",
+                    style: const TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                ],
               ),
               IconButton(
                 onPressed: () {},
@@ -226,6 +238,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                   Builder(
                     builder: (context) {
                       return IconButton(
+                          tooltip: "Configurações",
                           onPressed: () => customBottomSheetForLeitor(
                               context, bottomSheetController, leitorController),
                           icon: Icon(

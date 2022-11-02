@@ -196,6 +196,22 @@ buildSettingsModel() {
               "function": functions['Custom Shine'],
               "optionsAndValues": []
             },
+            {
+              "nameConfig": "Filtro presonalizado",
+              "description": "Define um filtro de cores personalizado",
+              "type": "switch",
+              "value": data['Custom Filter'],
+              "function": functions['Custom Filter'],
+              "optionsAndValues": []
+            },
+            {
+              "nameConfig": "Filtro Branco e Preto",
+              "description": "Define um filtro que deixa tudo em preto e branco",
+              "type": "switch",
+              "value": data['Black and White filter'],
+              "function": functions['Black and White filter'],
+              "optionsAndValues": []
+            },
           ]
         },
       ]
