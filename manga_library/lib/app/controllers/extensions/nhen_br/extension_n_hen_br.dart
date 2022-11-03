@@ -12,6 +12,8 @@ class ExtensionNHenBr implements Extension {
   @override
   String nome = "N Hentai Br";
   @override
+  String extensionPoster = "NHentai-Br.png";
+  @override
   int id = 8;
   @override
   bool isTwoRequests = false;

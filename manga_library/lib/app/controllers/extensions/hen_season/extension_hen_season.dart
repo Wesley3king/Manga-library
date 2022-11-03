@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/hen_season/scraping/scraping_hen_season.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 
@@ -12,6 +11,8 @@ class ExtensionHenSeason implements Extension {
   dynamic fetchServices;
   @override
   String nome = "Hentai Season";
+  @override
+  String extensionPoster = "Hentai-Season.png";
   @override
   int id = 7;
   @override
@@ -63,7 +64,7 @@ class ExtensionHenSeason implements Extension {
           buffer.write('$str+');
         }
       }
-      
+
       List<Map> books = await compute(scrapingSearch, buffer.toString());
 
       return SearchModel.fromJson(

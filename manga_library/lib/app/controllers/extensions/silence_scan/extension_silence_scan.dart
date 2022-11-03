@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/silence_scan/scraping/scraping_silence_scan.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 
@@ -12,6 +11,8 @@ class ExtensionSilenceScan implements Extension {
   dynamic fetchServices;
   @override
   String nome = "Silence Scan";
+  @override
+  String extensionPoster = "Silence-Scan.png";
   @override
   int id = 9;
   @override

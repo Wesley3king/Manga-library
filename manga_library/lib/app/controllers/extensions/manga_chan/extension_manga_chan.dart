@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/manga_chan/scraping/scraping_manga_chan.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 
@@ -12,6 +11,8 @@ class ExtensionMangaChan implements Extension {
   dynamic fetchServices;
   @override
   String nome = "Mangá Chan";
+  @override
+  String extensionPoster = "Manga-Chan.webp";
   @override
   int id = 10;
   @override

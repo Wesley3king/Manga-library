@@ -101,6 +101,16 @@ flutter:
   assets:
     - assets/imgs/new-icon-manga-mini.png
     - assets/imgs/grid-image-ready.png
+    # extesion posters
+    - assets/extesion_posters/Manga-Yabu.png
+    - assets/extesion_posters/Mundo-Manga-Kun.png
+    - assets/extesion_posters/Union-Mangas.png
+    - assets/extesion_posters/N-Hentai.png
+    - assets/extesion_posters/Universo-Hentai.png
+    - assets/extesion_posters/Hentai-Season.png
+    - assets/extesion_posters/NHentai-Br.png
+    - assets/extesion_posters/Silence-Scan.png
+    - assets/extesion_posters/Manga-Chan.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

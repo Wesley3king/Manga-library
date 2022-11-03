@@ -1,6 +1,5 @@
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/mundo_manga_kun/scraping/mundo_manga_kun_scraping.dart';
 // import 'package:manga_library/app/models/extension_model.dart';
 
@@ -14,6 +13,8 @@ class ExtensionMundoMangaKun implements Extension {
   dynamic fetchServices = "";
   @override
   String nome = "Mundo Manga Kun";
+  @override
+  String extensionPoster = "Mundo-Manga-Kun.png";
   @override
   int id = 3;
   @override

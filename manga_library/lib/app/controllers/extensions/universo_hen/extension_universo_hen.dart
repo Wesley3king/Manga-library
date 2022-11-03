@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/universo_hen/scraping/scraping_universo_hen.dart';
 
@@ -12,6 +11,8 @@ class ExtensionUniversoHen implements Extension {
   dynamic fetchServices;
   @override
   String nome = "Universo Hentai";
+  @override
+  String extensionPoster = "Universo-Hentai.png";
   @override
   int id = 6;
   @override

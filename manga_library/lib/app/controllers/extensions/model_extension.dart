@@ -5,6 +5,7 @@ import '../../models/search_model.dart';
 
 abstract class Extension {
   late final dynamic fetchServices;
+  late final String extensionPoster;
   late final String nome;
   late final int id;
   late final bool enable;

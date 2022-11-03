@@ -263,6 +263,16 @@ class _PagesLeitorState extends State<PagesLeitor> {
                   child: _leitorType(widget.leitorController.leitorType,
                       _getFilterQuality(), _getColor()),
                 );
+              } else if (widget.leitorController.isblackAndWhiteFilter) {
+                return ColorFiltered(
+                  colorFilter: const ColorFilter.mode(
+                      Color.fromARGB(
+                          255, 0, 0, 0
+                        ),
+                      BlendMode.color),
+                  child: _leitorType(widget.leitorController.leitorType,
+                      _getFilterQuality(), _getColor()),
+                );
               }
               return _leitorType(widget.leitorController.leitorType,
                   _getFilterQuality(), _getColor());

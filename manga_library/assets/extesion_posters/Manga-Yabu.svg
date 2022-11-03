@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="352" height="325" viewBox="0 0 352 325">
+  <defs>
+    <style>
+      .cls-1 {
+        filter: url(#filter);
+      }
+
+      .cls-2 {
+        fill: #FFFFFF;
+        stroke: #000;
+        stroke-width: 1px;
+        fill-rule: evenodd;
+      }
+    </style>
+    <filter id="filter" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#FFFFFF"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <image id="Plano_de_Fundo" data-name="Plano de Fundo" width="352" height="325"/>
+  <g id="logo" class="cls-1">
+    <path id="logo-esquerda" class="cls-2" d="M175.5,44.5s-36.5-22.816-77-33C51.93-.209.5,0.5,0.5,0.5v304a275.283,275.283,0,0,1,30,0,109.37,109.37,0,0,1,18,3,70.834,70.834,0,0,1,31,17h7v-59s23.344,0.854,46,9c21.828,7.848,43,23,43,23v-77a124.6,124.6,0,0,0-33-15c-22-5.976-48-7-48-7V90.5s23.593-1.021,45,4c18.942,4.443,36,15,36,15v-65Z"/>
+    <image id="remocao_de_erros" x="169" y="45" width="13" height="253" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAD9CAYAAABnef1lAAABGElEQVRoge3aYQ6CIBjGcXAdoi7X4bpc3YKWTUPeB0VMZ/l/Pjncz9dgIyJ8CMGdb3cXJTgd37U2ye0cGNxrVONIQoxKQP/w9PWKAtoa+RrE4IJSlExfO+y9OdPXskqHR4tQ/w23eqU9o8f18nefybSAQHNTtWKpqvQry5xZE2ZcqRSaLp+CPq00BbO/anIZPKhFYsL0mev3zdePrjRqFRM/uGqcZKWpMEeAQDIgEEgGBALJgEAgGRAIJAMCgWRAIJDMduhkWj672N2mc7v1XbKLHTLXo2g0IBBIBgQCyYCOhNR/7iUdYVYoNb1njgXsbJzSUw3rVUqHoQSZIfja65lxWa3SfCROmpgYVFUJBAKBClD+rJtz7gnIiSv1qyLg0wAAAABJRU5ErkJggg=="/>
+    <path id="logo-direita" class="cls-2" d="M176.5,44.5s36.5-22.816,77-33c46.57-11.709,98-11,98-11v304a275.281,275.281,0,0,0-30,0,109.373,109.373,0,0,0-18,3,70.836,70.836,0,0,0-31,17h-7v-59s-23.344.854-46,9c-21.828,7.848-43,23-43,23v-77a124.6,124.6,0,0,1,33-15c22-5.976,48-7,48-7V90.5s-23.593-1.021-45,4c-18.942,4.443-36,15-36,15v-65Z"/>
+  </g>
+</svg>

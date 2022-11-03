@@ -327,6 +327,7 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
                     .replaceFirst(".", ""))),
           ],
         ),
+        const Divider(),
         SwitchListTile(
           value: controller.isCustomFilter,
           onChanged: (value) {
@@ -385,11 +386,11 @@ Widget getFiltersPage(BuildContext context, LeitorController controller) {
             )
           ],
         ),
+        const Divider(),
         SwitchListTile(
           value: controller.isblackAndWhiteFilter,
           onChanged: (value) {
-            // implemet this!
-            // controller
+            controller.setBlackAndWhiteFilter(value);
           },
           title: const Text('Filtro Preto e Branco'),
         )

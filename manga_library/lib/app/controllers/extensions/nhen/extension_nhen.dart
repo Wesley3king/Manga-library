@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/nhen/scraping/nhen_scraping.dart';
 
@@ -12,6 +11,8 @@ class ExtensionNHen implements Extension {
   dynamic fetchServices;
   @override
   String nome = "NHentai";
+  @override
+  String extensionPoster = "N-Hentai.png";
   @override
   int id = 5;
   @override

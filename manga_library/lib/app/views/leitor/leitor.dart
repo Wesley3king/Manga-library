@@ -75,20 +75,24 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                   onPressed: () => GoRouter.of(context).pop(),
                   icon: Icon(Icons.arrow_back,
                       size: isVisible ? sizeOfButtons : 0)),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    GlobalData.mangaModel.name,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  Text(
-                    "Capítulo ${leitorController.atualChapter.id == '' ? "..." : leitorController.atualChapter.capitulo}",
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
-                  ),
-                ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
+                height: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      GlobalData.mangaModel.name.trim(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    Text(
+                      "Capítulo ${leitorController.atualChapter.id == '' ? "..." : leitorController.atualChapter.capitulo}",
+                      style: const TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ],
+                ),
               ),
               IconButton(
                 onPressed: () {},

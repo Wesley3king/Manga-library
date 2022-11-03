@@ -3,7 +3,6 @@ import 'dart:developer';
 
 // import 'package:chaleno/chaleno.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/repositories/yabu_fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/manga_yabu/scraping/scraping_yabu.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
@@ -18,6 +17,8 @@ class ExtensionMangaYabu implements Extension {
   dynamic fetchServices = YabuFetchServices();
   @override
   String nome = "Manga Yabu";
+  @override
+  String extensionPoster = "Manga-Yabu.png";
   @override
   int id = 1;
   @override

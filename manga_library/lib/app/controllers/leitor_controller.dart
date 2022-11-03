@@ -273,6 +273,14 @@ class LeitorController {
     }
     ReaderNotifier.instance.notify();
   }
+
+  void setBlackAndWhiteFilter(bool value) async {
+    if (!isCustomFilter) {
+      isblackAndWhiteFilter = value;
+      await settingsFunctions['Black and White filter']!(value, null);
+    }
+    ReaderNotifier.instance.notify();
+  }
 }
 
 class ReaderNotifier extends ChangeNotifier {

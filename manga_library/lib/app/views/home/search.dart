@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/views/extensions/extensions_page.dart';
 import 'package:manga_library/app/views/search/search_result.dart';
 
 import '../../controllers/search_controller.dart';
@@ -22,21 +23,21 @@ class _SearchPageState extends State<SearchPage> {
     controller.dispose();
   }
 
-  AppBar buildAppBar() {
-    return AppBar(
-      title: const Text('Pesquisar'),
-      actions: [
-        IconButton(
-            onPressed: () =>
-                showSearch(context: context, delegate: MySearchDelegate()),
-            icon: const Icon(Icons.search))
-      ],
-    );
-  }
+  // AppBar buildAppBar() {
+  //   return AppBar(
+  //     title: const Text('Pesquisar'),
+  //     actions: [
+  //       IconButton(
+  //           onPressed: () =>
+  //               showSearch(context: context, delegate: MySearchDelegate()),
+  //           icon: const Icon(Icons.search))
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Container();//buildAppBar()
+    return const ExtensionsPage();//buildAppBar()
   }
 }
 

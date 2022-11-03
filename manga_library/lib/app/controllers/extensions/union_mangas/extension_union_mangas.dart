@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/repositories/fetch_services.dart';
 import 'package:manga_library/app/controllers/extensions/union_mangas/scraping/union_scraping.dart';
@@ -13,6 +12,8 @@ class ExtensionUnionMangas implements Extension {
   dynamic fetchServices;
   @override
   String nome = "Union Mangas";
+  @override
+  String extensionPoster = "Union-Mangas.png";
   @override
   int id = 4;
   @override

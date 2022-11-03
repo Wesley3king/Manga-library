@@ -189,7 +189,7 @@ buildSettingsModel() {
           "nameClass": "Brilho e Filtros",
           "children": [
             {
-              "nameConfig": "Custom Shine",
+              "nameConfig": "Brilho personalizado",
               "description": "Define se o brilho da tela será personalizado",
               "type": "switch",
               "value": data['Custom Shine'],
