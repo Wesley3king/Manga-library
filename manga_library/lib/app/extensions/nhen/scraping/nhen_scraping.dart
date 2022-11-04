@@ -83,7 +83,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // authors
       List<Result>? artists = genresResult[3].querySelectorAll("a");
       for (int i = 0; i < artists!.length; ++i) {
-        authors.write('${artists[i].text}, ');
+        authors.write('${artists[i].text}');
       }
       // state
       state = parser.querySelector("div > time").text;
