@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/rendering.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_pages.dart';

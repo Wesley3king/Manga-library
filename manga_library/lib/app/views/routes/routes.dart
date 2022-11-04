@@ -7,6 +7,7 @@ import 'package:manga_library/app/views/configurations/backup_config/backup.dart
 import 'package:manga_library/app/views/configurations/config_options.dart';
 import 'package:manga_library/app/views/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/configurations/library_config/library_config_main.dart';
+import 'package:manga_library/app/views/extensions/show_page/extesion_show_page.dart';
 import 'package:manga_library/app/views/fila_de_downloads/fila_de_downloads.dart';
 import 'package:manga_library/app/views/historic/historic_page.dart';
 import 'package:manga_library/app/views/library/ocult%20library/ocult_library.dart';
@@ -118,6 +119,13 @@ final routes = GoRouter(
             url: link,
             idExtension: idExtension,
           );
+        },
+      ),
+      GoRoute(
+        path: '/extensionpage/:extension',
+        builder: (context, state) {
+          int idExtension = int.parse(state.params['extension']!);
+          return ExtensionShowPage(idExtension: idExtension);
         },
       ),
     ]);

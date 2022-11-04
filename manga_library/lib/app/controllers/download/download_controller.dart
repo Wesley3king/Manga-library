@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 // import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';

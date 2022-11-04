@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:readmore/readmore.dart';
 

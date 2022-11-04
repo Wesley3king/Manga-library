@@ -8,7 +8,7 @@ import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 // import '../../../../../controllers/hive/hive_controller.dart';
-import '../../../../controllers/extensions/extensions.dart';
+import '../../../../extensions/extensions.dart';
 import '../../../../controllers/off_line/manga_info_off_line.dart';
 
 class OffLineWidgetController {

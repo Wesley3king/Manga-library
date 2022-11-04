@@ -1,6 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manga_library/app/controllers/extensions/silence_scan/extension_silence_scan.dart';
+import 'package:manga_library/app/extensions/silence_scan/extension_silence_scan.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 void main() {

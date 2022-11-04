@@ -1,6 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manga_library/app/controllers/extensions/nhen_br/extension_n_hen_br.dart';
+import 'package:manga_library/app/extensions/nhen_br/extension_n_hen_br.dart';
 
 void main() {
   ExtensionNHenBr extend = ExtensionNHenBr();

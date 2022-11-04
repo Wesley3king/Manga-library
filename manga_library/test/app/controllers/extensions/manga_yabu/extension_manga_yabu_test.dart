@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manga_library/app/controllers/extensions/manga_yabu/extension_yabu.dart';
+import 'package:manga_library/app/extensions/manga_yabu/extension_yabu.dart';
 // import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
 // import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
@@ -20,14 +20,25 @@ void main() {
   test('deve retornar uma instancia do model com os dados do manga', () async {
     MangaInfoOffLineModel? result =
         await extensionManga.mangaDetail('dragon-ball-super');
+    // wind-breaker dragon-ball-super
 
-    log(result!.name);
+    log('${result?.name}');
+    expect(result != null, true);
   });
 
   test("deve retornar um model Capitulos", () async {
-    var data = await extensionManga.getPages("wind-breaker-capitulo-397-my944597", [
-          Capitulos(id: 'wind-breaker-capitulo-397-my944597', capitulo: '397', description:'', download: false, readed: false, disponivel: true, downloadPages: [], pages: [])
-        ]);
+    var data =
+        await extensionManga.getPages("wind-breaker-capitulo-397-my944597", [
+      Capitulos(
+          id: 'wind-breaker-capitulo-397-my944597',
+          capitulo: '397',
+          description: '',
+          download: false,
+          readed: false,
+          disponivel: true,
+          downloadPages: [],
+          pages: [])
+    ]);
     debugPrint("data: $data");
   });
   test('deve retornar um SearchModel', () async {

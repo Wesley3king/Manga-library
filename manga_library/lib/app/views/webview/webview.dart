@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:webviewx/webviewx.dart';
 
@@ -55,11 +55,12 @@ class _MyWebViewState extends State<MyWebView> {
                     children: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 500),
-                        height: showOptions.value ? 70 : 0,
+                        height: showOptions.value ? 120 : 0,
                         child: Container(
-                          height: 70,
+                          height: 120,
                           color: Colors.black45,
                           child: Row(
+                            // crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               IconButton(
                                   onPressed: () => GoRouter.of(context).pop(),

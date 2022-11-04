@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 // import 'package:manga_library/app/controllers/extensions/extension_manga_yabu.dart';
 // import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/search_model.dart';

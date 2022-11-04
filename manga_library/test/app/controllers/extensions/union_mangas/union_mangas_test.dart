@@ -1,6 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manga_library/app/controllers/extensions/union_mangas/extension_union_mangas.dart';
+import 'package:manga_library/app/extensions/union_mangas/extension_union_mangas.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 void main() {

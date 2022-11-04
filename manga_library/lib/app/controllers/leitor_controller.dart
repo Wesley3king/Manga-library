@@ -4,7 +4,7 @@ import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 
 // import '../models/leitor_pages.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/models/reader_chapter_model.dart';
 import 'package:manga_library/app/views/configurations/config_pages/functions/config_functions.dart';
 import 'package:screen_brightness/screen_brightness.dart';

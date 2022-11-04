@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/app/controllers/extensions/extensions.dart';
+import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 
 class ExtensionsPage extends StatefulWidget {
   const ExtensionsPage({super.key});
@@ -24,6 +25,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
             fit: BoxFit.cover,
           ),
         ),
+        onTap: () => GoRouter.of(context).push('/extensionpage/${keys[index]}'),
       ),);
   }
 }
