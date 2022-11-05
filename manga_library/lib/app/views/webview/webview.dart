@@ -55,34 +55,42 @@ class _MyWebViewState extends State<MyWebView> {
                     children: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 500),
-                        height: showOptions.value ? 120 : 0,
+                        height: showOptions.value ? 100 : 0,
                         child: Container(
-                          height: 120,
+                          height: 100,
                           color: Colors.black45,
-                          child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              IconButton(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            height: 40,
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                showOptions.value ?
+                                IconButton(
                                   onPressed: () => GoRouter.of(context).pop(),
-                                  icon: const Icon(Icons.arrow_back)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width - 180,
-                                  child: Text(
-                                    url,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Colors.white),
-                                  )),
-                              IconButton(
-                                onPressed: () => webViewController.goBack(),
-                                icon: const Icon(Icons.arrow_back_ios)
-                              ),
-                              IconButton(
-                                onPressed: () => webViewController.goForward(),
-                                icon: const Icon(Icons.arrow_forward_ios)
-                              ),
-                            ],
+                                  icon: const Icon(Icons.arrow_back)
+                                ) : Container(),
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width - 150,
+                                    child: Text(
+                                      url,
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          overflow: TextOverflow.ellipsis,
+                                          color: Colors.white),
+                                    )),
+                                showOptions.value ? 
+                                IconButton(
+                                  onPressed: () => webViewController.goBack(),
+                                  icon: const Icon(Icons.arrow_back_ios)
+                                ) : Container(),
+                                showOptions.value ? 
+                                IconButton(
+                                  onPressed: () => webViewController.goForward(),
+                                  icon: const Icon(Icons.arrow_forward_ios)
+                                ) : Container(),
+                              ],
+                            ),
                           ),
                         ),
                       ),

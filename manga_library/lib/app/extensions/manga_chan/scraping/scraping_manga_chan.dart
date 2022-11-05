@@ -119,8 +119,18 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       img = parser.querySelector("div.thumb > img").src;
       // debugPrint("img: $img");
       // authors
-      List<Result>? listaInfo = parser.querySelectorAll("table.infotable > tbody > tr");
-      authors = '${listaInfo[2].text?.replaceFirst("Autor", "").trim()}, ${listaInfo[3].text?.replaceFirst("Artista", "").trim()}';
+      List<Result>? listaInfo =
+          parser.querySelectorAll("table.infotable > tbody > tr");
+      StringBuffer buffer = StringBuffer();
+      for (Result info in listaInfo) {
+        if (info.text!.contains("Autor")) {
+          buffer.write('${info.text?.replaceFirst("Autor", "").trim()}');
+        } else if (info.text!.contains("Artista")) {
+          buffer.write(' ,${info.text?.replaceFirst("Artista", "").trim()}');
+        }
+      }
+
+      authors = buffer.toString();
       // debugPrint("authors: $authors");
       // status
       status = listaInfo[0].text?.replaceFirst("Status", "").trim();

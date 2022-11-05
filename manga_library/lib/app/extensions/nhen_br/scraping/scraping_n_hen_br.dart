@@ -76,10 +76,20 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           "$indenify > div.post-conteudo > ul.post-itens > li");
 
       for (int i = 0; i < genresResult.length; ++i) {
-        List<Result>? generos = genresResult[i].querySelectorAll("a");
-        if (i == 4 && (generos!.length == 1)) {
-          authors = generos[0].text;
+        String? type = genresResult[i].querySelector("strong")?.text;
+        if (type == "Artista:") {
+          StringBuffer buffer = StringBuffer();
+          List<Result>? autores = genresResult[i].querySelectorAll("a");
+          for (int indice = 0; indice < autores!.length; ++indice) {
+            if (indice == (autores.length - 1)) {
+              buffer.write(' ${autores[indice].text}');
+            } else {
+              buffer.write(' ${autores[indice].text},');
+            }
+          }
+          authors = buffer.toString();
         } else {
+          List<Result>? generos = genresResult[i].querySelectorAll("a");
           for (Result result in generos!) {
             genres.add("${result.text}");
           }
@@ -109,7 +119,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         name: name ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
-        state: "Estado desconhecido",
+        state: "Finalizado",
         authors: authors ?? "Autor desconhecido",
         link: "https://nhentaibr.com/$link/",
         idExtension: 8,
@@ -149,8 +159,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       var projetoData = parser.querySelectorAll("div.lista > ul > li");
       // print(projetoData);
       List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
-        List<Result>? result =
-            data.querySelectorAll("div.thumb-conteudo > a");
+        List<Result>? result = data.querySelectorAll("div.thumb-conteudo > a");
         // name
         String? name = result![1].querySelector("span.thumb-titulo")!.text;
         debugPrint("name: $name");
