@@ -94,6 +94,10 @@ class _MangaDetailsState extends State<MangaDetails> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Container(
+          color: Colors.green,
+          height: 10,
+        ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
           height: 320,

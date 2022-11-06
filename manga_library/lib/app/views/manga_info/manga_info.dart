@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
@@ -52,7 +51,7 @@ class _MangaInfoState extends State<MangaInfo> {
         PopupMenuItem(
           child: const Text('Atualizar'),
           onTap: () async {
-            if (mangaInfoController.state.value == MangaInfoStates.sucess2) {
+            if (mangaInfoController.state.value == MangaInfoStates.sucess) {
               generateMessage(context, "Atualizando...");
               await mangaInfoController.updateBook(
                       widget.link, widget.idExtension)
@@ -71,18 +70,18 @@ class _MangaInfoState extends State<MangaInfo> {
         return _loading();
       case MangaInfoStates.loading:
         return _loading();
-      case MangaInfoStates.sucess1:
+      // case MangaInfoStates.sucess1:
+      //   return SucessMangaInfo(
+      //     dados: mangaInfoController.data,
+      //     sucess2: false,
+      //     capitulosDisponiveis: const [],
+      //     link: widget.link,
+      //     controller: mangaInfoController,
+      //   );
+      case MangaInfoStates.sucess:
         return SucessMangaInfo(
           dados: mangaInfoController.data,
-          sucess2: false,
-          capitulosDisponiveis: const [],
-          link: widget.link,
-          controller: mangaInfoController,
-        );
-      case MangaInfoStates.sucess2:
-        return SucessMangaInfo(
-          dados: mangaInfoController.data,
-          sucess2: true,
+          // sucess2: true,
           capitulosDisponiveis: mangaInfoController.capitulosDisponiveis,
           link: widget.link,
           controller: mangaInfoController,

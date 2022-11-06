@@ -38,7 +38,7 @@ class MangaInfoController {
   );
   List<Capitulos>? capitulosDisponiveis = [];
   static bool isAnOffLineBook = false;
-  static bool isTwoRequests = false;
+  // static bool isTwoRequests = false;
   ValueNotifier<MangaInfoStates> state =
       ValueNotifier<MangaInfoStates>(MangaInfoStates.start);
 
@@ -50,8 +50,6 @@ class MangaInfoController {
           await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
       if (localData != null) {
         debugPrint("existe na base de dados! / l= $url");
-        // testa para definir isTwoRequests
-        isTwoRequests = mapOfExtensions[idExtension]!.isTwoRequests;
 
         data = localData;
         capitulosDisponiveis = localData.capitulos;
@@ -62,42 +60,41 @@ class MangaInfoController {
         // await _chaptersController.correlacionarCapitulos(
         //     capitulosDisponiveis ?? [], data.capitulos, url
         // );
-        state.value = MangaInfoStates.sucess2;
+        state.value = MangaInfoStates.sucess;
       } else {
         // operação OnLine
         debugPrint("iniciando o fetch! / l= $url");
 
         // identificar se a extensão trabalha em duas requisições
         final MangaInfoOffLineModel? dados;
-        isTwoRequests = mapOfExtensions[idExtension]!.isTwoRequests;
-        if (isTwoRequests) {
-          dados = await mapOfExtensions[idExtension]!.mangaDetail(url);
-          if (dados != null) {
-            data = dados;
-            state.value = MangaInfoStates.sucess1;
-          } else {
-            state.value = MangaInfoStates.error;
-          }
-          capitulosDisponiveis =
-              await fetchServiceExtensions[idExtension].fetchChapters(url);
-          //log("at online start: ${capitulosDisponiveis!.length}");
-        } else {
+        // if (isTwoRequests) {
+        //   dados = await mapOfExtensions[idExtension]!.mangaDetail(url);
+        //   if (dados != null) {
+        //     data = dados;
+        //     state.value = MangaInfoStates.sucess1;
+        //   } else {
+        //     state.value = MangaInfoStates.error;
+        //   }
+        //   capitulosDisponiveis =
+        //       await fetchServiceExtensions[idExtension].fetchChapters(url);
+        //   //log("at online start: ${capitulosDisponiveis!.length}");
+        // } else {
           dados = await mapOfExtensions[idExtension]!.mangaDetail(url);
           if (dados != null) {
             data = dados;
             capitulosDisponiveis = data.capitulos;
-            state.value = MangaInfoStates.sucess1;
+            // state.value = MangaInfoStates.sucess;
           } else {
-            state.value = MangaInfoStates.error;
+            // state.value = MangaInfoStates.error;
           }
-        }
+        // }
 
         // log("at online start: ${capitulosDisponiveis!.length}");
         GlobalData.mangaModel = data;
 
         isAnOffLineBook = false;
         if (state.value != MangaInfoStates.error) {
-          state.value = MangaInfoStates.sucess2;
+          state.value = MangaInfoStates.sucess;
         } else {
           HomePageController.errorMessage = 'erro no null 2';
           state.value = MangaInfoStates.error;
@@ -192,9 +189,9 @@ class MangaInfoController {
         await chaptersController?.update(capitulosDisponiveis,
             capitulosFromOriginalServer, url, idExtension);
       }
-      state.value = MangaInfoStates.sucess1;
+      state.value = MangaInfoStates.loading;
       // aqui deve atualizar a view totalmente
-      state.value = MangaInfoStates.sucess2;
+      state.value = MangaInfoStates.sucess;
       return true;
     } catch (e) {
       debugPrint("erro no update book at mangaInfoController: $e");
@@ -236,7 +233,7 @@ class MangaInfoController {
   }
 }
 
-enum MangaInfoStates { start, loading, sucess1, sucess2, error }
+enum MangaInfoStates { start, loading, sucess, error }
 
 /// controller dos capitulos
 class ChaptersController {
@@ -260,15 +257,15 @@ class ChaptersController {
             listaCapitulosDisponiveis, link, idExtension); // , listaCapitulos
 
       } else {
-        if (MangaInfoController.isTwoRequests) {
-          await correlacionarCapitulos(
-              listaCapitulosDisponiveis ?? [], listaCapitulos, link,
-              idExtension: idExtension);
-        } else {
-          print("isn't twoRequests");
+        // if (MangaInfoController.isTwoRequests) {
+        //   await correlacionarCapitulos(
+        //       listaCapitulosDisponiveis ?? [], listaCapitulos, link,
+        //       idExtension: idExtension);
+        // } else {
+        //   print("isn't twoRequests");
           capitulosCorrelacionados = listaCapitulos;
           await updateChapters(listaCapitulosDisponiveis, link, idExtension);
-        }
+        // }
       }
       // disponibilizar os capitulos correlacionados
 
@@ -278,8 +275,8 @@ class ChaptersController {
       state.value = ChaptersStates.sucess;
     } catch (e) {
       HomePageController.errorMessage = 'erro no catch ChapterController: $e';
-      print('erro no start ChapterController');
-      print(e);
+      debugPrint('erro no start ChapterController');
+      debugPrint('$e');
       state.value = ChaptersStates.error;
     }
   }
@@ -296,46 +293,45 @@ class ChaptersController {
       //   await correlacionarCapitulos(
       //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
       // }
-      log("update is two: ${MangaInfoController.isTwoRequests}");
-      if (MangaInfoController.isTwoRequests) {
-        // passar os downloads aos novos capitulos
-        for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
-          if (capCorrelacionados.download) {
-            for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
-              if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
-                debugPrint("capitulo com download disponivel!");
-                listaCapitulosDisponiveis[i].download = true;
-                listaCapitulosDisponiveis[i].downloadPages =
-                    capCorrelacionados.downloadPages;
-                // ok
-                break;
-              }
+      // if (MangaInfoController.isTwoRequests) {
+      //   // passar os downloads aos novos capitulos
+      //   for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
+      //     if (capCorrelacionados.download) {
+      //       for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
+      //         if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
+      //           debugPrint("capitulo com download disponivel!");
+      //           listaCapitulosDisponiveis[i].download = true;
+      //           listaCapitulosDisponiveis[i].downloadPages =
+      //               capCorrelacionados.downloadPages;
+      //           // ok
+      //           break;
+      //         }
+      //       }
+      //     }
+      //   }
+      //   log("off line twoRequests ok pt1");
+      //   await correlacionarCapitulos(
+      //       listaCapitulosDisponiveis ?? [], listaCapitulos, link,
+      //       isAnUpdate: true, idExtension: idExtension);
+      //   log("off line twoRequests ok pt2");
+      // } else {
+      for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
+        if (capCorrelacionados.download) {
+          for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
+            if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
+              debugPrint("capitulo com download disponivel!");
+              listaCapitulosDisponiveis[i].download = true;
+              listaCapitulosDisponiveis[i].downloadPages =
+                  capCorrelacionados.downloadPages;
+              // ok
+              break;
             }
           }
         }
-        log("off line twoRequests ok pt1");
-        await correlacionarCapitulos(
-            listaCapitulosDisponiveis ?? [], listaCapitulos, link,
-            isAnUpdate: true, idExtension: idExtension);
-        log("off line twoRequests ok pt2");
-      } else {
-        for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
-          if (capCorrelacionados.download) {
-            for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
-              if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
-                debugPrint("capitulo com download disponivel!");
-                listaCapitulosDisponiveis[i].download = true;
-                listaCapitulosDisponiveis[i].downloadPages =
-                    capCorrelacionados.downloadPages;
-                // ok
-                break;
-              }
-            }
-          }
-        }
-        capitulosCorrelacionados = listaCapitulosDisponiveis ?? [];
-        await updateChapters(listaCapitulosDisponiveis, link, idExtension);
       }
+      capitulosCorrelacionados = listaCapitulosDisponiveis ?? [];
+      await updateChapters(listaCapitulosDisponiveis, link, idExtension);
+      // }
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
       // print(capitulosCorrelacionados);

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/historic_manager_controller.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
-import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/manga_info/manga_details.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../controllers/system_config.dart';
@@ -14,14 +12,13 @@ import 'off_line/off_line_widget.dart';
 
 class SucessMangaInfo extends StatefulWidget {
   final MangaInfoOffLineModel dados;
-  final bool sucess2;
+  // final bool sucess2;
   final List<Capitulos>? capitulosDisponiveis;
   final String link;
   final MangaInfoController controller;
   const SucessMangaInfo({
     super.key,
     required this.dados,
-    required this.sucess2,
     required this.link,
     required this.capitulosDisponiveis,
     required this.controller,
@@ -149,9 +146,22 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     //print("link: ${widget.link}");
   }
 
+  /*
+  RefreshIndicator(
+        color: configSystemController.colorManagement(),
+        onRefresh: () async {
+          if (chaptersController.state.value == ChaptersStates.sucess) {
+            await widget.controller.updateBook(
+                widget.link,
+                /*chaptersController*/
+                widget.dados.idExtension);
+          }
+        },
+  */
+
   @override
   Widget build(BuildContext context) {
-    if (widget.sucess2) {
+    // if (widget.sucess2) {
       if (chaptersController.state.value == ChaptersStates.start) {
         chaptersController.start(widget.capitulosDisponiveis,
             widget.dados.capitulos, widget.link, widget.dados.idExtension);
@@ -227,6 +237,9 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                         color: Color.fromARGB(223, 158, 158, 158)),
                     child: ListView.builder(
                       controller: _scrollController,
+                      // addRepaintBoundaries: false,
+                      // dragStartBehavior: DragStartBehavior.down,
+                      // physics: ScrollPhysics(parent: ),
                       itemCount:
                           ChaptersController.capitulosCorrelacionados.length + 1,
                       itemBuilder: (context, index) {
@@ -256,36 +269,36 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               }
             }),
       );
-    } else {
-      return ListView(
-        children: [
-          MangaDetails(
-              link: widget.link,
-              dados: widget.dados,
-              controller: widget.controller,
-              capitulosDisponiveis: widget.capitulosDisponiveis),
-          const SizedBox(
-            height: 3.0,
-          ),
-          Column(
-            children: [
-              LinearProgressIndicator(
-                  color: configSystemController.colorManagement()),
-              const Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Text(
-                  "Carregando os Capítulos",
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-        ],
-      );
-    }
+    // } else {
+      // return ListView(
+      //   children: [
+      //     MangaDetails(
+      //         link: widget.link,
+      //         dados: widget.dados,
+      //         controller: widget.controller,
+      //         capitulosDisponiveis: widget.capitulosDisponiveis),
+      //     const SizedBox(
+      //       height: 3.0,
+      //     ),
+      //     Column(
+      //       children: [
+      //         LinearProgressIndicator(
+      //             color: configSystemController.colorManagement()),
+      //         const Padding(
+      //           padding: EdgeInsets.all(4.0),
+      //           child: Text(
+      //             "Carregando os Capítulos",
+      //             textAlign: TextAlign.center,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     const SizedBox(
+      //       height: 10.0,
+      //     ),
+      //   ],
+      // );
+    // }
   }
 }
 
