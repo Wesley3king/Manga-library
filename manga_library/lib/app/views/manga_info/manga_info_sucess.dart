@@ -5,6 +5,10 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/manga_info/manga_details.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../controllers/system_config.dart';
@@ -101,7 +105,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   }
 
   Widget _buildChapter(BuildContext context, int index) {
-    final Capitulos capitulo = ChaptersController.capitulosCorrelacionados[index - 1];
+    final Capitulos capitulo =
+        ChaptersController.capitulosCorrelacionados[index - 1];
     // GlobalData.capitulosDisponiveis;
 
     return ListTile(
@@ -162,150 +167,111 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   @override
   Widget build(BuildContext context) {
     // if (widget.sucess2) {
-      if (chaptersController.state.value == ChaptersStates.start) {
-        chaptersController.start(widget.capitulosDisponiveis,
-            widget.dados.capitulos, widget.link, widget.dados.idExtension);
-      }
-      return RefreshIndicator(
-        color: configSystemController.colorManagement(),
-        onRefresh: () async {
-          if (chaptersController.state.value == ChaptersStates.sucess) {
-            await widget.controller.updateBook(
-                widget.link,
-                /*chaptersController*/
-                widget.dados.idExtension);
-          }
-        },
-        child: AnimatedBuilder(
-            animation: chaptersController.state,
-            builder: (context, child) {
-              chaptersController.state.value == ChaptersStates.sucess
-                  ? itemCount =
-                      (ChaptersController.capitulosCorrelacionados.length + 1)
-                  : itemCount = 2;
-              switch (chaptersController.state.value) {
-                case ChaptersStates.start:
-                  return ListView(
-                    children: [
-                      MangaDetails(
-                          link: widget.link,
-                          dados: widget.dados,
-                          controller: widget.controller,
-                          capitulosDisponiveis: widget.capitulosDisponiveis),
-                      Column(
-                        children: [
-                          LinearProgressIndicator(
-                              color: configSystemController.colorManagement()),
-                          const Text(
-                            "Carregando os Capitulos",
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                case ChaptersStates.loading:
-                  return ListView(
-                    children: [
-                      MangaDetails(
-                          link: widget.link,
-                          dados: widget.dados,
-                          controller: widget.controller,
-                          capitulosDisponiveis: widget.capitulosDisponiveis),
-                      const SizedBox(
-                        height: 3.0,
-                      ),
-                      Column(
-                        children: [
-                          LinearProgressIndicator(
-                              color: configSystemController.colorManagement()),
-                          const Text(
-                            "Carregando os Capitulos",
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  );
-                case ChaptersStates.sucess:
-                  return VsScrollbar(
-                    controller: _scrollController,
-                    style: const VsScrollbarStyle(
-                        color: Color.fromARGB(223, 158, 158, 158)),
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      // addRepaintBoundaries: false,
-                      // dragStartBehavior: DragStartBehavior.down,
-                      // physics: ScrollPhysics(parent: ),
-                      itemCount:
-                          ChaptersController.capitulosCorrelacionados.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return MangaDetails(
-                              link: widget.link,
-                              dados: widget.dados,
-                              controller: widget.controller,
-                              capitulosDisponiveis: widget.capitulosDisponiveis);
-                        } else {
-                          return _buildChapter(context, index);
-                        }
-                      },
+    if (chaptersController.state.value == ChaptersStates.start) {
+      chaptersController.start(widget.capitulosDisponiveis,
+          widget.dados.capitulos, widget.link, widget.dados.idExtension);
+    }
+    return RefreshIndicator(
+      color: configSystemController.colorManagement(),
+      onRefresh: () async {
+        if (chaptersController.state.value == ChaptersStates.sucess) {
+          await widget.controller.updateBook(
+              widget.link,
+              /*chaptersController*/
+              widget.dados.idExtension);
+        }
+      },
+      child: AnimatedBuilder(
+          animation: chaptersController.state,
+          builder: (context, child) {
+            chaptersController.state.value == ChaptersStates.sucess
+                ? itemCount =
+                    (ChaptersController.capitulosCorrelacionados.length + 1)
+                : itemCount = 2;
+            switch (chaptersController.state.value) {
+              case ChaptersStates.start:
+                return ListView(
+                  children: [
+                    MangaDetails(
+                        link: widget.link,
+                        dados: widget.dados,
+                        controller: widget.controller,
+                        capitulosDisponiveis: widget.capitulosDisponiveis),
+                    Column(
+                      children: [
+                        LinearProgressIndicator(
+                            color: configSystemController.colorManagement()),
+                        const Text(
+                          "Carregando os Capitulos",
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                  );
-                case ChaptersStates.error:
-                  return ListView(
-                    children: [
-                      MangaDetails(
-                          link: widget.link,
-                          dados: widget.dados,
-                          controller: widget.controller,
-                          capitulosDisponiveis: widget.capitulosDisponiveis),
-                      _error(),
-                    ],
-                  );
-              }
-            }),
-      );
-    // } else {
-      // return ListView(
-      //   children: [
-      //     MangaDetails(
-      //         link: widget.link,
-      //         dados: widget.dados,
-      //         controller: widget.controller,
-      //         capitulosDisponiveis: widget.capitulosDisponiveis),
-      //     const SizedBox(
-      //       height: 3.0,
-      //     ),
-      //     Column(
-      //       children: [
-      //         LinearProgressIndicator(
-      //             color: configSystemController.colorManagement()),
-      //         const Padding(
-      //           padding: EdgeInsets.all(4.0),
-      //           child: Text(
-      //             "Carregando os Capítulos",
-      //             textAlign: TextAlign.center,
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     const SizedBox(
-      //       height: 10.0,
-      //     ),
-      //   ],
-      // );
-    // }
+                  ],
+                );
+              case ChaptersStates.loading:
+                return ListView(
+                  children: [
+                    MangaDetails(
+                        link: widget.link,
+                        dados: widget.dados,
+                        controller: widget.controller,
+                        capitulosDisponiveis: widget.capitulosDisponiveis),
+                    const SizedBox(
+                      height: 3.0,
+                    ),
+                    Column(
+                      children: [
+                        LinearProgressIndicator(
+                            color: configSystemController.colorManagement()),
+                        const Text(
+                          "Carregando os Capitulos",
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
+                );
+              case ChaptersStates.sucess:
+                return VsScrollbar(
+                  controller: _scrollController,
+                  style: const VsScrollbarStyle(
+                      color: Color.fromARGB(223, 158, 158, 158)),
+                  child: ScrollablePositionedList.builder(
+                    scrollController: _scrollController,
+                    // itemPositionsListener: itemPositionsListener,
+                    // itemScrollController: itemScrollController,
+                    itemCount:
+                        ChaptersController.capitulosCorrelacionados.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return MangaDetails(
+                            link: widget.link,
+                            dados: widget.dados,
+                            controller: widget.controller,
+                            capitulosDisponiveis: widget.capitulosDisponiveis);
+                      } else {
+                        return _buildChapter(context, index);
+                      }
+                    },
+                  ),
+                );
+              case ChaptersStates.error:
+                return ListView(
+                  children: [
+                    MangaDetails(
+                        link: widget.link,
+                        dados: widget.dados,
+                        controller: widget.controller,
+                        capitulosDisponiveis: widget.capitulosDisponiveis),
+                    _error(),
+                  ],
+                );
+            }
+          }),
+    );
   }
 }
-
-// Widget tst() {
-//   // return ScrollablePositionedList.builder(
-//   //   itemScrollController: ,
-//   //   itemCount: 1,
-//   //   itemBuilder: (context, index) => Text('$index'));
-//   return Container();
-// }

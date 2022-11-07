@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/leitor/components/bottom_sheet.dart';
 import 'package:manga_library/app/views/leitor/config_components.dart';
 // import 'package:flutter/services.dart';
 import 'package:manga_library/app/views/leitor/pages_leitor.dart';
 
 import '../../controllers/leitor_controller.dart';
+import '../../controllers/system_config.dart';
 import '../../models/globais.dart';
 
 class Leitor extends StatefulWidget {
@@ -30,14 +32,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   final double sizeOfButtons = 25.0;
   final int visibleDuration = 400;
   final Curve visibleCurve = Curves.easeInOut;
-  bool isVisible = true;
-
-  // colocar e remover o appbar e bottomNavigation
-  void removeOrAddInfo() {
-    setState(() {
-      isVisible = !isVisible;
-    });
-  }
+  ValueNotifier<bool> isVisible = ValueNotifier<bool>(true);
 
   // =========================================================================
   //                    ---- CONTROLS ----
@@ -48,7 +43,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
     // isVisible
     //     ? screenController.enterEdgeFullScreen()
     //     : screenController.enterFullScreen();
-    isVisible
+    isVisible.value
         ? leitorController.setFullScreen(true)
         : leitorController.setFullScreen(false);
     bool isLandscape =
@@ -59,7 +54,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
       AnimatedContainer(
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
-        height: isVisible
+        height: isVisible.value
             ? isLandscape
                 ? 60
                 : 100
@@ -74,7 +69,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
               IconButton(
                   onPressed: () => GoRouter.of(context).pop(),
                   icon: Icon(Icons.arrow_back,
-                      size: isVisible ? sizeOfButtons : 0)),
+                      size: isVisible.value ? sizeOfButtons : 0)),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 100,
                 height: 100,
@@ -98,7 +93,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                 onPressed: () {},
                 icon: Icon(
                   Icons.bookmark_border,
-                  size: isVisible ? sizeOfButtons : 0,
+                  size: isVisible.value ? sizeOfButtons : 0,
                 ),
               ),
               // const SizedBox(
@@ -114,16 +109,14 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
           height: isLandscape ? 60 : 200,
           width: MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
           child: GestureDetector(
-            onTap: () => setState(() {
-              isVisible = !isVisible;
-            }),
+            onTap: () => isVisible.value = !isVisible.value,
           ),
         ),
       ),
       AnimatedContainer(
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
-        height: isVisible
+        height: isVisible.value
             ? isLandscape
                 ? 1200
                 : 160
@@ -151,9 +144,15 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                                   BorderRadius.all(Radius.circular(40)),
                             ),
                             child: IconButton(
-                                onPressed: () => leitorController.prevChapter(widget.link, widget.idExtension),
-                                icon: const Icon(
+                                onPressed: () => leitorController.prevChapter(
+                                    widget.link, widget.idExtension),
+                                tooltip: "Capítulo Anterior",
+                                icon: Icon(
                                   Icons.skip_previous,
+                                  color:
+                                      leitorController.atualInfo.prevId == null
+                                          ? Colors.grey
+                                          : null,
                                   size: 25,
                                 )))),
                     const SizedBox(
@@ -174,18 +173,15 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                                   value: controller.state.value.toDouble(),
                                   max: leitorController.atualChapter.id == ""
                                       ? 1.0
-                                      : leitorController
-                                              .atualChapter.download
-                                          ? leitorController.atualChapter
-                                              .downloadPages.length
+                                      : leitorController.atualChapter.download
+                                          ? leitorController
+                                              .atualChapter.downloadPages.length
                                               .toDouble()
-                                          : leitorController.atualChapter
-                                                  .pages.isEmpty
+                                          : leitorController
+                                                  .atualChapter.pages.isEmpty
                                               ? 1.0
                                               : leitorController
-                                                  .atualChapter
-                                                  .pages
-                                                  .length
+                                                  .atualChapter.pages.length
                                                   .toDouble(),
                                   min: 1.0,
                                   onChanged: (value) => controller.scrollTo(
@@ -207,9 +203,15 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                           ),
                           child: IconButton(
                               disabledColor: Colors.red,
-                              onPressed: () => leitorController.nextChapter(widget.link, widget.idExtension),
-                              icon: const Icon(
+                              highlightColor: Colors.green,
+                              tooltip: "Próximo Capítulo",
+                              onPressed: () => leitorController.nextChapter(
+                                  widget.link, widget.idExtension),
+                              icon: Icon(
                                 Icons.skip_next,
+                                color: leitorController.atualInfo.nextId == null
+                                    ? Colors.grey
+                                    : null,
                                 size: 25,
                               )),
                         )),
@@ -273,18 +275,22 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
     leitorController.setOrientacion("auto");
     // Wakelock.toggle(enable: false);
     leitorController.setWakeLock(false);
+    _customNavigationBar();
     super.dispose();
   }
 
-  // double getHeight(BuildContext context) {
-  //   debugPrint("height get: ${MediaQuery.of(context).size.height}");
-  //   return MediaQuery.of(context).size.height;
-  // }
+  void _customNavigationBar() {
+    ConfigSystemController.instance.isDarkTheme
+        ? StylesFromSystemNavigation.setSystemNavigationBarBlack26()
+        : StylesFromSystemNavigation.setSystemNavigationBarWhite24();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
+        body: AnimatedBuilder(
+      animation: leitorController.state,
+      builder: (context, child) => SizedBox(
         height: MediaQuery.of(context).size.height,
         child: IconTheme(
           data: const IconThemeData(color: Colors.white),
@@ -294,7 +300,6 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: PagesLeitor(
-                    showOrHideInfo: removeOrAddInfo,
                     leitorController: leitorController,
                     controller: controller,
                     link: widget.link,
@@ -303,16 +308,18 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: buildInfo(context),
+                child: AnimatedBuilder(
+                  animation: isVisible,
+                  builder: (context, child) => Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: buildInfo(context)),
                 ),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: AnimatedContainer(
-                  padding: isVisible
+                  padding: isVisible.value
                       ? const EdgeInsets.only(bottom: 100)
                       : const EdgeInsets.only(bottom: 0),
                   duration: const Duration(milliseconds: 200),
@@ -336,6 +343,6 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-    );
+    ));
   }
 }

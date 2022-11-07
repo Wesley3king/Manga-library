@@ -13,7 +13,6 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class PagesLeitor extends StatefulWidget {
-  final Function showOrHideInfo;
   final LeitorController leitorController;
   final PagesController controller;
   final String link;
@@ -23,8 +22,7 @@ class PagesLeitor extends StatefulWidget {
       required this.link,
       required this.id,
       required this.leitorController,
-      required this.controller,
-      required this.showOrHideInfo});
+      required this.controller,});
 
   @override
   State<PagesLeitor> createState() => _PagesLeitorState();
@@ -96,7 +94,6 @@ class _PagesLeitorState extends State<PagesLeitor> {
       builder: (context, index) => PhotoViewGalleryPageOptions(
         imageProvider: returnAnImageProvider(index),
         filterQuality: filterQuality,
-        // onTapUp: (context, details, controllerValue) => widget.showOrHideInfo(),
         // filterQuality:
       ),
     );
@@ -111,7 +108,6 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
           widget.controller.setPage = index;
-          // widget.showOrHideInfo();
         },
         child: MyPageImage(
           capitulo: widget.leitorController.atualChapter,
@@ -177,7 +173,6 @@ class _PagesLeitorState extends State<PagesLeitor> {
       onPageChanged: (index) => widget.controller.setPage = (index + 1),
       reverse: rtl,
       itemBuilder: (context, index) => Container(
-        // onTap: () => widget.showOrHideInfo(),
         color: color,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

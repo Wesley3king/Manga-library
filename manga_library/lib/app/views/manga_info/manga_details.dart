@@ -94,19 +94,15 @@ class _MangaDetailsState extends State<MangaDetails> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          color: Colors.green,
-          height: 10,
-        ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 320,
+          height: 425,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 320,
+                height: 425,
                 child: Image(
                   image: CachedNetworkImageProvider(
                     widget.dados.img,
@@ -116,7 +112,7 @@ class _MangaDetailsState extends State<MangaDetails> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 320,
+                height: 425,
                 decoration: ConfigSystemController.instance.isDarkTheme
                     ? const BoxDecoration(
                         gradient: LinearGradient(

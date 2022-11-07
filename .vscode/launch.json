@@ -1,0 +1,48 @@
+{
+    // Use o IntelliSense para saber mais sobre os atributos possíveis.
+    // Focalizar para exibir as descrições dos atributos existentes.
+    // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "manga_library",
+            "cwd": "manga_library",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "manga_library (profile mode)",
+            "cwd": "manga_library",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "manga_library (release mode)",
+            "cwd": "manga_library",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "scrollable_positioned_list",
+            "cwd": "manga_library/lib/scrollable_positioned_list",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "scrollable_positioned_list (profile mode)",
+            "cwd": "manga_library/lib/scrollable_positioned_list",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "scrollable_positioned_list (release mode)",
+            "cwd": "manga_library/lib/scrollable_positioned_list",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
