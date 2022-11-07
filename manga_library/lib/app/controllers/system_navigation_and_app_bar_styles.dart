@@ -21,4 +21,11 @@ class StylesFromSystemNavigation {
     // debugPrint("invisivel!");
     fullScreenController.setSystemNavigationBarWhite24();
   }
+
+  /// if true statusBar is Transparent
+  static void toggleStatusBarContrastEnforced(bool value) {
+    value ?
+    fullScreenController.enterStatusBarForDetailsPage() :
+    fullScreenController.exitStatusBarForDetailsPage();
+  }
 }

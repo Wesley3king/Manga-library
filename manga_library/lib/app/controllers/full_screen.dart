@@ -4,7 +4,7 @@ import 'package:manga_library/app/controllers/system_config.dart';
 // import 'package:flutter/material.dart';
 
 class FullScreenController {
-  static FullScreenTypes activedFullScreen = FullScreenTypes.home;
+  // static FullScreenTypes activedFullScreen = FullScreenTypes.home;
 
   // setFullScreen() {
   //   print('configurando...');
@@ -66,7 +66,22 @@ class FullScreenController {
   // ==========================================================================
   //                      STYLES
   // ==========================================================================
-  // set the style(Color) of SystemNavigationBar to black26
+
+  void enterStatusBarForDetailsPage() {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemStatusBarContrastEnforced: false,
+      statusBarColor: Colors.transparent
+    ));
+  }
+
+  void exitStatusBarForDetailsPage() {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemStatusBarContrastEnforced: false,
+      statusBarColor: Colors.black26
+    ));
+  }
+
+  /// set the style(Color) of SystemNavigationBar to black26
   void setSystemNavigationBarBlack26() async {
     debugPrint("visivel!");
     /*
@@ -96,8 +111,9 @@ class FullScreenController {
             systemNavigationBarContrastEnforced: false,
             systemNavigationBarIconBrightness: ConfigSystemController.instance.isDarkTheme ? Brightness.light : Brightness.dark,
             systemNavigationBarDividerColor: Colors.black,
-            systemNavigationBarColor: Colors.transparent));
+            systemNavigationBarColor: Colors.transparent
+          ));
   }
 }
 
-enum FullScreenTypes { home ,mangaDetail, reader}
+// enum FullScreenTypes { home ,mangaDetail, reader}

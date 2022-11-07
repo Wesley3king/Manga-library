@@ -39,8 +39,6 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       ConfigSystemController();
   late final ChaptersController chaptersController;
   late ScrollController _scrollController;
-
-  int itemCount = 2;
   // colors
   final TextStyle indisponivel = const TextStyle(color: Colors.red);
   // final List<Capitulos> listaCapitulos;
@@ -184,56 +182,70 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
       child: AnimatedBuilder(
           animation: chaptersController.state,
           builder: (context, child) {
-            chaptersController.state.value == ChaptersStates.sucess
-                ? itemCount =
-                    (ChaptersController.capitulosCorrelacionados.length + 1)
-                : itemCount = 2;
             switch (chaptersController.state.value) {
               case ChaptersStates.start:
-                return ListView(
-                  children: [
-                    MangaDetails(
-                        link: widget.link,
-                        dados: widget.dados,
-                        controller: widget.controller,
-                        capitulosDisponiveis: widget.capitulosDisponiveis),
-                    Column(
-                      children: [
-                        LinearProgressIndicator(
-                            color: configSystemController.colorManagement()),
-                        const Text(
-                          "Carregando os Capitulos",
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ],
+                return ScrollablePositionedList.builder(
+                  itemCount: 2,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return MangaDetails(
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                          capitulosDisponiveis: widget.capitulosDisponiveis);
+                    } else if (index == 1) {
+                      return const SizedBox(
+                        height: 3.0,
+                      );
+                    } else if (index == 3) {
+                      return const SizedBox(
+                        height: 10.0,
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          LinearProgressIndicator(
+                              color: configSystemController.colorManagement()),
+                          const Text(
+                            "Carregando os Capitulos",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 );
               case ChaptersStates.loading:
-                return ListView(
-                  children: [
-                    MangaDetails(
-                        link: widget.link,
-                        dados: widget.dados,
-                        controller: widget.controller,
-                        capitulosDisponiveis: widget.capitulosDisponiveis),
-                    const SizedBox(
-                      height: 3.0,
-                    ),
-                    Column(
-                      children: [
-                        LinearProgressIndicator(
-                            color: configSystemController.colorManagement()),
-                        const Text(
-                          "Carregando os Capitulos",
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                  ],
+                return ScrollablePositionedList.builder(
+                  itemCount: 2,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return MangaDetails(
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                          capitulosDisponiveis: widget.capitulosDisponiveis);
+                    } else if (index == 1) {
+                      return const SizedBox(
+                        height: 3.0,
+                      );
+                    } else if (index == 3) {
+                      return const SizedBox(
+                        height: 10.0,
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          LinearProgressIndicator(
+                              color: configSystemController.colorManagement()),
+                          const Text(
+                            "Carregando os Capitulos",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 );
               case ChaptersStates.sucess:
                 return VsScrollbar(
