@@ -5,5 +5,16 @@
     "enable": true,
     "homePage": "Function",
     "mangaDetail": "Function",
-    "search": "Function"
+    "search": "Function",
+    "teste de download": [
+        {
+            "idExtension": 0,
+            "id": "String",
+            "link": "String",
+            "Pages": [
+                "String",
+                "String"
+            ]
+        }
+    ]
 }

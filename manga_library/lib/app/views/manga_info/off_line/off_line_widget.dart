@@ -107,7 +107,7 @@ class _OffLineWidgetState extends State<OffLineWidget> {
   @override
   void initState() {
     super.initState();
-    _offLineWidgetController.start(widget.capitulo);
+    _offLineWidgetController.start(widget.capitulo, link: widget.model.link, idExtension: widget.model.idExtension);
   }
 
   @override

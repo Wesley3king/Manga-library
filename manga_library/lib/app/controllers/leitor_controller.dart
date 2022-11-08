@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
+import 'package:manga_library/app/controllers/historic_manager_controller.dart';
+import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 
 // import '../models/leitor_pages.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
+import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/reader_chapter_model.dart';
 import 'package:manga_library/app/views/configurations/config_pages/functions/config_functions.dart';
 import 'package:screen_brightness/screen_brightness.dart';
@@ -16,6 +19,9 @@ import '../models/manga_info_offline_model.dart';
 class LeitorController {
   final ScreenBrightness screenBrightness = ScreenBrightness();
   final FullScreenController screenController = FullScreenController();
+  final ChaptersController controller = ChaptersController();
+  final ManagerHistoricController historicController =
+      ManagerHistoricController();
   List<Capitulos> capitulos = [];
   Capitulos atualChapter = Capitulos(
       id: "",
@@ -77,16 +83,22 @@ class LeitorController {
       if (isCustomShine) {
         setShine(shineValueUi);
       }
-
+      // processar informações
+       atualInfo =
+          getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
+      // marcar o capitulo como lido
+      if (atualInfo.id ==
+              ChaptersController.capitulosCorrelacionados[atualInfo.index].id &&
+          !ChaptersController
+              .capitulosCorrelacionados[atualInfo.index].readed) {
+        markOrRemoveMark(id, link, atualChapter.capitulo);
+      }
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
       Capitulos cap =
           await mapOfExtensions[idExtension]!.getPages(id, capitulos);
       // debugPrint("$cap");
       atualChapter = cap;
-      atualInfo =
-          getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
-      debugPrint("=========== em carga =============");
 
       state.value = LeitorStates.sucess;
     } catch (e) {
@@ -109,6 +121,26 @@ class LeitorController {
       }
     }
     return null;
+  }
+
+  /// marca os capitulos como lido ou remove-o da lista de lidos (caso já esteja lido)
+  Future<void> markOrRemoveMark(String id, String link, String chapter) async {
+    Map<String, String> nameImageLink = {
+      "name": GlobalData.mangaModel.name,
+      "img": GlobalData.mangaModel.img,
+      "link": GlobalData.mangaModel.link
+    };
+    await controller.marcarDesmarcar(
+        id, link, nameImageLink, GlobalData.mangaModel.idExtension);
+    await historicController.insertOnHistoric(HistoricModel(
+        name: nameImageLink['name']!,
+        img: nameImageLink['img']!,
+        link: nameImageLink['link']!,
+        idExtension: GlobalData.mangaModel.idExtension,
+        chapter: chapter,
+        date: ""));
+    // controller.updateChapters(
+    //     capitulos, nameImageLink["link"]!, GlobalData.mangaModel.idExtension);
   }
 
   void prevChapter(String link, int idExtension) {

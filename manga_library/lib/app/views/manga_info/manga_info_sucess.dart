@@ -6,9 +6,6 @@ import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/manga_info/manga_details.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../controllers/system_config.dart';
@@ -87,20 +84,18 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   }
 
   // states
-  Widget _error() {
-    return SizedBox(
-      width: double.infinity,
-      height: 200,
-      child: Center(
-        child: Column(
-          children: const <Widget>[
-            Icon(Icons.report_problem),
-            Text('Error!'),
-          ],
+  Widget get _error => SizedBox(
+        width: double.infinity,
+        height: 200,
+        child: Center(
+          child: Column(
+            children: const <Widget>[
+              Icon(Icons.report_problem),
+              Text('Error!'),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildChapter(BuildContext context, int index) {
     final Capitulos capitulo =
@@ -129,11 +124,11 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
               width: 1,
               height: 1,
             ),
-      onTap: () async {
-        if (!capitulo.readed) {
-          markOrRemoveMark(
-              capitulo.id.toString(), widget.link, capitulo.capitulo);
-        }
+      onTap: () {
+        // if (!capitulo.readed) {
+        //   markOrRemoveMark(
+        //       capitulo.id.toString(), widget.link, capitulo.capitulo);
+        // }
         GoRouter.of(context).push(
             '/leitor/${widget.link}/${capitulo.id}/${widget.dados.idExtension}');
       },
@@ -148,19 +143,6 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
     _scrollController = ScrollController();
     //print("link: ${widget.link}");
   }
-
-  /*
-  RefreshIndicator(
-        color: configSystemController.colorManagement(),
-        onRefresh: () async {
-          if (chaptersController.state.value == ChaptersStates.sucess) {
-            await widget.controller.updateBook(
-                widget.link,
-                /*chaptersController*/
-                widget.dados.idExtension);
-          }
-        },
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -254,10 +236,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                       color: Color.fromARGB(223, 158, 158, 158)),
                   child: ScrollablePositionedList.builder(
                     scrollController: _scrollController,
-                    // itemPositionsListener: itemPositionsListener,
-                    // itemScrollController: itemScrollController,
                     itemCount:
-                        ChaptersController.capitulosCorrelacionados.length + 1,
+                        ChaptersController.capitulosCorrelacionados.length + 2,
                     itemBuilder: (context, index) {
                       if (index == 0) {
                         return MangaDetails(
@@ -265,6 +245,12 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                             dados: widget.dados,
                             controller: widget.controller,
                             capitulosDisponiveis: widget.capitulosDisponiveis);
+                      } else if (index ==
+                          (ChaptersController.capitulosCorrelacionados.length +
+                              1)) {
+                        return const SizedBox(
+                          height: 40,
+                        );
                       } else {
                         return _buildChapter(context, index);
                       }
@@ -272,16 +258,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   ),
                 );
               case ChaptersStates.error:
-                return ListView(
-                  children: [
-                    MangaDetails(
-                        link: widget.link,
-                        dados: widget.dados,
-                        controller: widget.controller,
-                        capitulosDisponiveis: widget.capitulosDisponiveis),
-                    _error(),
-                  ],
-                );
+                return _error;
             }
           }),
     );

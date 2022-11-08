@@ -1,13 +1,10 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
-// import 'package:manga_library/app/controllers/extensions/model_extension.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
-// import '../../../../../controllers/hive/hive_controller.dart';
 import '../../../../extensions/extensions.dart';
 import '../../../../controllers/off_line/manga_info_off_line.dart';
 
@@ -17,7 +14,7 @@ class OffLineWidgetController {
   ValueNotifier<Map<String, int?>> downloadProgress =
       ValueNotifier<Map<String, int?>>({});
 
-  start(Capitulos capitulo) {
+  void start(Capitulos capitulo, {required String link, required int idExtension}) {
     if (capitulo.download) {
       state.value = DownloadStates.delete;
     } else {
@@ -29,7 +26,7 @@ class OffLineWidgetController {
             false; // DownloadModel model in filaDownloadFreezed
         for (int i = 0; i < DownloadController.filaDeDownload.length; ++i) {
           final DownloadModel model = DownloadController.filaDeDownload[i];
-          if (model.capitulo.id == capitulo.id) {
+          if (model.capitulo.id == capitulo.id && model.model.link == link && model.model.idExtension == idExtension) {
             state.value = DownloadStates.downloading;
             Map<String, int?> progressData = {
               "total": model.capitulo.pages.length,

@@ -12,26 +12,7 @@ class ManagerHistoricController {
     try {
       model.date = getDateTime();
       List<HistoricModel> data = await _hiveController.getHistoric();
-      bool done = false;
-      // for (int i = 0; i < data.length; ++i) {
-      //   if ((data[i].link == model.link) &&
-      //       (data[i].idExtension == model.idExtension)) {
-      //     // caso já exista
-      //     data[i].chapter = model.chapter;
-      //     data[i].date = model.date;
-      //     bool updated = await _hiveController.updateHistoric(data);
-      //     // caso tenha um erro ao atualizar
-      //     if (!updated) return false;
-      //     done = true;
-      //   }
-      // }
-      // // caso não tenha um registro
-      // if (!done) {
-      //   data.add(model);
-      //   bool updated = await _hiveController.updateHistoric(data);
-      //   // caso tenha um erro ao atualizar
-      //   if (!updated) return false;
-      // }
+      // bool done = false;
       data.removeWhere((element) => (element.link == model.link) && (element.idExtension == model.idExtension));
       data.add(model);
       bool updated = await _hiveController.updateHistoric(data);

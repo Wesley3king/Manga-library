@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/downloads_pages_model.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
@@ -342,7 +343,8 @@ class HiveController {
       } else {
         debugPrint(" - dados do Hive:");
         debugPrint('$data');
-        return data.map((book) => MangaInfoOffLineModel.fromJson(book))
+        return data
+            .map((book) => MangaInfoOffLineModel.fromJson(book))
             .toList();
       }
     } catch (e) {
@@ -385,10 +387,40 @@ class HiveController {
         return [];
       }
       List<dynamic>? lista = List.from(data);
-      List<Map<String, dynamic>> maps = lista.map((e) => Map<String, dynamic>.from(e)).toList();
+      List<Map<String, dynamic>> maps =
+          lista.map((e) => Map<String, dynamic>.from(e)).toList();
       return maps.map((json) => HistoricModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no getHistoric at HiveController: $e");
+      return [];
+    }
+  }
+
+  // ==========================================================================
+  //        ------------------- DOWNLOADS -----------------------------
+  // ==========================================================================
+
+  final String downloadKey = "downloads";
+
+  /// escreve a base dos downloads no banco
+  List<Map<String, dynamic>> writeDownloads() {
+    final List<Map<String, dynamic>> lista = [];
+    clientData?.put(downloadKey, lista);
+    return lista;
+  }
+
+  Future<List<DownloadPagesModel>> getDownloads() async {
+    try {
+      List<Map<String, dynamic>>? data = await clientData?.get(downloadKey);
+      if (data != null) {
+        return data
+            .map((Map<String, dynamic> json) =>
+                DownloadPagesModel.fromJson(json))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      debugPrint("erro no getDownloads at HiveController: $e");
       return [];
     }
   }

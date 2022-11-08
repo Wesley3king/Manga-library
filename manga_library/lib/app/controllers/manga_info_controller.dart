@@ -243,18 +243,17 @@ class ChaptersController {
       ValueNotifier<ChaptersStates>(ChaptersStates.start);
   static List<Capitulos> capitulosCorrelacionados = [];
 
-  start(List<Capitulos>? listaCapitulosDisponiveis,
+  void start(List<Capitulos>? listaCapitulosDisponiveis,
       List<Capitulos> listaCapitulos, String link, int idExtension) async {
     state.value = ChaptersStates.loading;
     // GlobalData.capitulosDisponiveis;
     try {
-      print(
+      debugPrint(
           'start // link: $link // ${listaCapitulosDisponiveis?.length} // ${listaCapitulos.length}');
-      print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
+      debugPrint("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         capitulosCorrelacionados = listaCapitulos;
-        await updateChapters(
-            listaCapitulosDisponiveis, link, idExtension); // , listaCapitulos
+        await updateChapters(listaCapitulosDisponiveis, link, idExtension); // , listaCapitulos
 
       } else {
         // if (MangaInfoController.isTwoRequests) {
