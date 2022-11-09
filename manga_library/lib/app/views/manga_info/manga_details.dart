@@ -13,13 +13,13 @@ class MangaDetails extends StatefulWidget {
   final String link;
   final MangaInfoOffLineModel dados;
   final MangaInfoController controller;
-  final List<Capitulos>? capitulosDisponiveis;
+  // final List<Capitulos>? capitulosDisponiveis;
   const MangaDetails(
       {super.key,
       required this.link,
       required this.dados,
       required this.controller,
-      required this.capitulosDisponiveis});
+    });
 
   @override
   State<MangaDetails> createState() => _MangaDetailsState();
@@ -234,7 +234,7 @@ class _MangaDetailsState extends State<MangaDetails> {
               AddToLibrary(
                 link: widget.link,
                 dados: widget.dados,
-                capitulos: widget.capitulosDisponiveis ?? [],
+                capitulos: widget.controller.capitulosDisponiveis ?? [],
               ),
               TextButton(
                   onPressed: () => GoRouter.of(context)

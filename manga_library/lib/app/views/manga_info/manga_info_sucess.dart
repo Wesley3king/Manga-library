@@ -14,14 +14,14 @@ import 'off_line/off_line_widget.dart';
 class SucessMangaInfo extends StatefulWidget {
   final MangaInfoOffLineModel dados;
   // final bool sucess2;
-  final List<Capitulos>? capitulosDisponiveis;
+  // final List<Capitulos>? capitulosDisponiveis;
   final String link;
   final MangaInfoController controller;
   const SucessMangaInfo({
     super.key,
     required this.dados,
     required this.link,
-    required this.capitulosDisponiveis,
+    // required this.capitulosDisponiveis,
     required this.controller,
   });
 
@@ -79,8 +79,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         idExtension: widget.dados.idExtension,
         chapter: chapter,
         date: ""));
-    chaptersController.updateChapters(widget.controller.capitulosDisponiveis,
-        nameImageLink["link"]!, widget.dados.idExtension);
+    chaptersController.updateChapters(nameImageLink["link"]!, widget.dados.idExtension);
   }
 
   // states
@@ -148,8 +147,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   Widget build(BuildContext context) {
     // if (widget.sucess2) {
     if (chaptersController.state.value == ChaptersStates.start) {
-      chaptersController.start(widget.capitulosDisponiveis,
-          widget.dados.capitulos, widget.link, widget.dados.idExtension);
+      chaptersController.start(widget.controller.capitulosDisponiveis ?? [], widget.link, widget.dados.idExtension);
     }
     return RefreshIndicator(
       color: configSystemController.colorManagement(),
@@ -174,7 +172,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                           link: widget.link,
                           dados: widget.dados,
                           controller: widget.controller,
-                          capitulosDisponiveis: widget.capitulosDisponiveis);
+                        );
                     } else if (index == 1) {
                       return const SizedBox(
                         height: 3.0,
@@ -206,7 +204,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                           link: widget.link,
                           dados: widget.dados,
                           controller: widget.controller,
-                          capitulosDisponiveis: widget.capitulosDisponiveis);
+                        );
                     } else if (index == 1) {
                       return const SizedBox(
                         height: 3.0,
@@ -244,7 +242,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                             link: widget.link,
                             dados: widget.dados,
                             controller: widget.controller,
-                            capitulosDisponiveis: widget.capitulosDisponiveis);
+                          );
                       } else if (index ==
                           (ChaptersController.capitulosCorrelacionados.length +
                               1)) {

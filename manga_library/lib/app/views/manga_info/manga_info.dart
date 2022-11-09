@@ -82,7 +82,7 @@ class _MangaInfoState extends State<MangaInfo> {
         return SucessMangaInfo(
           dados: mangaInfoController.data,
           // sucess2: true,
-          capitulosDisponiveis: mangaInfoController.capitulosDisponiveis,
+          // capitulosDisponiveis: mangaInfoController.capitulosDisponiveis,
           link: widget.link,
           controller: mangaInfoController,
         );

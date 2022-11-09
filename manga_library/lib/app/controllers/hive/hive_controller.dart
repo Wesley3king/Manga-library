@@ -403,10 +403,9 @@ class HiveController {
   final String downloadKey = "downloads";
 
   /// escreve a base dos downloads no banco
-  List<Map<String, dynamic>> writeDownloads() {
+  void writeDownloads() {
     final List<Map<String, dynamic>> lista = [];
     clientData?.put(downloadKey, lista);
-    return lista;
   }
 
   Future<List<DownloadPagesModel>> getDownloads() async {
@@ -417,11 +416,24 @@ class HiveController {
             .map((Map<String, dynamic> json) =>
                 DownloadPagesModel.fromJson(json))
             .toList();
+      } else {
+        writeDownloads();
+        return [];
       }
-      return [];
     } catch (e) {
       debugPrint("erro no getDownloads at HiveController: $e");
       return [];
+    }
+  }
+
+  Future<bool> updateDownloads(List<DownloadPagesModel> models) async {
+    try {
+      List<Map<String, dynamic>> data = models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
+      await clientData?.put(downloadKey, data);
+      return true;
+    } catch (e) {
+      debugPrint("erro no updateDownloads at HiveController: $e");
+      return false;
     }
   }
 }
