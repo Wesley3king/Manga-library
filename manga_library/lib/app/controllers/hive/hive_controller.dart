@@ -410,9 +410,12 @@ class HiveController {
 
   Future<List<DownloadPagesModel>> getDownloads() async {
     try {
-      List<Map<String, dynamic>>? data = await clientData?.get(downloadKey);
+      List<dynamic>? data = await clientData?.get(downloadKey);
       if (data != null) {
-        return data
+        List<Map<String, dynamic>> listOfMaps =
+            List<Map<String, dynamic>>.from(data.map<Map<String, dynamic>>((e) => Map.from(e)).toList());
+        // debugPrint('data DOWNLOADS: $listOfMaps');aaasa
+        return listOfMaps
             .map((Map<String, dynamic> json) =>
                 DownloadPagesModel.fromJson(json))
             .toList();
@@ -428,7 +431,8 @@ class HiveController {
 
   Future<bool> updateDownloads(List<DownloadPagesModel> models) async {
     try {
-      List<Map<String, dynamic>> data = models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
+      List<Map<String, dynamic>> data =
+          models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
       await clientData?.put(downloadKey, data);
       return true;
     } catch (e) {

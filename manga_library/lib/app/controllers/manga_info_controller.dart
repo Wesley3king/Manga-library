@@ -177,15 +177,6 @@ class MangaInfoController {
 
   void updateChaptersAfterDownload(String url, int idExtension) async {
     try {
-      // MangaInfoOffLineModel? localData =
-      //     await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
-      // if (localData != null) {
-        //print("existe na base de dados! / l= $url");
-        // data = localData;
-        // capitulosDisponiveis = localData.capitulos;
-        // GlobalData.capitulosDisponiveis =
-        //     List.unmodifiable(capitulosDisponiveis ?? []);
-        // GlobalData.mangaModel = localData;
       await chaptersController?.correlacionarDownloads(
           link: url,
           idExtension: idExtension,
@@ -249,51 +240,6 @@ class ChaptersController {
 
   Future<bool> update(List<Capitulos> listaCapitulos, String link, int idExtension) async {
     try {
-      // print("chapter offline: ${MangaInfoController.isAnOffLineBook}");
-      // if (MangaInfoController.isAnOffLineBook) {
-      //   print("preparando para iniciar o correlacionamento!!!");
-      //   await correlacionarCapitulos(
-      //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
-      // } else {
-      //   await correlacionarCapitulos(
-      //       listaCapitulosDisponiveis ?? [], listaCapitulos, link);
-      // }
-      // if (MangaInfoController.isTwoRequests) {
-      //   // passar os downloads aos novos capitulos
-      //   for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
-      //     if (capCorrelacionados.download) {
-      //       for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
-      //         if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
-      //           debugPrint("capitulo com download disponivel!");
-      //           listaCapitulosDisponiveis[i].download = true;
-      //           listaCapitulosDisponiveis[i].downloadPages =
-      //               capCorrelacionados.downloadPages;
-      //           // ok
-      //           break;
-      //         }
-      //       }
-      //     }
-      //   }
-      //   log("off line twoRequests ok pt1");
-      //   await correlacionarCapitulos(
-      //       listaCapitulosDisponiveis ?? [], listaCapitulos, link,
-      //       isAnUpdate: true, idExtension: idExtension);
-      //   log("off line twoRequests ok pt2");
-      // } else {
-      // for (Capitulos capCorrelacionados in capitulosCorrelacionados) {
-      //   if (capCorrelacionados.download) {
-      //     for (int i = 0; i < listaCapitulosDisponiveis!.length; ++i) {
-      //       if (listaCapitulosDisponiveis[i].id == capCorrelacionados.id) {
-      //         debugPrint("capitulo com download disponivel!");
-      //         listaCapitulosDisponiveis[i].download = true;
-      //         listaCapitulosDisponiveis[i].downloadPages =
-      //             capCorrelacionados.downloadPages;
-      //         // ok
-      //         break;
-      //       }
-      //     }
-      //   }
-      // }
       capitulosCorrelacionados = listaCapitulos;
       await correlacionarDownloads(link: link, idExtension: idExtension, chaptersList: listaCapitulos);
       await updateChapters(link, idExtension);
@@ -323,7 +269,7 @@ class ChaptersController {
       ClientDataModel clientData = await _hiveController.getClientData();
       // achar os capitulos lidos do manga pelo link
       List<dynamic> capitulosLidos = [];
-      String completUrl = mapOfExtensions[idExtension]!.getLink(link);
+      String completUrl = link.contains("http") ? link : mapOfExtensions[idExtension]!.getLink(link);
       RegExp regex = RegExp(completUrl, dotAll: true, caseSensitive: false);
 
       for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
@@ -332,11 +278,6 @@ class ChaptersController {
         }
       }
       debugPrint('$capitulosLidos');
-      // await correlacionarCapitulos(
-      //     listaCapitulosDisponiveis ?? [], listaCapitulos, link);
-      // faz o recorrelacionamento
-      //  if (capitulosLidos.isNotEmpty) {
-      // print('inicio = ${capitulosCorrelacionados.length}');
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
       // debugPrint("caplist: ${listaCapitulosDisponiveis?.length}");
 
@@ -461,10 +402,8 @@ class ChaptersController {
           }
         }
       }
-      capitulosCorrelacionados = chaptersList;
-    } else {
-      capitulosCorrelacionados = chaptersList;
     }
+    capitulosCorrelacionados = chaptersList;
   }
 }
 

@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/globais.dart';
+import 'package:manga_library/app/my_app.dart';
 import 'package:manga_library/app/services/auth_service.dart';
 import 'package:manga_library/app/views/auth/password_screen.dart';
 import 'package:manga_library/app/views/configurations/backup_config/backup.dart';
@@ -17,9 +19,11 @@ import 'package:manga_library/app/views/manga_info/manga_info.dart';
 import 'package:manga_library/app/views/webview/webview.dart';
 
 final AuthService authService = AuthService();
-
+final RouteObserver<ModalRoute<void>> routeObserver =
+      RouteObserver<ModalRoute<void>>();
 final routes = GoRouter(
     initialLocation: '/auth',
+    observers: [ routeObserver ],
     refreshListenable: authService,
     redirect: (state) {
       final isAuth = authService.isAuthenticated;

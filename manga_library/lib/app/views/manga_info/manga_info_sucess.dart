@@ -5,6 +5,7 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/manga_info/manga_details.dart';
+import 'package:manga_library/app/views/routes/routes.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
@@ -29,7 +30,7 @@ class SucessMangaInfo extends StatefulWidget {
   State<SucessMangaInfo> createState() => _SucessMangaInfoState();
 }
 
-class _SucessMangaInfoState extends State<SucessMangaInfo> {
+class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
   final ManagerHistoricController historicController =
       ManagerHistoricController();
   final ConfigSystemController configSystemController =
@@ -79,7 +80,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
         idExtension: widget.dados.idExtension,
         chapter: chapter,
         date: ""));
-    chaptersController.updateChapters(nameImageLink["link"]!, widget.dados.idExtension);
+    chaptersController.updateChapters(
+        nameImageLink["link"]!, widget.dados.idExtension);
   }
 
   // states
@@ -144,10 +146,29 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
   }
 
   @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    chaptersController.updateChapters(widget.link, widget.dados.idExtension);
+    super.didPop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // if (widget.sucess2) {
     if (chaptersController.state.value == ChaptersStates.start) {
-      chaptersController.start(widget.controller.capitulosDisponiveis ?? [], widget.link, widget.dados.idExtension);
+      chaptersController.start(widget.controller.capitulosDisponiveis ?? [],
+          widget.link, widget.dados.idExtension);
     }
     return RefreshIndicator(
       color: configSystemController.colorManagement(),
@@ -169,10 +190,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return MangaDetails(
-                          link: widget.link,
-                          dados: widget.dados,
-                          controller: widget.controller,
-                        );
+                        link: widget.link,
+                        dados: widget.dados,
+                        controller: widget.controller,
+                      );
                     } else if (index == 1) {
                       return const SizedBox(
                         height: 3.0,
@@ -201,10 +222,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return MangaDetails(
-                          link: widget.link,
-                          dados: widget.dados,
-                          controller: widget.controller,
-                        );
+                        link: widget.link,
+                        dados: widget.dados,
+                        controller: widget.controller,
+                      );
                     } else if (index == 1) {
                       return const SizedBox(
                         height: 3.0,
@@ -239,10 +260,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> {
                     itemBuilder: (context, index) {
                       if (index == 0) {
                         return MangaDetails(
-                            link: widget.link,
-                            dados: widget.dados,
-                            controller: widget.controller,
-                          );
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                        );
                       } else if (index ==
                           (ChaptersController.capitulosCorrelacionados.length +
                               1)) {
