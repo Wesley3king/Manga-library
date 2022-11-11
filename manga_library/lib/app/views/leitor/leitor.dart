@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/leitor/components/bottom_sheet.dart';
+import 'package:manga_library/app/views/leitor/components/layouts/layout_l.dart';
 import 'package:manga_library/app/views/leitor/config_components.dart';
 // import 'package:flutter/services.dart';
 import 'package:manga_library/app/views/leitor/pages_leitor.dart';
@@ -103,16 +104,16 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      Padding(
-        padding: EdgeInsets.only(bottom: isLandscape ? 0 : 170),
-        child: SizedBox(
-          height: isLandscape ? 60 : 200,
-          width: MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
-          child: GestureDetector(
-            onTap: () => isVisible.value = !isVisible.value,
-          ),
-        ),
-      ),
+      // Padding(
+      //   padding: EdgeInsets.only(bottom: isLandscape ? 0 : 170),
+      //   child: SizedBox(
+      //     height: isLandscape ? 60 : 200,
+      //     width: MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
+      //     child: GestureDetector(
+      //       onTap: () => isVisible.value = !isVisible.value,
+      //     ),
+      //   ),
+      // ),
       AnimatedContainer(
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
@@ -305,6 +306,11 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                     link: widget.link,
                     id: widget.id,
                   )),
+              LayoutL(
+                notifier: isVisible,
+                controller: controller,
+                leitorType: leitorController.leitorType
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,

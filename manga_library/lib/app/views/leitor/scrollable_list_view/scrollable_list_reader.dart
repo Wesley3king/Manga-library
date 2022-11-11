@@ -74,6 +74,7 @@ class ScrollablePositionedListPageState
           itemCount: widget.lista.length,
           itemBuilder: (context, index) => generateItens(index, context),
           itemScrollController: widget.controller.scrollControllerList,
+          scrollController: widget.controller.scrollController,
           itemPositionsListener: itemPositionsListener,
           //reverse: reversed,
           // scrollDirection: orientation == Orientation.portrait

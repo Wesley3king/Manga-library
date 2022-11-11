@@ -84,7 +84,7 @@ class LeitorController {
         setShine(shineValueUi);
       }
       // processar informações
-       atualInfo =
+      atualInfo =
           getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
@@ -356,6 +356,8 @@ enum LeitorBackgroundColor { black, white }
 class PagesController {
   // int maxPages = 1;
   ValueNotifier<int> state = ValueNotifier<int>(1);
+  // controllers de pagina
+  ScrollController scrollController = ScrollController();
   PageController pageController = PageController();
   ItemScrollController scrollControllerList = ItemScrollController();
   WebViewXController? webViewController;
@@ -401,6 +403,47 @@ class PagesController {
         break;
     }
   }
+  /// obtem o valor computacional [ incluindo o zero ]
+  int get readerIndex => state.value - 1;
+
+  void scrollToPosition(LeitorTypes type, ReaderPageAction action) {
+    const Duration duration = Duration(milliseconds: 300);
+    const Curve curve = Curves.linear;
+    // double position = 0;
+    // if (action == ReaderPageAction.next) {
+    //   position =
+    // } else {}
+    int index = action == ReaderPageAction.next
+            ? (readerIndex + 1)
+            : (readerIndex - 1);
+    switch (type) {
+      case LeitorTypes.vertical:
+        pageController.animateToPage(index, duration: duration, curve: curve);
+        break;
+      case LeitorTypes.ltr:
+        pageController.animateToPage(index, duration: duration, curve: curve);
+        break;
+      case LeitorTypes.rtl:
+        pageController.animateToPage(index, duration: duration, curve: curve);
+        break;
+      case LeitorTypes.ltrlist:
+        pageController.animateToPage(index, duration: duration, curve: curve);
+        break;
+      case LeitorTypes.rtllist:
+        pageController.animateToPage(index, duration: duration, curve: curve);
+        break;
+      case LeitorTypes.webtoon:
+        double position = action == ReaderPageAction.next
+            ? (scrollController.offset + 50)
+            : (scrollController.offset - 50);
+        scrollController.animateTo(position, duration: duration, curve: curve);
+        break;
+      case LeitorTypes.webview:
+        // implement this
+        //webViewController?.callJsMethod('scrollToIndex', [index]);
+        break;
+    }
+  }
 
   // startNextPage() {
   //   if (state.value < maxPages) {
@@ -411,3 +454,5 @@ class PagesController {
 
   // }
 }
+
+enum ReaderPageAction { next, prev }
