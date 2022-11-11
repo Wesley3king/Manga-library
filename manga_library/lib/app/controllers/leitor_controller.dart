@@ -86,6 +86,12 @@ class LeitorController {
       // processar informações
        atualInfo =
           getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
+      // buscar pelas paginas
+      debugPrint("======= capitulos ==========");
+      Capitulos cap =
+          await mapOfExtensions[idExtension]!.getPages(id, capitulos);
+      // debugPrint("$cap");
+      atualChapter = cap;
       // marcar o capitulo como lido
       if (atualInfo.id ==
               ChaptersController.capitulosCorrelacionados[atualInfo.index].id &&
@@ -93,12 +99,6 @@ class LeitorController {
               .capitulosCorrelacionados[atualInfo.index].readed) {
         markOrRemoveMark(id, link, atualChapter.capitulo);
       }
-      // buscar pelas paginas
-      debugPrint("======= capitulos ==========");
-      Capitulos cap =
-          await mapOfExtensions[idExtension]!.getPages(id, capitulos);
-      // debugPrint("$cap");
-      atualChapter = cap;
 
       state.value = LeitorStates.sucess;
     } catch (e) {
@@ -128,7 +128,7 @@ class LeitorController {
     Map<String, String> nameImageLink = {
       "name": GlobalData.mangaModel.name,
       "img": GlobalData.mangaModel.img,
-      "link": GlobalData.mangaModel.link
+      "link": GlobalData.pieceOfLink
     };
     await controller.marcarDesmarcar(
         id, link, nameImageLink, GlobalData.mangaModel.idExtension);

@@ -118,6 +118,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
           : naoLido(capitulo.id.toString(), widget.link, capitulo.capitulo),
       trailing: MangaInfoController.isAnOffLineBook
           ? OffLineWidget(
+              pieceOfLink: widget.link,
               capitulo: capitulo,
               model: widget.dados,
             )

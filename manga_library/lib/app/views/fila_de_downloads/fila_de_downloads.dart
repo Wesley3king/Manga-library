@@ -114,6 +114,7 @@ class CustomListTile extends StatelessWidget {
                   right: 5.0,
                 ),
                 child: OffLineWidget(
+                  pieceOfLink: model.pieceOfLink,
                   capitulo: model.capitulo,
                   model: model.model,
                 ),

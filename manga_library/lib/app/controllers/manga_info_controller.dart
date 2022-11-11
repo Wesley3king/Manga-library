@@ -49,6 +49,8 @@ class MangaInfoController {
       // operação OffLine
       MangaInfoOffLineModel? localData =
           await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
+      /// adiciona o pedaco do link para ser utilizado no histórico
+      GlobalData.pieceOfLink = url;
       if (localData != null) {
         debugPrint("existe na base de dados! / l= $url");
 
@@ -147,7 +149,8 @@ class MangaInfoController {
         //   capitulosFromOriginalServer = dados.capitulos;
         // }
         // mapOfExtensions[idExtension].isTwoRequests;
-        await chaptersController?.update(capitulosDisponiveis ?? [], url, idExtension);
+        await chaptersController?.update(
+            capitulosDisponiveis ?? [], url, idExtension);
 
         final MangaInfoOffLineController mangaInfoOffLineController =
             MangaInfoOffLineController();
@@ -162,7 +165,8 @@ class MangaInfoController {
         capitulosDisponiveis = dados.capitulos;
         debugPrint("nao é twoRequests: $capitulosDisponiveis");
 
-        await chaptersController?.update(capitulosDisponiveis ?? [], url, idExtension);
+        await chaptersController?.update(
+            capitulosDisponiveis ?? [], url, idExtension);
       }
       state.value = MangaInfoStates.loading;
       // aqui deve atualizar a view totalmente
@@ -181,11 +185,12 @@ class MangaInfoController {
           link: url,
           idExtension: idExtension,
           chaptersList: capitulosDisponiveis ?? []);
-      
+
       await chaptersController?.updateChapters(url, idExtension);
       // }
     } catch (e) {
-      debugPrint("erro no updateChaptersAfterDownload at MangaInfoController: $e");
+      debugPrint(
+          "erro no updateChaptersAfterDownload at MangaInfoController: $e");
     }
   }
 }
@@ -210,7 +215,9 @@ class ChaptersController {
         // capitulosCorrelacionados = listaCapitulos;
 
         await correlacionarDownloads(
-            link: mapOfExtensions[idExtension]!.getLink(link), idExtension: idExtension, chaptersList: listaCapitulos);
+            link: mapOfExtensions[idExtension]!.getLink(link),
+            idExtension: idExtension,
+            chaptersList: listaCapitulos);
         await updateChapters(link, idExtension); // , listaCapitulos
 
       } else {
@@ -238,10 +245,14 @@ class ChaptersController {
     }
   }
 
-  Future<bool> update(List<Capitulos> listaCapitulos, String link, int idExtension) async {
+  Future<bool> update(
+      List<Capitulos> listaCapitulos, String link, int idExtension) async {
     try {
       capitulosCorrelacionados = listaCapitulos;
-      await correlacionarDownloads(link: link, idExtension: idExtension, chaptersList: listaCapitulos);
+      await correlacionarDownloads(
+          link: mapOfExtensions[idExtension]!.getLink(link),
+          idExtension: idExtension,
+          chaptersList: listaCapitulos);
       await updateChapters(link, idExtension);
       // }
       state.value = ChaptersStates.loading;
@@ -259,9 +270,7 @@ class ChaptersController {
     }
   }
 
-  Future<void> updateChapters(
-      String link,
-      int idExtension) async {
+  Future<void> updateChapters(String link, int idExtension) async {
     state.value = ChaptersStates.loading;
     try {
       debugPrint('update chapters');
@@ -269,7 +278,9 @@ class ChaptersController {
       ClientDataModel clientData = await _hiveController.getClientData();
       // achar os capitulos lidos do manga pelo link
       List<dynamic> capitulosLidos = [];
-      String completUrl = link.contains("http") ? link : mapOfExtensions[idExtension]!.getLink(link);
+      String completUrl = link.contains("http")
+          ? link
+          : mapOfExtensions[idExtension]!.getLink(link);
       RegExp regex = RegExp(completUrl, dotAll: true, caseSensitive: false);
 
       for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
@@ -380,9 +391,11 @@ class ChaptersController {
         await _hiveController.getDownloads();
     List<DownloadPagesModel> models = [];
 
-    /// obtem os downloads que pertencem a este manga
+    /// obtem os downloads que pertencem a este manga [ o link deve ser completo]
     for (DownloadPagesModel model in donloadModels) {
-      if (model.idExtension == idExtension && model.link == link) {
+      final String completeUrl =
+          mapOfExtensions[model.idExtension]!.getLink(model.link);
+      if (model.idExtension == idExtension && completeUrl == link) {
         models.add(model);
       }
     }

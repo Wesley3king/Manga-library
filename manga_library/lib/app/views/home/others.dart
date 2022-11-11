@@ -64,7 +64,7 @@ class _OthersPageState extends State<OthersPage> {
             ListTile(
               leading: const Icon(Icons.download_done),
               title: const Text('Downloads'),
-              onTap: () {},
+              onTap: () => GoRouter.of(context).push('/downloads'),
             ),
             const Divider(),
             ListTile(

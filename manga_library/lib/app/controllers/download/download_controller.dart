@@ -61,6 +61,7 @@ class DownloadController {
         debugPrint("attemps: ${model.attempts}");
         bool result = await downloadController.processOneChapter(
           capitulo: model.capitulo,
+          pieceOfLink: model.pieceOfLink,
           index: i,
           model: model.model,
         );
@@ -102,6 +103,7 @@ class DownloadController {
 
   Future<bool> processOneChapter({
     required Capitulos capitulo,
+    required String pieceOfLink,
     required MangaInfoOffLineModel model,
     required int index,
     // ValueNotifier<Map<String, int?>>? downloadProgress
@@ -132,30 +134,14 @@ class DownloadController {
       );
       // caso seja null deu um erro!
       if (downloadedPagesPath == null) return false;
-      // procura na memória até achar o capitulo
-      // for (Capitulos chapter in atualBook.capitulos) {
-      //   if (chapter.id == capitulo.id) {
-      //     chapter.downloadPages = downloadedPagesPath;
-      //     chapter.download = true;
-      //     bool saveResult = await mangaInfoOffLineController.updateBook(
-      //         model: atualBook, capitulos: atualBook.capitulos);
-      //     debugPrint("salvo na memória! : $saveResult");
-      //     if (saveResult == false) {
-      //       deleteDownloadForCancel(downloadedPagesPath[0]);
-      //       return false;
-      //     } else {
-      //       log("atualizando a view: ${mangaInfoController == null ? "is null" : "is not Null"}");
-      //       mangaInfoController?.updateChaptersAfterDownload(
-      //           atualBook.link, atualBook.idExtension);
-      //     }
-      //     break;
-      //   }
-      // }
       /// adiciona o download a memória
       downloadModels.add(DownloadPagesModel(
           id: capitulo.id,
+          chapter: capitulo.capitulo,
           idExtension: model.idExtension,
-          link: model.link,
+          link: pieceOfLink,
+          img: model.img,
+          name: model.name,
           pages: downloadedPagesPath));
       /// save in database
       bool isSaved = await hiveController.updateDownloads(downloadModels);

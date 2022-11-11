@@ -5,10 +5,10 @@ import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/manga_info/off_line/controller/off_line_widget_controller.dart';
 
 class OffLineWidget extends StatefulWidget {
-  // final dynamic id;
+  final String pieceOfLink;
   final MangaInfoOffLineModel model;
   final Capitulos capitulo;
-  const OffLineWidget({super.key, required this.capitulo, required this.model});
+  const OffLineWidget({super.key, required this.pieceOfLink, required this.capitulo, required this.model});
 
   @override
   State<OffLineWidget> createState() => _OffLineWidgetState();
@@ -20,6 +20,7 @@ class _OffLineWidgetState extends State<OffLineWidget> {
   Widget download() {
     return IconButton(
         onPressed: () => _offLineWidgetController.download(
+            link: widget.pieceOfLink,
             capitulo: widget.capitulo, mangaModel: widget.model),
         icon: const Icon(Icons.download));
   }

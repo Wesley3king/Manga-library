@@ -9,6 +9,7 @@ import 'package:manga_library/app/views/configurations/backup_config/backup.dart
 import 'package:manga_library/app/views/configurations/config_options.dart';
 import 'package:manga_library/app/views/configurations/config_pages/config_options_page.dart';
 import 'package:manga_library/app/views/configurations/library_config/library_config_main.dart';
+import 'package:manga_library/app/views/downloads_page/downloads_page.dart';
 import 'package:manga_library/app/views/extensions/show_page/extesion_show_page.dart';
 import 'package:manga_library/app/views/fila_de_downloads/fila_de_downloads.dart';
 import 'package:manga_library/app/views/historic/historic_page.dart';
@@ -113,6 +114,10 @@ final routes = GoRouter(
       GoRoute(
         path: '/filadedownloads',
         builder: (context, state) => const FilaDeDownloads(),
+      ),
+      GoRoute(
+        path: '/downloads',
+        builder: (context, state) => const DownloadsPage(),
       ),
       GoRoute(
         path: '/webview/:link/:extension',
