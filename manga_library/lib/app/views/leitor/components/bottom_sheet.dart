@@ -133,105 +133,219 @@ class _CustomReaderConfigurationsState extends State<CustomReaderConfigurations>
 //   {"option": "Webview (on-line)", "value": "webview"}
 // ];
 Widget getFirstPage(LeitorController controller) {
-  ValueNotifier<String> notifier = ValueNotifier<String>("pattern");
+  ValueNotifier<int> notifier = ValueNotifier<int>(0);
+  const double dropdownWidth = 180.0;
   return AnimatedBuilder(
     animation: notifier,
-    builder: (context, child) => Column(
-      children: [
-        const Text("Para este Capítulo"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text('Tipo do leitor'),
-            DropdownButton<String>(
-              value: controller.leitorTypeUi,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              onChanged: (value) {
-                controller.setReaderType(value as String);
-                notifier.value = value;
-              },
-              items: const [
-                DropdownMenuItem(
-                  value: "pattern",
-                  child: Text('Padrão'),
+    builder: (context, child) => Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          const Text("Para este Capítulo"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Tipo do leitor'),
+              SizedBox(
+                width: dropdownWidth,
+                child: DropdownButton<String>(
+                  alignment: Alignment.centerLeft,
+                  value: controller.leitorTypeUi,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  onChanged: (value) {
+                    controller.setReaderType(value as String);
+                    notifier.value++;
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: "pattern",
+                      child: Text('Padrão'),
+                    ),
+                    DropdownMenuItem(
+                      value: "vertical",
+                      child: Text('Vertical'),
+                    ),
+                    DropdownMenuItem(
+                      value: "ltr",
+                      child: Text('Esquerda para Direita'),
+                    ),
+                    DropdownMenuItem(
+                      value: "rtl",
+                      child: Text('Direita para esquerda'),
+                    ),
+                    DropdownMenuItem(
+                      value: "ltrlist",
+                      child: Text('Lista ltr'),
+                    ),
+                    DropdownMenuItem(
+                      value: "rtllist",
+                      child: Text('Lista rtl'),
+                    ),
+                    DropdownMenuItem(
+                      value: "webtoon",
+                      child: Text('Webtoon'),
+                    ),
+                    DropdownMenuItem(
+                      value: "webview",
+                      child: Text('Webview (on-line)'),
+                    ),
+                  ],
                 ),
-                DropdownMenuItem(
-                  value: "vertical",
-                  child: Text('Vertical'),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Rotação da tela'),
+              SizedBox(
+                width: dropdownWidth,
+                child: DropdownButton<String>(
+                  alignment: Alignment.centerLeft,
+                  value: controller.orientacionUi,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  onChanged: (value) {
+                    controller.setOrientacion(value as String);
+                    notifier.value++;
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: "pattern",
+                      child: Text('Padrão'),
+                    ),
+                    DropdownMenuItem(
+                      value: "auto",
+                      child: Text('Seguir o Sistema'),
+                    ),
+                    DropdownMenuItem(
+                      value: "portraitup",
+                      child: Text('Retrato'),
+                    ),
+                    DropdownMenuItem(
+                      value: "portraitdown",
+                      child: Text('Retrato Invertido'),
+                    ),
+                    DropdownMenuItem(
+                      value: "landscapeleft",
+                      child: Text('Paisagem Esquerda'),
+                    ),
+                    DropdownMenuItem(
+                      value: "landscaperight",
+                      child: Text('Paisagem Direita'),
+                    ),
+                  ],
                 ),
-                DropdownMenuItem(
-                  value: "ltr",
-                  child: Text('Esquerda para Direita'),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Layout'),
+              SizedBox(
+                width: dropdownWidth,
+                child: DropdownButton<String>(
+                  alignment: Alignment.centerLeft,
+                  value: controller.orientacionUi, // edit this
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  onChanged: (value) {
+                    controller.setReaderLayout(value);
+                    notifier.value++;
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: "pattern",
+                      child: Text('Padrão'),
+                    ),
+                    DropdownMenuItem(
+                      value: "L",
+                      child: Text('Em forma de L'),
+                    ),
+                    DropdownMenuItem(
+                      value: "bordersLTR",
+                      child: Text('Bordas LTR'),
+                    ),
+                    DropdownMenuItem(
+                      value: "bordersRTL",
+                      child: Text('Bordas RTL'),
+                    ),
+                    DropdownMenuItem(
+                      value: "none",
+                      child: Text('Nenhum'),
+                    )
+                  ],
                 ),
-                DropdownMenuItem(
-                  value: "rtl",
-                  child: Text('Direita para esquerda'),
-                ),
-                DropdownMenuItem(
-                  value: "ltrlist",
-                  child: Text('Lista ltr'),
-                ),
-                DropdownMenuItem(
-                  value: "rtllist",
-                  child: Text('Lista rtl'),
-                ),
-                DropdownMenuItem(
-                  value: "webtoon",
-                  child: Text('Webtoon'),
-                ),
-                DropdownMenuItem(
-                  value: "webview",
-                  child: Text('Webview (on-line)'),
-                ),
-              ],
-            )
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text('Rotação da tela'),
-            DropdownButton<String>(
-              value: controller.orientacionUi,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              onChanged: (value) {
-                controller.setOrientacion(value as String);
-                notifier.value = value;
-              },
-              items: const [
-                DropdownMenuItem(
-                  value: "pattern",
-                  child: Text('Padrão'),
-                ),
-                DropdownMenuItem(
-                  value: "auto",
-                  child: Text('Seguir o Sistema'),
-                ),
-                DropdownMenuItem(
-                  value: "portraitup",
-                  child: Text('Retrato'),
-                ),
-                DropdownMenuItem(
-                  value: "portraitdown",
-                  child: Text('Retrato Invertido'),
-                ),
-                DropdownMenuItem(
-                  value: "landscapeleft",
-                  child: Text('Paisagem Esquerda'),
-                ),
-                DropdownMenuItem(
-                  value: "landscaperight",
-                  child: Text('Paisagem Direita'),
-                ),
-              ],
-            )
-          ],
-        )
-      ],
+              )
+            ],
+          ),
+          controller.leitorType == LeitorTypes.webtoon
+              ? getWebttonSettings(
+                  controller: controller,
+                  notifier: notifier,
+                  dropdownWidth: dropdownWidth)
+              : Container(),
+        ],
+      ),
     ),
   );
 }
 
+/// configurações de leitor webtoon
+Widget getWebttonSettings(
+        {required LeitorController controller,
+        required ValueNotifier<int> notifier,
+        required double dropdownWidth}) =>
+    Column(
+      children: [
+        const SizedBox(height: 10,),
+        const Divider(
+          height: 1,
+          color: Colors.grey,
+        ),
+        const SizedBox(height: 5,),
+        const Text('Webtoon'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Distancia da Rolagem'),
+            SizedBox(
+              width: dropdownWidth,
+              child: DropdownButton<String>(
+                alignment: Alignment.centerLeft,
+                value: "${LeitorController.scrollWebtoonValue}",
+                icon: const Icon(Icons.keyboard_arrow_down),
+                onChanged: (value) {
+                  controller.setScrollWebtoonValue(int.parse(value!));
+                  notifier.value++;
+                },
+                items: const [
+                  // DropdownMenuItem(
+                  //   value: "0",
+                  //   child: Text('Padrão'),
+                  // ),
+                  DropdownMenuItem(
+                    value: "100",
+                    child: Text('100'),
+                  ),
+                  DropdownMenuItem(
+                    value: "200",
+                    child: Text('200'),
+                  ),
+                  DropdownMenuItem(
+                    value: "400",
+                    child: Text('400'),
+                  ),
+                  DropdownMenuItem(
+                    value: "600",
+                    child: Text('600'),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ],
+    );
 Widget getSecondPage(BuildContext context, LeitorController controller) {
   ValueNotifier<int> notifier = ValueNotifier<int>(0);
   return AnimatedBuilder(

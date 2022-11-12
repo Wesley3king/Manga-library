@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/leitor/components/bottom_sheet.dart';
+import 'package:manga_library/app/views/leitor/components/layouts/layout_border.dart';
 import 'package:manga_library/app/views/leitor/components/layouts/layout_l.dart';
 import 'package:manga_library/app/views/leitor/config_components.dart';
 // import 'package:flutter/services.dart';
@@ -33,7 +34,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   final double sizeOfButtons = 25.0;
   final int visibleDuration = 400;
   final Curve visibleCurve = Curves.easeInOut;
-  ValueNotifier<bool> isVisible = ValueNotifier<bool>(true);
+  ValueNotifier<bool> isVisible = ValueNotifier<bool>(GlobalData.settings['ShowControls']);
 
   // =========================================================================
   //                    ---- CONTROLS ----
@@ -263,6 +264,36 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
     ];
   }
 
+  /// obtem o Layout a ser utilizado
+  Widget getLayout() {
+    switch (leitorController.layoutState.value) {
+      case ReaderLayouts.l:
+        return LayoutL(
+          notifier: isVisible,
+          controller: controller,
+          leitorType: leitorController.leitorType
+        );
+      case ReaderLayouts.bordersLTR:
+        return LayoutBorder(
+          notifier: isVisible,
+          controller: controller,
+          leitorType: leitorController.leitorType
+        );
+      case ReaderLayouts.bordersRTL:
+        return LayoutBorder(
+          notifier: isVisible,
+          controller: controller,
+          leitorType: leitorController.leitorType
+        );
+      case ReaderLayouts.none:
+        return SizedBox(
+          child: GestureDetector(
+            onTap: () => isVisible.value = !isVisible.value,
+          ),
+        );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -306,10 +337,9 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                     link: widget.link,
                     id: widget.id,
                   )),
-              LayoutL(
-                notifier: isVisible,
-                controller: controller,
-                leitorType: leitorController.leitorType
+              ValueListenableBuilder(
+                valueListenable: leitorController.layoutState,
+                builder: (context, value, child) => getLayout(),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,

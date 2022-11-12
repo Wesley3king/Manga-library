@@ -15,18 +15,22 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
           parser.querySelectorAll("div.video div.video-thumb");
       // retirar anuncios
       results.removeAt(0);
+      debugPrint("passou here");
 
       for (Result manga in results) {
         // print("==============================================================");
         // print(manga.html);
         // name
         String? name = manga.querySelector("span.video-titulo")!.text;
+        // debugPrint("name: $name");
         // img
         String? img = manga.querySelector("a img")!.src;
+        // debugPrint("img: $img");
         // link
         String? link = manga.querySelector("a")!.href;
+        if (!link!.contains('https://universohentai.com')) break;
         // debugPrint("link: $link");
-        List<String> corteLink = link!.split(".com/");
+        List<String> corteLink = link.split(".com/");
         books.add(<String, String>{
           "name": name ?? "erro",
           "url": corteLink[1].replaceAll("/", ""),

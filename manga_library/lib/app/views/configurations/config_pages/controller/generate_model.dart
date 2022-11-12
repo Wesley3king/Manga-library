@@ -185,6 +185,14 @@ buildSettingsModel() {
           "optionsAndValues": []
         },
         {
+          "nameConfig": "Exibir os Controles ao Entrar no Leitor",
+          "description": "mostra os controles no inicio",
+          "type": "switch",
+          "value": data['ShowControls'],
+          "function": functions['ShowControls'],
+          "optionsAndValues": []
+        },
+        {
           "type": "class",
           "nameClass": "Brilho e Filtros",
           "children": [
@@ -211,6 +219,52 @@ buildSettingsModel() {
               "value": data['Black and White filter'],
               "function": functions['Black and White filter'],
               "optionsAndValues": []
+            },
+          ]
+        },
+        {
+          "type": "class",
+          "nameClass": "Layout",
+          "children": [
+            {
+              "nameConfig": "Tipo de Layout",
+              "description": "Define Layout de navegação do leitor",
+              "type": "radio",
+              "value": data['Layout'],
+              "function": functions['Layout'],
+              "optionsAndValues": [
+                {"option": "Em forma de L", "value": "L"},
+                {"option": "Bordas LTR", "value": "bordersLTR"},
+                {"option": "Bordas RTL", "value": "bordersRTL"},
+                {"option": "Nenhum", "value": "none"},
+              ]
+            },
+            {
+              "nameConfig": "Mostrar Layout ao abrir o Leitor",
+              "description": "Exibe as areas de toque no inicio",
+              "type": "switch",
+              "value": data['ShowLayout'],
+              "function": functions['ShowLayout'],
+              "optionsAndValues": []
+            },
+          ]
+        },
+        {
+          "type": "class",
+          "nameClass": "Webtoon",
+          "children": [
+            {
+              "nameConfig": "Distancia da Rolagem por Toque",
+              "description": "Define a distancia do avanço",
+              "type": "radio",
+              "value": data['ScrollWebtoon'],
+              "function": functions['ScrollWebtoon'],
+              "optionsAndValues": [
+                {"option": "100", "value": 100},
+                {"option": "200", "value": 200},
+                {"option": "400", "value": 400},
+                {"option": "600", "value": 600},
+              ]
             },
           ]
         },

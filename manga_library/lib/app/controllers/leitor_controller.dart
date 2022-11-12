@@ -69,12 +69,18 @@ class LeitorController {
   ];
   // ======= Black AND WHITE FILTER ==========
   bool isblackAndWhiteFilter = GlobalData.settings['Black and White filter'];
+  // =========== LAYOUT ===============
+  final ValueNotifier<ReaderLayouts> layoutState =
+      ValueNotifier<ReaderLayouts>(ReaderLayouts.bordersLTR);
+  // ========== SCROLL WEBTOON ===========
+  static int scrollWebtoonValue = 400;
 
   void start(String link, String id, int idExtension) async {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.mangaModel.capitulos;
       // configurar o leitor
+      setReaderLayout(null);
       setFilterQuality("pattern");
       setOrientacion("pattern");
       setBackgroundColor();
@@ -144,11 +150,15 @@ class LeitorController {
   }
 
   void prevChapter(String link, int idExtension) {
-    start(link, atualInfo.prevId!, idExtension);
+    if (atualInfo.prevId != null) {
+      start(link, atualInfo.prevId!, idExtension);
+    }
   }
 
   void nextChapter(String link, int idExtension) {
-    start(link, atualInfo.nextId!, idExtension);
+    if (atualInfo.nextId != null) {
+      start(link, atualInfo.nextId!, idExtension);
+    }
   }
 
   void setReaderType(String type) {
@@ -157,9 +167,6 @@ class LeitorController {
       type = GlobalData.settings['Tipo do Leitor'];
     }
     switch (type) {
-      // case "pattern":
-      //   leitorTypeState.value = LeitorTypes.pattern;
-      //   break;
       case "vertical":
         leitorType = LeitorTypes.vertical;
         break;
@@ -313,6 +320,36 @@ class LeitorController {
     }
     ReaderNotifier.instance.notify();
   }
+
+  void setReaderLayout(String? type) {
+    if (type == "pattern") {
+      type = GlobalData.settings['Layout'];
+    }
+    type ??= GlobalData.settings['Layout'];
+    switch (type) {
+      case "L":
+        layoutState.value = ReaderLayouts.l;
+        break;
+      case "bordersLTR":
+        layoutState.value = ReaderLayouts.bordersLTR;
+        break;
+      case "bordersRTL":
+        layoutState.value = ReaderLayouts.bordersRTL;
+        break;
+      case "none":
+        layoutState.value = ReaderLayouts.none;
+        break;
+    }
+  }
+
+  void setScrollWebtoonValue(int? value) {
+    /// 0 is default value
+    if (value == 0) {
+      value = GlobalData.settings['Layout'];
+    }
+    value ??= GlobalData.settings['Layout'];
+    scrollWebtoonValue = value!;
+  }
 }
 
 class ReaderNotifier extends ChangeNotifier {
@@ -344,14 +381,7 @@ enum LeitorUiFilterQuality { pattern, none, low, medium, hight }
 
 enum LeitorBackgroundColor { black, white }
 
-// enum LeitorUiOrientacion {
-//   pattern,
-//   auto,
-//   portraitUp,
-//   portraitDown,
-//   landscapeLeft,
-//   landscapeRight
-// }
+enum ReaderLayouts { l, bordersRTL, bordersLTR, none }
 
 class PagesController {
   // int maxPages = 1;
@@ -362,10 +392,6 @@ class PagesController {
   ItemScrollController scrollControllerList = ItemScrollController();
   WebViewXController? webViewController;
 
-  // start() {
-  //   state.value++;
-  //   print('iniciou!');
-  // }
   set setPage(int max) {
     debugPrint('$max');
     state.value = max;
@@ -403,19 +429,16 @@ class PagesController {
         break;
     }
   }
+
   /// obtem o valor computacional [ incluindo o zero ]
   int get readerIndex => state.value - 1;
 
   void scrollToPosition(LeitorTypes type, ReaderPageAction action) {
-    const Duration duration = Duration(milliseconds: 300);
+    const Duration duration = Duration(milliseconds: 100);
     const Curve curve = Curves.linear;
-    // double position = 0;
-    // if (action == ReaderPageAction.next) {
-    //   position =
-    // } else {}
-    int index = action == ReaderPageAction.next
-            ? (readerIndex + 1)
-            : (readerIndex - 1);
+
+    int index =
+        action == ReaderPageAction.next ? (readerIndex + 1) : (readerIndex - 1);
     switch (type) {
       case LeitorTypes.vertical:
         pageController.animateToPage(index, duration: duration, curve: curve);
@@ -434,8 +457,8 @@ class PagesController {
         break;
       case LeitorTypes.webtoon:
         double position = action == ReaderPageAction.next
-            ? (scrollController.offset + 50)
-            : (scrollController.offset - 50);
+            ? (scrollController.offset + LeitorController.scrollWebtoonValue)
+            : (scrollController.offset - LeitorController.scrollWebtoonValue);
         scrollController.animateTo(position, duration: duration, curve: curve);
         break;
       case LeitorTypes.webview:
@@ -444,15 +467,6 @@ class PagesController {
         break;
     }
   }
-
-  // startNextPage() {
-  //   if (state.value < maxPages) {
-  //     state.value++;
-  //   }
-  //   print('state = ${state.value}');
-  //   print('max = $maxPages');
-
-  // }
 }
 
 enum ReaderPageAction { next, prev }

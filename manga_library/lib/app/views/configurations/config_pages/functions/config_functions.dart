@@ -121,6 +121,14 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
+  "ShowControls": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("valor de ShowControls: $value");
+    GlobalData.settings['ShowControls'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Custom Shine": (dynamic value, SettingsOptionsController? controller) {
     debugPrint("valor de Custom Shine: $value");
     GlobalData.settings['Custom Shine'] = value;
@@ -168,6 +176,30 @@ Map<String, Function> settingsFunctions = {
         ConfigSystemController();
     configSystemController.update(settings);
     controller?.updateSetting();
+  },
+  "Layout": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("valor de Layout: $value");
+    GlobalData.settings['Layout'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "ShowLayout": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("valor de ShowLayout: $value");
+    GlobalData.settings['ShowLayout'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "ScrollWebtoon": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("valor de ScrollWebtoon: $value");
+    GlobalData.settings['ScrollWebtoon'] = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
   },
   "Local de armazenamento":
       (dynamic value, SettingsOptionsController controller) {},
