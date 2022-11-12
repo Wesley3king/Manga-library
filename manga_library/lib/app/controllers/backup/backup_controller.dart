@@ -7,6 +7,7 @@ import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/models/system_settings.dart';
 
 import '../../models/manga_info_offline_model.dart';
 
@@ -44,7 +45,7 @@ class BackupCore {
           homePageModels?.map((ModelHomePage model) => model.toJson()).toList();
 
       // settings
-      Map<dynamic, dynamic> settings = await hiveController.getSettings();
+      SystemSettingsModel settings = await hiveController.getSettings();
 
       // books
       List<MangaInfoOffLineModel>? booksData = await hiveController.getBooks();
@@ -60,7 +61,7 @@ class BackupCore {
         "libraries": libraries,
         "ocultLibraries": ocultLibraries,
         "historic": historicData,
-        "settings": settings,
+        "settings": settings.toJson(),
         "books": books
       };
 

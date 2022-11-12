@@ -1,7 +1,7 @@
 import 'package:manga_library/app/models/globais.dart';
 
 List<double> getSizeOfBooks() {
-  String type = GlobalData.settings['Tamanho dos quadros'];
+  String type = GlobalData.settings.frameSize;
   // [X, Y]
   switch (type) {
     case "small":

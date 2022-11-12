@@ -34,7 +34,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   final double sizeOfButtons = 25.0;
   final int visibleDuration = 400;
   final Curve visibleCurve = Curves.easeInOut;
-  ValueNotifier<bool> isVisible = ValueNotifier<bool>(GlobalData.settings['ShowControls']);
+  ValueNotifier<bool> isVisible = ValueNotifier<bool>(GlobalData.settings.showControls);
 
   // =========================================================================
   //                    ---- CONTROLS ----

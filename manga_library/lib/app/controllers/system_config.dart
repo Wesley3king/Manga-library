@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/models/system_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../models/globais.dart';
@@ -17,7 +18,7 @@ class SystemController {
   }
 
   Future updateConfig() async {
-    Map data = await _hiveController.getSettings();
+    SystemSettingsModel data = await _hiveController.getSettings();
     debugPrint('$data');
     GlobalData.settings = data;
     ConfigSystemController.instance.start();
@@ -71,7 +72,7 @@ class ConfigSystemController extends ChangeNotifier {
     notifyListeners();
   }
 
-  update(Map data) async {
+  update(SystemSettingsModel data) async {
     final SystemController systemController = SystemController();
     bool response = await _hiveController.updateSettings(data);
     if (response) systemController.updateConfig();
@@ -79,7 +80,7 @@ class ConfigSystemController extends ChangeNotifier {
 
   Color colorManagement() {
     // print(GlobalData.settings['Cor da Interface']);
-    switch (GlobalData.settings['Cor da Interface']) {
+    switch (GlobalData.settings.interfaceColor) {
       case "blue":
         return const Color.fromARGB(255, 40, 152, 243);
       case "green":

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/library_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
@@ -75,7 +74,7 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
     );
 
     if ((result != null) && result) {
-      if (text == GlobalData.settings["Senha da Biblioteca Oculta"]) {
+      if (text == GlobalData.settings.hiddenLibraryPassword) {
         GoRouter.of(context).push('/ocultlibrary');
       } else {
         ScaffoldMessenger.of(context)

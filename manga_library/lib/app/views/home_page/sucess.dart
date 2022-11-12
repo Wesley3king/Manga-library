@@ -4,7 +4,6 @@ import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/views/home_page/horizontal_list.dart';
-import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 import '../../models/globais.dart';
 
@@ -80,7 +79,7 @@ class _SucessState extends State<Sucess> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => debugPrint(GlobalData.settings["Tema"]),
+                    onTap: () => debugPrint(GlobalData.settings.theme),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Column(

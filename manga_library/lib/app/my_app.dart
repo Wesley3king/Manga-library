@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   ThemeData themeSetter() {
-    switch (GlobalData.settings["Tema"]) {
+    switch (GlobalData.settings.theme) {
       case "auto":
         ConfigSystemController.instance.isDarkTheme = theme == darkTheme;
         return theme;
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         return darkTheme;
       default:
         debugPrint("auto default");
-        debugPrint(GlobalData.settings["Tema"]);
+        debugPrint(GlobalData.settings.theme);
         return theme;
     }
   }

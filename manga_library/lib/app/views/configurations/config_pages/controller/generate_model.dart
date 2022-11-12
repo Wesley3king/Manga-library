@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/models/settings_model.dart';
+import 'package:manga_library/app/models/system_settings.dart';
 import 'package:manga_library/app/views/configurations/config_pages/functions/config_functions.dart';
 
 buildSettingsModel() {
-  Map<dynamic, dynamic> data = settings;
+  SystemSettingsModel data = settings;
   Map<String, Function> functions = settingsFunctions;
   debugPrint("iniciando a construção do model SettingsModel");
   return SettingsModel.fromJson([
@@ -17,7 +18,7 @@ buildSettingsModel() {
           "nameConfig": "Ordenação",
           "description": "A ordem em que os mangas serão exibidos",
           "type": "radio",
-          "value": data['Ordenação'],
+          "value": data.ordination,
           "function": functions['Ordenação'],
           "optionsAndValues": [
             {"option": "Velhos até Novos", "value": "oldtonew"},
@@ -29,7 +30,7 @@ buildSettingsModel() {
           "nameConfig": "Tamanho dos quadros",
           "description": "Configura o tamanho das capas",
           "type": "radio",
-          "value": data['Tamanho dos quadros'],
+          "value": data.frameSize,
           "function": functions['Tamanho dos quadros'],
           "optionsAndValues": [
             {"option": "Pequenos", "value": "small"},
@@ -37,17 +38,6 @@ buildSettingsModel() {
             {"option": "Grandes", "value": "big"}
           ]
         },
-        // {
-        //   "nameConfig": "Atualizar as Capas",
-        //   "description": "Atualiza as capas da Biblioteca",
-        //   "type": "confirm",
-        //   "value": data['Atualizar as Capas'],
-        //   "function": functions['Atualizar as Capas'],
-        //   "optionsAndValues": [
-        //     {"option": "Cancelar", "value": false},
-        //     {"option": "Confirmar", "value": true}
-        //   ]
-        // },
         {
           "type": "class",
           "nameClass": "Atualização",
@@ -56,7 +46,7 @@ buildSettingsModel() {
               "nameConfig": "Atualizar",
               "description": "Atualiza a Biblioteca automaticamente ao abrir o app",
               "type": "radio",
-              "value": data['Atualizar'],
+              "value": data.update,
               "function": functions['Atualizar'],
               "optionsAndValues": [
                 {"option": "Nunca", "value": "0"},
@@ -70,7 +60,7 @@ buildSettingsModel() {
               "nameConfig": "Atualizar as Capas",
               "description": "Caso não queira que as capas sejam atualizadas desligue.",
               "type": "switch",
-              "value": data['Atualizar as Capas'],
+              "value": data.updateTheCovers,
               "function": functions['Atualizar as Capas'],
               "optionsAndValues": []
             },
@@ -84,7 +74,7 @@ buildSettingsModel() {
               "nameConfig": "Senha da Biblioteca Oculta",
               "description": "Define a senha da Biblioteca Oculta",
               "type": "input",
-              "value": data['Senha da Biblioteca Oculta'],
+              "value": data.hiddenLibraryPassword,
               "function": functions['Senha da Biblioteca Oculta'],
               "optionsAndValues": []
             },
@@ -117,7 +107,7 @@ buildSettingsModel() {
           "nameConfig": "Tipo do Leitor",
           "description": "O modo como as paginas disponibilizadas",
           "type": "radio",
-          "value": data['Tipo do Leitor'],
+          "value": data.readerType,
           "function": functions['Tipo do Leitor'],
           "optionsAndValues": [
             {"option": "Vertical", "value": "vertical"},
@@ -132,7 +122,7 @@ buildSettingsModel() {
           "nameConfig": "Cor de fundo",
           "description": "A cor para o fundo do Leitor",
           "type": "radio",
-          "value": data['Cor de fundo'],
+          "value": data.backgroundColor,
           "function": functions['Cor de fundo'],
           "optionsAndValues": [
             {"option": "Preto", "value": "black"},
@@ -143,7 +133,7 @@ buildSettingsModel() {
           "nameConfig": "Orientação do Leitor",
           "description": "O modo padrão da orientação do aparelho",
           "type": "radio",
-          "value": data['Orientação do Leitor'],
+          "value": data.readerGuidance,
           "function": functions['Orientação do Leitor'],
           "optionsAndValues": [
             {"option": "Seguir o Sistema", "value": "auto"},
@@ -157,7 +147,7 @@ buildSettingsModel() {
           "nameConfig": "Qualidade",
           "description": "A qualidade das imagens (pode afetar o desempenho)",
           "type": "radio",
-          "value": data['Qualidade'],
+          "value": data.quality,
           "function": functions['Qualidade'],
           "optionsAndValues": [
             {"option": "Baixo", "value": "low"},
@@ -170,7 +160,7 @@ buildSettingsModel() {
           "nameConfig": "Tela cheia",
           "description": "Se o Leitor será exibido em tela cheia",
           "type": "switch",
-          "value": data['Tela cheia'],
+          "value": data.fullScreen,
           "function": functions['Tela cheia'],
           "optionsAndValues": [
             {"option": "switch", "value": true}
@@ -180,7 +170,7 @@ buildSettingsModel() {
           "nameConfig": "Manter a tela ligada",
           "description": "Se o Leitor manterá a tela ligada durante todo o tempo",
           "type": "switch",
-          "value": data['Manter a tela ligada'],
+          "value": data.keepScreenOn,
           "function": functions['Manter a tela ligada'],
           "optionsAndValues": []
         },
@@ -188,7 +178,7 @@ buildSettingsModel() {
           "nameConfig": "Exibir os Controles ao Entrar no Leitor",
           "description": "mostra os controles no inicio",
           "type": "switch",
-          "value": data['ShowControls'],
+          "value": data.showControls,
           "function": functions['ShowControls'],
           "optionsAndValues": []
         },
@@ -200,7 +190,7 @@ buildSettingsModel() {
               "nameConfig": "Brilho personalizado",
               "description": "Define se o brilho da tela será personalizado",
               "type": "switch",
-              "value": data['Custom Shine'],
+              "value": data.customShine,
               "function": functions['Custom Shine'],
               "optionsAndValues": []
             },
@@ -208,7 +198,7 @@ buildSettingsModel() {
               "nameConfig": "Filtro presonalizado",
               "description": "Define um filtro de cores personalizado",
               "type": "switch",
-              "value": data['Custom Filter'],
+              "value": data.customFilter,
               "function": functions['Custom Filter'],
               "optionsAndValues": []
             },
@@ -216,7 +206,7 @@ buildSettingsModel() {
               "nameConfig": "Filtro Branco e Preto",
               "description": "Define um filtro que deixa tudo em preto e branco",
               "type": "switch",
-              "value": data['Black and White filter'],
+              "value": data.blackAndWhiteFilter,
               "function": functions['Black and White filter'],
               "optionsAndValues": []
             },
@@ -230,7 +220,7 @@ buildSettingsModel() {
               "nameConfig": "Tipo de Layout",
               "description": "Define Layout de navegação do leitor",
               "type": "radio",
-              "value": data['Layout'],
+              "value": data.layout,
               "function": functions['Layout'],
               "optionsAndValues": [
                 {"option": "Em forma de L", "value": "L"},
@@ -243,7 +233,7 @@ buildSettingsModel() {
               "nameConfig": "Mostrar Layout ao abrir o Leitor",
               "description": "Exibe as areas de toque no inicio",
               "type": "switch",
-              "value": data['ShowLayout'],
+              "value": data.showLayout,
               "function": functions['ShowLayout'],
               "optionsAndValues": []
             },
@@ -257,7 +247,7 @@ buildSettingsModel() {
               "nameConfig": "Distancia da Rolagem por Toque",
               "description": "Define a distancia do avanço",
               "type": "radio",
-              "value": data['ScrollWebtoon'],
+              "value": data.scrollWebtoon,
               "function": functions['ScrollWebtoon'],
               "optionsAndValues": [
                 {"option": "100", "value": 100},
@@ -278,7 +268,7 @@ buildSettingsModel() {
           "nameConfig": "Rolar a Barra",
           "description": "retira a barra ao rolar para baixo",
           "type": "switch",
-          "value": data['Rolar a Barra'],
+          "value": data.rollTheBar,
           "function": functions['Rolar a Barra'],
           "optionsAndValues": [
             {"option": "switch", "value": true}
@@ -292,7 +282,7 @@ buildSettingsModel() {
               "nameConfig": "Tema",
               "description": "Define o tema do aplicativo",
               "type": "radio",
-              "value": data['Tema'],
+              "value": data.theme,
               "function": functions['Tema'],
               "optionsAndValues": [
                 {"option": "Automatico", "value": "auto"},
@@ -304,7 +294,7 @@ buildSettingsModel() {
               "nameConfig": "Cor da Interface",
               "description": "Define a cor dos icones e cabechalhos",
               "type": "radio",
-              "value": data['Cor da Interface'],
+              "value": data.interfaceColor,
               "function": functions['Cor da Interface'],
               "optionsAndValues": [
                 {"option": "Azul", "value": "blue"},
@@ -330,7 +320,7 @@ buildSettingsModel() {
               "nameConfig": "Idioma",
               "description": "Define o linguagem do aplicativo",
               "type": "radio",
-              "value": data['Idioma'],
+              "value": data.language,
               "function": functions['Idioma'],
               "optionsAndValues": [
                 {"option": "Português(Br)", "value": "ptbr"}
@@ -348,7 +338,7 @@ buildSettingsModel() {
           "nameConfig": "Local de armazenamento",
           "description": "Define o local que fivaram os downloads",
           "type": "radio",
-          "value": data['Local de armazenamento'],
+          "value": data.storageLocation,
           "function": functions['Local de armazenamento'],
           "optionsAndValues": [
             {"option": "Interno", "value": "intern"},
@@ -369,7 +359,7 @@ buildSettingsModel() {
               "nameConfig": "Autenticação",
               "description": "Define se havera autenticação ao entrar",
               "type": "switch",
-              "value": data['Autenticação'],
+              "value": data.authentication,
               "function": functions['Autenticação'],
               "optionsAndValues": [
                 {"option": "switch", "value": false}
@@ -379,7 +369,7 @@ buildSettingsModel() {
               "nameConfig": "Tipo de Autenticação",
               "description": "Define o tipo autenticação",
               "type": "radio",
-              "value": data['Tipo de Autenticação'],
+              "value": data.authenticationType,
               "function": functions['Tipo de Autenticação'],
               "optionsAndValues": [
                 {"option": "Caracteres", "value": "text"},
@@ -392,7 +382,7 @@ buildSettingsModel() {
           "nameConfig": "Senha de Autenticação",
           "description": "Define se havera autenticação ao entrar",
           "type": "input",
-          "value": data['Senha de Autenticação'],
+          "value": data.authenticationPassword,
           "function": functions['Senha de Autenticação'],
           "optionsAndValues": [
             {"option": "Caracteres", "value": ""},
@@ -413,7 +403,7 @@ buildSettingsModel() {
               "nameConfig": "Multiplas Pesquisas",
               "description": "Define se pode fazer mais de uma pesquisa por vez",
               "type": "switch",
-              "value": data['Multiplas Pesquisas'],
+              "value": data.multipleSearches,
               "function": functions['Multiplas Pesquisas'],
               "optionsAndValues": [
                 {"option": "switch", "value": false}
@@ -432,7 +422,7 @@ buildSettingsModel() {
                   "nameConfig": "Conteudo NSFW",
                   "description": "Define se havera extesões +18",
                   "type": "switch",
-                  "value": data['Conteudo NSFW'],
+                  "value": data.nSFWContent,
                   "function": functions['Conteudo NSFW'],
                   "optionsAndValues": [
                     {"option": "switch", "value": false}
@@ -442,7 +432,7 @@ buildSettingsModel() {
                   "nameConfig": "Mostrar na Lista",
                   "description": "Exibe estas extensões na Lista de Extensões",
                   "type": "switch",
-                  "value": data['Mostrar na Lista'],
+                  "value": data.showNSFWInList,
                   "function": functions['Mostrar na Lista'],
                   "optionsAndValues": [
                     {"option": "switch", "value": true}
@@ -479,7 +469,7 @@ buildSettingsModel() {
           "nameConfig": "Limpar o Cache",
           "description": "Remove dados substituiveis",
           "type": "confirm",
-          "value": data['Limpar o Cache'],
+          "value": data.clearCache,
           "function": functions['Limpar o Cache'],
           "optionsAndValues": [
             {"option": "Cancelar", "value": false},
@@ -490,7 +480,7 @@ buildSettingsModel() {
           "nameConfig": "Restaurar",
           "description": "Remove todos os dados do aplicativo",
           "type": "confirm",
-          "value": data['Restaurar'],
+          "value": data.restore,
           "function": functions['Restaurar'],
           "optionsAndValues": [
             {"option": "Cancelar", "value": false},

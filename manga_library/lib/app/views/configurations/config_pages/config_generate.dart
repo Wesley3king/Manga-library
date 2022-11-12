@@ -207,7 +207,7 @@ class InputTypes {
                           onPressed: () {
                             if (oldPassword !=
                                 GlobalData
-                                    .settings["Senha da Biblioteca Oculta"]) {
+                                    .settings.hiddenLibraryPassword) {
                               showSnackBar(context, "Senha Incorreta!");
                             } else {
                               isAuthorized = true;

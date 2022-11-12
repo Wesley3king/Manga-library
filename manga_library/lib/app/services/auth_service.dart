@@ -5,7 +5,7 @@ class AuthService extends ChangeNotifier {
   bool isAuthenticated = false;
   
   bool login(dynamic value) {
-    if (value.toString() == GlobalData.settings['Senha de Autenticação']) {
+    if (value.toString() == GlobalData.settings.authenticationPassword) {
       isAuthenticated = true;
       notifyListeners();
       return true;

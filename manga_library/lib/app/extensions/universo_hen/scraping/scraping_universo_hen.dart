@@ -28,7 +28,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
         // debugPrint("img: $img");
         // link
         String? link = manga.querySelector("a")!.href;
-        if (!link!.contains('https://universohentai.com')) break;
+        if (!link!.contains('https://universohentai.com')) continue;
         // debugPrint("link: $link");
         List<String> corteLink = link.split(".com/");
         books.add(<String, String>{

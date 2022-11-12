@@ -165,7 +165,7 @@ class MangaInfoOffLineController {
             log("manga off-line found!!! == doing changes");
             model.capitulos = capitulos;
             data[i] = model;
-            if (!GlobalData.settings['Atualizar as Capas']) {
+            if (!GlobalData.settings.updateTheCovers) {
               data[i].img = img!;
             }
             break;

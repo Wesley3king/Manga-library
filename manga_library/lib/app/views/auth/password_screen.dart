@@ -13,7 +13,7 @@ class PasswordScreen extends StatefulWidget {
 }
 
 class _PasswordScreenState extends State<PasswordScreen> {
-  final String authType = GlobalData.settings['Tipo de Autenticação'];
+  final String authType = GlobalData.settings.authenticationType;
   String _password = "";
   ConfigSystemController configSystemController = ConfigSystemController();
 

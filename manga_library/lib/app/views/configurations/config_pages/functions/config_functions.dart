@@ -9,7 +9,7 @@ var settings = GlobalData.settings;
 Map<String, Function> settingsFunctions = {
   "Ordenação": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor de Ordenação: $value");
-    GlobalData.settings['Ordenação'] = value;
+    GlobalData.settings.ordination = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -17,7 +17,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Tamanho dos quadros": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor de Tamanho dos quadros: $value");
-    GlobalData.settings['Tamanho dos quadros'] = value;
+    GlobalData.settings.frameSize = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -26,7 +26,7 @@ Map<String, Function> settingsFunctions = {
   "Atualizar":
       (dynamic value, SettingsOptionsController controller) {
         debugPrint("alterar o valor de Atualizar: $value");
-        GlobalData.settings['Atualizar'] = value;
+        GlobalData.settings.update = value;
         final ConfigSystemController configSystemController =
             ConfigSystemController();
         configSystemController.update(settings);
@@ -35,7 +35,7 @@ Map<String, Function> settingsFunctions = {
   "Atualizar as Capas":
       (dynamic value, SettingsOptionsController controller) {
         debugPrint("alterar o valor de Tamanho dos quadros: $value");
-        GlobalData.settings['Atualizar as Capas'] = value;
+        GlobalData.settings.updateTheCovers = value;
         final ConfigSystemController configSystemController =
             ConfigSystemController();
         configSystemController.update(settings);
@@ -43,7 +43,7 @@ Map<String, Function> settingsFunctions = {
       },
   "Senha da Biblioteca Oculta": (dynamic value, SettingsOptionsController controller) {
         debugPrint("alterar o valor deSenha da Biblioteca Oculta: $value");
-        GlobalData.settings['Senha da Biblioteca Oculta'] = value;
+        GlobalData.settings.hiddenLibraryPassword = value;
         final ConfigSystemController configSystemController =
             ConfigSystemController();
         configSystemController.update(settings);
@@ -51,7 +51,7 @@ Map<String, Function> settingsFunctions = {
       },
   "Tema": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Tema'] = value;
+    GlobalData.settings.theme = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -59,7 +59,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Cor da Interface": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Cor da Interface'] = value;
+    GlobalData.settings.interfaceColor = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -67,7 +67,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Idioma": (dynamic value, SettingsOptionsController controller) {},
   "Rolar a Barra": (dynamic value, SettingsOptionsController controller) {
-    GlobalData.settings['Rolar a Barra'] = value;
+    GlobalData.settings.rollTheBar = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -75,7 +75,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Tipo do Leitor": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Tipo do Leitor'] = value;
+    GlobalData.settings.readerType = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -83,7 +83,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Cor de fundo": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor Cor de fundo = $value");
-    GlobalData.settings['Cor de fundo'] = value;
+    GlobalData.settings.backgroundColor = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -92,14 +92,14 @@ Map<String, Function> settingsFunctions = {
   "Orientação do Leitor":
       (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Orientação do Leitor'] = value;
+    GlobalData.settings.readerGuidance = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
     controller.updateSetting();
   },
   "Qualidade": (dynamic value, SettingsOptionsController controller) {
-    GlobalData.settings['Qualidade'] = value;
+    GlobalData.settings.quality = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -107,7 +107,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Tela cheia": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de Tela cheia: $value");
-    GlobalData.settings['Tela cheia'] = value;
+    GlobalData.settings.fullScreen = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -115,7 +115,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Manter a tela ligada": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de Manter a tela ligada: $value");
-    GlobalData.settings['Manter a tela ligada'] = value;
+    GlobalData.settings.keepScreenOn = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -123,7 +123,7 @@ Map<String, Function> settingsFunctions = {
   },
   "ShowControls": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de ShowControls: $value");
-    GlobalData.settings['ShowControls'] = value;
+    GlobalData.settings.showControls = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -131,7 +131,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Custom Shine": (dynamic value, SettingsOptionsController? controller) {
     debugPrint("valor de Custom Shine: $value");
-    GlobalData.settings['Custom Shine'] = value;
+    GlobalData.settings.customShine = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -139,14 +139,14 @@ Map<String, Function> settingsFunctions = {
   },
   "Custom Shine Value": (dynamic value) {
     debugPrint("valor de Custom Shine Value: $value");
-    GlobalData.settings['Custom Shine Value'] = value;
+    GlobalData.settings.customShineValue = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
   },
   "Custom Filter": (dynamic value, SettingsOptionsController? controller) {
     debugPrint("valor de Custom Filter: $value");
-    GlobalData.settings['Custom Filter'] = value;
+    GlobalData.settings.customFilter = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -156,13 +156,13 @@ Map<String, Function> settingsFunctions = {
     // debugPrint("valor de Custom Shine Value: $value");
     switch (type) {
       case "R":
-        GlobalData.settings['R'] = value;
+        GlobalData.settings.R = value;
         break;
       case "G":
-        GlobalData.settings['G'] = value;
+        GlobalData.settings.G = value;
         break;
       case "B":
-        GlobalData.settings['B'] = value;
+        GlobalData.settings.B = value;
         break;
     }
     final ConfigSystemController configSystemController =
@@ -171,7 +171,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Black and White filter": (dynamic value, SettingsOptionsController? controller) {
     debugPrint("valor de Black and White filter: $value");
-    GlobalData.settings['Black and White filter'] = value;
+    GlobalData.settings.blackAndWhiteFilter = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -179,7 +179,7 @@ Map<String, Function> settingsFunctions = {
   },
   "Layout": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de Layout: $value");
-    GlobalData.settings['Layout'] = value;
+    GlobalData.settings.layout = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -187,7 +187,7 @@ Map<String, Function> settingsFunctions = {
   },
   "ShowLayout": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de ShowLayout: $value");
-    GlobalData.settings['ShowLayout'] = value;
+    GlobalData.settings.showLayout = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -195,7 +195,7 @@ Map<String, Function> settingsFunctions = {
   },
   "ScrollWebtoon": (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de ScrollWebtoon: $value");
-    GlobalData.settings['ScrollWebtoon'] = value;
+    GlobalData.settings.scrollWebtoon = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -205,7 +205,7 @@ Map<String, Function> settingsFunctions = {
       (dynamic value, SettingsOptionsController controller) {},
   "Autenticação": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Autenticação'] = value;
+    GlobalData.settings.authentication = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -214,7 +214,7 @@ Map<String, Function> settingsFunctions = {
   "Tipo de Autenticação":
       (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Tipo de Autenticação'] = value;
+    GlobalData.settings.authenticationType = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);
@@ -223,7 +223,7 @@ Map<String, Function> settingsFunctions = {
   "Senha de Autenticação":
       (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
-    GlobalData.settings['Senha de Autenticação'] = value;
+    GlobalData.settings.authenticationPassword = value;
     final ConfigSystemController configSystemController =
         ConfigSystemController();
     configSystemController.update(settings);

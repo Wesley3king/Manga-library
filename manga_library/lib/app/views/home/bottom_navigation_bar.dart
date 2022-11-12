@@ -155,7 +155,7 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
 
   /// controla o height e os efeitos, como a rolagem e estilo do NativeBottomNavigation
   double setHeight(bool isPortrait) {
-    if (GlobalData.settings['Rolar a Barra']) {
+    if (GlobalData.settings.rollTheBar) {
       if (isVisible) {
         // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         //     systemNavigationBarContrastEnforced: false,

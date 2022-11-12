@@ -233,7 +233,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
                             onPressed: () {
                               if (oldPassword !=
                                   GlobalData
-                                      .settings["Senha da Biblioteca Oculta"]) {
+                                      .settings.hiddenLibraryPassword) {
                                 showMessage(context, "Senha Incorreta!");
                                 Navigator.of(context).pop();
                               } else {

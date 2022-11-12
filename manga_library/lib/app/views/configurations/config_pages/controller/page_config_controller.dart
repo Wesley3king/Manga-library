@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/settings_model.dart';
+import 'package:manga_library/app/models/system_settings.dart';
 import 'package:manga_library/app/views/configurations/config_pages/controller/generate_model.dart';
 
 class SettingsController {
@@ -10,7 +11,7 @@ class SettingsController {
   SettingsModel settings = SettingsModel(models: []);
 
   Future start() async {
-    Map data = await hiveController.getSettings();
+    SystemSettingsModel data = await hiveController.getSettings();
     try {
       GlobalData.settingsApp = buildSettingsModel();
     } catch (e, s) {

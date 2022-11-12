@@ -39,7 +39,7 @@ class LibraryController {
   void setStateOrdenacion(String type) {
     ordemType = type;
     if (type == "pattern") {
-      type = GlobalData.settings['Ordenação'];
+      type = GlobalData.settings.ordination;
     }
     oldOrdem = ordemState.value;
     switch (type) {

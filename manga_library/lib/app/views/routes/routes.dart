@@ -31,7 +31,7 @@ final routes = GoRouter(
       final isLoginRoute = state.subloc == '/auth';
 
       if (isLoginRoute) {
-        if (!GlobalData.settings['Autenticação']) return '/home';
+        if (!GlobalData.settings.authentication) return '/home';
         // caso precise de autenticação
         if (!isAuth) {
           return isLoginRoute ? null : '/home';

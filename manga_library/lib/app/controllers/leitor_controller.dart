@@ -56,19 +56,19 @@ class LeitorController {
   // ========= FULL SCREEN =======================
   bool? isFullScreen;
   // ===== CUSTOM SHINE =======
-  bool isCustomShine = GlobalData.settings['Custom Shine'];
+  bool isCustomShine = GlobalData.settings.customShine;
   // ======= SHINE VALUE ===========
-  double shineValueUi = GlobalData.settings['Custom Shine Value'];
+  double shineValueUi = GlobalData.settings.customShineValue;
   // ======= CUSTOM FILTER ==========
-  bool isCustomFilter = GlobalData.settings['Custom Filter'];
+  bool isCustomFilter = GlobalData.settings.customFilter;
   // ======= CUSTOM FLITER VALUES ========
   List<int> customFilterValues = [
-    GlobalData.settings['R'],
-    GlobalData.settings['G'],
-    GlobalData.settings['B']
+    GlobalData.settings.R,
+    GlobalData.settings.G,
+    GlobalData.settings.B
   ];
   // ======= Black AND WHITE FILTER ==========
-  bool isblackAndWhiteFilter = GlobalData.settings['Black and White filter'];
+  bool isblackAndWhiteFilter = GlobalData.settings.blackAndWhiteFilter;
   // =========== LAYOUT ===============
   final ValueNotifier<ReaderLayouts> layoutState =
       ValueNotifier<ReaderLayouts>(ReaderLayouts.bordersLTR);
@@ -164,7 +164,7 @@ class LeitorController {
   void setReaderType(String type) {
     leitorTypeUi = type;
     if (type == "pattern") {
-      type = GlobalData.settings['Tipo do Leitor'];
+      type = GlobalData.settings.readerType;
     }
     switch (type) {
       case "vertical":
@@ -196,7 +196,7 @@ class LeitorController {
     // type ??= GlobalData.settings['Qualidade'];
     filterQualityUi = type;
     if (type == "pattern") {
-      type = GlobalData.settings['Qualidade'];
+      type = GlobalData.settings.quality;
     }
     switch (type) {
       case "none":
@@ -219,7 +219,7 @@ class LeitorController {
     // type ??= GlobalData.settings['Orientação do Leitor'];
     orientacionUi = type;
     if (type == "pattern") {
-      type = GlobalData.settings['Orientação do Leitor'];
+      type = GlobalData.settings.readerGuidance;
       // debugPrint(" =================== chegou aqui: $type");
       ConfigSystemController.instance.setSystemOrientacion(type);
     } else {
@@ -230,7 +230,7 @@ class LeitorController {
   void setBackgroundColor([String? type]) {
     type == null ? backgroundColorUi = "pattern" : backgroundColorUi = type;
     if (type == null || type == "pattern") {
-      type = GlobalData.settings['Cor de fundo'];
+      type = GlobalData.settings.backgroundColor;
     }
     switch (type) {
       case "black":
@@ -244,7 +244,7 @@ class LeitorController {
   }
 
   void setFullScreen(bool isFullScreenTemporally) {
-    isFullScreen ??= GlobalData.settings['Tela cheia'];
+    isFullScreen ??= GlobalData.settings.fullScreen;
 
     if (isFullScreen!) {
       if (isFullScreenTemporally) {
@@ -261,8 +261,8 @@ class LeitorController {
   }
 
   void setWakeLock(bool? value) {
-    value ??= GlobalData.settings['Manter a tela ligada'];
-    wakeLock = value!;
+    value ??= GlobalData.settings.keepScreenOn;
+    wakeLock = value;
     Wakelock.toggle(enable: value);
   }
 
@@ -323,9 +323,9 @@ class LeitorController {
 
   void setReaderLayout(String? type) {
     if (type == "pattern") {
-      type = GlobalData.settings['Layout'];
+      type = GlobalData.settings.layout;
     }
-    type ??= GlobalData.settings['Layout'];
+    type ??= GlobalData.settings.layout;
     switch (type) {
       case "L":
         layoutState.value = ReaderLayouts.l;
@@ -345,10 +345,10 @@ class LeitorController {
   void setScrollWebtoonValue(int? value) {
     /// 0 is default value
     if (value == 0) {
-      value = GlobalData.settings['Layout'];
+      value = GlobalData.settings.scrollWebtoon;
     }
-    value ??= GlobalData.settings['Layout'];
-    scrollWebtoonValue = value!;
+    value ??= GlobalData.settings.scrollWebtoon;
+    scrollWebtoonValue = value;
   }
 }
 

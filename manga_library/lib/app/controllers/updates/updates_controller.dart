@@ -10,7 +10,7 @@ class UpdatesCore {
 
   static void verifyIfIsTimeToUpdate() async {
     HiveController hiveController = HiveController();
-    if (GlobalData.settings['Atualizar'] != "0") {
+    if (GlobalData.settings.update != "0") {
       /// implemet teste
       /*
       {"option": "Nunca", "value": "0"},
@@ -93,7 +93,7 @@ class UpdatesCore {
       }
 
       /// vericar o intervalo de atualização
-      switch (GlobalData.settings['Atualizar']) {
+      switch (GlobalData.settings.update) {
         case "6":
           if (verify6()) {
             start();

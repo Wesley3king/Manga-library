@@ -1,14 +1,14 @@
-import 'dart:collection';
-
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:manga_library/app/adapters/client_data_model_adapter.dart';
+import 'package:manga_library/app/adapters/system_settings_model_adapter.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/downloads_pages_model.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/models/system_settings.dart';
 
 class HiveController {
   static Box? clientData;
@@ -19,6 +19,7 @@ class HiveController {
   Future<void> start() async {
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ClientDataModelHiveAdapter());
+      Hive.registerAdapter(SystemSettingsModelHiveAdapter());
     }
     debugPrint("hive enabled");
     clientData = await Hive.openBox('clientData');
@@ -245,66 +246,100 @@ class HiveController {
   // ---------------------------------------------------------------------------
   //       ======================= SETTINGS =======================
   // ---------------------------------------------------------------------------
-  Future<Map<String, dynamic>> writeSettings() async {
-    Map<String, dynamic> model = {
-      "Ordenação": "oldtonew",
-      "Tamanho dos quadros": "normal",
-      "Atualizar": "0",
-      "Atualizar as Capas": true,
-      "Senha da Biblioteca Oculta": "0000",
-      "Tema": "auto",
-      "Cor da Interface": "blue",
-      "Idioma": "ptbr",
-      "Rolar a Barra": true,
-      "Tipo do Leitor": "vertical",
-      "Cor de fundo": "black",
-      "Orientação do Leitor": "auto",
-      "Qualidade": "medium",
-      "Tela cheia": true,
-      "Manter a tela ligada": false,
-      "ShowControls": false,
-      "Custom Shine": false,
-      "Custom Shine Value": 0.5,
-      "Custom Filter": false,
-      "R": 0,
-      "G": 0,
-      "B": 0,
-      "Black and White filter": false,
-      "Layout": "bordersLTR",
-      "ShowLayout": true,
-      "ScrollWebtoon": 400,
-      "Local de armazenamento": "intern",
-      "Autenticação": false,
-      "Tipo de Autenticação": "text",
-      "Senha de Autenticação": "",
-      "Multiplas Pesquisas": false,
-      "Conteudo NSFW": false,
-      "Mostrar na Lista": true,
-      "Limpar o Cache": false,
-      "Restaurar": false,
-    };
+  Future<SystemSettingsModel> writeSettings() async {
+    // Map<String, dynamic> model = {
+    //   "Ordenação": "oldtonew",
+    //   "Tamanho dos quadros": "normal",
+    //   "Atualizar": "0",
+    //   "Atualizar as Capas": true,
+    //   "Senha da Biblioteca Oculta": "0000",
+    //   "Tema": "auto",
+    //   "Cor da Interface": "blue",
+    //   "Idioma": "ptbr",
+    //   "Rolar a Barra": true,
+    //   "Tipo do Leitor": "vertical",
+    //   "Cor de fundo": "black",
+    //   "Orientação do Leitor": "auto",
+    //   "Qualidade": "medium",
+    //   "Tela cheia": true,
+    //   "Manter a tela ligada": false,
+    //   "ShowControls": false,
+    //   "Custom Shine": false,
+    //   "Custom Shine Value": 0.5,
+    //   "Custom Filter": false,
+    //   "R": 0,
+    //   "G": 0,
+    //   "B": 0,
+    //   "Black and White filter": false,
+    //   "Layout": "bordersLTR",
+    //   "ShowLayout": true,
+    //   "ScrollWebtoon": 400,
+    //   "Local de armazenamento": "intern",
+    //   "Autenticação": false,
+    //   "Tipo de Autenticação": "text",
+    //   "Senha de Autenticação": "",
+    //   "Multiplas Pesquisas": false,
+    //   "Conteudo NSFW": false,
+    //   "Mostrar na Lista": true,
+    //   "Limpar o Cache": false,
+    //   "Restaurar": false,
+    // };
+    SystemSettingsModel model = SystemSettingsModel(
+        ordination: "oldtonew",
+        frameSize: "normal",
+        update: "0",
+        updateTheCovers: true,
+        hiddenLibraryPassword: '0000',
+        theme: "auto",
+        interfaceColor: "blue",
+        language: "ptbr",
+        rollTheBar: true,
+        readerType: "vertical",
+        backgroundColor: "black",
+        readerGuidance: "auto",
+        quality: "medium",
+        fullScreen: true,
+        keepScreenOn: false,
+        showControls: false,
+        customShine: false,
+        customShineValue: 0.5,
+        customFilter: false,
+        R: 0,
+        G: 0,
+        B: 0,
+        blackAndWhiteFilter: false,
+        layout: "bordersLTR",
+        showLayout: true,
+        scrollWebtoon: 400,
+        storageLocation: "intern",
+        authentication: false,
+        authenticationType: "text",
+        authenticationPassword: "",
+        multipleSearches: false,
+        nSFWContent: false,
+        showNSFWInList: true,
+        clearCache: false,
+        restore: false);
     clientData?.put("settings", model);
     return model;
   }
 
-  Future<Map> getSettings() async {
+  Future<SystemSettingsModel> getSettings() async {
     var data = await clientData?.get("settings");
-    debugPrint(data is Map<String, dynamic>
-        ? "é Map<String, dynamic>"
-        : "não é Map<String, dynamic>");
-    if (data != null && data is Map) {
+    // debugPrint(data is Map<String, dynamic>
+    //     ? "é Map<String, dynamic>"
+    //     : "não é Map<String, dynamic>");
+    if (data != null) {
       return data;
     } else {
       return await writeSettings();
     }
   }
 
-  Future<bool> updateSettings(Map data) async {
+  Future<bool> updateSettings(SystemSettingsModel data) async {
     try {
-      debugPrint('${data['Tema']}');
       await clientData?.put("settings", data);
-      // var data2 = await clientData?.get("settings");
-      // print(data2);
+  
       return true;
     } catch (e) {
       debugPrint('erro no HiveController - updateSettings: $e');
@@ -416,8 +451,8 @@ class HiveController {
     try {
       List<dynamic>? data = await clientData?.get(downloadKey);
       if (data != null) {
-        List<Map<String, dynamic>> listOfMaps =
-            List<Map<String, dynamic>>.from(data.map<Map<String, dynamic>>((e) => Map.from(e)).toList());
+        List<Map<String, dynamic>> listOfMaps = List<Map<String, dynamic>>.from(
+            data.map<Map<String, dynamic>>((e) => Map.from(e)).toList());
         // debugPrint('data DOWNLOADS: $listOfMaps');aaasa
         return listOfMaps
             .map((Map<String, dynamic> json) =>

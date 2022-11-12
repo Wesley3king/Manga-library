@@ -18,7 +18,7 @@ class LayoutBorder extends StatefulWidget {
 
 class _LayoutBorderState extends State<LayoutBorder> {
   final ValueNotifier<CrossFadeState> showLayout =
-      ValueNotifier<CrossFadeState>(GlobalData.settings['ShowLayout'] ? CrossFadeState.showFirst : CrossFadeState.showSecond);
+      ValueNotifier<CrossFadeState>(GlobalData.settings.showLayout ? CrossFadeState.showFirst : CrossFadeState.showSecond);
 
   void next() => widget.controller
       .scrollToPosition(widget.leitorType, ReaderPageAction.next);
