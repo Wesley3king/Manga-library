@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/controllers/updates/updates_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/routes/routes.dart';
 
 ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
-  appBarTheme: const AppBarTheme(
-    systemOverlayStyle: SystemUiOverlayStyle.light
-  )
-);
+    brightness: Brightness.dark,
+    appBarTheme:
+        const AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.light));
 ThemeData lightTheme = ThemeData(
-  visualDensity: VisualDensity.adaptivePlatformDensity,
-  brightness: Brightness.light,
-  appBarTheme: const AppBarTheme(
-    actionsIconTheme: IconThemeData(color: Color.fromARGB(255, 48, 48, 48)),
-    
-    titleTextStyle: TextStyle(
-      color: Color.fromARGB(255, 48, 48, 48),
-      fontWeight: FontWeight.bold,
-      fontSize: 20
-    ),
-    systemOverlayStyle: SystemUiOverlayStyle.light,
-    iconTheme: IconThemeData(color: Color.fromARGB(255, 48, 48, 48)),
-    backgroundColor: Color.fromARGB(255, 230, 230, 230),
-
-  )
-);
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    brightness: Brightness.light,
+    appBarTheme: const AppBarTheme(
+      actionsIconTheme: IconThemeData(color: Color.fromARGB(255, 48, 48, 48)),
+      titleTextStyle: TextStyle(
+          color: Color.fromARGB(255, 48, 48, 48),
+          fontWeight: FontWeight.bold,
+          fontSize: 20),
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      iconTheme: IconThemeData(color: Color.fromARGB(255, 48, 48, 48)),
+      backgroundColor: Color.fromARGB(255, 230, 230, 230),
+    ));
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -79,9 +74,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    //UpdatesCore.start();
-    UpdatesCore.verifyIfIsTimeToUpdate();
+    start();
     detectTheme();
+  }
+
+  void start() async {
+    await FullScreenController().startScreenApp();
+    UpdatesCore.verifyIfIsTimeToUpdate();
   }
 
   @override

@@ -66,23 +66,25 @@ class ScrollablePositionedListPageState
         }),
       );
 
-  Widget list(Orientation orientation) => Container(
-        color: widget.color,
-        child: ValueListenableBuilder(
-          valueListenable: indexes, 
-          builder: (context, value, child) => ScrollablePositionedList.builder(
-          itemCount: widget.lista.length,
-          itemBuilder: (context, index) => generateItens(index, context),
-          itemScrollController: widget.controller.scrollControllerList,
-          scrollController: widget.controller.scrollController,
-          itemPositionsListener: itemPositionsListener,
-          //reverse: reversed,
-          // scrollDirection: orientation == Orientation.portrait
-          //     ? Axis.vertical
-          //     : Axis.horizontal,
+  Widget list(Orientation orientation) => InteractiveViewer(
+    child: Container(
+          color: widget.color,
+          child: ValueListenableBuilder(
+            valueListenable: indexes, 
+            builder: (context, value, child) => ScrollablePositionedList.builder(
+            itemCount: widget.lista.length,
+            itemBuilder: (context, index) => generateItens(index, context),
+            itemScrollController: widget.controller.scrollControllerList,
+            scrollController: widget.controller.scrollController,
+            itemPositionsListener: itemPositionsListener,
+            //reverse: reversed,
+            // scrollDirection: orientation == Orientation.portrait
+            //     ? Axis.vertical
+            //     : Axis.horizontal,
+          ),
+          )
         ),
-        )
-      );
+  );
 
   Widget get positionsView => ValueListenableBuilder<Iterable<ItemPosition>>(
         valueListenable: itemPositionsListener.itemPositions,

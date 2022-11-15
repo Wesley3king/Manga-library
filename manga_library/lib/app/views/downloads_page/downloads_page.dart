@@ -34,8 +34,9 @@ class _DownloadsPageState extends State<DownloadsPage> {
     if (controller.data.isEmpty) {
       return Center(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
-            Icon(Icons.file_download_off),
+            Icon(Icons.file_download_off, size: 40,),
             Text("Sem Downloads")
           ],
         ),

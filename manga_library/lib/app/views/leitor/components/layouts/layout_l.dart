@@ -46,12 +46,12 @@ class _LayoutLState extends State<LayoutL> {
                     color: const Color.fromARGB(141, 255, 153, 0),
                     child: Center(
                       child: Text("Anterior", style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
                         shadows: [ Shadow(
                           color: Colors.black,
                           offset: Offset.fromDirection(3),
-                          blurRadius: 0.8
+                          blurRadius: 2.0
                         )]
                       ),),
                     ),
@@ -78,7 +78,15 @@ class _LayoutLState extends State<LayoutL> {
                   Container(
                     height: columnItensHeight,
                     color: const Color.fromARGB(148, 76, 175, 79),
-                    child: const Center(child: Text("Próximo"),),
+                    child: Center(child: Text("Próximo", style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        shadows: [ Shadow(
+                          color: Colors.black,
+                          offset: Offset.fromDirection(3),
+                          blurRadius: 2.0
+                        )]
+                      ),),),
                   )
                 ],
               ),

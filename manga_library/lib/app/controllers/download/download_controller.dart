@@ -1,13 +1,11 @@
 import 'dart:developer';
 
-// import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
-import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
 import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/downloads_pages_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
@@ -86,6 +84,7 @@ class DownloadController {
       }
       // caso ainda tenha downloads
       // filaDeDownload = filaDeDownloadUnmodifiable;
+      /// ========== [ inventar outro método URGENTE ] =====================
       for (int index in indexToRemove) {
         filaDeDownload.removeAt(index);
         //removeWhere((DownloadModel downloadModel) =>
@@ -201,13 +200,13 @@ class DownloadController {
           log("Cancelando o download!!!");
           filaDeDownload[index].attempts = 3;
           if (pagesPath.isEmpty) {
-            /// deve-se modicar ao buildar com outro id
+            ///[ deve-se modicar ao buildar com outro id ] com.king.manga_library com.example.manga_library
             await deleteDownloadForCancel(
-                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
+                "/storage/emulated/0/Android/data/com.king.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
           } else {
             if (pagesPath[0].contains("error:")) {
               await deleteDownloadForCancel(
-                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
+                  "/storage/emulated/0/Android/data/com.king.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
             } else {
               await deleteDownloadForCancel(pagesPath[0]);
             }

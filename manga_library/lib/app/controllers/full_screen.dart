@@ -16,6 +16,23 @@ class FullScreenController {
   //   }
   // }
 
+  Future<void> startScreenApp() async {
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemStatusBarContrastEnforced: false,
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+
+      // systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
+      // systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
+      // systemNavigationBarIconBrightness: Brightness.light,
+      // systemNavigationBarContrastEnforced: false,
+      systemNavigationBarContrastEnforced: false,
+      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent
+    ));
+  }
   void enterFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
@@ -46,7 +63,6 @@ class FullScreenController {
       systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarContrastEnforced: false,
     ));
-    
   }
 
   void exitEdgeFullScreenToReader() {

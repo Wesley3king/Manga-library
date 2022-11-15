@@ -124,9 +124,11 @@ class OffLineWidgetController {
       models.removeWhere((model) {
         final completeLink =
             mapOfExtensions[model.idExtension]!.getLink(model.link);
-        return model.id == capitulo.id && completeLink == mangaModel.link &&
+        return model.id == capitulo.id &&
+            completeLink == mangaModel.link &&
             model.idExtension == mangaModel.idExtension;
       });
+      await hiveController.updateDownloads(models);
       DownloadController.mangaInfoController?.updateChaptersAfterDownload(
           mangaModel.link, mangaModel.idExtension);
       state.value = DownloadStates.download;

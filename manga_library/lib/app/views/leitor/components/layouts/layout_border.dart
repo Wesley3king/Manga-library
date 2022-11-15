@@ -44,7 +44,15 @@ class _LayoutBorderState extends State<LayoutBorder> {
                   Container(
                     width: rowItensWidth,
                     color: const Color.fromARGB(141, 255, 153, 0),
-                    child: const Center(child: Text("Anterior"),),
+                    child: Center(child: Text("Anterior", style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        shadows: [ Shadow(
+                          color: Colors.black,
+                          offset: Offset.fromDirection(3),
+                          blurRadius: 2.0
+                        )]
+                      ),),),
                   ),
                   Container(
                     width: rowItensWidth,
@@ -53,7 +61,15 @@ class _LayoutBorderState extends State<LayoutBorder> {
                   Container(
                     width: rowItensWidth,
                     color: const Color.fromARGB(148, 76, 175, 79),
-                    child: const Center(child: Text("Próximo"),),
+                    child: Center(child: Text("Próximo", style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        shadows: [ Shadow(
+                          color: Colors.black,
+                          offset: Offset.fromDirection(3),
+                          blurRadius: 2.0
+                        )]
+                      ),),),
                   )
                 ],
               )
