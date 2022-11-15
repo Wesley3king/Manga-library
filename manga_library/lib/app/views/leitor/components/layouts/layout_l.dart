@@ -44,7 +44,17 @@ class _LayoutLState extends State<LayoutL> {
                   Container(
                     height: columnItensHeight,
                     color: const Color.fromARGB(141, 255, 153, 0),
-                    child: const Center(child: Text("Anterior"),),
+                    child: Center(
+                      child: Text("Anterior", style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        shadows: [ Shadow(
+                          color: Colors.black,
+                          offset: Offset.fromDirection(3),
+                          blurRadius: 0.8
+                        )]
+                      ),),
+                    ),
                   ),
                   SizedBox(
                     height: columnItensHeight,

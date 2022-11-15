@@ -157,22 +157,10 @@ class _ScrollHideWidgetState extends State<ScrollHideWidget> {
   double setHeight(bool isPortrait) {
     if (GlobalData.settings.rollTheBar) {
       if (isVisible) {
-        // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        //     systemNavigationBarContrastEnforced: false,
-        //     systemNavigationBarDividerColor: Colors.black,
-        //     systemNavigationBarColor: Colors.transparent));
-        // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
-        // debugPrint("visivel!");
         return isPortrait
             ? (kBottomNavigationBarHeight + 48)
             : kBottomNavigationBarHeight;
       } else {
-        // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        //     systemNavigationBarContrastEnforced: false,
-        //     systemNavigationBarDividerColor: Colors.black26,
-        //     systemNavigationBarColor: Colors.black26));
-        // StylesFromSystemNavigation.setSystemNavigationBarTransparent();
-        // debugPrint("INVISIVEL!");
         return 0;
       }
     } else {

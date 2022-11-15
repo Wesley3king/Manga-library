@@ -18,8 +18,6 @@ class FullScreenController {
 
   void enterFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    // ,overlays: [SystemUiOverlay.top]
-    // activedFullScreen
   }
 
   void enterEdgeFullScreen() {
@@ -31,26 +29,24 @@ class FullScreenController {
     //   systemNavigationBarContrastEnforced: false,
     // ));
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        // statusBarIconBrightness: Brightness.dark,
         systemNavigationBarContrastEnforced: false,
         systemNavigationBarDividerColor: Colors.black26,
         systemNavigationBarColor: Colors.black26));
     // isFullScreen = false;
   }
 
-  void exitEdgeFullScreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  void exitEdgeFullScreen() async {
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemStatusBarContrastEnforced: false,
+      // systemStatusBarContrastEnforced: false,
+      statusBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
       systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
       systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarContrastEnforced: false,
     ));
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //     systemNavigationBarContrastEnforced: false,
-    //     systemNavigationBarDividerColor: Colors.black26,
-    //     systemNavigationBarColor: Colors.black26));
-    // isFullScreen = false;
+    
   }
 
   void exitEdgeFullScreenToReader() {
@@ -67,20 +63,6 @@ class FullScreenController {
   //                      STYLES
   // ==========================================================================
 
-  void enterStatusBarForDetailsPage() {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemStatusBarContrastEnforced: false,
-      statusBarColor: Colors.transparent
-    ));
-  }
-
-  void exitStatusBarForDetailsPage() {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemStatusBarContrastEnforced: false,
-      statusBarColor: Colors.black26
-    ));
-  }
-
   /// set the style(Color) of SystemNavigationBar to black26
   void setSystemNavigationBarBlack26() async {
     debugPrint("visivel!");
@@ -88,6 +70,8 @@ class FullScreenController {
     ConfigSystemController.instance.isDarkTheme ? 
     */
     SystemChrome.setSystemUIOverlayStyle( const SystemUiOverlayStyle(
+      systemStatusBarContrastEnforced: false,
+      statusBarColor: Colors.transparent,
         systemNavigationBarContrastEnforced: false,
         systemNavigationBarIconBrightness: Brightness.light,
         systemNavigationBarDividerColor: Colors.black26,
@@ -108,11 +92,11 @@ class FullScreenController {
   void setSystemNavigationBarTransparent() async {
     debugPrint("invisivel!");
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarContrastEnforced: false,
-            systemNavigationBarIconBrightness: ConfigSystemController.instance.isDarkTheme ? Brightness.light : Brightness.dark,
-            systemNavigationBarDividerColor: Colors.black,
-            systemNavigationBarColor: Colors.transparent
-          ));
+      systemNavigationBarContrastEnforced: false,
+      systemNavigationBarIconBrightness: ConfigSystemController.instance.isDarkTheme ? Brightness.light : Brightness.dark,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent
+    ));
   }
 }
 

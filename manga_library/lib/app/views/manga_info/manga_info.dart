@@ -106,7 +106,7 @@ class _MangaInfoState extends State<MangaInfo> {
   }
 
   void _customNavigationBar() {
-    StylesFromSystemNavigation.toggleStatusBarContrastEnforced(true);
+    // StylesFromSystemNavigation.toggleStatusBarContrastEnforced(true);
     ConfigSystemController.instance.isDarkTheme
         ? StylesFromSystemNavigation.setSystemNavigationBarBlack26()
         : StylesFromSystemNavigation.setSystemNavigationBarWhite24();
@@ -114,7 +114,7 @@ class _MangaInfoState extends State<MangaInfo> {
 
   @override
   void dispose() {
-    StylesFromSystemNavigation.toggleStatusBarContrastEnforced(false);
+    // StylesFromSystemNavigation.toggleStatusBarContrastEnforced(false);
     super.dispose();
   }
 

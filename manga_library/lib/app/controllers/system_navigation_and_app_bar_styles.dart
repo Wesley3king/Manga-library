@@ -23,9 +23,9 @@ class StylesFromSystemNavigation {
   }
 
   /// if true statusBar is Transparent
-  static void toggleStatusBarContrastEnforced(bool value) {
-    value ?
-    fullScreenController.enterStatusBarForDetailsPage() :
-    fullScreenController.exitStatusBarForDetailsPage();
-  }
+  // static void toggleStatusBarContrastEnforced(bool value) {
+  //   value ?
+  //   fullScreenController.enterStatusBarForDetailsPage() :
+  //   fullScreenController.exitStatusBarForDetailsPage();
+  // }
 }
