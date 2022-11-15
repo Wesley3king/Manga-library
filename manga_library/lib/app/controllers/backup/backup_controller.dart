@@ -109,7 +109,7 @@ class BackupCore {
           .toList();
       await hiveController.updateOcultLibraries(ocultLibraryList);
       // ================= settings =============================
-      await hiveController.updateSettings(data['settings']);
+      await hiveController.updateSettings(SystemSettingsModel.fromJson(data['settings']));
       // ================ historic ==============================
       List<HistoricModel> historicModels = data['historic']
           .map<HistoricModel>((dynamic json) => HistoricModel.fromJson(json))

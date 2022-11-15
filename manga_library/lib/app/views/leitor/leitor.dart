@@ -57,10 +57,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
         height: isVisible.value
-            ? isLandscape
-                ? 60
-                : 100
-            : 0,
+            ? 100 : 0,
         child: Container(
           color: appBarAndBottomAppBarColor,
           width: MediaQuery.of(context).size.width,
@@ -105,22 +102,13 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      // Padding(
-      //   padding: EdgeInsets.only(bottom: isLandscape ? 0 : 170),
-      //   child: SizedBox(
-      //     height: isLandscape ? 60 : 200,
-      //     width: MediaQuery.of(context).size.width - (isLandscape ? 280 : 190),
-      //     child: GestureDetector(
-      //       onTap: () => isVisible.value = !isVisible.value,
-      //     ),
-      //   ),
-      // ),
+
       AnimatedContainer(
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
         height: isVisible.value
-            ? isLandscape
-                ? 1200
+            ?  isLandscape
+                ? 126
                 : 160
             : 0,
         child: Wrap(

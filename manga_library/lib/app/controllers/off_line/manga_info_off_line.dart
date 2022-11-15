@@ -56,23 +56,6 @@ class MangaInfoOffLineController {
     return null;
   }
 
-  // monta e retorna um ModelMangaInfo
-  // ModelMangaInfo buildMangaInfoModel(MangaInfoOffLineModel model) {
-  //   return ModelMangaInfo(
-  //     chapterName: model.name,
-  //     chapters: model.chapters,
-  //     description: model.description,
-  //     cover: model.img,
-  //     genres: model.genres,
-  //     chapterList: "off line doesn't have this",
-  //     alternativeName: model.alternativeName,
-  //     allposts: model.capitulos
-  //         .map((cap) => Allposts(
-  //             id: cap.id, num: cap.capitulo, disponivel: cap.disponivel))
-  //         .toList(),
-  //   );
-  // }
-
   // monta e  retorna um List<ModelPages>
   List<ModelPages> buildModelLeitor(MangaInfoOffLineModel model) {
     return model.capitulos

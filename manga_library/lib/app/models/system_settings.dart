@@ -146,7 +146,7 @@ class SystemSettingsModel {
     data['nSFWContent'] = nSFWContent;
     data['showNSFWInList'] = showNSFWInList;
     data['clearCache'] = clearCache;
-    data['Restaurar'] = restore;
+    data['restore'] = restore;
     return data;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/backup/backup_controller.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 
 class BackupConfig extends StatefulWidget {
   const BackupConfig({super.key});
@@ -31,9 +32,34 @@ class _BackupConfigState extends State<BackupConfig> {
               subtitle: const Text("restaura os dados a partir de um backup"),
               onTap: () async {
                 String response = await BackupCore.readBackup();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response)));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(response)));
               },
-            )
+            ),
+            Divider(
+              height: 1,
+              color: ConfigSystemController().colorManagement(),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.report_problem),
+                      ), 
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 60,
+                        child: const Text("Atenção: depois de restaurar um backup é necessário fechar e abrir o app novamente."))],
+                  ),
+                ))
           ],
         ),
       ),

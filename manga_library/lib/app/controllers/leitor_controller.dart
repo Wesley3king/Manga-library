@@ -72,6 +72,8 @@ class LeitorController {
   // =========== LAYOUT ===============
   final ValueNotifier<ReaderLayouts> layoutState =
       ValueNotifier<ReaderLayouts>(ReaderLayouts.bordersLTR);
+  // ======== LAYOUT UI ===========
+  String layoutUi = "pattern";
   // ========== SCROLL WEBTOON ===========
   static int scrollWebtoonValue = 400;
 
@@ -80,7 +82,7 @@ class LeitorController {
     try {
       capitulos = GlobalData.mangaModel.capitulos;
       // configurar o leitor
-      setReaderLayout(null);
+      setReaderLayout("pattern");
       setFilterQuality("pattern");
       setOrientacion("pattern");
       setBackgroundColor();
@@ -323,9 +325,13 @@ class LeitorController {
 
   void setReaderLayout(String? type) {
     if (type == "pattern") {
+      layoutUi = "pattern";
       type = GlobalData.settings.layout;
+    } else {
+      type ??= GlobalData.settings.layout;
+      layoutUi = type;
     }
-    type ??= GlobalData.settings.layout;
+    
     switch (type) {
       case "L":
         layoutState.value = ReaderLayouts.l;

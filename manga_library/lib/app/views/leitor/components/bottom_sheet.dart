@@ -246,7 +246,7 @@ Widget getFirstPage(LeitorController controller) {
                 width: dropdownWidth,
                 child: DropdownButton<String>(
                   alignment: Alignment.centerLeft,
-                  value: controller.orientacionUi, // edit this
+                  value: controller.layoutUi, // edit this
                   icon: const Icon(Icons.keyboard_arrow_down),
                   onChanged: (value) {
                     controller.setReaderLayout(value);
