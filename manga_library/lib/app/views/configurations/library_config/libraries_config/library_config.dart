@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/configurations/library_config/libraries_config/controller/library_config_controller.dart';
 
 import '../../../../models/libraries_model.dart';
@@ -68,7 +69,7 @@ class _LibraryConfigMainState extends State<LibraryConfigMain> {
   void _rename(String name) {
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(text: name);
-    String valor = name;
+    // String valor = name;
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -79,7 +80,7 @@ class _LibraryConfigMainState extends State<LibraryConfigMain> {
             child: TextField(
               autofocus: true,
               controller: textController,
-              onChanged: (value) => valor = value,
+              // onChanged: (value) => valor = value,
             ),
           ),
           Row(
@@ -147,6 +148,46 @@ class _LibraryConfigMainState extends State<LibraryConfigMain> {
     );
   }
 
+  /// ir para a biblioteca oculta depois de autenticar
+  void goToOcultLibrary(BuildContext context) {
+    String value = "";
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text("Biblioteca Oculta"),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              autofocus: true,
+              onChanged: (valor) => value = valor,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancelar")),
+              TextButton(
+                  onPressed: () {
+                    if (GlobalData.settings.hiddenLibraryPassword == value) {
+                      GoRouter.of(context).push('/configlibrary/true');
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Senha incorreta!'))
+                      );
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Ir")),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _sucess() {
     lista = _libraryConfigController.libraries;
     return SizedBox(
@@ -177,7 +218,7 @@ class _LibraryConfigMainState extends State<LibraryConfigMain> {
                 do {
                   lista[local] = lista[++local];
                   index++;
-                  print(index);
+                  // print(index);
                 } while (index < noMove - oldIndex);
                 lista[noMove] = item;
               }
@@ -224,9 +265,7 @@ class _LibraryConfigMainState extends State<LibraryConfigMain> {
               icon: const Icon(Icons.checklist_rounded)),
           IconButton(
             tooltip: "Biblioteca Oculta",
-            onPressed: () {
-              GoRouter.of(context).push('/configlibrary/true');
-            },
+            onPressed: () => goToOcultLibrary(context),
             icon: const Icon(Icons.lock),
           ),
           IconButton(

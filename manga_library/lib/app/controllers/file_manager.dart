@@ -106,7 +106,7 @@ class FileManager {
       } else {
         // modifique o caminho  com.example.manga_library com.king.manga_library com.king.manga_library.teste
         final path = data.files.single.path!
-            .replaceFirst("Android/data/com.king.manga_library/files/", "");
+            .replaceFirst("Android/data/com.example.manga_library/files/", "");
         log("arquive - path: $path");
         //status += "p= $path";
         //File file = File(path);

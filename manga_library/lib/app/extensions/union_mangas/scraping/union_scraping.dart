@@ -14,6 +14,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
+    debugPrint("HTML: ${parser?.html}");
 
     var result = parser?.querySelectorAll(indentify);
     // debugPrint("lrngth: ${result?.length}");
@@ -130,9 +131,9 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       img = parser.querySelector(".img-thumbnail").src;
       // debugPrint("img: $img");
       // authors
-      List<Result>? infoResult =
-          parser.querySelectorAll("div.col-md-8 h4");
-      authors = '${infoResult[2].text?.replaceFirst("Autor:", "")}, ${infoResult[3].text?.replaceFirst("Artista:", "")}';
+      List<Result>? infoResult = parser.querySelectorAll("div.col-md-8 h4");
+      authors =
+          '${infoResult[2].text?.replaceFirst("Autor:", "")}, ${infoResult[3].text?.replaceFirst("Artista:", "")}';
       // state
       state = parser.querySelector("div.col-md-8 h4 span").text;
       // state = infoResult[5].text;
@@ -153,7 +154,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // String? html = chaptersResult[i].html;
         // print(html);
         // link
-        String? link = chaptersResult[i].querySelector("div.col-xs-6 > a")!.href;
+        String? link =
+            chaptersResult[i].querySelector("div.col-xs-6 > a")!.href;
         // pula para o próximo em caso de já existir
         //print(link);
         if (!link!.contains("leitor/")) continue;
@@ -163,16 +165,19 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // print("replced link: $replacedLink");
 
         // name cap
-        String? capName = chaptersResult[i].querySelector("div.col-xs-6 > a")!.text;
+        String? capName =
+            chaptersResult[i].querySelector("div.col-xs-6 > a")!.text;
         capName?.replaceFirst("Cap. ", "");
         // print("chapetr name : $capName");
         // description date
-        List<Result>? listDate = chaptersResult[i].querySelectorAll("div.col-xs-6 > span");
+        List<Result>? listDate =
+            chaptersResult[i].querySelectorAll("div.col-xs-6 > span");
         String? date = listDate?[1].text;
         date = date?.replaceAll("(", "");
         date = date?.replaceAll(")", "");
         // description scan
-        String? scan = chaptersResult[i].querySelector("div.text-right > a")?.text;
+        String? scan =
+            chaptersResult[i].querySelector("div.text-right > a")?.text;
 
         chapters.add(Capitulos(
           id: replacedLink,

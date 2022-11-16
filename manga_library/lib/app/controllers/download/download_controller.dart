@@ -202,11 +202,11 @@ class DownloadController {
           if (pagesPath.isEmpty) {
             ///[ deve-se modicar ao buildar com outro id ] com.king.manga_library com.example.manga_library
             await deleteDownloadForCancel(
-                "/storage/emulated/0/Android/data/com.king.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
+                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
           } else {
             if (pagesPath[0].contains("error:")) {
               await deleteDownloadForCancel(
-                  "/storage/emulated/0/Android/data/com.king.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
+                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
             } else {
               await deleteDownloadForCancel(pagesPath[0]);
             }
