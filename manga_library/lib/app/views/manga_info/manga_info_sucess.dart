@@ -104,8 +104,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
     // GlobalData.capitulosDisponiveis;
 
     return ListTile(
-      title: Text(
-        'Capítulo ${capitulo.capitulo}', //  l = ${capitulo.pages.length}, ${capitulo.id}
+      title: Text(capitulo.capitulo,
         style: capitulo.disponivel
             ? capitulo.readed
                 ? const TextStyle(color: Color.fromARGB(255, 184, 184, 184))

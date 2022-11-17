@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:manga_library/app/extensions/gekkou_scans/repositories/gekkou_scans_repositories.dart';
 import 'package:manga_library/app/extensions/gekkou_scans/scraping/scraping_gekkou_scans.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
-import 'package:manga_library/app/extensions/union_mangas/repositories/fetch_services.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/manga_info_offline_model.dart';
@@ -13,7 +13,7 @@ class ExtensionGekkouScans implements Extension {
   @override
   String nome = "Gekkou Scans";
   @override
-  String extensionPoster = "Union-Mangas.png";
+  String extensionPoster = "Gekkou-scans.png";
   @override
   int id = 11;
   @override
@@ -73,7 +73,7 @@ class ExtensionGekkouScans implements Extension {
   @override
   Future<SearchModel> search(String txt) async {
     try {
-      debugPrint("UNION SEARCH STARTING...");
+      debugPrint("GEKKOU SCANS SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 
@@ -85,23 +85,10 @@ class ExtensionGekkouScans implements Extension {
           buffer.write('$str+');
         }
       }
-      dynamic data = await searchService(buffer.toString().toLowerCase());
-      // print("test: ${data is String ? "true":"false"}");
-      // print(data.keys);
-      List<Map> books = [];
-      for (int i = 0; i < data['items'].length; ++i) {
-        Map book = data['items'][i];
+      List<Map<String, String>> data = await searchService(buffer.toString().toLowerCase());
 
-        books.add({
-          "name": book["titulo"],
-          "img": book['imagem'],
-          "link": book['url']
-        });
-      }
-      // print('---------------------------------------------');
-      // print(books);
       return SearchModel.fromJson(
-          {"font": nome, "data": books, "idExtension": id});
+          {"font": nome, "data": data, "idExtension": id});
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
       return SearchModel.fromJson(

@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:chaleno/chaleno.dart';
 import 'package:flutter/rendering.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
@@ -106,7 +105,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           List<String> corteId = element['chapters'][0]['id'].split("ler/");
           return Capitulos(
             id: corteId[1].replaceFirst("/", ""),
-            capitulo: element['num'],
+            capitulo: 'Capítulo ${element['num']}',
             description: element['chapters'][0]['date'],
             download: false,
             readed: false,
@@ -121,7 +120,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           List<String> corteId = element['id'].split("ler/"); // id posição 1
           return Capitulos(
             id: corteId[1].replaceFirst("/", ""),
-            capitulo: element['num'],
+            capitulo: 'Capítulo ${element['num']}',
             description: element['date'],
             download: false,
             readed: false,

@@ -173,7 +173,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
         chapters.add(Capitulos(
           id: replacedLink,
-          capitulo: chapter,
+          capitulo: 'Capítulo $chapter',
           description: capDescription ?? "",
           download: false,
           readed: false,

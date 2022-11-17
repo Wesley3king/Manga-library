@@ -69,8 +69,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
         List<String> linkCorte1 = link!.split("manga/");
         // debugPrint("link cortado: ${linkCorte1[1]}");
 
-        books.add(
-            {"name": name, "url": linkCorte1[1], "img": img ?? ""});
+        books.add({"name": name, "url": linkCorte1[1], "img": img ?? ""});
         debugPrint("book adicionado!!!");
       } catch (e) {
         debugPrint("não é um manga! at hoje: $e");
@@ -99,83 +98,85 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   //const String indentify = "";
 
   try {
-    var parser =
-        await Chaleno().load("https://unionleitor.top/pagina-manga/$link");
+    var parser = await Chaleno().load("https://gekkou.com.br/manga/$link");
 
-    String? name;
+    String name = "";
     String? description;
     String? img;
-    String? authors;
+    String authors = "";
     String? state;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
       // name
-      name = parser.querySelector("div.col-md-12 h2").text;
+      // name = link;
       // List<String> corteName = htmlName!.split(
       //     '<div class="col-md-12">'); // <div class="row"><div class="col-md-8 perfil-manga"><div class="row"> <h2>
       // print(corteName);
       // name = "";
       // print("name: $name");
       // description
-      description = parser.querySelector(".panel-body").text;
-      // print("description: $description");
+      description = parser.querySelector("div.well > p").text;
+      debugPrint("description: $description");
       // img
-      img = parser.querySelector(".img-thumbnail").src;
-      // debugPrint("img: $img");
+      img = parser.querySelector("img.img-responsive").src;
+      debugPrint("img: $img");
       // authors
-      List<Result>? infoResult = parser.querySelectorAll("div.col-md-8 h4");
-      authors =
-          '${infoResult[2].text?.replaceFirst("Autor:", "")}, ${infoResult[3].text?.replaceFirst("Artista:", "")}';
-      // state
-      state = parser.querySelector("div.col-md-8 h4 span").text;
-      // state = infoResult[5].text;
+      List<Result>? infoDataResult =
+          parser.querySelectorAll("dl.dl-horizontal > dd");
+      List<Result>? infoResult =
+          parser.querySelectorAll("dl.dl-horizontal > dt");
 
-      // genres
-      List<Result>? genresResult = parser.querySelectorAll("div.col-md-8 h4 a");
-      // print(genresResult);
-
-      for (int i = 0; i < genresResult.length; ++i) {
-        genres.add("${genresResult[i].text}");
+      for (int i = 0; i < infoResult.length; i++) {
+        debugPrint("${infoResult[i].text}");
+        String txt = infoResult[i].text!;
+        if (txt == "Autor(s)") {
+          authors = '${infoDataResult[i].text?.trim()}';
+        } else if (txt == "Artista(s)") {
+          authors += ', ${infoDataResult[i].text?.trim()}';
+        } else if (txt == "Status") {
+          state = '${infoDataResult[i].text?.trim()}';
+        } else if (txt == "Categorias") {
+          debugPrint("gg : ${infoDataResult[i].text}");
+          List<String> genresPieces = infoDataResult[i].text!.split("/");
+          for (String str in genresPieces) {
+            genres.add(str.trim());
+          }
+        }
       }
-      // print(genres);
       // chapters
-      List<Result> chaptersResult = parser.querySelectorAll("div.capitulos");
+      List<Result> chaptersResult =
+          parser.querySelectorAll("ul.domaintld > li");
       debugPrint("length de cap: ${chaptersResult.length}");
 
       for (int i = 0; i < chaptersResult.length; ++i) {
-        // String? html = chaptersResult[i].html;
-        // print(html);
-        // link
-        String? link =
-            chaptersResult[i].querySelector("div.col-xs-6 > a")!.href;
-        // pula para o próximo em caso de já existir
-        //print(link);
-        if (!link!.contains("leitor/")) continue;
+        if (i == 0) {
+          // name =
+          String value = chaptersResult[i].querySelector("a")!.text!;
+          List<String> pieces = value.split(" ").reversed.toList();
+          for (int index = 1; index < pieces.length; ++index) {
+            name += '${pieces[index]} ';
+          }
+        }
 
-        List<String> corteLink1 = link.split("leitor/");
-        String replacedLink = corteLink1[1].replaceFirst("/", "--");
+        //link
+        String? link = chaptersResult[i].querySelector("a")!.href;
+        // // pula para o próximo em caso de já existir
+        // //print(link);
+        // if (!link!.contains("leitor/")) continue;
+
+        List<String> corteLink1 = link!.split("manga/");
+        String replacedLink = corteLink1[1].replaceAll("/", "--");
         // print("replced link: $replacedLink");
 
         // name cap
-        String? capName =
-            chaptersResult[i].querySelector("div.col-xs-6 > a")!.text;
-        capName?.replaceFirst("Cap. ", "");
-        // print("chapetr name : $capName");
-        // description date
-        List<Result>? listDate =
-            chaptersResult[i].querySelectorAll("div.col-xs-6 > span");
-        String? date = listDate?[1].text;
-        date = date?.replaceAll("(", "");
-        date = date?.replaceAll(")", "");
-        // description scan
-        String? scan =
-            chaptersResult[i].querySelector("div.text-right > a")?.text;
+        String? capName = chaptersResult[i].querySelector("a")!.text;
+        // capName?.replaceFirst("Cap. ", "");
 
         chapters.add(Capitulos(
           id: replacedLink,
           capitulo: capName ?? "erro",
-          description: '$date - $scan',
+          description: '',
           download: false,
           readed: false,
           disponivel: true,
@@ -186,13 +187,13 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       }
 
       return MangaInfoOffLineModel(
-        name: name ?? "erro",
+        name: name.trim(),
         description: description ?? "erro",
         authors: authors,
         state: state ?? "EStado desconhecido",
         img: img ?? "erro",
-        link: "https://unionleitor.top/pagina-manga/$link",
-        idExtension: 4,
+        link: "https://gekkou.com.br/manga/$link",
+        idExtension: 11,
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
@@ -213,26 +214,21 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 Future<List<String>> scrapingLeitor(String id) async {
   // shounen-no-abyss_cap-tulo-01
   try {
-    List<String> mangaAndChapter = id.split("--");
-    var parser = await Chaleno().load(
-        "https://unionleitor.top/leitor/${mangaAndChapter[0]}/${mangaAndChapter[1]}");
+    var parser = await Chaleno()
+        .load("https://gekkou.com.br/manga/${id.replaceAll("--", "/")}");
 
-    var resultHtml = parser?.querySelectorAll(".img-responsive");
+    var results = parser?.querySelectorAll("div#all > img");
+    // debugPrint("result: ${results?.html}");
 
     List<String> resultPages = [];
-    if (resultHtml != null) {
-      for (int i = 0; i < 2; ++i) {
-        resultHtml.removeAt(0);
-      }
-      for (Result image in resultHtml) {
-        String? page = image.src;
-        debugPrint("img: $page");
-        if (page != null) {
-          resultPages.add(page);
-        }
-      }
-    }
 
+    for (Result image in results!) {
+      String page = image.html!;
+      List<String> cortePage1 = page.split('data-src="');
+      List<String> cortePage2 = cortePage1[1].split('" alt=');
+      resultPages.add(cortePage2[0].trim());
+      // debugPrint("img: ${cortePage2[0].replaceFirst("com.br//", "com.br/").trim()}");
+    }
     return resultPages;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at EXtensionUnionMangas: $e");

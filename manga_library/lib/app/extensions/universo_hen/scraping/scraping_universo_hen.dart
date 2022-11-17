@@ -107,7 +107,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         capitulos: [
           Capitulos(
             id: linkChapter[1].replaceAll("/", ""),
-            capitulo: "1",
+            capitulo: "Capítulo 1",
             download: false,
             description: "",
             readed: false,

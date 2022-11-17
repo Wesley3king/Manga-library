@@ -135,7 +135,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
           chapters.add(Capitulos(
             id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""),
-            capitulo: corteCapitulo2[1],
+            capitulo:'Capítulo ${corteCapitulo2[1]}',
             description: "",
             download: false,
             readed: false,

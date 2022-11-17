@@ -14,7 +14,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
-    debugPrint("HTML: ${parser?.html}");
+    // debugPrint("HTML: ${parser?.html}");
 
     var result = parser?.querySelectorAll(indentify);
     // debugPrint("lrngth: ${result?.length}");
@@ -167,7 +167,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // name cap
         String? capName =
             chaptersResult[i].querySelector("div.col-xs-6 > a")!.text;
-        capName?.replaceFirst("Cap. ", "");
+        // capName?.replaceFirst("Cap. ", "");
         // print("chapetr name : $capName");
         // description date
         List<Result>? listDate =

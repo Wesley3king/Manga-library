@@ -10,7 +10,7 @@ class ExtensionMangaChan implements Extension {
   @override
   dynamic fetchServices;
   @override
-  String nome = "Mangá Chan";
+  String nome = "Mangás Chan";
   @override
   String extensionPoster = "Manga-Chan.webp";
   @override

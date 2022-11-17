@@ -11,7 +11,7 @@ void main() {
   });
   test("deve retornar um MangaInfoOffLineModel", () async {
     var data =
-        await extend.mangaDetail("mesmo-eu-tendo-decidido-jogar-com-voce"); // tiny-evil
+        await extend.mangaDetail("michitarita-seikatsu-nerawareta-megane-jimitsuma"); // tiny-evil michitarita-seikatsu-nerawareta-megane-jimitsuma mesmo-eu-tendo-decidido-jogar-com-voce
     debugPrint("data: $data");
   });
 

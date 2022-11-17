@@ -1,4 +1,3 @@
-import '../models/download_model.dart';
 import '../models/home_page_model.dart';
 import '../models/manga_info_offline_model.dart';
 import '../models/search_model.dart';
