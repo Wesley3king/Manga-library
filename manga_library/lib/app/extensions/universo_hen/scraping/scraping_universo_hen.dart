@@ -60,37 +60,54 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? authors;
     List<String> genres = [];
     List<String> linkChapter = [];
+    List<String> pages = [];
     if (parser != null) {
-      Result? postInfo = parser.querySelector("ul.paginaPostItens");
-      List<Result>? itens = postInfo.querySelectorAll("li");
-      debugPrint("itens: $itens");
       // name
       name = parser.querySelector("div.paginaPostInfo h1").text;
       debugPrint("name: $name");
-      description = itens![0].querySelector("i")?.text;
-      debugPrint("description: $description");
-      // img
-      img = parser.querySelector("div.paginaPostThumb img").src;
-      debugPrint("img: $img");
-      // authors
-      authors = itens[2].querySelector("a")?.text;
-      // genres
-      for (int cat = 3; cat < itens.length; ++cat) {
-        List<Result>? generos = itens[cat].querySelectorAll("a");
+      try {
+        Result? postInfo = parser.querySelector("ul.paginaPostItens");
+        List<Result>? itens = postInfo.querySelectorAll("li");
+        debugPrint("itens: $itens");
+        description = itens![0].querySelector("i")?.text;
+        debugPrint("description: $description");
+        // img
+        img = parser.querySelector("div.paginaPostThumb img").src;
+        debugPrint("img: $img");
+        // authors
+        authors = itens[2].querySelector("a")?.text;
+        // genres
+        for (int cat = 3; cat < itens.length; ++cat) {
+          List<Result>? generos = itens[cat].querySelectorAll("a");
 
-        if (generos != null) {
-          for (int i = 0; i < generos.length; ++i) {
-            genres.add("${generos[i].text}");
+          if (generos != null) {
+            for (int i = 0; i < generos.length; ++i) {
+              genres.add("${generos[i].text}");
+            }
           }
         }
+        debugPrint("genres: $genres");
+        // chapters
+        String? chapterPages =
+            parser.querySelector("ul.paginaPostBotoes > li > a").href; //  li a
+        debugPrint("linkchapter: $chapterPages");
+        // debugPrint("length de cap: ${parser.querySelector("ul.paginaPostBotoes").html}");
+        linkChapter = chapterPages!.split("id=");
+      } catch (e) {
+        debugPrint("não possui mais informações");
+        description = "Indisponivel";
+        img =
+            "https://universohentai.com/wp-content/uploads/2020/10/Universo-Hentai-Favicon.png";
+        authors = "Autor desconhecido";
+        linkChapter = ["", "chapterone"];
+
+        /// obter as paginas
+        Result? result = parser.querySelector("div.postGaleria");
+        List<Result>? elements = result.querySelectorAll("a");
+        for (Result page in elements!) {
+          pages.add('${page.href}');
+        }
       }
-      debugPrint("genres: $genres");
-      // chapters
-      String? chapterPages =
-          parser.querySelector("ul.paginaPostBotoes > li > a").href; //  li a
-      debugPrint("linkchapter: $chapterPages");
-      // debugPrint("length de cap: ${parser.querySelector("ul.paginaPostBotoes").html}");
-      linkChapter = chapterPages!.split("id=");
       // debugPrint("pages: ${linkChapter[1]}");
 
       return MangaInfoOffLineModel(
@@ -113,7 +130,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             readed: false,
             disponivel: true,
             downloadPages: [],
-            pages: [],
+            pages: pages,
           ),
         ],
       );

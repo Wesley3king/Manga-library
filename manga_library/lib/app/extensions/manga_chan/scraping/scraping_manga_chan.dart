@@ -40,7 +40,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     debugPrint("montando o model Ultimas Atualizações");
     Map<String, dynamic> destaques = {
       "idExtension": 10,
-      "title": "Mangá Chan Ultimas Atualizações",
+      "title": "Mangás Chan Ultimas Atualizações",
       "books": books
     };
     models.add(ModelHomePage.fromJson(destaques));
@@ -79,7 +79,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       debugPrint("montando o model Mais lidos da semana");
       Map<String, dynamic> maislidos = {
         "idExtension": 10,
-        "title": "Mangá Chan mais lidos da semana",
+        "title": "Mangás Chan mais lidos da semana",
         "books": books
       };
       models.add(ModelHomePage.fromJson(maislidos));
