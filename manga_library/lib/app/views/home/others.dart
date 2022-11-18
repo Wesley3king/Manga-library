@@ -77,11 +77,11 @@ class _OthersPageState extends State<OthersPage> {
               title: const Text('Biblioteca'),
               onTap: () => GoRouter.of(context).push('/configlibrary/false'),
             ),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Conta e Sincronização'),
-              onTap: () {},
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.account_circle),
+            //   title: const Text('Conta e Sincronização'),
+            //   onTap: () {},
+            // ),
             ListTile(
               leading: const Icon(Icons.backup),
               title: const Text('Backup e restauração local'),

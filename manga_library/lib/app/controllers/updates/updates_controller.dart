@@ -49,9 +49,10 @@ class UpdatesCore {
           return true;
         } else if ((int.parse(dateNow[0][0]) +
                 (24 - int.parse(dateLastUpdate[0][0]))) >=
-            6) {
+            6 && dateNow[1][2] != dateLastUpdate[1][2]) {
           return true;
         }
+        debugPrint("Não é hora de ATUALIZAR!");
         return false;
       }
 
@@ -167,6 +168,7 @@ class UpdatesCore {
   /// atualiza o livro
   static Future<bool> updateAnBook(Books book) async {
     MangaInfoController controller = MangaInfoController();
+    debugPrint("=========== ATUALIZANDO [ ${book.name} ] ==========");
     try {
       final bool data = await controller.updateBook(book.link, book.idExtension,
           isAnUpdateFromCore: true);

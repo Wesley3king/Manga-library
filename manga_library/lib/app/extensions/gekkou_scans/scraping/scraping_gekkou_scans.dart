@@ -117,10 +117,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // print("name: $name");
       // description
       description = parser.querySelector("div.well > p").text;
-      debugPrint("description: $description");
+      // debugPrint("description: $description");
       // img
       img = parser.querySelector("img.img-responsive").src;
-      debugPrint("img: $img");
+      // debugPrint("img: $img");
       // authors
       List<Result>? infoDataResult =
           parser.querySelectorAll("dl.dl-horizontal > dd");
@@ -128,7 +128,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           parser.querySelectorAll("dl.dl-horizontal > dt");
 
       for (int i = 0; i < infoResult.length; i++) {
-        debugPrint("${infoResult[i].text}");
+        // debugPrint("${infoResult[i].text}");
         String txt = infoResult[i].text!;
         if (txt == "Autor(s)") {
           authors = '${infoDataResult[i].text?.trim()}';
@@ -137,7 +137,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         } else if (txt == "Status") {
           state = '${infoDataResult[i].text?.trim()}';
         } else if (txt == "Categorias") {
-          debugPrint("gg : ${infoDataResult[i].text}");
+          // debugPrint("gg : ${infoDataResult[i].text}");
           List<String> genresPieces = infoDataResult[i].text!.split("/");
           for (String str in genresPieces) {
             genres.add(str.trim());
@@ -147,7 +147,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // chapters
       List<Result> chaptersResult =
           parser.querySelectorAll("ul.domaintld > li");
-      debugPrint("length de cap: ${chaptersResult.length}");
+      // debugPrint("length de cap: ${chaptersResult.length}");
 
       for (int i = 0; i < chaptersResult.length; ++i) {
         if (i == 0) {
@@ -183,7 +183,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           downloadPages: [],
           pages: [],
         ));
-        debugPrint("capitulo adicionado! $capName");
+        // debugPrint("capitulo adicionado! $capName");
       }
 
       return MangaInfoOffLineModel(

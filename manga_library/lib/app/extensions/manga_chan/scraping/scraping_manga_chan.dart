@@ -15,17 +15,17 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     Result? lancamentos =
         parser?.querySelector("div.postbody > div.bixbox > div.listupd");
     List<Result>? lancametosItens =
-        lancamentos?.querySelectorAll("div > div.bsx");
+        lancamentos?.querySelectorAll("div > div.utao");
     List<Map<String, String>> books = [];
     for (Result html in lancametosItens!) {
       // name
-      String? name = html.querySelector("div.bigor > div.tt > a")!.text;
+      String? name = html.querySelector("div.uta > div.luf > a > h4")!.text;
       // debugPrint("name: $name");
       // img
-      String? img = html.querySelector("a > div.limit > img")!.src;
+      String? img = html.querySelector("div.imgu > a > img")!.src;
       // debugPrint("img: $img");
       // link
-      String? link = html.querySelector("a")!.href;
+      String? link = html.querySelector("div.uta > div.luf > a")!.href;
       // debugPrint("link: $link");
       List<String> linkCorte1 = link!.split("manga/");
 
