@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -172,16 +173,15 @@ class _MangaDetailsState extends State<MangaDetails> {
                         const SizedBox(
                           height: 55,
                         ),
-                        Flexible(
-                          child: Text(
-                            widget.dados.name,
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: widget.dados.name.length > 30 ? 13 : 17,
-                            ),
+                        AutoSizeText(
+                          widget.dados.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
                           ),
+                          maxLines: 4,
+                          maxFontSize: 17,
+                          minFontSize: 12,
                         ),
                         const SizedBox(
                           height: 20,
