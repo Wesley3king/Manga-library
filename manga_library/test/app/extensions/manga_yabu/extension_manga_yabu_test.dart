@@ -35,7 +35,7 @@ void main() {
           description: '',
           download: false,
           readed: false,
-          disponivel: true,
+          mark: false,
           downloadPages: [],
           pages: [])
     ]);

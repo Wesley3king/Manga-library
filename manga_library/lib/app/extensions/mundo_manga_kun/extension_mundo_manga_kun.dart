@@ -42,7 +42,7 @@ class ExtensionMundoMangaKun implements Extension {
     Capitulos result = Capitulos(
         capitulo: "",
         id: "",
-        disponivel: false,
+        mark: false,
         description: "",
         download: false,
         downloadPages: [],

@@ -64,7 +64,7 @@ class Capitulos {
     required this.description,
     required this.download,
     required this.readed,
-    required this.disponivel,
+    required this.mark,
     required this.downloadPages,
     required this.pages,
   });
@@ -73,7 +73,7 @@ class Capitulos {
   late String description;
   late bool download;
   late bool readed;
-  late bool disponivel;
+  late bool mark;
   late List<String> downloadPages;
   late List<String> pages;
 
@@ -81,10 +81,10 @@ class Capitulos {
     id = json['id'];
     capitulo = json['capitulo'];
     description = json['description'];
-    download = json['download'];
-    disponivel = json['disponivel'];
-    readed = json['readed'];
-    downloadPages = List.castFrom<dynamic, String>(json['downloadPages']);
+    download = false; //json['download']
+    mark = false;
+    readed = false; //json['readed'];
+    downloadPages = []; //List.castFrom<dynamic, String>(json['downloadPages']);
     pages = List.castFrom<dynamic, String>(json['pages'] ?? []);
   }
 
@@ -92,11 +92,12 @@ class Capitulos {
     final data = <String, dynamic>{};
     data['id'] = id;
     data['capitulo'] = capitulo;
-    data['description'] = description;
-    data['download'] = download;
-    data['disponivel'] = disponivel;
-    data['readed'] = readed;
-    data['downloadPages'] = downloadPages;
+    data['description'] = mark;
+    // data['mark'] = mark;
+    // data['download'] = download;
+    // data['disponivel'] = disponivel;
+    // data['readed'] = readed;
+    // data['downloadPages'] = downloadPages;
     data['pages'] = pages;
     return data;
   }

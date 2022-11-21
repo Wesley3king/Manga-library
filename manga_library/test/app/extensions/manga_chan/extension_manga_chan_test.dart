@@ -23,7 +23,7 @@ void main() {
           capitulo: "312-5",
           id: "houkago-no-goumon-shoujo-capitulo-116",
           description: "",
-          disponivel: false,
+          mark: false,
           download: false,
           downloadPages: [],
           pages: [],

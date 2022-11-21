@@ -21,7 +21,7 @@ void main() {
           capitulo: "398.5",
           id: "Tales_of_Demons_and_Gods--398.5",
           description: "",
-          disponivel: false,
+          mark: false,
           download: false,
           downloadPages: [],
           pages: [],

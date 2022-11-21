@@ -5,7 +5,6 @@ import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/leitor_pages.dart';
-import 'package:manga_library/app/models/manga_info_model.dart';
 
 import '../../models/manga_info_offline_model.dart';
 
@@ -62,23 +61,6 @@ class MangaInfoOffLineController {
         .map((Capitulos cap) =>
             ModelPages(capitulo: cap.capitulo, id: cap.id, pages: cap.pages))
         .toList();
-  }
-
-  // monta e retorna um List<ModelCapitulosCorrelacionados>
-  List<ModelCapitulosCorrelacionados> buildModelCapitulosCorrelacionados(
-      MangaInfoOffLineModel model) {
-    var lista = model.capitulos.map((Capitulos cap) {
-      debugPrint("mt1 - ${cap.disponivel ? "T" : "F"}");
-      var md = ModelCapitulosCorrelacionados(
-          id: cap.id,
-          capitulo: cap.capitulo,
-          disponivel: cap.disponivel,
-          readed: cap.readed);
-      debugPrint("mt2 - ${md.disponivel ? "T" : "F"}");
-      return md;
-    }).toList();
-
-    return lista;
   }
 
   // add an offline book

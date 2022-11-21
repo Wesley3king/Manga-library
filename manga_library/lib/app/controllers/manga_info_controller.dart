@@ -8,6 +8,7 @@ import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/downloads_pages_model.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/models/mark_chapter_model.dart';
 // import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
 // import '../models/leitor_pages.dart';
@@ -49,6 +50,7 @@ class MangaInfoController {
       // operação OffLine
       MangaInfoOffLineModel? localData =
           await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
+
       /// adiciona o pedaco do link para ser utilizado no histórico
       GlobalData.pieceOfLink = url;
       if (localData != null) {
@@ -308,7 +310,7 @@ class ChaptersController {
                 description: capitulosCorrelacionados[i].description,
                 download: capitulosCorrelacionados[i].download,
                 readed: true,
-                disponivel: capitulosCorrelacionados[i].disponivel,
+                mark: capitulosCorrelacionados[i].mark,
                 downloadPages: capitulosCorrelacionados[i].downloadPages,
                 pages: capitulosCorrelacionados[i].pages,
               ));
@@ -322,7 +324,7 @@ class ChaptersController {
               description: capitulosCorrelacionados[i].description,
               download: capitulosCorrelacionados[i].download,
               readed: false,
-              disponivel: capitulosCorrelacionados[i].disponivel,
+              mark: capitulosCorrelacionados[i].mark,
               downloadPages: capitulosCorrelacionados[i].downloadPages,
               pages: capitulosCorrelacionados[i].pages,
             ));
@@ -383,6 +385,18 @@ class ChaptersController {
     debugPrint('marcar desmarcar concluido!');
   }
 
+  // ========================================================================
+  //                  ----- MARK MANAGEMENT -----
+  // ========================================================================
+  Future<bool> markOrRemoveMarkFromChapter() async {
+    try {
+      return true;
+    } catch (e) {
+      debugPrint("erro no markOrRemoveFromChapter at ChaptersController: $e");
+      return false;
+    }
+  }
+
   Future<void> correlacionarDownloads(
       {required String link,
       required int idExtension,
@@ -417,6 +431,23 @@ class ChaptersController {
       }
     }
     capitulosCorrelacionados = chaptersList;
+  }
+
+  // correlaciona os capitulos marcados
+  Future<void> correlacionarMarks(int idExtesnion, String link) async {
+    final List<MarkChaptersModel> models = await _hiveController.getMarks();
+    MarkChaptersModel markModel =
+        MarkChaptersModel(idExtension: 0, link: '', marks: []);
+    for (MarkChaptersModel model in models) {
+      if (model.idExtension == idExtesnion && model.link == link) {
+        markModel = model;
+        break;
+      }
+    }
+    // case 0: error or not found
+    if (!(markModel.idExtension == 0)) {
+      /// continue to implement this
+    }
   }
 }
 

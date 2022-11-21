@@ -41,7 +41,7 @@ class ExtensionMangaChan implements Extension {
     Capitulos result = Capitulos(
         capitulo: "error",
         id: "error",
-        disponivel: false,
+        mark: false,
         description: '',
         download: false,
         downloadPages: [],

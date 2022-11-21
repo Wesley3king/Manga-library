@@ -29,7 +29,7 @@ class LeitorController {
       description: "",
       download: false,
       readed: false,
-      disponivel: false,
+      mark: false,
       downloadPages: [],
       pages: []);
   ReaderChapter atualInfo = ReaderChapter(index: 0, id: '');

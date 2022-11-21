@@ -105,7 +105,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
 
     return ListTile(
       title: Text(capitulo.capitulo,
-        style: capitulo.disponivel
+        style: capitulo.mark
             ? capitulo.readed
                 ? const TextStyle(color: Color.fromARGB(255, 184, 184, 184))
                 : const TextStyle()

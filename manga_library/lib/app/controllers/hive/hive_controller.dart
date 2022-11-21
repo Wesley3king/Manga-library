@@ -8,6 +8,7 @@ import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/models/mark_chapter_model.dart';
 import 'package:manga_library/app/models/system_settings.dart';
 
 class HiveController {
@@ -339,7 +340,7 @@ class HiveController {
   Future<bool> updateSettings(SystemSettingsModel data) async {
     try {
       await clientData?.put("settings", data);
-  
+
       return true;
     } catch (e) {
       debugPrint('erro no HiveController - updateSettings: $e');
@@ -477,6 +478,49 @@ class HiveController {
     } catch (e) {
       debugPrint("erro no updateDownloads at HiveController: $e");
       return false;
+    }
+  }
+
+  // =========================================================================
+  //                ---- -- MARKS ON CHAPTERS -- ----
+  // =========================================================================
+  final marksKey = "marks";
+
+  List<MarkChaptersModel> writeMarks() {
+    List<MarkChaptersModel> models = [];
+    try {
+      clientData?.put(marksKey, models);
+    } catch (e) {
+      debugPrint("ERRO no writeMarks at HiveController: $e");
+    }
+    return models;
+  }
+
+  Future<bool> updateMarks(List<MarkChaptersModel> models) async {
+    try {
+      List<Map<String, dynamic>> processedModels =
+          models.map<Map<String, dynamic>>((model) => model.toJson()).toList();
+      await clientData?.put(marksKey, processedModels);
+      return true;
+    } catch (e) {
+      debugPrint("erro no updateMarks at HiveController: $e");
+      return false;
+    }
+  }
+
+  Future<List<MarkChaptersModel>> getMarks() async {
+    try {
+      List<dynamic>? data = clientData?.get(marksKey);
+      if (data == null) {
+        return writeMarks();
+      }
+      return data.map<MarkChaptersModel>((e) {
+        final Map<String, dynamic> model = Map<String, dynamic>.from(e);
+        return MarkChaptersModel.fromJson(model);
+      }).toList();
+    } catch (e) {
+      debugPrint("erro no getMarks at HiveController: $e");
+      return [];
     }
   }
 }

@@ -140,7 +140,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
             download: false,
             description: tradutor ?? "",
             readed: false,
-            disponivel: true,
+            mark: false,
             downloadPages: [],
             pages: pagesChapter,
           ),

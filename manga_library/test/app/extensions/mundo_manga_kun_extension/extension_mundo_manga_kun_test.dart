@@ -22,7 +22,7 @@ void main() {
         capitulo: "01",
         id: "shounen-no-abyss_cap-tulo-109",
         description: "",
-        disponivel: false,
+        mark: false,
         download: false,
         downloadPages: [],
         pages: [],    // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo

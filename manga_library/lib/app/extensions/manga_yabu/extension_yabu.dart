@@ -48,7 +48,7 @@ class ExtensionMangaYabu implements Extension {
         capitulo: "",
         id: "",
         description: "",
-        disponivel: false,
+        mark: false,
         download: false,
         downloadPages: [],
         pages: [],

@@ -27,7 +27,7 @@ abstract class Extension {
   Future<Capitulos> getPages(String url, List<Capitulos> listChapters) async {
     return Capitulos(
         capitulo: "",
-        disponivel: false,
+        mark: false,
         description: "",
         download: false,
         downloadPages: [],
