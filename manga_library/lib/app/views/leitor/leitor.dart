@@ -34,17 +34,13 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   final double sizeOfButtons = 25.0;
   final int visibleDuration = 400;
   final Curve visibleCurve = Curves.easeInOut;
-  ValueNotifier<bool> isVisible = ValueNotifier<bool>(GlobalData.settings.showControls);
+  ValueNotifier<bool> isVisible =
+      ValueNotifier<bool>(GlobalData.settings.showControls);
 
   // =========================================================================
   //                    ---- CONTROLS ----
   // =========================================================================
   List<Widget> buildInfo(BuildContext context) {
-    // final double height = MediaQuery.of(context).size.height - 120;
-    // definir o fullScreen
-    // isVisible
-    //     ? screenController.enterEdgeFullScreen()
-    //     : screenController.enterFullScreen();
     isVisible.value
         ? leitorController.setFullScreen(true)
         : leitorController.setFullScreen(false);
@@ -56,8 +52,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
       AnimatedContainer(
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
-        height: isVisible.value
-            ? 100 : 0,
+        height: isVisible.value ? 100 : 0,
         child: Container(
           color: appBarAndBottomAppBarColor,
           width: MediaQuery.of(context).size.width,
@@ -89,10 +84,23 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                 ),
               ),
               IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.bookmark_border,
-                  size: isVisible.value ? sizeOfButtons : 0,
+                onPressed: () => leitorController.markOrRemoveMarkFromChapter(),
+                icon: AnimatedBuilder(
+                  animation: leitorController.isMarked,
+                  builder: (context, child) {
+                    if (leitorController.isMarked.value) {
+                      return Icon(
+                        Icons.bookmark,
+                        color: Colors.amber,
+                        size: isVisible.value ? sizeOfButtons : 0,
+                      );
+                    } else {
+                      return Icon(
+                        Icons.bookmark_border,
+                        size: isVisible.value ? sizeOfButtons : 0,
+                      );
+                    }
+                  },
                 ),
               ),
               // const SizedBox(
@@ -102,12 +110,11 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-
       AnimatedContainer(
         duration: Duration(milliseconds: visibleDuration),
         curve: visibleCurve,
         height: isVisible.value
-            ?  isLandscape
+            ? isLandscape
                 ? 126
                 : 160
             : 0,
@@ -257,22 +264,19 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
     switch (leitorController.layoutState.value) {
       case ReaderLayouts.l:
         return LayoutL(
-          notifier: isVisible,
-          controller: controller,
-          leitorType: leitorController.leitorType
-        );
+            notifier: isVisible,
+            controller: controller,
+            leitorType: leitorController.leitorType);
       case ReaderLayouts.bordersLTR:
         return LayoutBorder(
-          notifier: isVisible,
-          controller: controller,
-          leitorType: leitorController.leitorType
-        );
+            notifier: isVisible,
+            controller: controller,
+            leitorType: leitorController.leitorType);
       case ReaderLayouts.bordersRTL:
         return LayoutBorder(
-          notifier: isVisible,
-          controller: controller,
-          leitorType: leitorController.leitorType
-        );
+            notifier: isVisible,
+            controller: controller,
+            leitorType: leitorController.leitorType);
       case ReaderLayouts.none:
         return SizedBox(
           child: GestureDetector(

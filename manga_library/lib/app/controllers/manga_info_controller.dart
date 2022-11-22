@@ -220,7 +220,8 @@ class ChaptersController {
             link: mapOfExtensions[idExtension]!.getLink(link),
             idExtension: idExtension,
             chaptersList: listaCapitulos);
-        await updateChapters(link, idExtension); // , listaCapitulos
+        await updateChapters(link, idExtension);
+        await correlacionarMarks(idExtension, link); // , listaCapitulos
 
       } else {
         // if (MangaInfoController.isTwoRequests) {
@@ -231,6 +232,7 @@ class ChaptersController {
         //   print("isn't twoRequests");
         capitulosCorrelacionados = listaCapitulos;
         await updateChapters(link, idExtension);
+        await correlacionarMarks(idExtension, link);
         // }
       }
       // disponibilizar os capitulos correlacionados
@@ -238,6 +240,7 @@ class ChaptersController {
       // MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
       // GlobalData.capitulosDisponiveis;
       // print("");
+      GlobalData.mangaModel.capitulos = capitulosCorrelacionados;
       state.value = ChaptersStates.sucess;
     } catch (e) {
       HomePageController.errorMessage = 'erro no catch ChapterController: $e';
@@ -256,6 +259,7 @@ class ChaptersController {
           idExtension: idExtension,
           chaptersList: listaCapitulos);
       await updateChapters(link, idExtension);
+      await correlacionarMarks(idExtension, link);
       // }
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
@@ -343,8 +347,8 @@ class ChaptersController {
     }
   }
 
-  marcarDesmarcar(String id, String link, Map<String, String> nameAndImage,
-      int idExtension) async {
+  Future<void> marcarDesmarcar(String id, String link,
+      Map<String, String> nameAndImage, int idExtension) async {
     ClientDataModel clientData = await _hiveController.getClientData();
     debugPrint('${clientData.capitulosLidos}');
 
@@ -388,8 +392,45 @@ class ChaptersController {
   // ========================================================================
   //                  ----- MARK MANAGEMENT -----
   // ========================================================================
-  Future<bool> markOrRemoveMarkFromChapter() async {
+  Future<bool> markOrRemoveMarkFromChapter(
+      String link, int idExtension, String chapterId) async {
     try {
+      final List<MarkChaptersModel> models = await _hiveController.getMarks();
+      String completUrl = link.contains("http")
+          ? link
+          : mapOfExtensions[idExtension]!.getLink(link);
+      MarkChaptersModel markModel =
+          MarkChaptersModel(idExtension: 0, link: '', marks: []);
+      for (int modelIndex = 0; modelIndex < models.length; ++modelIndex) {
+        MarkChaptersModel model = models[modelIndex];
+        if (model.idExtension == idExtension && model.link == completUrl) {
+          markModel = model;
+          models.removeAt(modelIndex);
+          break;
+        }
+      }
+      // case 0: error or not found
+      if (!(markModel.idExtension == 0) && markModel.marks.isNotEmpty) {
+        bool found = false;
+        for (int markIndex = 0;
+            markIndex < markModel.marks.length;
+            ++markIndex) {
+          if (chapterId == markModel.marks[markIndex]) {
+            found = true;
+            markModel.marks.removeWhere((id) => id == chapterId);
+            models.add(markModel);
+            break;
+          }
+        }
+        if (!found) {
+          markModel.marks.add(chapterId);
+          models.add(markModel);
+        }
+      } else {
+        models.add(MarkChaptersModel(
+            idExtension: idExtension, link: link, marks: [chapterId]));
+      }
+      await _hiveController.updateMarks(models);
       return true;
     } catch (e) {
       debugPrint("erro no markOrRemoveFromChapter at ChaptersController: $e");
@@ -434,19 +475,34 @@ class ChaptersController {
   }
 
   // correlaciona os capitulos marcados
-  Future<void> correlacionarMarks(int idExtesnion, String link) async {
+  Future<void> correlacionarMarks(int idExtension, String link) async {
     final List<MarkChaptersModel> models = await _hiveController.getMarks();
+    String completUrl = link.contains("http")
+        ? link
+        : mapOfExtensions[idExtension]!.getLink(link);
     MarkChaptersModel markModel =
         MarkChaptersModel(idExtension: 0, link: '', marks: []);
     for (MarkChaptersModel model in models) {
-      if (model.idExtension == idExtesnion && model.link == link) {
+      if (model.idExtension == idExtension && model.link == completUrl) {
         markModel = model;
         break;
       }
     }
     // case 0: error or not found
-    if (!(markModel.idExtension == 0)) {
+    if (!(markModel.idExtension == 0) && markModel.marks.isNotEmpty) {
       /// continue to implement this
+      for (int markIndex = 0; markIndex < markModel.marks.length; ++markIndex) {
+        final String mark = markModel.marks[markIndex];
+        for (int chapterIndex = 0;
+            chapterIndex < capitulosCorrelacionados.length;
+            ++chapterIndex) {
+          /// testa o id
+          if (capitulosCorrelacionados[chapterIndex].id == mark) {
+            capitulosCorrelacionados[chapterIndex].mark = true;
+            break;
+          }
+        }
+      }
     }
   }
 }
@@ -506,8 +562,6 @@ class DialogController {
       bool existe = false;
       bool executed = false;
       for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-        // print(
-        //     "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
         if ((dataLibrary[i].library == lista[i]['library']) &&
             (dataLibrary[i].books[iBook].link == book['link']) &&
             (dataLibrary[i].books[iBook].idExtension == book['idExtension'])) {

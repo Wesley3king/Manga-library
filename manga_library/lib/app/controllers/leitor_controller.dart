@@ -32,6 +32,7 @@ class LeitorController {
       mark: false,
       downloadPages: [],
       pages: []);
+  ValueNotifier<bool> isMarked = ValueNotifier<bool>(false);
   ReaderChapter atualInfo = ReaderChapter(index: 0, id: '');
 
   // ===== State =====
@@ -100,6 +101,7 @@ class LeitorController {
           await mapOfExtensions[idExtension]!.getPages(id, capitulos);
       // debugPrint("$cap");
       atualChapter = cap;
+      isMarked.value = cap.mark;
       // marcar o capitulo como lido
       if (atualInfo.id ==
               ChaptersController.capitulosCorrelacionados[atualInfo.index].id &&
@@ -149,6 +151,25 @@ class LeitorController {
         date: ""));
     // controller.updateChapters(
     //     capitulos, nameImageLink["link"]!, GlobalData.mangaModel.idExtension);
+  }
+
+  /// adiciona ou remove(caso esteja adicionado) as marcas de favorito no capítulo
+  Future<void> markOrRemoveMarkFromChapter() async {
+    bool response = await controller.markOrRemoveMarkFromChapter(
+        GlobalData.mangaModel.link,
+        GlobalData.mangaModel.idExtension,
+        atualChapter.id);
+    if (response) {
+      atualChapter.mark = !atualChapter.mark;
+
+      for (Capitulos chapter in GlobalData.mangaModel.capitulos) {
+        if (chapter.id == atualChapter.id) {
+          chapter.mark = atualChapter.mark;
+          break;
+        }
+      }
+      isMarked.value = atualChapter.mark;
+    }
   }
 
   void prevChapter(String link, int idExtension) {
@@ -331,7 +352,7 @@ class LeitorController {
       type ??= GlobalData.settings.layout;
       layoutUi = type;
     }
-    
+
     switch (type) {
       case "L":
         layoutState.value = ReaderLayouts.l;

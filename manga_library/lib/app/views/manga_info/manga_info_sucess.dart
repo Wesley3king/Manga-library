@@ -14,15 +14,12 @@ import 'off_line/off_line_widget.dart';
 
 class SucessMangaInfo extends StatefulWidget {
   final MangaInfoOffLineModel dados;
-  // final bool sucess2;
-  // final List<Capitulos>? capitulosDisponiveis;
   final String link;
   final MangaInfoController controller;
   const SucessMangaInfo({
     super.key,
     required this.dados,
     required this.link,
-    // required this.capitulosDisponiveis,
     required this.controller,
   });
 
@@ -38,9 +35,8 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
   late final ChaptersController chaptersController;
   late ScrollController _scrollController;
   // colors
-  final TextStyle indisponivel = const TextStyle(color: Colors.red);
-  // final List<Capitulos> listaCapitulos;
-  //   final List<ModelLeitor>? listaCapitulosDisponiveis;
+  final TextStyle marked = const TextStyle(color: Colors.amber);
+
   // trailings
   IconButton naoLido(String id, String link, String chapter) {
     // Map<String, String> nameImageLink = {
@@ -106,10 +102,10 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
     return ListTile(
       title: Text(capitulo.capitulo,
         style: capitulo.mark
-            ? capitulo.readed
+            ? marked
+            : capitulo.readed
                 ? const TextStyle(color: Color.fromARGB(255, 184, 184, 184))
-                : const TextStyle()
-            : indisponivel,
+                : const TextStyle(),
       ),
       subtitle: Text(capitulo.description),
       leading: capitulo.readed
