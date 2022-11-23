@@ -4,6 +4,7 @@ import 'package:manga_library/app/extensions/gekkou_scans/scraping/scraping_gekk
 import 'package:manga_library/app/extensions/model_extension.dart';
 
 import '../../models/home_page_model.dart';
+import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
 import '../../models/search_model.dart';
 
@@ -34,7 +35,8 @@ class ExtensionGekkouScans implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => "https://gekkou.com.br/manga/$pieceOfLink";
+  String getLink(String pieceOfLink) =>
+      "https://gekkou.com.br/manga/$pieceOfLink";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -71,7 +73,7 @@ class ExtensionGekkouScans implements Extension {
   }
 
   @override
-  Future<SearchModel> search(String txt) async {
+  Future<List<Books>> search(String txt) async {
     try {
       debugPrint("GEKKOU SCANS SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
@@ -85,14 +87,13 @@ class ExtensionGekkouScans implements Extension {
           buffer.write('$str+');
         }
       }
-      List<Map<String, String>> data = await searchService(buffer.toString().toLowerCase());
+      List<Map<String, String>> data =
+          await searchService(buffer.toString().toLowerCase());
 
-      return SearchModel.fromJson(
-          {"font": nome, "data": data, "idExtension": id});
+      return data.map<Books>((e) => Books.fromJson(e)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
-      return SearchModel.fromJson(
-          {"font": nome, "data": [], "idExtension": id});
+      return [];
     }
   }
 }

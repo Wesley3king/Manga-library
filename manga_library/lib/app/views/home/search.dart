@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/views/extensions/extensions_page.dart';
-import 'package:manga_library/app/views/search/search_result.dart';
+import 'package:manga_library/app/views/search/search_result_list.dart';
 
 import '../../controllers/search_controller.dart';
 
@@ -72,8 +72,8 @@ class MySearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     if (query != '') {
       searchController.search(query);
-      return SearchResult(
-        searchController: searchController,
+      return SearchResultsPage(
+        controller: searchController,
       );
     } else {
       return Container();

@@ -12,6 +12,8 @@ import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/search_model.dart';
 
+import '../../models/libraries_model.dart';
+
 class ExtensionMangaYabu implements Extension {
   @override
   dynamic fetchServices = YabuFetchServices();
@@ -75,19 +77,15 @@ class ExtensionMangaYabu implements Extension {
   }
 
   @override
-  Future<SearchModel> search(String txt) async {
+  Future<List<Books>> search(String txt) async {
     debugPrint("MANGA YABU SEARCH STARTING...");
     try {
-      Map<String, dynamic> data = await fetchServices.search(txt);
+      List<Map<String, dynamic>> data = await fetchServices.search(txt);
       log("data: $data");
-      return SearchModel.fromJson(data);
+      return data.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionMangaYabu: $e");
-      return SearchModel(
-        font: "MangaYabu",
-        idExtension: 1,
-        books: [],
-      );
+      return [];
     }
   }
 }

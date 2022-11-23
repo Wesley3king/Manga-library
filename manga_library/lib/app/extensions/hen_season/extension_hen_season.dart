@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/hen_season/scraping/scraping_hen_season.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
+import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/manga_info_offline_model.dart';
@@ -50,7 +51,7 @@ class ExtensionHenSeason implements Extension {
   }
 
   @override
-  Future<SearchModel> search(String txt) async {
+  Future<List<Books>> search(String txt) async {
     try {
       debugPrint("HENT SEASON SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
@@ -67,11 +68,10 @@ class ExtensionHenSeason implements Extension {
 
       List<Map> books = await compute(scrapingSearch, buffer.toString());
 
-      return SearchModel.fromJson(
-          {"font": nome, "data": books, "idExtension": id});
+      return books.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionHenSeason: $e");
-      return SearchModel(books: [], font: nome, idExtension: id);
+      return [];
     }
   }
 }

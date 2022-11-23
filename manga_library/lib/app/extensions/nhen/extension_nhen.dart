@@ -3,6 +3,7 @@ import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/extensions/nhen/scraping/nhen_scraping.dart';
 
 import '../../models/home_page_model.dart';
+import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
 import '../../models/search_model.dart';
 
@@ -33,8 +34,7 @@ class ExtensionNHen implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) =>
-      "https://nhentai.to/g/$pieceOfLink";
+  String getLink(String pieceOfLink) => "https://nhentai.to/g/$pieceOfLink";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -47,7 +47,7 @@ class ExtensionNHen implements Extension {
   }
 
   @override
-  Future<SearchModel> search(String txt) async {
+  Future<List<Books>> search(String txt) async {
     try {
       debugPrint("NHENT SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
@@ -61,15 +61,13 @@ class ExtensionNHen implements Extension {
           buffer.write('$str+');
         }
       }
-      
+
       List<Map> books = await compute(scrapingSearch, buffer.toString());
-      
-      return SearchModel.fromJson(
-          {"font": nome, "data": books, "idExtension": id});
+
+      return books.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
-      return SearchModel.fromJson(
-          {"font": nome, "data": [], "idExtension": id});
+      return [];
     }
   }
 }

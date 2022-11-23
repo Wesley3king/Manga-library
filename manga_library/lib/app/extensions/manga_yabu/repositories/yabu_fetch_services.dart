@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 // import 'package:manga_library/app/models/leitor_pages.dart';
@@ -38,31 +37,22 @@ class YabuFetchServices {
   //   }
   // }
 
-  Future<Map<String, dynamic>> search(String txt) async {
+  Future<List<Map<String, dynamic>>> search(String txt) async {
     try {
-      var data = await dio.post('https://manga-search-server.herokuapp.com/search',
+      var data = await dio.post(
+          'https://manga-search-server.herokuapp.com/search',
           data: {"txt": txt});
       // debugPrint(data.data['data']);
 
       var decoded = List.from(data.data);
-      List<Map<String, dynamic>> newData = decoded.map<Map<String, dynamic>>((e) => {
-        "name": e["title"],
-        "img": e["cover"],
-        "link": e["slug"]
-      }).toList();
-      return {
-        "font": "MangaYabu",
-        "idExtension": 1,
-        "data": newData,
-      };
+      return decoded
+          .map<Map<String, dynamic>>(
+              (e) => {"name": e["title"], "img": e["cover"], "link": e["slug"]})
+          .toList();
     } catch (e, s) {
       debugPrint('error no search! $e');
       debugPrint('$s');
-      return {
-        "font": "MangaYabu",
-        "idExtension": 1,
-        "data": [],
-      };
+      return [];
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:manga_library/app/extensions/union_mangas/repositories/fetch_ser
 import 'package:manga_library/app/extensions/union_mangas/scraping/union_scraping.dart';
 
 import '../../models/home_page_model.dart';
+import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
 import '../../models/search_model.dart';
 
@@ -34,7 +35,8 @@ class ExtensionUnionMangas implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => "https://unionleitor.top/pagina-manga/$pieceOfLink";
+  String getLink(String pieceOfLink) =>
+      "https://unionleitor.top/pagina-manga/$pieceOfLink";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -71,7 +73,7 @@ class ExtensionUnionMangas implements Extension {
   }
 
   @override
-  Future<SearchModel> search(String txt) async {
+  Future<List<Books>> search(String txt) async {
     try {
       debugPrint("UNION SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
@@ -100,12 +102,10 @@ class ExtensionUnionMangas implements Extension {
       }
       // print('---------------------------------------------');
       // print(books);
-      return SearchModel.fromJson(
-          {"font": nome, "data": books, "idExtension": id});
+      return data.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
-      return SearchModel.fromJson(
-          {"font": nome, "data": [], "idExtension": id});
+      return [];
     }
   }
 }

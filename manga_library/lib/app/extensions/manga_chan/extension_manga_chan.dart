@@ -3,6 +3,7 @@ import 'package:manga_library/app/extensions/manga_chan/scraping/scraping_manga_
 import 'package:manga_library/app/extensions/model_extension.dart';
 
 import '../../models/home_page_model.dart';
+import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
 import '../../models/search_model.dart';
 
@@ -71,7 +72,7 @@ class ExtensionMangaChan implements Extension {
   }
 
   @override
-  Future<SearchModel> search(String txt) async {
+  Future<List<Books>> search(String txt) async {
     try {
       debugPrint("SILENCE SCAN SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
@@ -91,12 +92,10 @@ class ExtensionMangaChan implements Extension {
 
       // print('---------------------------------------------');
       // print(data);
-      return SearchModel.fromJson(
-          {"font": nome, "data": data, "idExtension": id});
+      return data.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
-      return SearchModel.fromJson(
-          {"font": nome, "data": [], "idExtension": id});
+      return [];
     }
   }
 }

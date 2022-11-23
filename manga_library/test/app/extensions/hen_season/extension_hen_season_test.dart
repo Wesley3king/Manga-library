@@ -32,8 +32,8 @@ void main() {
 
   test("deve retornar um SearchModel", () async {
     var data = await extend.search("dom");
-    if (data.books.isNotEmpty) {
-      debugPrint("data: ${data.books[0].link}");
+    if (data.isNotEmpty) {
+      debugPrint("data: ${data[0].link}");
     }
   });
 }

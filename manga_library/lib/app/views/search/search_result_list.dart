@@ -7,8 +7,9 @@ import '../../controllers/search_controller.dart';
 import '../../models/search_model.dart';
 
 class SearchResultsPage extends StatelessWidget {
-  final List<SearchModel> results;
-  const SearchResultsPage({super.key, required this.results});
+  // final List<SearchModel> results;
+  final SearchController controller;
+  const SearchResultsPage({super.key, required this.controller});
 
   Widget item(Books data, var context) {
     return Padding(
@@ -61,12 +62,31 @@ class SearchResultsPage extends StatelessWidget {
   }
 
   Widget resultList(SearchModel model, BuildContext context) {
-    if (model.books.isEmpty) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 95,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
+    if (model.state == SearchStates.sucess) {
+      if (model.books.isEmpty) {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 95,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
+            child: Column(
+              children: [
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: SizedBox(
+                    height: 18,
+                    child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
+                ),
+                const Center(child: Text("Nenhum resultado encontrado"),),
+              ],
+            ),
+          ),
+        );
+      } else {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 255,
           child: Column(
             children: [
               const Divider(),
@@ -76,9 +96,38 @@ class SearchResultsPage extends StatelessWidget {
                   height: 18,
                   child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
               ),
-              const Center(child: Text("Nenhum resultado encontrado"),),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: model.books.length,
+                  cacheExtent: 1000,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => item(model.books[index], context),
+                ),
+              ),
             ],
           ),
+        );
+      }
+    } else if (model.state == SearchStates.start) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 255,
+        child: Column(
+          children: [
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: SizedBox(
+                height: 18,
+                child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),
+              )),
+            ),
+            const Expanded(
+              child: Center(
+                child: CircularProgressIndicator()
+              ),
+            ),
+          ],
         ),
       );
     } else {
@@ -95,11 +144,11 @@ class SearchResultsPage extends StatelessWidget {
                 child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: model.books.length,
-                cacheExtent: 1000,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => item(model.books[index], context),
+              child: Center(
+                child: Row(children: const <Widget>[
+                  Icon(Icons.report_gmailerrorred),
+                  Text('Erro na busca')
+                ],),
               ),
             ),
           ],
@@ -113,25 +162,13 @@ class SearchResultsPage extends StatelessWidget {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: ListView.builder(
-          itemCount: results.length + 1,
-          cacheExtent: 10000,
-          itemBuilder: (context, index) {
-            if (index + 1 == results.length + 1 &&
-                !SearchController.finalized) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 300,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            } else if (SearchController.finalized && index == results.length) {
-              return Container();
-            } else {
-              return resultList(results[index], context);
-            }
-          },
+        child: ValueListenableBuilder(
+          valueListenable: controller.state,
+          builder: (context, value, child) => ListView.builder(
+            itemCount: controller.result.length,
+            cacheExtent: 10000,
+            itemBuilder: (context, index) => resultList(controller.result[index], context)
+          ),
         ));
   }
 }

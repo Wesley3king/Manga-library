@@ -1,3 +1,5 @@
+import 'package:manga_library/app/models/libraries_model.dart';
+
 import '../models/home_page_model.dart';
 import '../models/manga_info_offline_model.dart';
 import '../models/search_model.dart';
@@ -42,9 +44,8 @@ abstract class Extension {
   }
 
   // retorna um SearchModel com os mangas pesquisados
-  Future<SearchModel> search(String txt) async {
-    Map<String, dynamic> data = await fetchServices.search(txt);
-    return SearchModel.fromJson(data);
+  Future<List<Books>> search(String txt) async {
+    return [];
   }
 
   // implementa os downloads

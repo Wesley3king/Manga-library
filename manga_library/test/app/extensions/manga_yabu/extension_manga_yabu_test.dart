@@ -42,7 +42,7 @@ void main() {
     debugPrint("data: $data");
   });
   test('deve retornar um SearchModel', () async {
-    SearchModel data = await extensionManga.search('one piece');
-    debugPrint(data.books[0].name);
+    List data = await extensionManga.search('one piece');
+    debugPrint(data[0].name);
   });
 }
