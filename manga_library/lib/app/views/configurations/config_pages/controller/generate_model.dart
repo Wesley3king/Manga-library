@@ -252,6 +252,7 @@ buildSettingsModel() {
               "optionsAndValues": [
                 {"option": "100", "value": 100},
                 {"option": "200", "value": 200},
+                {"option": "300", "value": 300},
                 {"option": "400", "value": 400},
                 {"option": "600", "value": 600},
               ]

@@ -289,7 +289,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    leitorController.start(widget.link, widget.id, widget.idExtension);
+    leitorController.start(widget.link, widget.id, widget.idExtension, isFirstTime: true);
     bottomSheetController = AnimationController(vsync: this);
   }
 

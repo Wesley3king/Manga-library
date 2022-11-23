@@ -159,6 +159,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
         color: color,
         filterQuality: filterQuality,
         isOffLine: widget.leitorController.atualChapter.download,
+        chapterId: widget.leitorController.atualChapter.id,
         controller: widget.controller);
   }
 

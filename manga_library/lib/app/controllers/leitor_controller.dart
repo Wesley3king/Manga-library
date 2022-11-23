@@ -78,23 +78,24 @@ class LeitorController {
   // ========== SCROLL WEBTOON ===========
   static int scrollWebtoonValue = 400;
 
-  void start(String link, String id, int idExtension) async {
+  void start(String link, String id, int idExtension, {bool? isFirstTime}) async {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.mangaModel.capitulos;
       // configurar o leitor
-      setReaderLayout("pattern");
-      setFilterQuality("pattern");
-      setOrientacion("pattern");
-      setBackgroundColor();
-      setReaderType("pattern");
-      setWakeLock(null);
-      if (isCustomShine) {
-        setShine(shineValueUi);
+      if (isFirstTime != null && isFirstTime == true) {
+        setReaderLayout("pattern");
+        setFilterQuality("pattern");
+        setOrientacion("pattern");
+        setBackgroundColor();
+        setReaderType("pattern");
+        setWakeLock(null);
+        if (isCustomShine) {
+          setShine(shineValueUi);
+        }
       }
       // processar informações
-      atualInfo =
-          getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
+      atualInfo = getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
       Capitulos cap =

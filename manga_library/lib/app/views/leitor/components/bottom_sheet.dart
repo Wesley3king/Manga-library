@@ -319,10 +319,6 @@ Widget getWebttonSettings(
                   notifier.value++;
                 },
                 items: const [
-                  // DropdownMenuItem(
-                  //   value: "0",
-                  //   child: Text('Padrão'),
-                  // ),
                   DropdownMenuItem(
                     value: "100",
                     child: Text('100'),
@@ -330,6 +326,10 @@ Widget getWebttonSettings(
                   DropdownMenuItem(
                     value: "200",
                     child: Text('200'),
+                  ),
+                  DropdownMenuItem(
+                    value: "300",
+                    child: Text('300'),
                   ),
                   DropdownMenuItem(
                     value: "400",

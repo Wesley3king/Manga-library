@@ -9,12 +9,14 @@ import '../../../controllers/leitor_controller.dart';
 
 class ScrollablePositionedListPage extends StatefulWidget {
   final bool isOffLine;
+  final String chapterId;
   final PagesController controller;
   final FilterQuality filterQuality;
   final List<String> lista;
   final Color color;
   const ScrollablePositionedListPage(
       {super.key,
+      required this.chapterId,
       required this.lista,
       required this.color,
       required this.filterQuality,
@@ -38,9 +40,13 @@ class ScrollablePositionedListPageState
   bool isWorking = false;
   List<Widget> images = [];
 
+  /// corrigi um erro com downloads
+  late String atualChapterId;
+
   @override
   void initState() {
     super.initState();
+    atualChapterId = widget.chapterId;
     // final heightGenerator = Random(328902348);
     // final colorGenerator = Random(42490823);
     // itemHeights = List<double>.generate(
@@ -53,38 +59,53 @@ class ScrollablePositionedListPageState
   }
 
   @override
-  Widget build(BuildContext context) => Material(
-        child: OrientationBuilder(builder: (context, orientation) {
-          return Column(
-            children: <Widget>[
-              Expanded(
-                child: list(orientation),
-              ),
-              positionsView,
-            ],
-          );
-        }),
-      );
+  void dispose() {
+    debugPrint("dispose enabled!");
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.chapterId != atualChapterId) {
+      itemHeights.clear();
+      indexes.value = 0;
+      images.clear();
+      atualChapterId = widget.chapterId;
+      widget.controller.scrollControllerList.jumpTo(index: 0);
+    }
+    return Material(
+      child: OrientationBuilder(builder: (context, orientation) {
+        return Column(
+          children: <Widget>[
+            Expanded(
+              child: list(orientation),
+            ),
+            positionsView,
+          ],
+        );
+      }),
+    );
+  }
 
   Widget list(Orientation orientation) => InteractiveViewer(
-    child: Container(
-          color: widget.color,
-          child: ValueListenableBuilder(
-            valueListenable: indexes, 
-            builder: (context, value, child) => ScrollablePositionedList.builder(
-            itemCount: widget.lista.length,
-            itemBuilder: (context, index) => generateItens(index, context),
-            itemScrollController: widget.controller.scrollControllerList,
-            scrollController: widget.controller.scrollController,
-            itemPositionsListener: itemPositionsListener,
-            //reverse: reversed,
-            // scrollDirection: orientation == Orientation.portrait
-            //     ? Axis.vertical
-            //     : Axis.horizontal,
-          ),
-          )
-        ),
-  );
+        child: Container(
+            color: widget.color,
+            child: ValueListenableBuilder(
+              valueListenable: indexes,
+              builder: (context, value, child) =>
+                  ScrollablePositionedList.builder(
+                itemCount: widget.lista.length,
+                itemBuilder: (context, index) => generateItens(index, context),
+                itemScrollController: widget.controller.scrollControllerList,
+                scrollController: widget.controller.scrollController,
+                itemPositionsListener: itemPositionsListener,
+                //reverse: reversed,
+                // scrollDirection: orientation == Orientation.portrait
+                //     ? Axis.vertical
+                //     : Axis.horizontal,
+              ),
+            )),
+      );
 
   Widget get positionsView => ValueListenableBuilder<Iterable<ItemPosition>>(
         valueListenable: itemPositionsListener.itemPositions,
@@ -151,8 +172,9 @@ class ScrollablePositionedListPageState
 
   // get on line image
   Future<Uint8List> getOnLineImage(String src) async {
-    Response<List<int>> rs = await Dio(BaseOptions(connectTimeout: 60000, )).get<List<int>>(src,
-        options: Options(responseType: ResponseType.bytes));
+    Response<List<int>> rs = await Dio(BaseOptions(
+      connectTimeout: 60000,
+    )).get<List<int>>(src, options: Options(responseType: ResponseType.bytes));
     return Uint8List.fromList(rs.data!);
   }
 
@@ -177,10 +199,12 @@ class ScrollablePositionedListPageState
         errorBuilder: (context, error, stackTrace) => SizedBox(
           width: width,
           height: 100,
-          child: Row(children: [
-            const Icon(Icons.report_problem),
-            Text('Erro ao carregar Imagem: $src')
-          ],),
+          child: Row(
+            children: [
+              const Icon(Icons.report_problem),
+              Text('Erro ao carregar Imagem: $src')
+            ],
+          ),
         ),
       );
       itemHeights.add((image.height * width) / image.width);

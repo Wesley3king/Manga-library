@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/historic_model.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/models/mark_chapter_model.dart';
 import 'package:manga_library/app/models/system_settings.dart';
 
 import '../../models/manga_info_offline_model.dart';
@@ -26,6 +28,10 @@ class BackupCore {
       } else {
         log("não é clientdata model: ${clientData.runtimeType}");
       }
+      // marks
+      var marks = await hiveController.getMarks();
+      List<Map<String, dynamic>> marksData =
+          marks.map<Map<String, dynamic>>((e) => e.toJson()).toList();
       // libraries
       var librariesData = await hiveController.getLibraries();
       var libraries = librariesData.map((model) => model.toJson()).toList();
@@ -57,6 +63,7 @@ class BackupCore {
 
       Map<String, dynamic> backupData = {
         "clientData": clientData,
+        "marks": marksData,
         "homePage": homePageData,
         "libraries": libraries,
         "ocultLibraries": ocultLibraries,
@@ -97,6 +104,12 @@ class BackupCore {
           .toList();
 
       await hiveController.updateHomePage(homePageData ?? []);
+      // ================ marks ===================
+      List<MarkChaptersModel> marksList = data['marks']
+          .map<MarkChaptersModel>(
+              (dynamic json) => MarkChaptersModel.fromJson(json))
+          .toList();
+      await hiveController.updateMarks(marksList);
 
       // ================ libraries ====================- updateLibraries(List<LibraryModel> listModel)
       List<LibraryModel> libraryList = data['libraries']
@@ -109,7 +122,9 @@ class BackupCore {
           .toList();
       await hiveController.updateOcultLibraries(ocultLibraryList);
       // ================= settings =============================
-      await hiveController.updateSettings(SystemSettingsModel.fromJson(data['settings']));
+      final SystemSettingsModel settingsModel =
+          SystemSettingsModel.fromJson(data['settings']);
+      await hiveController.updateSettings(settingsModel);
       // ================ historic ==============================
       List<HistoricModel> historicModels = data['historic']
           .map<HistoricModel>((dynamic json) => HistoricModel.fromJson(json))
@@ -123,7 +138,7 @@ class BackupCore {
           .toList();
 
       await hiveController.updateBook(books);
-
+      ConfigSystemController.instance.update(settingsModel);
       return "sucess";
     } catch (e) {
       debugPrint("erro no readBackup at BackupCore: $e");

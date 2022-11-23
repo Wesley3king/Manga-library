@@ -130,8 +130,7 @@ class MangaInfoController {
       MangaInfoOffLineModel? offLineBook;
 
       if (isAnUpdateFromCore) {
-        offLineBook =
-            await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
+        offLineBook = await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
         if (offLineBook == null) {
           /// aqui retorno true -- MAS O MANGA NÃO É ATUALIZADO, já que não existe ná memória
           return true;
@@ -141,7 +140,7 @@ class MangaInfoController {
       if (isAnOffLineBook) {
         // is an off line book
         capitulosDisponiveis = dados.capitulos;
-        debugPrint("nao é twoRequests: $capitulosDisponiveis");
+        // debugPrint("nao é twoRequests: $capitulosDisponiveis");
 
         // if (dados == null) {
         //   debugPrint("dd off-line true");
@@ -160,12 +159,12 @@ class MangaInfoController {
         await mangaInfoOffLineController.updateBook(
             model: data,
             img: offLineBook?.img,
-            capitulos: ChaptersController.capitulosCorrelacionados);
+            capitulos: data.capitulos);
         debugPrint("inserindo com SUCESSO na base de dados!");
       } else {
         // isn't an off ine book
         capitulosDisponiveis = dados.capitulos;
-        debugPrint("nao é twoRequests: $capitulosDisponiveis");
+        // debugPrint("nao é twoRequests: $capitulosDisponiveis");
 
         await chaptersController?.update(
             capitulosDisponiveis ?? [], url, idExtension);

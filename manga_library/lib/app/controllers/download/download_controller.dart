@@ -50,7 +50,7 @@ class DownloadController {
 
     try {
       // esta gurada o indice do download a ser removida da fila
-      List<int> indexToRemove = [];
+      List<Map<String, dynamic>> dataToRemove = [];
       final List<DownloadModel> filaModificable =
           List<DownloadModel>.from(filaDeDownload);
       // laço
@@ -64,7 +64,11 @@ class DownloadController {
           model: model.model,
         );
         if (result) {
-          indexToRemove.add(i);
+          dataToRemove.add({
+              "idExtension": model.model.idExtension,
+              "link": model.model.link,
+              "idChapter": model.capitulo.id
+            });
           model.state?.value = DownloadStates.delete;
         } else {
           ++model.attempts;
@@ -78,18 +82,24 @@ class DownloadController {
             //model.state?.value = DownloadStates.error;
             // filaDeDownload.removeWhere((DownloadModel downloadModel) =>
             //     downloadModel.capitulo.id == model.capitulo.id);
-            indexToRemove.add(i);
+            dataToRemove.add({
+              "idExtension": model.model.idExtension,
+              "link": model.model.link,
+              "idChapter": model.capitulo.id
+            });
           }
         }
       }
       // caso ainda tenha downloads
       // filaDeDownload = filaDeDownloadUnmodifiable;
-      /// ========== [ inventar outro método URGENTE ] =====================
-      for (int index in indexToRemove) {
-        filaDeDownload.removeAt(index);
-        //removeWhere((DownloadModel downloadModel) =>
-        //  downloadModel.capitulo.id == model.capitulo.id
-        //);
+      /// ========== [ método em Teste ] =====================
+      for (Map<String, dynamic> removeData in dataToRemove) {
+        // filaDeDownload.removeAt(index);
+        filaDeDownload.removeWhere((DownloadModel downloadModel) =>
+          downloadModel.capitulo.id == removeData["idChapter"] &&
+          downloadModel.model.idExtension == removeData["idExtension"] &&
+          downloadModel.model.link == removeData["link"]
+        );
         //model.state?.value = DownloadStates.delete;
       }
       if (filaDeDownload.isNotEmpty) downloadMachine();

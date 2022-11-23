@@ -92,7 +92,7 @@ class Capitulos {
     final data = <String, dynamic>{};
     data['id'] = id;
     data['capitulo'] = capitulo;
-    data['description'] = mark;
+    data['description'] = description;
     // data['mark'] = mark;
     // data['download'] = download;
     // data['disponivel'] = disponivel;
