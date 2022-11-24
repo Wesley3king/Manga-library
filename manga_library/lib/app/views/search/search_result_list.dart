@@ -1,6 +1,7 @@
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../controllers/search_controller.dart';
@@ -17,14 +18,13 @@ class SearchResultsPage extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           // List<String> corteUrl1 = data.link.split('manga/');
-          GoRouter.of(context)
-              .push('/detail/${data.link}/${data.idExtension}');
+          GoRouter.of(context).push('/detail/${data.link}/${data.idExtension}');
         },
         child: SizedBox(
           width: 110,
           height: 170,
           child: Column(
-            mainAxisAlignment:   MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: 145.0,
@@ -45,14 +45,12 @@ class SearchResultsPage extends StatelessWidget {
                 //   fit: BoxFit.fill,
                 // ),
               ),
-              Text(data.name,
-                  overflow: TextOverflow.ellipsis,
-                  strutStyle: StrutStyle.fromTextStyle(const TextStyle(
-                    fontSize: 13,
-                  ), height: 1.0,
-                  forceStrutHeight: true,
-                  fontSize: 13
-                ),
+              AutoSizeText(
+                data.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                maxFontSize: 13,
+                minFontSize: 12,
               ),
             ],
           ),
@@ -68,17 +66,25 @@ class SearchResultsPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: 95,
           child: Padding(
-            padding: const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
+            padding:
+                const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
             child: Column(
               children: [
                 const Divider(),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: SizedBox(
-                    height: 18,
-                    child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
+                      height: 18,
+                      child: Text(
+                        model.font,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                 ),
-                const Center(child: Text("Nenhum resultado encontrado"),),
+                const Center(
+                  child: Text("Nenhum resultado encontrado"),
+                ),
               ],
             ),
           ),
@@ -91,17 +97,45 @@ class SearchResultsPage extends StatelessWidget {
             children: [
               const Divider(),
               Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: const EdgeInsets.only(bottom: 4.0),
                 child: SizedBox(
-                  height: 18,
-                  child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
+                  height: 27,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          model.font,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                          alignment: Alignment.topCenter,
+                          tooltip: "ir",
+                          onPressed: () {
+                            GlobalData.searchModelSelected = model;
+                            GlobalData.searchString = controller.lastSearch;
+                            GoRouter.of(context)
+                                .push('/searchshowpage/${model.idExtension}');
+                          },
+                          icon: const Icon(
+                            Icons.arrow_forward,
+                            size: 20,
+                          ))
+                    ],
+                  ),
+                ),
               ),
               Expanded(
                 child: ListView.builder(
                   itemCount: model.books.length,
                   cacheExtent: 1000,
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => item(model.books[index], context),
+                  itemBuilder: (context, index) =>
+                      item(model.books[index], context),
                 ),
               ),
             ],
@@ -111,22 +145,28 @@ class SearchResultsPage extends StatelessWidget {
     } else if (model.state == SearchStates.start) {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: 255,
+        height: 65,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Divider(),
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: SizedBox(
+                  height: 18,
+                  child: Text(
+                    model.font,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+            ),
+            const SizedBox(
+                width: 18,
                 height: 18,
-                child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),
-              )),
-            ),
-            const Expanded(
-              child: Center(
-                child: CircularProgressIndicator()
-              ),
-            ),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                )),
           ],
         ),
       );
@@ -137,18 +177,25 @@ class SearchResultsPage extends StatelessWidget {
         child: Column(
           children: [
             const Divider(),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: SizedBox(
+            SizedBox(
                 height: 18,
-                child: Text(model.font, style: const TextStyle(fontWeight: FontWeight.bold,),)),
-            ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    model.font,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )),
             Expanded(
               child: Center(
-                child: Row(children: const <Widget>[
-                  Icon(Icons.report_gmailerrorred),
-                  Text('Erro na busca')
-                ],),
+                child: Row(
+                  children: const <Widget>[
+                    Icon(Icons.report_gmailerrorred),
+                    Text('Erro na busca')
+                  ],
+                ),
               ),
             ),
           ],
@@ -165,10 +212,10 @@ class SearchResultsPage extends StatelessWidget {
         child: ValueListenableBuilder(
           valueListenable: controller.state,
           builder: (context, value, child) => ListView.builder(
-            itemCount: controller.result.length,
-            cacheExtent: 10000,
-            itemBuilder: (context, index) => resultList(controller.result[index], context)
-          ),
+              itemCount: controller.result.length,
+              cacheExtent: 10000,
+              itemBuilder: (context, index) =>
+                  resultList(controller.result[index], context)),
         ));
   }
 }

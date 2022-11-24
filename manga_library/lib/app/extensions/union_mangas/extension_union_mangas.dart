@@ -6,7 +6,6 @@ import 'package:manga_library/app/extensions/union_mangas/scraping/union_scrapin
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 
 class ExtensionUnionMangas implements Extension {
   @override
@@ -97,7 +96,8 @@ class ExtensionUnionMangas implements Extension {
         books.add({
           "name": book["titulo"],
           "img": book['imagem'],
-          "link": book['url']
+          "link": book['url'],
+          "idExtension": id
         });
       }
       // print('---------------------------------------------');

@@ -5,7 +5,6 @@ import 'package:manga_library/app/extensions/mundo_manga_kun/scraping/mundo_mang
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 import '../model_extension.dart';
 
 class ExtensionMundoMangaKun implements Extension {
@@ -87,7 +86,7 @@ class ExtensionMundoMangaKun implements Extension {
           buffer.write('$str+');
         }
       }
-      List<Map<String, String>> data =
+      List<Map<String, dynamic>> data =
           await compute(scrapingSearch, buffer.toString().toLowerCase());
       debugPrint('$data');
       return data.map<Books>((json) => Books.fromJson(json)).toList();

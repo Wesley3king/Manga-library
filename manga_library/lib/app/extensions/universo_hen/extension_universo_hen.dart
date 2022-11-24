@@ -5,7 +5,6 @@ import 'package:manga_library/app/extensions/universo_hen/scraping/scraping_univ
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 
 class ExtensionUniversoHen implements Extension {
   @override

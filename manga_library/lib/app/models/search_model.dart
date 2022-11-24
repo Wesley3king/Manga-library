@@ -10,7 +10,7 @@ class SearchModel {
   late final String font;
   late final int idExtension;
   late SearchStates state;
-  late final List<Books> books;
+  late List<Books> books;
 
   SearchModel.fromJson(Map<String, dynamic> json) {
     font = json['font'];

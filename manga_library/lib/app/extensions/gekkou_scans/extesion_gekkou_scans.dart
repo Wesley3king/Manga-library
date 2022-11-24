@@ -6,7 +6,6 @@ import 'package:manga_library/app/extensions/model_extension.dart';
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 
 class ExtensionGekkouScans implements Extension {
   @override
@@ -87,7 +86,7 @@ class ExtensionGekkouScans implements Extension {
           buffer.write('$str+');
         }
       }
-      List<Map<String, String>> data =
+      List<Map<String, dynamic>> data =
           await searchService(buffer.toString().toLowerCase());
 
       return data.map<Books>((e) => Books.fromJson(e)).toList();

@@ -155,13 +155,13 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 }
 
 // ============== SEARCH ==============
-Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
     Parser? parser = await Chaleno().load(
         "https://hentaiseason.com/?s=$txt"); // https://hentaiseason.com/?s=do
     Result? result = parser?.querySelector("div.lista > ul");
     // books
-    List<Map<String, String>> books = [];
+    List<Map<String, dynamic>> books = [];
     List<Result>? results = result?.querySelectorAll("li div.thumb-conteudo");
     for (Result book in results!) {
       // name
@@ -179,7 +179,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       books.add({
         "name": name ?? "error",
         "link": modicaredLink,
-        "img": img ?? "erro: imagem"
+        "img": img ?? "erro: imagem",
+        "idExtension": 7
       });
     }
     return books;

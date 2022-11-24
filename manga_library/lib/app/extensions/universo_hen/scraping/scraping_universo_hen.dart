@@ -165,12 +165,12 @@ Future<List<String>> scrapingLeitor(String url) async {
 }
 
 // ============== SEARCH ==============
-Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
     Parser? parser = await Chaleno().load("https://universohentai.com/?s=$txt");
     Result? result = parser?.querySelector("div.videos");
     // books
-    List<Map<String, String>> books = [];
+    List<Map<String, dynamic>> books = [];
     List<Result>? results = result?.querySelectorAll("div.video-thumb");
     for (Result book in results!) {
       // name
@@ -188,7 +188,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
         "name": name ?? "error",
         "link": corteLink[1].replaceAll("/", ""),
         "img": img ??
-            "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg"
+            "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg",
+        "idExtension": 6
       });
     }
     return books;

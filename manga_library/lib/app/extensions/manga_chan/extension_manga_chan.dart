@@ -5,7 +5,6 @@ import 'package:manga_library/app/extensions/model_extension.dart';
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 
 class ExtensionMangaChan implements Extension {
   @override
@@ -88,7 +87,7 @@ class ExtensionMangaChan implements Extension {
         // }
       }
       // print(buffer.toString());
-      List<Map<String, String>> data = await compute(scrapingSearch, buffer.toString());
+      List<Map<String, dynamic>> data = await compute(scrapingSearch, buffer.toString());
 
       // print('---------------------------------------------');
       // print(data);

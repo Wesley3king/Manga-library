@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/globais.dart';
-import 'package:manga_library/app/my_app.dart';
 import 'package:manga_library/app/services/auth_service.dart';
 import 'package:manga_library/app/views/auth/password_screen.dart';
 import 'package:manga_library/app/views/configurations/backup_config/backup.dart';
@@ -17,6 +15,7 @@ import 'package:manga_library/app/views/library/ocult%20library/ocult_library.da
 import 'package:manga_library/app/views/home.dart';
 import 'package:manga_library/app/views/leitor/leitor.dart';
 import 'package:manga_library/app/views/manga_info/manga_info.dart';
+import 'package:manga_library/app/views/search/search_show_results_page/serach_show_results_page.dart';
 import 'package:manga_library/app/views/webview/webview.dart';
 
 final AuthService authService = AuthService();
@@ -135,6 +134,13 @@ final routes = GoRouter(
         builder: (context, state) {
           int idExtension = int.parse(state.params['extension']!);
           return ExtensionShowPage(idExtension: idExtension);
+        },
+      ),
+      GoRoute(
+        path: '/searchshowpage/:extension',
+        builder: (context, state) {
+          int idExtension = int.parse(state.params['extension']!);
+          return SearchShowResultsPage(idExtension: idExtension);
         },
       ),
     ]);

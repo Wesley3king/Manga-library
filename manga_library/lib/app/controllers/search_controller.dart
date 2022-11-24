@@ -55,17 +55,19 @@ class SearchController {
     // }
     if (lastSearch != txt) {
       result = [];
+      buildModels();
+
       /// start the serach service
       if (GlobalData.settings.multipleSearches) {
-        multipleSearchMachine(txt);
+        await multipleSearchMachine(txt);
       } else {
-        oneForOneSearchMachine(txt);
+        await oneForOneSearchMachine(txt);
       }
       lastSearch = txt;
     }
   }
 
-  Future<void> buildModels() async {
+  void buildModels() {
     for (Extension extend in extensions) {
       result.add(SearchModel(
           font: extend.nome,
@@ -73,6 +75,7 @@ class SearchController {
           idExtension: extend.id,
           state: SearchStates.start));
     }
+    // result = result.reversed.toList();
   }
 
   Future<void> oneForOneSearchMachine(String txt) async {
@@ -88,7 +91,8 @@ class SearchController {
     // final SearchModel model = result[index];
     try {
       List<Books> books =
-          await extensions[result[index].idExtension].search(txt);
+          await mapOfExtensions[result[index].idExtension]!.search(txt);
+      // debugPrint('books ==== $books / index: $index - ${result[index].idExtension} / erro : ${extensions[result[index].idExtension].nome}');
       result[index].books = books;
       result[index].state = SearchStates.sucess;
     } catch (e) {

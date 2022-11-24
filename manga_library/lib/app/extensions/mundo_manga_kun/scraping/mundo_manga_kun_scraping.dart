@@ -208,18 +208,18 @@ Future<List<String>> scrapingLeitor(String id) async {
 //           ---------------- search ------------------------
 // ============================================================================
 
-Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
     var parser = await Chaleno().load("https://mundomangakun.com.br/?s=$txt");
 
     var resultHtml = parser?.querySelector(".main_container");
-    List<Map<String, String>> books = [];
+    List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
       // projeto
       var projetoData = resultHtml.querySelectorAll(".post_projeto");
       // print(projetoData);
       if (projetoData != null) {
-        List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
           // name
           String? name = data.querySelector(".post_projeto_titulo")!.text;
           // img
@@ -231,7 +231,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
           return {
             "name": name ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
-            "img": img ?? ""
+            "img": img ?? "",
+            "idExtension": 3
           };
         }).toList();
 
@@ -239,7 +240,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
       }
       // post normal
       var normalData = resultHtml.querySelectorAll(".post_normal");
-      List<Map<String, String>> normalBooks = [];
+      List<Map<String, dynamic>> normalBooks = [];
       if (normalData != null) {
         for (Result data in normalData) {
           try {
@@ -270,7 +271,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
               normalBooks.add({
                 "name": name ?? "error",
                 "link": corteLink2[0],
-                "img": img
+                "img": img,
+                "idExtension": 3
               });
             }
           } catch (e) {

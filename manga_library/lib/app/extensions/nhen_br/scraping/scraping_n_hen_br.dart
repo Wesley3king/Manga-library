@@ -149,16 +149,16 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ----------------------------------------------------------------------------
 //                     === SEARCH ===
 
-Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
     var parser = await Chaleno().load("https://nhentaibr.com/?s=$txt");
-    List<Map<String, String>> books = [];
+    List<Map<String, dynamic>> books = [];
 
     if (parser != null) {
       // projeto
       var projetoData = parser.querySelectorAll("div.lista > ul > li");
       // print(projetoData);
-      List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
+      List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
         List<Result>? result = data.querySelectorAll("div.thumb-conteudo > a");
         // name
         String? name = result![1].querySelector("span.thumb-titulo")!.text;
@@ -174,7 +174,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
         return {
           "name": name ?? "error",
           "link": corteLink[1].replaceAll("/", ""),
-          "img": "https://cdn.dogehls.xyz/$img"
+          "img": "https://cdn.dogehls.xyz/$img",
+          "idExtension": 8
         };
       }).toList();
 

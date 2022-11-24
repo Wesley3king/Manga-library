@@ -47,7 +47,7 @@ class YabuFetchServices {
       var decoded = List.from(data.data);
       return decoded
           .map<Map<String, dynamic>>(
-              (e) => {"name": e["title"], "img": e["cover"], "link": e["slug"]})
+              (e) => {"name": e["title"], "img": e["cover"], "link": e["slug"], "idExtension": 1})
           .toList();
     } catch (e, s) {
       debugPrint('error no search! $e');

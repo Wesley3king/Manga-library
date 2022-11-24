@@ -5,7 +5,6 @@ import 'package:manga_library/app/models/libraries_model.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 
 class ExtensionHenSeason implements Extension {
   @override

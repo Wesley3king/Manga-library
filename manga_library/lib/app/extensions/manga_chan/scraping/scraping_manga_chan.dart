@@ -242,12 +242,12 @@ Future<List<String>> scrapingLeitor(String id) async {
 //           ---------------- search ------------------------
 // ============================================================================
 
-Future<List<Map<String, String>>> scrapingSearch(String txt) async {
+Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
     var parser = await Chaleno().load("https://mangaschan.com/?s=$txt");
 
     var resultHtml = parser?.querySelector("div.bixbox > div.listupd");
-    List<Map<String, String>> books = [];
+    List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
       // projeto
       var projetoData = resultHtml.querySelectorAll("div.bs > div.bsx");
@@ -256,7 +256,7 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
         // for (Result result in projetoData) {
 
         // }
-        List<Map<String, String>> projetoBooks = projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
           // name
           String? name = data.querySelector("a div.tt")!.text;
           // debugPrint("name: $name");
@@ -271,7 +271,8 @@ Future<List<Map<String, String>>> scrapingSearch(String txt) async {
           return {
             "name": name ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
-            "img": img ?? ""
+            "img": img ?? "",
+            "idExtension": 10
           };
         }).toList();
 
