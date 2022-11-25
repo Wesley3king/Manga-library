@@ -269,7 +269,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
           List<String> corteLink = link!.split("manga/");
           // print(data.html);
           return {
-            "name": name ?? "error",
+            "name": name?.trim() ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
             "img": img ?? "",
             "idExtension": 10
@@ -283,7 +283,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     return books;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");
-    print(s);
+    debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
   }

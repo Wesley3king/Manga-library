@@ -18,6 +18,7 @@ class SearchResultsPage extends StatefulWidget {
 }
 
 class _SearchResultsPageState extends State<SearchResultsPage> with RouteAware {
+  
   Widget item(Books data, var context) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
@@ -28,35 +29,38 @@ class _SearchResultsPageState extends State<SearchResultsPage> with RouteAware {
         },
         child: SizedBox(
           width: 110,
-          height: 170,
+          height: 205,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
                 width: 145.0,
-                height: 181.0,
-                // child: Image.network(
-                //   data.img,
-                //   width: 145.0,
-                //   height: 187.5,
-                //   loadingBuilder: (context, child, loadingProgress) {
-                //     if (loadingProgress == null) return child;
-                //     return Container(
-                //       color: Colors.grey,
-                //     );
-                //   },
-                //   errorBuilder: (context, error, stackTrace) => const Center(
-                //     child: Icon(Icons.report_problem),
-                //   ),
-                //   fit: BoxFit.fill,
-                // ),
+                height: 171.0,
+                child: Image.network(
+                  data.img,
+                  width: 145.0,
+                  height: 171.0,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.grey,
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.report_problem),
+                  ),
+                  fit: BoxFit.fill,
+                ),
               ),
-              AutoSizeText(
-                data.name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                maxFontSize: 13,
-                minFontSize: 12,
+              SizedBox(
+                height: 30,
+                child: AutoSizeText(
+                  data.name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  maxFontSize: 13,
+                  minFontSize: 11,
+                ),
               ),
             ],
           ),

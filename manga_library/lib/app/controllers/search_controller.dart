@@ -70,15 +70,16 @@ class SearchController {
   }
 
   void multipleSearchMachine(String txt) {
-    // while (allResultsIndice < result.length) {
-    // processOneSearch(allResultsIndice, txt);
-    // processOneSearch(allResultsIndice + 1, txt);
-    // processOneSearch(allResultsIndice + 2, txt);
-    // }
     if (allResultsIndice < result.length) {
-      debugPrint("teste de parada: ${(result.length - allResultsIndice+1) < 3} / ${result.length - allResultsIndice+1}");
-      if ((result.length - allResultsIndice+1) < 3) {
+      debugPrint(
+          "teste de parada: ${(result.length - allResultsIndice + 1) < 3} / ${result.length - allResultsIndice + 1}");
+      final int restantes = result.length - allResultsIndice + 1;
+      if (restantes < 3) {
         /// implement this
+        for (int i = allResultsIndice; i < result.length; ++i) {
+          processOneSearch(allResultsIndice, txt);
+          allResultsIndice++;
+        }
       } else {
         processOneSearch(allResultsIndice, txt);
         processOneSearch(allResultsIndice + 1, txt);
