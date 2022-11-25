@@ -63,5 +63,5 @@ class GlobalData {
 
   /// ======== SEARCH ============
   static SearchModel? searchModelSelected;
-  static String searchString= '';
+  static String searchString= "";
 }

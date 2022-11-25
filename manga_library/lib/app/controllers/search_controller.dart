@@ -17,6 +17,11 @@ class SearchController {
   String lastSearch = "";
   final List<dynamic> extensions = listOfExtensions;
   final ValueNotifier<int> state = ValueNotifier<int>(-1);
+
+  /// multiple searchs mode
+  int allResultsIndice = 0;
+  int atualRequestsCount = 0;
+  int finalizedRequestCount = 0;
   //List<dynamic> extensions = [ExtensionMangaYabu(), ExtensionMangaYabuAdimin()];
 
   // ValueNotifier<SearchStates> state = ValueNotifier(SearchStates.sucess);
@@ -32,36 +37,15 @@ class SearchController {
 
   Future<void> search(String txt) async {
     state.value = 0;
-    // try {
-    //   finalized = false;
-    //   debugPrint("$lastSearch / $txt");
-    //   if (lastSearch != txt) {
-    //     result = [];
-    //     for (int i = 0; i < extensions.length; ++i) {
-    //       state.value = SearchStates.loading;
-    //       debugPrint('iniciado');
-    //       result.add(await extensions[i].search(txt));
-    //       debugPrint('terminado!');
-    //       debugPrint('${result[0].books}');
-    //       state.value = SearchStates.sucess;
-    //     }
-    //   }
-    //   state.value = SearchStates.sucess;
-    //   finalized = true;
-    //   lastSearch = txt;
-    // } catch (e) {
-    //   debugPrint("erro no search: $e");
-    //   state.value = SearchStates.error;
-    // }
     if (lastSearch != txt) {
       result = [];
       buildModels();
 
       /// start the serach service
       if (GlobalData.settings.multipleSearches) {
-        await multipleSearchMachine(txt);
+        multipleSearchMachine(txt);
       } else {
-        await oneForOneSearchMachine(txt);
+        oneForOneSearchMachine(txt);
       }
       lastSearch = txt;
     }
@@ -85,16 +69,46 @@ class SearchController {
     }
   }
 
-  Future<void> multipleSearchMachine(String txt) async {}
+  void multipleSearchMachine(String txt) {
+    // while (allResultsIndice < result.length) {
+    // processOneSearch(allResultsIndice, txt);
+    // processOneSearch(allResultsIndice + 1, txt);
+    // processOneSearch(allResultsIndice + 2, txt);
+    // }
+    if (allResultsIndice < result.length) {
+      debugPrint("teste de parada: ${(result.length - allResultsIndice+1) < 3} / ${result.length - allResultsIndice+1}");
+      if ((result.length - allResultsIndice+1) < 3) {
+        /// implement this
+      } else {
+        processOneSearch(allResultsIndice, txt);
+        processOneSearch(allResultsIndice + 1, txt);
+        processOneSearch(allResultsIndice + 2, txt);
+        allResultsIndice += 3;
+      }
+    } else {
+      allResultsIndice = 0;
+    }
+  }
+
+  void checkIfCanContinue(String txt) {
+    if (finalizedRequestCount == 2) {
+      multipleSearchMachine(txt);
+      finalizedRequestCount = 0;
+    } else {
+      finalizedRequestCount++;
+    }
+  }
 
   Future<void> processOneSearch(int index, String txt) async {
-    // final SearchModel model = result[index];
     try {
       List<Books> books =
           await mapOfExtensions[result[index].idExtension]!.search(txt);
       // debugPrint('books ==== $books / index: $index - ${result[index].idExtension} / erro : ${extensions[result[index].idExtension].nome}');
       result[index].books = books;
       result[index].state = SearchStates.sucess;
+      state.value++;
+      debugPrint("concluido: $index");
+      checkIfCanContinue(txt);
     } catch (e) {
       debugPrint("erro no processOneSearch at SearchController: $e");
       result[index].state = SearchStates.error;

@@ -148,9 +148,9 @@ class _ExtensionShowPageState extends State<ExtensionShowPage> {
   @override
   void initState() {
     super.initState();
-    ConfigSystemController.instance.isDarkTheme ? 
-    StylesFromSystemNavigation.setSystemNavigationBarBlack26() :
-    StylesFromSystemNavigation.setSystemNavigationBarWhite24();
+    ConfigSystemController.instance.isDarkTheme
+        ? StylesFromSystemNavigation.setSystemNavigationBarBlack26()
+        : StylesFromSystemNavigation.setSystemNavigationBarWhite24();
     sizeOfBooks = getSizeOfBooks();
     controller.start(widget.idExtension);
   }
@@ -160,6 +160,13 @@ class _ExtensionShowPageState extends State<ExtensionShowPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(mapOfExtensions[widget.idExtension]!.nome),
+        actions: [
+          IconButton(
+              onPressed: () => GoRouter.of(context)
+                  .push('/searchshowpage/${widget.idExtension}'),
+              tooltip: 'pesquisar',
+              icon: const Icon(Icons.search))
+        ],
       ),
       body: AnimatedBuilder(
         animation: controller.state,

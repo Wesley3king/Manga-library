@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
-import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/library/functions/library_functions.dart';
 import 'package:manga_library/app/views/search/search_show_results_page/controllers/serach_show_results_page_controller.dart';
@@ -23,7 +22,7 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
   final ConfigSystemController configSystemController =
       ConfigSystemController();
   final TextEditingController _textEditingController =
-      TextEditingController(text: GlobalData.searchString);
+      TextEditingController(text: GlobalData.searchString == "" ? null : GlobalData.searchString);
   late List<double> sizeOfBooks;
   String textValue = GlobalData.searchString;
 
@@ -158,24 +157,36 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
         ? StylesFromSystemNavigation.setSystemNavigationBarBlack26()
         : StylesFromSystemNavigation.setSystemNavigationBarWhite24();
     sizeOfBooks = getSizeOfBooks();
-    controller.start();
+    controller.start(GlobalData.searchString);
+  }
+
+  @override
+  void dispose() {
+    GlobalData.searchString = "";
+    GlobalData.searchModelSelected = null;
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final InputDecoration? showHint = GlobalData.searchString == "" ? const InputDecoration(
+      hintText: 'Pesquisar'
+    ) : null;
     return Scaffold(
         appBar: AppBar(
           title: TextField(
             controller: _textEditingController,
             textAlign: TextAlign.center,
             maxLines: 1,
+            decoration: showHint,
             scrollPadding: const EdgeInsets.all(5.0),
             style: const TextStyle(fontSize: 18),
             onChanged: ((value) => textValue = value),
           ),
           actions: [
             IconButton(
-                onPressed: () => controller.search(textValue, widget.idExtension),
+                onPressed: () =>
+                    controller.search(textValue, widget.idExtension),
                 tooltip: 'pesquisar',
                 icon: const Icon(Icons.search))
           ],

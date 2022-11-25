@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/views/routes/routes.dart';
 
 import '../../controllers/search_controller.dart';
 import '../../models/search_model.dart';
 
-class SearchResultsPage extends StatelessWidget {
+class SearchResultsPage extends StatefulWidget {
   // final List<SearchModel> results;
   final SearchController controller;
   const SearchResultsPage({super.key, required this.controller});
 
+  @override
+  State<SearchResultsPage> createState() => _SearchResultsPageState();
+}
+
+class _SearchResultsPageState extends State<SearchResultsPage> with RouteAware {
   Widget item(Books data, var context) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
@@ -117,7 +123,8 @@ class SearchResultsPage extends StatelessWidget {
                           tooltip: "ir",
                           onPressed: () {
                             GlobalData.searchModelSelected = model;
-                            GlobalData.searchString = controller.lastSearch;
+                            GlobalData.searchString =
+                                widget.controller.lastSearch;
                             GoRouter.of(context)
                                 .push('/searchshowpage/${model.idExtension}');
                           },
@@ -205,17 +212,35 @@ class SearchResultsPage extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    widget.controller.state.value++;
+    super.didPop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: ValueListenableBuilder(
-          valueListenable: controller.state,
+          valueListenable: widget.controller.state,
           builder: (context, value, child) => ListView.builder(
-              itemCount: controller.result.length,
+              itemCount: widget.controller.result.length,
               cacheExtent: 10000,
               itemBuilder: (context, index) =>
-                  resultList(controller.result[index], context)),
+                  resultList(widget.controller.result[index], context)),
         ));
   }
 }

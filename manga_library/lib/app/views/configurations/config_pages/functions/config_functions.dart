@@ -230,9 +230,30 @@ Map<String, Function> settingsFunctions = {
     controller.updateSetting();
   },
   "Multiplas Pesquisas":
-      (dynamic value, SettingsOptionsController controller) {},
-  "Conteudo NSFW": (dynamic value, SettingsOptionsController controller) {},
-  "Mostrar na Lista": (dynamic value, SettingsOptionsController controller) {},
+      (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor = $value");
+    GlobalData.settings.multipleSearches = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "Conteudo NSFW": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor = $value");
+    GlobalData.settings.nSFWContent = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "Mostrar na Lista": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor = $value");
+    GlobalData.settings.showNSFWInList = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Limpar o Cache": (dynamic value, SettingsOptionsController controller) {},
   "Restaurar": (dynamic value, SettingsOptionsController controller) {
     final SystemController systemController = SystemController();

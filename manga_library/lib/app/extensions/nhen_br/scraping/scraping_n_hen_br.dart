@@ -174,7 +174,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
         return {
           "name": name ?? "error",
           "link": corteLink[1].replaceAll("/", ""),
-          "img": "https://cdn.dogehls.xyz/$img",
+          "img": img,
           "idExtension": 8
         };
       }).toList();

@@ -8,7 +8,7 @@ void main() {
 
   test("deve retornar uma lista de destaques", () async {
     var data = await extend.homePage();
-    // print(data);
+    debugPrint('$data');
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {
     var data = await extend.mangaDetail('tales-of-demons-and-gods');
