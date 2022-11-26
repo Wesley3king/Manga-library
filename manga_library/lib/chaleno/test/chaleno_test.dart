@@ -10,7 +10,7 @@ void main() {
 
   /// get union mangas
   test("obter os dados do union mangas", () async {
-    var data = await Chaleno().load("https://mangalivre.net/");
+    var data = await Chaleno().load("https://yabutoons.com/webtoon/1st-kiss/");
     print(data?.html);
   });
   // group('Test Parser class', () {
