@@ -20,7 +20,7 @@ class ExtensionMangaChan implements Extension {
   @override
   bool enable = true;
   @override
-  bool nsfw = true;
+  bool nsfw = false;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

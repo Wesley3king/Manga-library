@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/extensions/model_extension.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 
 enum HomeStates { start, loading, sucess, error }
 
 class HomePageController {
   static String errorMessage = '';
-  final List<dynamic> extensoes = listOfExtensions;
+  final List<Extension> extensoes = listOfExtensions;
   final HiveController hiveController = HiveController();
   List<ModelHomePage> data = [];
 
@@ -53,10 +55,11 @@ class HomePageController {
     List<ModelHomePage> dados = [];
     try {
       debugPrint("iniciando a atualização do home page!");
-      for (dynamic font in extensoes) {
-        List<ModelHomePage> extensionData = await font.homePage();
-
-        dados.addAll(extensionData);
+      for (Extension font in extensoes) {
+        if ((GlobalData.settings.nSFWContent && GlobalData.settings.showNSFWInList && font.nsfw) || !font.nsfw) {
+          List<ModelHomePage> extensionData = await font.homePage();
+          dados.addAll(extensionData);
+        }
       }
       await hiveController.updateHomePage(dados);
       return dados;

@@ -29,31 +29,34 @@ class _SearchResultsPageState extends State<SearchResultsPage> with RouteAware {
         },
         child: SizedBox(
           width: 110,
-          height: 205,
+          height: 185,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 145.0,
-                height: 171.0,
-                child: Image.network(
-                  data.img,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: SizedBox(
                   width: 145.0,
                   height: 171.0,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: Colors.grey,
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.report_problem),
+                  child: Image.network(
+                    data.img,
+                    width: 145.0,
+                    height: 171.0,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: Colors.grey,
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => const Center(
+                      child: Icon(Icons.report_problem),
+                    ),
+                    fit: BoxFit.fill,
                   ),
-                  fit: BoxFit.fill,
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: 20,
                 child: AutoSizeText(
                   data.name,
                   overflow: TextOverflow.ellipsis,

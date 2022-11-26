@@ -25,14 +25,14 @@ class _LibraryItensState extends State<LibraryItens>
             blurRadius: 2.0)
       ]),
       width: 300,
-      height: 350,
+      height: 300,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         child: Stack(
           children: [
             SizedBox(
               width: 300,
-              height: 350,
+              height: 300,
               child: CachedNetworkImage(
                 imageUrl: widget.data.books[index].img,
                 fit: BoxFit.fill,
@@ -91,9 +91,6 @@ class _LibraryItensState extends State<LibraryItens>
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void initState() {
     super.initState();
     sizeOfBooks = getSizeOfBooks();
@@ -123,4 +120,7 @@ class _LibraryItensState extends State<LibraryItens>
           }),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

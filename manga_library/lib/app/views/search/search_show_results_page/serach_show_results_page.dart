@@ -181,6 +181,7 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
             decoration: showHint,
             scrollPadding: const EdgeInsets.all(5.0),
             style: const TextStyle(fontSize: 18),
+            onSubmitted: (value) => controller.search(textValue, widget.idExtension),
             onChanged: ((value) => textValue = value),
           ),
           actions: [

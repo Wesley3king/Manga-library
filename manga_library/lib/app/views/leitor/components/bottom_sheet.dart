@@ -372,33 +372,39 @@ Widget getSecondPage(BuildContext context, LeitorController controller) {
           },
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Cor de fundo",
-              style: TextStyle(fontSize: 16),
+            const Padding(
+              padding: EdgeInsets.only(left: 17.0),
+              child: Text(
+                "Cor de fundo",
+                style: TextStyle(fontSize: 16),
+              ),
             ),
-            DropdownButton<String>(
-              value: controller.backgroundColorUi,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              onChanged: (value) {
-                controller.setBackgroundColor(value);
-                notifier.value++;
-              },
-              items: const [
-                DropdownMenuItem(
-                  value: "pattern",
-                  child: Text('Padrão'),
-                ),
-                DropdownMenuItem(
-                  value: "black",
-                  child: Text('Preto'),
-                ),
-                DropdownMenuItem(
-                  value: "white",
-                  child: Text('Branco'),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(right: 24.0),
+              child: DropdownButton<String>(
+                value: controller.backgroundColorUi,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                onChanged: (value) {
+                  controller.setBackgroundColor(value);
+                  notifier.value++;
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: "pattern",
+                    child: Text('Padrão'),
+                  ),
+                  DropdownMenuItem(
+                    value: "black",
+                    child: Text('Preto'),
+                  ),
+                  DropdownMenuItem(
+                    value: "white",
+                    child: Text('Branco'),
+                  ),
+                ],
+              ),
             )
           ],
         )

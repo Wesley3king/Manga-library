@@ -53,11 +53,14 @@ class SearchController {
 
   void buildModels() {
     for (Extension extend in extensions) {
-      result.add(SearchModel(
+      if ((GlobalData.settings.nSFWContent && extend.nsfw) || !extend.nsfw) {
+        result.add(SearchModel(
           font: extend.nome,
           books: [],
           idExtension: extend.id,
-          state: SearchStates.start));
+          state: SearchStates.start)
+        );
+      }
     }
     // result = result.reversed.toList();
   }
