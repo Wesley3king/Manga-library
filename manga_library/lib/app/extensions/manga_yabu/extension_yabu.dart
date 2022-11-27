@@ -10,7 +10,6 @@ import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 // import 'package:manga_library/app/models/manga_info_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
-import 'package:manga_library/app/models/search_model.dart';
 
 import '../../models/libraries_model.dart';
 
@@ -23,10 +22,6 @@ class ExtensionMangaYabu implements Extension {
   String extensionPoster = "Manga-Yabu.png";
   @override
   int id = 1;
-  @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
   @override
   bool nsfw = false;
 

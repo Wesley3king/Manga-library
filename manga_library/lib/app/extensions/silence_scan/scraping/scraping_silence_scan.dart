@@ -45,7 +45,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       "books": books
     };
     models.add(ModelHomePage.fromJson(destaques));
-    // novos
+    // ======================== novos
     Result? result2 = parser?.querySelector(
         "div.section > span.ts-ajax-cache > div.serieslist > ul");
     List<Result>? novosItens = result2?.querySelectorAll("li");

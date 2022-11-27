@@ -17,10 +17,6 @@ class ExtensionGekkouScans implements Extension {
   @override
   int id = 11;
   @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
-  @override
   bool nsfw = false;
 
   @override

@@ -9,6 +9,7 @@ import 'package:manga_library/app/extensions/nhen_br/extension_n_hen_br.dart';
 import 'package:manga_library/app/extensions/silence_scan/extension_silence_scan.dart';
 import 'package:manga_library/app/extensions/union_mangas/extension_union_mangas.dart';
 import 'package:manga_library/app/extensions/universo_hen/extension_universo_hen.dart';
+import 'package:manga_library/app/extensions/yabutoon/extension_yabutoon.dart';
 
 final List<Extension> listOfExtensions = [
   ExtensionMangaYabu(),
@@ -20,7 +21,8 @@ final List<Extension> listOfExtensions = [
   ExtensionNHenBr(),
   ExtensionSilenceScan(),
   ExtensionMangaChan(),
-  ExtensionGekkouScans()
+  ExtensionGekkouScans(),
+  ExtensionYabutoon()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -33,7 +35,8 @@ final Map<int, Extension> mapOfExtensions = {
   8: ExtensionNHenBr(),
   9: ExtensionSilenceScan(),
   10: ExtensionMangaChan(),
-  11: ExtensionGekkouScans()
+  11: ExtensionGekkouScans(),
+  12: ExtensionYabutoon()
 };
 
 // final Map<int, dynamic> fetchServiceExtensions = {

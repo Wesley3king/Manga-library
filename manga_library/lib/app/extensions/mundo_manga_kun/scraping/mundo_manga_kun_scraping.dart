@@ -6,61 +6,141 @@ import '../../../models/manga_info_offline_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
   const String url = 'https://mundomangakun.com.br/';
-  const String indentify = '.post-projeto';
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
-    var result = parser?.querySelectorAll(indentify);
-    // print(result?[0].html);
-    List<String> chaptersHtml = [];
-    if (result != null) {
-      for (Result html in result) {
-        chaptersHtml.add(html.html ?? "");
-      }
-      // cortar o link
-      // debugPrint("pt1");
-      List<List<String>> corteLink1 =
-          chaptersHtml.map((e) => e.split('href="')).toList();
-      List<List<String>> corteLink2 = corteLink1
-          .map((e) => e[1].split('/cap'))
-          .toList(); // link na posição 0
-      // print(corteLink2);
-      // cortar a imagem
-      // debugPrint("pt2");
-      List<List<String>> corteImage1 =
-          chaptersHtml.map((e) => e.split('url(')).toList();
-      List<List<String>> corteImage2 = corteImage1
-          .map((e) => e[1].split(');"'))
-          .toList(); // img na posição 0
-      // cortar o nome
-      List<List<String>> corteNome1 =
-          chaptersHtml.map((e) => e.split('<h3 class="titulo-cap">')).toList();
-      List<List<String>> corteNome2 = corteNome1
-          .map((e) => e[1].split('<br><small>'))
-          .toList(); // nome na posição 0
+    // ==================================================================
+    //          -- LANCAMENTOS --
+    Result? lancamentos =
+        parser?.querySelector("div.postbody > div.bixbox > div.listupd");
+    List<Result>? lancametosItens =
+        lancamentos?.querySelectorAll("div > div.bsx > a");
+    List<Map<String, String>> books = [];
+    for (Result html in lancametosItens!) {
+      // name
+      String? name = html.querySelector("div.bigor > div.tt")!.text;
+      // name!.replaceAll("...", "");
+      // name.replaceAll(" - ...", "");
+      debugPrint("name: $name");
+      // img
+      String? img = html.querySelector("div.limit > img")!.src;
+      debugPrint("img: $img");
+      // link
+      String? link = html.querySelector("a")!.href;
+      debugPrint("link: $link");
+      List<String> linkCorte1 = link!.split("com.br/");
+      List<String> linkCorte2 = linkCorte1[1].split("-capitulo");
 
-      // juntar tudo
-      List<Map<String, String>> mangas = [];
-      for (int i = 0; i < corteNome2.length; ++i) {
-        //print(corteLink2[i][0]);
-        List<String> corteLink1Home = corteLink2[i][0].split("projeto/"); // \/
-        //List<String> corteLink2Home = corteLink1Home[1]
-        // .split("/cap"); // .replaceFirst("leitor-online/", "")
-        mangas.add({
-          "name": corteNome2[i][0].trim(),
-          "img": corteImage2[i][0],
-          "url": corteLink1Home[1]
-        });
-      }
-      // montar o model
-      // debugPrint("$mangas");
-      Map<String, dynamic> lancamentos = {
-        "idExtension": 3,
-        "title": "Mundo Mangá Kun Lançamentos",
-        "books": mangas
-      };
-      models.add(ModelHomePage.fromJson(lancamentos));
+      books.add({
+        "name": name!,
+        "url": linkCorte2[0].replaceAll("/", ""),
+        "img": img ?? ""
+      });
     }
+    // print(books);
+    // monat model destaques
+    debugPrint("montando o model Lançamentos");
+    Map<String, dynamic> destaques = {
+      "idExtension": 9,
+      "title": "Mundo Manga Kun Lançamentos",
+      "books": books
+    };
+    models.add(ModelHomePage.fromJson(destaques));
+    // ============================================================
+    // ======================== novos =============================
+    Result? result2 = parser?.querySelector(
+        "div.section > span.ts-ajax-cache > div.serieslist > ul");
+    List<Result>? novosItens = result2?.querySelectorAll("li");
+    books = [];
+
+    for (Result html in novosItens!) {
+      // name
+      // List<Result>? nameList = html.querySelectorAll(".link-titulo");
+      // print(nameList);
+      // nameList!.forEach((element) =>
+      //     print("${element.html} \n --------------------------------"));
+      String? name = html.querySelector("div.leftseries > h2")!.text;
+      // name!.replaceAll("...", "");
+      // name.replaceAll(" - ...", "");
+      // debugPrint("name: $name");
+      // img
+      String? img = html.querySelector("div.imgseries > a > img")!.src;
+      // debugPrint("img: $img");
+      // link
+      String? link = html.querySelector("div.imgseries > a")!.href;
+      // debugPrint("link: $link");
+      List<String> linkCorte1 = link!.split("manga/");
+      // debugPrint("link cortado: ${linkCorte1[1]}");
+
+      books.add({
+        "name": name ?? "erro",
+        "url": linkCorte1[1].replaceAll("/", ""),
+        "img": img ?? ""
+      });
+      debugPrint("book adicionado!!!");
+    }
+    // print(books);
+    // monat model destaques
+    if (books.isNotEmpty) {
+      debugPrint("montando o model Novos");
+      Map<String, dynamic> novos = {
+        "idExtension": 9,
+        "title": "Mundo Manga Kun Novos",
+        "books": books
+      };
+      models.add(ModelHomePage.fromJson(novos));
+    }
+    // novos
+    Result? result3 =
+        parser?.querySelector("div#wpop-items > div.serieslist > ul");
+    List<Result>? maisLidosItens = result3?.querySelectorAll("li");
+    books = [];
+
+    for (Result html in maisLidosItens!) {
+      // name
+      // List<Result>? nameList = html.querySelectorAll(".link-titulo");
+      // print(nameList);
+      // nameList!.forEach((element) =>
+      //     print("${element.html} \n --------------------------------"));
+      String? name = html.querySelector("div.leftseries > h2")!.text;
+      // name!.replaceAll("...", "");
+      // name.replaceAll(" - ...", "");
+      // debugPrint("name: $name");
+      // img
+      String? img = html.querySelector("div.imgseries > a > img")!.src;
+      // debugPrint("img: $img");
+      // link
+      String? link = html.querySelector("div.imgseries > a")!.href;
+      // debugPrint("link: $link");
+      List<String> linkCorte1 = link!.split("manga/");
+      // debugPrint("link cortado: ${linkCorte1[1]}");
+
+      books.add({
+        "name": name ?? "erro",
+        "url": linkCorte1[1].replaceAll("/", ""),
+        "img": img ?? ""
+      });
+      debugPrint("book adicionado!!!");
+    }
+    // print(books);
+    // monat model destaques
+    if (books.isNotEmpty) {
+      debugPrint("montando o model Mais lidos da semana");
+      Map<String, dynamic> maislidos = {
+        "idExtension": 9,
+        "title": "Silence Scan mais lidos da semana",
+        "books": books
+      };
+      models.add(ModelHomePage.fromJson(maislidos));
+    }
+    // // montar o model
+    // // debugPrint("$mangas");
+    // Map<String, dynamic> lancamentos = {
+    //   "idExtension": 3,
+    //   "title": "Mundo Mangá Kun Lançamentos",
+    //   "books": mangas
+    // };
+    // models.add(ModelHomePage.fromJson(lancamentos));
 
     return models;
   } catch (e) {
@@ -75,89 +155,95 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
   try {
     var parser =
-        await Chaleno().load("https://mundomangakun.com.br/projeto/$link/");
+        await Chaleno().load("https://mundomangakun.com.br/manga/$link/");
 
     String? name;
     String? description;
     String? img;
+    String? state;
     String? authors;
-    String? status;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
       // name
-      name = parser.querySelector(".titulo_projeto").text;
+      name = parser.querySelector("div#titlemove h1.entry-title").text;
+      // debugPrint("name: $name");
       // description
-      description = parser.querySelector("div.conteudo_projeto p").text;
-      debugPrint(description);
+      description =
+          parser.querySelector("div.wd-full > div.entry-content > p").text;
+      // debugPrint("description: $description");
       // img
-      img = parser.querySelector(".imagens_projeto_container > img").src;
+      img = parser.querySelector("div.thumb > img").src;
+      // debugPrint("img: $img");
       // authors
-      List<Result>? listaTabela =
-          parser.querySelectorAll("table.tabela_info_projeto > tbody > tr");
-      String? listaArtista = listaTabela[0].text?.replaceFirst("Arte", "").trim();
-      String? listaAutor = listaTabela[1].text?.replaceFirst("Roteiro", "").trim();
+      List<Result>? info = parser.querySelectorAll("div.tsinfo > div");
+      authors =
+          '${info[3].querySelector("i")!.text}, ${info[4].querySelector("i")!.text}';
 
-      authors = '$listaAutor, $listaArtista';
-      // status
-      // List<Result>? listaStatus = .querySelectorAll("td > strong");
-      status = listaTabela[4].text?.replaceFirst("Status no país de origem", "").trim();
+      // state
+      state = info[0].querySelector("i")!.text;
       // genres
-      List<Result?> genresResult = parser.querySelectorAll(".link_genero");
+      List<Result>? genresResult =
+          parser.querySelectorAll("div.wd-full > span.mgen > a");
+      // print(genresResult);
 
       for (int i = 0; i < genresResult.length; ++i) {
-        if (genresResult[i] != null) {
-          genres.add("${genresResult[i]!.text}");
-        }
+        genres.add("${genresResult[i].text}");
       }
+      // debugPrint("genres: $genres");
       // chapters
-      List<Result?> chaptersResult = parser.querySelectorAll(".link_capitulo");
+      List<Result> chaptersResult =
+          parser.querySelectorAll("div#chapterlist > ul > li");
+      // debugPrint("length de cap: ${chaptersResult.length}");
 
       for (int i = 0; i < chaptersResult.length; ++i) {
-        if (chaptersResult[i] != null) {
-          String? html = chaptersResult[i]!.html;
-          // link
-          List<String> corteLink1 = html!.split("','");
-          List<String> corteLink2 =
-              corteLink1[0].split("{'"); // posição 1 link iteiro
-          List<String> corteLink3 = corteLink2[1].split("/");
-          // print(corteLink3);
-          // List<String> corteLink4 = corteLink3[1].split("\/");
-          // capitulo
-          var corteCapitulo1 = html.split("</a>");
-          var corteCapitulo2 = corteCapitulo1[0].split("lo "); // posição 1
-          // print(html);
-          // print("link: ${corteLink2[1]}");
-          // print("cap: ${corteCapitulo2[1]}");
-          // print("------------------------ here");
-          // print(corteLink4);
-          // print("${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""));
+        // link
+        String? link =
+            chaptersResult[i].querySelector("div > div.eph-num > a")!.href;
+        // pula para o próximo em caso de já existir
+        //print(link);
+        //if (!link!.contains("leitor/")) continue;
 
-          chapters.add(Capitulos(
-            id: "${corteLink3[5]}_${corteLink3[6]}".replaceAll("\\", ""),
-            capitulo:'Capítulo ${corteCapitulo2[1]}',
-            description: "",
-            download: false,
-            readed: false,
-            mark: false,
-            downloadPages: [],
-            pages: [],
-          ));
-        }
+        List<String> corteLink1 = link!.split("br/");
+        String replacedLink = corteLink1[1].replaceFirst("/", "");
+        // debugPrint("replced link: $replacedLink");
+
+        // name cap
+        String? capName = chaptersResult[i]
+            .querySelector("div > div.eph-num > a > span.chapternum")!
+            .text;
+        String chapter = capName!.replaceAll("Capítulo ", "");
+        // debugPrint("chapetr name : $capName");
+        // description
+        String? date = chaptersResult[i]
+            .querySelector("div > div.eph-num > a > span.chapterdate")!
+            .text;
+
+        chapters.add(Capitulos(
+          id: replacedLink,
+          capitulo: 'Capítulo $chapter',
+          description: date ?? "",
+          download: false,
+          readed: false,
+          mark: false,
+          downloadPages: [],
+          pages: [],
+        ));
+        // debugPrint("capitulo adicionado! $capName");
       }
 
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
-        authors: authors,
-        state: status ?? "Estado desconhecido",
         img: img ?? "erro",
-        link: 'https://mundomangakun.com.br/projeto/$link/',
-        idExtension: 3,
+        state: state ?? "Estado desconhecido",
+        authors: authors,
+        link: "https://mundomangakun.com.br/manga/$link/",
+        idExtension: 9,
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
-        capitulos: chapters.reversed.toList(),
+        capitulos: chapters,
       );
     }
   } catch (e) {
@@ -171,36 +257,35 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ============================================================================
 
 Future<List<String>> scrapingLeitor(String id) async {
-  // shounen-no-abyss_cap-tulo-01
+  // shounen-no-abyss_cap-tulo-01 https://mundomangakun.com.br/shounen-no-abyss-capitulo-114/
   try {
-    List<String> mangaAndChapter = id.split("_");
-    var parser = await Chaleno().load(
-        "https://mundomangakun.com.br/leitor-online/projeto/${mangaAndChapter[0]}/${mangaAndChapter[1]}/");
+    var parser = await Chaleno().load("https://mundomangakun.com.br/$id/");
 
-    var resultHtml = parser?.querySelector("#leitor_pagina_projeto").innerHTML;
+    List<Result>? area = parser?.querySelectorAll("div.wrapper > script");
+    // area?.forEach((element) {
+    //   debugPrint("area: ${element.html}");
+    // });
 
-    List<String> resultPages = [];
-    if (resultHtml != null) {
-      print(resultHtml);
-      List<String> htmlItens = resultHtml.split("</option>");
-      print(htmlItens);
-      List<List<String>> cortePage1 =
-          htmlItens.map((String str) => str.split('">')).toList();
+    List<String> corteForDecode1 = area![0].html!.split('"images":["');
+    List<String> corteForDecode2 = corteForDecode1[1].split('"]}]');
+    // debugPrint('result: $resultHtml');
 
-      List<List<String>> cortePage2 = cortePage1
-          .map((List<String> list) => list[0].split('value="'))
-          .toList();
-      print(cortePage2);
-      cortePage2.removeLast();
-      resultPages = cortePage2
-          .map<String>((List<String> list) => list[1].replaceAll("amp;", ""))
-          .toList();
-    }
+    List<String> bruteResultPages = corteForDecode2[0].split('","');
+    List<String> resultPages = bruteResultPages.map((img) => img.replaceAll('\\', '')).toList();
+    // if (resultHtml != null) {
+    //   for (String image in resultHtml) {
+    //     if (image.contains('src="http')) {
+    //       List<String>? page = image.split('src="'); // image on index 1
+    //       // debugPrint("img: $page");
+    //       resultPages.add(page[1]);
+    //     }
+    //   }
+    // }
 
     return resultPages;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
-    print(s);
+    debugPrint("$s");
     return [];
   }
 }
@@ -219,7 +304,8 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
       var projetoData = resultHtml.querySelectorAll(".post_projeto");
       // print(projetoData);
       if (projetoData != null) {
-        List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks =
+            projetoData.map((Result data) {
           // name
           String? name = data.querySelector(".post_projeto_titulo")!.text;
           // img

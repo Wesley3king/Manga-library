@@ -17,10 +17,6 @@ class ExtensionMundoMangaKun implements Extension {
   @override
   int id = 3;
   @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
-  @override
   bool nsfw = true;
 
   @override

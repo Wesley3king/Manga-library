@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
+import 'package:manga_library/app/extensions/yabutoon/repositories/extension_yabutoon_repositories.dart';
 import 'package:manga_library/app/extensions/yabutoon/scraping/extension_yabutoon_scraping.dart';
 
 import '../../models/home_page_model.dart';
@@ -8,17 +9,13 @@ import '../../models/manga_info_offline_model.dart';
 
 class ExtensionYabutoon implements Extension {
   @override
-  dynamic fetchServices;
+  dynamic fetchServices = YabutoonRepositories();
   @override
-  String nome = "Yabutoon";
+  String nome = "YabuToons";
   @override
-  String extensionPoster = "N-Hentai.png";
+  String extensionPoster = "YabuToons.png";
   @override
   int id = 12;
-  @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
   @override
   bool nsfw = false;
 
@@ -70,7 +67,7 @@ class ExtensionYabutoon implements Extension {
   @override
   Future<List<Books>> search(String txt) async {
     try {
-      debugPrint("NHENT SEARCH STARTING...");
+      debugPrint("YABUTOONS SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 
@@ -83,10 +80,9 @@ class ExtensionYabutoon implements Extension {
         }
       }
 
-      // List<Map> books = await compute(scrapingSearch, buffer.toString());
+      List<Map> books = await compute(fetchServices.search, buffer.toString());
 
-      // return books.map<Books>((json) => Books.fromJson(json)).toList();
-      return [];
+      return books.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
       debugPrint("erro no search at ExtensionUnionMangas: $e");
       return [];

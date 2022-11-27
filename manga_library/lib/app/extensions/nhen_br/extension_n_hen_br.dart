@@ -5,7 +5,6 @@ import 'package:manga_library/app/extensions/nhen_br/scraping/scraping_n_hen_br.
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
-import '../../models/search_model.dart';
 
 class ExtensionNHenBr implements Extension {
   @override
@@ -16,10 +15,6 @@ class ExtensionNHenBr implements Extension {
   String extensionPoster = "NHentai-Br.png";
   @override
   int id = 8;
-  @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
   @override
   bool nsfw = true;
 

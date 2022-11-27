@@ -16,10 +16,6 @@ class ExtensionMangaChan implements Extension {
   @override
   int id = 10;
   @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
-  @override
   bool nsfw = false;
 
   @override

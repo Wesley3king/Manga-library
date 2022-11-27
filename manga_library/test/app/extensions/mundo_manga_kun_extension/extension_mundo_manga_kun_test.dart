@@ -11,16 +11,17 @@ void main() {
   });
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('shounen-no-abyss');
+    var data = await extend.mangaDetail('shounen-no-abyss'); // the-legendary-moonlight-sculptor shounen-no-abyss
     debugPrint('$data');
   });
 
   // getPages
   test("deve retornar um model Capitulos", () async {
-    var data = await extend.getPages("shounen-no-abyss_cap-tulo-109", [
+    //shounen-no-abyss-capitulo-114  shounen-no-abyss_cap-tulo-109
+    var data = await extend.getPages("shounen-no-abyss-capitulo-114", [
       Capitulos(
-        capitulo: "01",
-        id: "shounen-no-abyss_cap-tulo-109",
+        capitulo: "114",
+        id: "shounen-no-abyss-capitulo-114",
         description: "",
         mark: false,
         download: false,

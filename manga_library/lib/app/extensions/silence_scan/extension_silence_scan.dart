@@ -16,10 +16,6 @@ class ExtensionSilenceScan implements Extension {
   @override
   int id = 9;
   @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
-  @override
   bool nsfw = false;
 
   @override

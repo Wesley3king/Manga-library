@@ -17,10 +17,6 @@ class ExtensionNHen implements Extension {
   @override
   int id = 5;
   @override
-  bool isTwoRequests = false;
-  @override
-  bool enable = true;
-  @override
   bool nsfw = true;
 
   @override

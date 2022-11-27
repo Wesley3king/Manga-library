@@ -24,9 +24,18 @@ class YabutoonRepositories {
   //   }
   // }
 
-  Future<List<Books>> search(String txt) async {
+  Future<List<Map<String, dynamic>>> search(String txt) async {
      try {
-      return [];
+      var data = await dio.post(
+          'https://manga-search-server.herokuapp.com/search',
+          data: {"txt": txt});
+      // debugPrint(data.data['data']);
+
+      var decoded = List.from(data.data);
+      return decoded
+          .map<Map<String, dynamic>>(
+              (e) => {"name": e["title"], "img": 'https://yabutoons.com/${e["cover"]}', "link": e["slug"], "idExtension": 12})
+          .toList();
     } catch (e) {
       debugPrint("erro no search at YabutoonRepositories: $e");
       return [];
