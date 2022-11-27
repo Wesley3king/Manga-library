@@ -54,8 +54,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int indiceCompute) async {
       if (maisLidosResults != null) {
         for (Result element in maisLidosResults) {
           // img
-          String? img =
-              element.querySelector("a > div.card-image > img")!.src;
+          String? img = element.querySelector("a > div.card-image > img")!.src;
           debugPrint("img: $img");
           // link
           String? link = element.querySelector('a')!.href;
@@ -120,78 +119,76 @@ Future<List<ModelHomePage>> scrapingHomePage(int indiceCompute) async {
 
 Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   try {
-    var parser = await Chaleno().load('https://mangayabu.top/manga/$link/');
+    var parser = await Chaleno().load('https://yabutoons.com/webtoon/$link/');
 
-    var dados = parser?.querySelector('script#manga-info').html.toString();
+    //var dados = parser?.querySelector('script#manga-info').html.toString();
 
     String? state;
-    if (dados != null) {
+    String name = "";
+    String description = "";
+    String img = "";
+    List<String> genres = [];
+    if (parser != null) {
+      // name
+      name = parser.querySelector("div.mango-title > h1").text!;
+      // description
+      description =
+          parser.querySelector("div.mango-data > div.mango-description").text!;
+      // link
+      img = parser.querySelector("div.mango-cover-left-holder > a > img").src!;
       // state - last update
-      state = parser!.querySelector("span.last-updated").text;
-      // estes recortam a parte em html
-      List<String> corteHtml1 = dados.split('type="application/json">');
-      List<String> corteHtml2 = corteHtml1[1].split('</script>');
-
-      // faz um decode para json e processa os capitulos
-      var decoded = json.decode(corteHtml2[0]);
-      List capitulos = decoded['allposts'];
-      // print("passou pelo model pt 1!");
+      List<Result>? stateResults =
+          parser.querySelectorAll("div.mango-info-right > div");
+      for (Result result in stateResults) {
+        String? txt = result.text;
+        if (txt!.contains("Última Atualização")) {
+          state = txt.replaceFirst("tag ", "");
+        } else if (txt.contains("Generos")) {
+          List<String> corteGeneros = txt.split("Generos: ");
+          genres = corteGeneros[1].split(", ");
+        }
+      }
+      // capitulos
       late List<Capitulos> listCapitulos;
+      List<Result>? capitulos =
+          parser.querySelectorAll("div.manga-chapters > div.single-chapter");
 
       // realiza a construção dos capitulos na nova ou antiga interface
-      try {
-        listCapitulos = capitulos.map((element) {
-          List<String> corteId = element['chapters'][0]['id'].split("ler/");
-          return Capitulos(
-            id: corteId[1].replaceFirst("/", ""),
-            capitulo: 'Capítulo ${element['num']}',
-            description: element['chapters'][0]['date'],
-            download: false,
-            readed: false,
-            mark: false,
-            downloadPages: [],
-            pages: [],
-          );
-        }).toList();
-      } catch (e) {
-        debugPrint("interface antiga!");
-        listCapitulos = capitulos.map((element) {
-          List<String> corteId = element['id'].split("ler/"); // id posição 1
-          return Capitulos(
-            id: corteId[1].replaceFirst("/", ""),
-            capitulo: 'Capítulo ${element['num']}',
-            description: element['date'],
-            download: false,
-            readed: false,
-            mark: false,
-            downloadPages: [],
-            pages: [],
-          );
-        }).toList();
-      }
+      listCapitulos = capitulos.map((element) {
+        String linkChapter = element.querySelector("a")!.href!;
+        List<String> corteLink = linkChapter.split("toon/");
+        return Capitulos(
+          id: corteLink[1].replaceFirst("/", ""),
+          capitulo: element.querySelector("a")!.text!,
+          description: element.querySelector("small")!.text!,
+          download: false,
+          readed: false,
+          mark: false,
+          downloadPages: [],
+          pages: [],
+        );
+      }).toList();
 
       debugPrint("passou pelo model!");
       return MangaInfoOffLineModel(
-          name: decoded['chapter_name'],
-          description: decoded['description'],
-          img: decoded['cover'],
+          name: name.replaceFirst("Ler ", ""),
+          description: description.trim(),
+          img: img,
           authors: "Autor desconhecido",
-          state: state ?? "Estado desconhecido",
-          link: 'https://mangayabu.top/manga/$link/',
-          idExtension: 1,
-          genres: decoded['genres']
-              .map<String>((dynamic genre) => genre.toString())
-              .toList(),
-          alternativeName: decoded['alternative_name'],
-          chapters: decoded['chapters'],
+          state: state?.trim() ?? "Estado desconhecido",
+          link: 'https://yabutoons.com/webtoon/$link/',
+          idExtension: 12,
+          genres: genres,
+          alternativeName: "",
+          chapters: listCapitulos.length,
           capitulos: listCapitulos);
     } else {
       debugPrint(
-          "deu null no scrapingMangaDetail at extension/manga_yabu/scraping");
+          "deu null no scrapingMangaDetail at extension/yabutoon/scraping");
       return null;
     }
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at MangaYabu Extension: $e");
+    debugPrint("erro no scrapingMangaDetail at Yabutoon Extension: $e");
     return null;
   }
 }
@@ -202,11 +199,11 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
 Future<List<String>> scrapingLeitor(String id) async {
   try {
-    Parser? parser = await Chaleno().load('https://mangayabu.top/ler/$id/');
+    Parser? parser = await Chaleno().load('https://yabutoons.com/toon/$id/');
     List<String> pages = [];
     if (parser != null) {
       List<Result>? itens =
-          parser.querySelectorAll("div.table-of-contents > img");
+          parser.querySelectorAll("div.manga-navigations > img");
       for (Result result in itens) {
         String? page = result.src;
         pages.add(page ??
@@ -215,7 +212,7 @@ Future<List<String>> scrapingLeitor(String id) async {
     }
     return pages;
   } catch (e) {
-    debugPrint("erro no scrapingLeitor at MangaYabu Extension: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionYabutoon: $e");
     return [];
   }
 }

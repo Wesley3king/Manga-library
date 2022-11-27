@@ -33,16 +33,38 @@ class ExtensionYabutoon implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => "https://nhentai.to/g/$pieceOfLink";
+  String getLink(String pieceOfLink) => 'https://yabutoons.com/webtoon/$pieceOfLink/';
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
-    return listChapters[0];
+    Capitulos result = Capitulos(
+        capitulo: "error",
+        id: "error",
+        mark: false,
+        description: '',
+        download: false,
+        downloadPages: [],
+        pages: [],
+        readed: false);
+    for (int i = 0; i < listChapters.length; ++i) {
+      if (listChapters[i].id == id) {
+        result = listChapters[i];
+        break;
+      }
+    }
+    if (!result.download) {
+      try {
+        result.pages = await compute(scrapingLeitor, id);
+      } catch (e) {
+        debugPrint("erro - não foi possivel obter as paginas on-line: $e");
+      }
+    }
+    return result;
   }
 
   @override
   Future<List<String>> getPagesForDownload(String url) async {
-    return [];
+    return await compute(scrapingLeitor, url);
   }
 
   @override
