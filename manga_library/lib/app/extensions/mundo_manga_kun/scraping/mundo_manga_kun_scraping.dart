@@ -41,7 +41,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
     // monat model destaques
     debugPrint("montando o model Lançamentos");
     Map<String, dynamic> destaques = {
-      "idExtension": 9,
+      "idExtension": 3,
       "title": "Mundo Manga Kun Lançamentos",
       "books": books
     };
@@ -84,7 +84,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
     if (books.isNotEmpty) {
       debugPrint("montando o model Novos");
       Map<String, dynamic> novos = {
-        "idExtension": 9,
+        "idExtension": 3,
         "title": "Mundo Manga Kun Novos",
         "books": books
       };
@@ -127,7 +127,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
     if (books.isNotEmpty) {
       debugPrint("montando o model Mais lidos da semana");
       Map<String, dynamic> maislidos = {
-        "idExtension": 9,
+        "idExtension": 3,
         "title": "Silence Scan mais lidos da semana",
         "books": books
       };
@@ -239,7 +239,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         state: state ?? "Estado desconhecido",
         authors: authors,
         link: "https://mundomangakun.com.br/manga/$link/",
-        idExtension: 9,
+        idExtension: 3,
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
@@ -272,15 +272,6 @@ Future<List<String>> scrapingLeitor(String id) async {
 
     List<String> bruteResultPages = corteForDecode2[0].split('","');
     List<String> resultPages = bruteResultPages.map((img) => img.replaceAll('\\', '')).toList();
-    // if (resultHtml != null) {
-    //   for (String image in resultHtml) {
-    //     if (image.contains('src="http')) {
-    //       List<String>? page = image.split('src="'); // image on index 1
-    //       // debugPrint("img: $page");
-    //       resultPages.add(page[1]);
-    //     }
-    //   }
-    // }
 
     return resultPages;
   } catch (e, s) {
@@ -297,25 +288,27 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
     var parser = await Chaleno().load("https://mundomangakun.com.br/?s=$txt");
 
-    var resultHtml = parser?.querySelector(".main_container");
+    var resultHtml = parser?.querySelector("div.bixbox > div.listupd");
     List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
       // projeto
-      var projetoData = resultHtml.querySelectorAll(".post_projeto");
+      var projetoData = resultHtml.querySelectorAll("div.bs > div.bsx");
       // print(projetoData);
       if (projetoData != null) {
-        List<Map<String, dynamic>> projetoBooks =
-            projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
           // name
-          String? name = data.querySelector(".post_projeto_titulo")!.text;
+          String? name = data.querySelector("a > div.bigor > div.tt")!.text;
+          // debugPrint("name: $name");
           // img
-          String? img = data.querySelector(".post_projeto_thumbnail_img")!.src;
+          String? img = data.querySelector("a > div.limit > img")!.src;
+          // debugPrint("img: $img");
           // link
-          String? link = data.querySelector(".btn_large_primary")!.href;
-          List<String> corteLink = link!.split("projeto/");
+          String? link = data.querySelector("a")!.href;
+          // debugPrint("link: $link");
+          List<String> corteLink = link!.split("manga/");
           // print(data.html);
           return {
-            "name": name ?? "error",
+            "name": name?.trim() ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
             "img": img ?? "",
             "idExtension": 3
@@ -324,53 +317,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
 
         books.addAll(projetoBooks);
       }
-      // post normal
-      var normalData = resultHtml.querySelectorAll(".post_normal");
-      List<Map<String, dynamic>> normalBooks = [];
-      if (normalData != null) {
-        for (Result data in normalData) {
-          try {
-            // name
-            // print("pt1");
-            String? name = data.querySelector(".post_title")!.text;
-            // print("pt2 ${data.html}");
-            // img
-            String? img = data.querySelector(".post_head_thumbnail")?.src;
-            // print("pt3 img;$img");
-            // link
-            String? link = data.querySelector(".post_head_comment_tags")!.html;
-            // print("pt4");
-            List<String> corteLink1 = link!.split("tags/");
-            corteLink1 = corteLink1.reversed.toList();
-            List<String> corteLink2 = corteLink1[0].split('/" rel=');
-            // print(corteLink2);
-            if (img != null && img.contains("http")) {
-              bool alreadyExists = false;
-              for (Map book in normalBooks) {
-                if (book['link'] == corteLink2[0]) {
-                  alreadyExists = true;
-                  break;
-                }
-              }
-              if (alreadyExists) continue;
-              // caso não tenha ele adicionara
-              normalBooks.add({
-                "name": name ?? "error",
-                "link": corteLink2[0],
-                "img": img,
-                "idExtension": 3
-              });
-            }
-          } catch (e) {
-            debugPrint("não é um manga; $e");
-          }
-        }
-        debugPrint('$normalBooks');
-        books.addAll(normalBooks);
-      }
     }
-
-    // return SearchModel(font: "", books: [], idExtension: 3);
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
