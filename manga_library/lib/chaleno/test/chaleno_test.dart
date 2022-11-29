@@ -10,7 +10,7 @@ void main() {
 
   /// get union mangas
   test("obter os dados do union mangas", () async {
-    var data = await Chaleno().load("https://yabutoons.com/webtoon/1st-kiss/");
+    var data = await Chaleno().load("https://saikaiscan.com.br/ler/comics/tales-of-demons-and-gods-tdg/44570/capitulo-4035");
     print(data?.html);
   });
   // group('Test Parser class', () {
