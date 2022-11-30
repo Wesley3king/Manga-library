@@ -1,17 +1,17 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manga_library/app/extensions/mundo_manga_kun/extension_mundo_manga_kun.dart';
+import 'package:manga_library/app/extensions/prisma_scan/extension_prisma_scans.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 
 void main() {
-  final ExtensionMundoMangaKun extend = ExtensionMundoMangaKun();
+  final ExtensionPrismaScan extend = ExtensionPrismaScan();
   test("deve retornar um List<ModelHomePage>", () async {
     var data = await extend.homePage();
     debugPrint('$data');
   });
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('shounen-no-abyss'); // the-legendary-moonlight-sculptor shounen-no-abyss
+    var data = await extend.mangaDetail('jungle-juice25');
     debugPrint('$data');
   });
 
