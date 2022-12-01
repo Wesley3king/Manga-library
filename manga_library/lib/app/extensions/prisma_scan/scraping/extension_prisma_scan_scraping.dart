@@ -23,13 +23,13 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       String? name = html
           .querySelector("div.item-summary > div.post-title > h3.h5 > a")!
           .text;
-      debugPrint("name: $name");
+      // debugPrint("name: $name");
       // img
       String? img = html.querySelector("div.item-thumb > a > img")!.src;
-      debugPrint("img: $img");
+      // debugPrint("img: $img");
       // link
       String? link = html.querySelector("div.item-thumb > a")!.href;
-      debugPrint("link: $link");
+      // debugPrint("link: $link");
       List<String> linkCorte1 = link!.split("manga/");
 
       books.add({
@@ -125,7 +125,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // debugPrint("description: $description");
       // img
       img = parser.querySelector("div.summary_image > a > img").src;
-      debugPrint("img: $img");
+      // debugPrint("img: $img");
       // authors
       List<Result>? listaInfo =
           parser.querySelectorAll("div.post-content > div.post-content_item");
@@ -143,16 +143,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
                 info.querySelector("div.summary-content > div > a")!.text!;
             buffer.write(
                 ' ,$value'); // {info.text?.replaceFirst("Artista", "").trim()}
-          } else if (txt.contains("Status")) {
-            final String? isInHiato =
-                parser.querySelector("div.post-title > h1").text;
-            final String value =
-                info.querySelector("div.summary-content")!.text!;
-            status = "$value${isInHiato == null ? "" : ", $isInHiato"}";
           } else if (txt.contains("Gênero")) {
             // genres
             List<Result>? genresResult = parser.querySelectorAll(
-                "div.summary-results > div.genres-content > a");
+                "div.summary-content > div.genres-content > a");
             // print(genresResult);
             for (int i = 0; i < genresResult.length; ++i) {
               genres.add("${genresResult[i].text}");
@@ -164,15 +158,29 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       }
 
       authors = buffer.toString();
-      debugPrint("authors: $authors");
-      debugPrint("state: $status");
-      debugPrint("genres: $genres");
+      // debugPrint("authors: $authors");
+      // debugPrint("genres: $genres");
+      final List<Result> stateResult = parser.querySelectorAll(
+          "div.post-content > div.post-status > div.post-content_item");
+      for (Result stateResultado in stateResult) {
+        final String txt =
+            stateResultado.querySelector("div.summary-heading > h5")!.text!;
+        if (txt.contains("Status")) {
+          final String? isInHiato = parser
+              .querySelector("div.post-title > span.manga-title-badges")
+              .text;
+          final String value =
+              stateResultado.querySelector("div.summary-content")!.text!;
+          status = "${value.trim()}${isInHiato == null ? "" : ", $isInHiato"}";
+        }
+      }
+      // debugPrint("state: $status");
       // chapters
-      final Response response = await dio.post("https://prismascans.net/manga/$link/ajax/chapters/");
+      final Response response =
+          await dio.post("https://prismascans.net/manga/$link/ajax/chapters/");
       final Parser chaptersParser = Parser(response.data);
-      List<Result> chaptersResult = parser.querySelectorAll("ul.main > li.wp-manga-chapter");
-      // debugPrint("length de cap: ${chaptersResult.length}");
-      // int indice = 0;
+      List<Result> chaptersResult =
+          chaptersParser.querySelectorAll("ul.main > li.wp-manga-chapter");
 
       for (Result result in chaptersResult) {
         // debugPrint("inice: $indice / cap: ${chaptersResult.length}");
@@ -185,19 +193,16 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // debugPrint("replaced link: $replacedLink");
 
         // name cap
-        String? capName = result
-            .querySelector("a")!
-            .text;
+        String? capName = result.querySelector("a")!.text;
         // String chapter = capName!.replaceAll("Capítulo ", "");
-        // debugPrint("chapetr name : $capName");
+        // debugPrint("chapter name : $capName");
         // description
-        String? capDescription = result
-            .querySelector("div > div.eph-num > a > span.chapterdate")!
-            .text;
+        String? capDescription =
+            result.querySelector("span.chapter-release-date > i")!.text;
 
         chapters.add(Capitulos(
           id: replacedLink,
-          capitulo: capName!,
+          capitulo: capName!.trim(),
           description: capDescription ?? "",
           download: false,
           readed: false,
@@ -236,22 +241,18 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
 Future<List<String>> scrapingLeitor(String id) async {
   try {
-    var parser = await Chaleno().load("https://mangaschan.com/$id/");
+    var parser = await Chaleno()
+        .load("https://prismascans.net/manga/${id.replaceAll("__", "/")}");
 
-    Result? area = parser?.querySelector("div#readerarea > noscript");
-    debugPrint("area: ${area?.html}");
-
-    List<String>? resultHtml = area?.html?.split('" alt=');
-    // debugPrint('result: $resultHtml');
+    final List<Result>? resultHtml =
+        parser?.querySelectorAll("div.reading-content > div.page-break > img");
 
     List<String> resultPages = [];
     if (resultHtml != null) {
-      for (String image in resultHtml) {
-        if (image.contains('src="http')) {
-          List<String>? page = image.split('src="'); // image on index 1
-          // debugPrint("img: $page");
-          resultPages.add(page[1]);
-        }
+      for (Result image in resultHtml) {
+        List<String> cortePage1 = image.html!.split('src="');
+        List<String> cortePage2 = cortePage1[1].split('" class');
+        resultPages.add(cortePage2[0].trim());
       }
     }
 
@@ -268,28 +269,24 @@ Future<List<String>> scrapingLeitor(String id) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load("https://mangaschan.com/?s=$txt");
+    var parser = await Chaleno().load("https://prismascans.net/?s=$txt&post_type=wp-manga&op=&author=&artist=&release=&adult=");
 
-    var resultHtml = parser?.querySelector("div.bixbox > div.listupd");
+    var resultHtml = parser?.querySelector("div.search-wrap > div.tab-content-wrap > div.c-tabs-item");
     List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
       // projeto
-      var projetoData = resultHtml.querySelectorAll("div.bs > div.bsx");
-      // print(projetoData);
+      var projetoData = resultHtml.querySelectorAll("div.row");
       if (projetoData != null) {
-        // for (Result result in projetoData) {
-
-        // }
         List<Map<String, dynamic>> projetoBooks =
             projetoData.map((Result data) {
           // name
-          String? name = data.querySelector("a div.tt")!.text;
+          String? name = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!.text;
           // debugPrint("name: $name");
           // img
-          String? img = data.querySelector("a > div.limit > img")!.src;
+          String? img = data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
           // debugPrint("img: $img");
           // link
-          String? link = data.querySelector("a")!.href;
+          String? link = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!.href;
           // debugPrint("link: $link");
           List<String> corteLink = link!.split("manga/");
           // print(data.html);
@@ -297,7 +294,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
             "name": name?.trim() ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
             "img": img ?? "",
-            "idExtension": 10
+            "idExtension": 13
           };
         }).toList();
 

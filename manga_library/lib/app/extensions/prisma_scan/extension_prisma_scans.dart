@@ -12,7 +12,7 @@ class ExtensionPrismaScan implements Extension {
   @override
   String nome = "Prisma Scan";
   @override
-  String extensionPoster = "Manga-Chan.webp";
+  String extensionPoster = "Prisma-Scan.webp";
   @override
   int id = 13;
   @override
@@ -29,8 +29,7 @@ class ExtensionPrismaScan implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) =>
-      "https://mangaschan.com/manga/$pieceOfLink/";
+  String getLink(String pieceOfLink) => "https://prismascans.net/manga/$pieceOfLink/";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {

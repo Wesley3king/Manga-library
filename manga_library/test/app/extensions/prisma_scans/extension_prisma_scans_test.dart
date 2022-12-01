@@ -18,23 +18,23 @@ void main() {
   // getPages
   test("deve retornar um model Capitulos", () async {
     //shounen-no-abyss-capitulo-114  shounen-no-abyss_cap-tulo-109
-    var data = await extend.getPages("shounen-no-abyss-capitulo-114", [
+    var data = await extend.getPages("jungle-juice25__cap-83-fim-da-primeira-temporada__", [
       Capitulos(
-        capitulo: "114",
-        id: "shounen-no-abyss-capitulo-114",
+        capitulo: "83",
+        id: "jungle-juice25__cap-83-fim-da-primeira-temporada__",
         description: "",
         mark: false,
         download: false,
         downloadPages: [],
-        pages: [],    // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
-        readed: false // https://drive.google.com/uc?export=view&id=1yH3aSar0XO6h3qpLPJzliiXmRVJP_-eo
+        pages: [],
+        readed: false
       )
     ]);
     debugPrint('${data.pages}');
   });
 
   test("deve retornar um SearchModel", () async {
-    var data = await extend.search("sho");
-    debugPrint(data[0].name);
+    var data = await extend.search("ju");
+    debugPrint('$data');
   });
 }

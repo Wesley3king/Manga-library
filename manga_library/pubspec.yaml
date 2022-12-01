@@ -116,6 +116,7 @@ flutter:
     - assets/extesion_posters/Manga-Chan.webp
     - assets/extesion_posters/Gekkou-scans.png
     - assets/extesion_posters/YabuToons.png
+    - assets/extesion_posters/Prisma-Scan.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

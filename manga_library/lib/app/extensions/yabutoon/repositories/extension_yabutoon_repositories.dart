@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
-import 'package:manga_library/app/models/home_page_model.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
 
 class YabutoonRepositories {
   final Dio dio = Dio(BaseOptions(receiveTimeout: 40000));
@@ -34,7 +32,7 @@ class YabutoonRepositories {
       var decoded = List.from(data.data);
       return decoded
           .map<Map<String, dynamic>>(
-              (e) => {"name": e["title"], "img": 'https://yabutoons.com/${e["cover"]}', "link": e["slug"], "idExtension": 12})
+              (e) => {"name": e["title"], "img": e["cover"], "link": e["slug"], "idExtension": 12})
           .toList();
     } catch (e) {
       debugPrint("erro no search at YabutoonRepositories: $e");
