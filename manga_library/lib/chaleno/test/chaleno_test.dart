@@ -10,7 +10,7 @@ void main() {
 
   /// get union mangas
   test("obter os dados do union mangas", () async {
-    var data = await Chaleno().load("https://prismascans.net/");
+    var data = await Chaleno().load("https://goldenmangas.top/mangabr/forget-about-my-husband-id-rather-go-make-money/01");
     print(data?.html);
   });
   // group('Test Parser class', () {
