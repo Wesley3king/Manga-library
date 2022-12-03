@@ -5,25 +5,24 @@ import 'package:flutter/rendering.dart';
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 
-Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
-  const String url = 'https://neoxscans.net/';
+Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
+  const String url = 'https://prismascans.net/';
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
+
     // ==================================================================
-    //          -- LANCAMENTOS --
-    // Result? lancamentos =
-    //     parser?.querySelector("div.row-eq-height > div.col-6 > div.page-item-detail");
-    List<Result>? lancametosItens = parser?.querySelectorAll(
-        "div.row-eq-height > div.col-6 > div.page-item-detail");
+    //          -- ULTIMAS ATUALIZAÇÕES --
+    List<Result>? lancamentos = parser?.querySelectorAll(
+        "div#loop-content > div.page-listing-item > div.row > div.col-6 > div.page-item-detail");
+    // List<Result>? lancametosItens =
+    //     lancamentos?.querySelectorAll("div.item-summary > div.post-title > h3.h5 > a");
     List<Map<String, String>> books = [];
-    for (Result html in lancametosItens!) {
+    for (Result html in lancamentos!) {
       // name
       String? name = html
           .querySelector("div.item-summary > div.post-title > h3.h5 > a")!
           .text;
-      // name!.replaceAll("...", "");
-      // name.replaceAll(" - ...", "");
       // debugPrint("name: $name");
       // img
       String? img = html.querySelector("div.item-thumb > a > img")!.src;
@@ -41,20 +40,20 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
     }
     // print(books);
     // monat model destaques
-    debugPrint("montando o model Lançamentos");
+    debugPrint("montando o model Ultimas Atualizações");
     Map<String, dynamic> destaques = {
-      "idExtension": 14,
-      "title": "Neox Scans Ultimas atualizações",
+      "idExtension": 13,
+      "title": "Prisma Scan Ultimas Atualizações",
       "books": books
     };
     models.add(ModelHomePage.fromJson(destaques));
-    // ============================================================
-    // ======================== recomendacoes =============================
-    List<Result>? novosItens = parser?.querySelectorAll(
-        "div.popular-slider > div.slider__container > div.slider__item > div.item__wrap");
-    books.clear();
+    //================ POPULARES =======================
+    List<Result>? maisLidosItens =
+        parser?.querySelectorAll("div.slider__item > div.item__wrap");
+    // print("data: $result3 / li: $maisLidosItens");
+    books = [];
 
-    for (Result html in novosItens!) {
+    for (Result html in maisLidosItens!) {
       // name
       String? name = html
           .querySelector(
@@ -69,8 +68,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
       // debugPrint("img: $img");
       // link
       String? link = html
-          .querySelector(
-              "div.slider__content > div.slider__content_item > div.post-title > h4 > a")!
+          .querySelector("div.slider__thumb > div.slider__thumb_item > a")!
           .href;
       // debugPrint("link: $link");
       List<String> linkCorte1 = link!.split("manga/");
@@ -81,69 +79,22 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
         "url": linkCorte1[1].replaceAll("/", ""),
         "img": img ?? ""
       });
-      debugPrint("book adicionado!!!");
-    }
-    // print(books);
-    // monat model destaques
-    if (books.isNotEmpty) {
-      debugPrint("montando o model Novos");
-      Map<String, dynamic> novos = {
-        "idExtension": 14,
-        "title": "Neox Scans Destaques",
-        "books": books
-      };
-      models.add(ModelHomePage.fromJson(novos));
-    }
-    // ====================== mais lidos do dia ==========================
-    List<Result>? maisLidosItens = parser?.querySelectorAll(
-        "div.c-widget-content > div.widget-content > div.popular-item-wrap");
-    books = [];
-
-    for (Result html in maisLidosItens!) {
-      // name
-      String? name =
-          html.querySelector("div.popular-content > h5.widget-title > a")!.text;
-      // debugPrint("name: $name");
-      // img
-      String? img = html.querySelector("div.popular-img > a > img")!.src;
-      // debugPrint("img: $img");
-      // link
-      String? link =
-          html.querySelector("div.popular-content > h5.widget-title > a")!.href;
-      // debugPrint("link: $link");
-      List<String> linkCorte1 = link!.split("manga/");
-      // debugPrint("link cortado: ${linkCorte1[1]}");
-
-      books.add({
-        "name": name ?? "erro",
-        "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img ?? ""
-      });
-      debugPrint("book adicionado!!!");
+      // debugPrint("book adicionado!!!");
     }
     // print(books);
     // monat model destaques
     if (books.isNotEmpty) {
       debugPrint("montando o model Mais lidos da semana");
       Map<String, dynamic> maislidos = {
-        "idExtension": 14,
-        "title": "Neox Scans Mais lidos do dia",
+        "idExtension": 13,
+        "title": "Prisma scans Populares",
         "books": books
       };
       models.add(ModelHomePage.fromJson(maislidos));
     }
-    // // montar o model
-    // // debugPrint("$mangas");
-    // Map<String, dynamic> lancamentos = {
-    //   "idExtension": 3,
-    //   "title": "Mundo Mangá Kun Lançamentos",
-    //   "books": mangas
-    // };
-    // models.add(ModelHomePage.fromJson(lancamentos));
-
     return models;
   } catch (e) {
-    debugPrint("erro no scrapingHomePage at ExtensionNeoxScans: $e");
+    debugPrint("erro no scrapingHomePage at ExtensionMangaChan: $e");
     return [];
   }
 }
@@ -151,14 +102,16 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
 // manga Detail
 Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   final Dio dio = Dio();
+  //const String indentify = "";
+
   try {
-    var parser = await Chaleno().load("https://neoxscans.net/manga/$link/");
+    var parser = await Chaleno().load("https://prismascans.net/manga/$link/");
 
     String? name;
     String? description;
     String? img;
-    String? state;
     String? authors;
+    String? status;
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
@@ -166,7 +119,9 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       name = parser.querySelector("div.post-title > h1").text;
       // debugPrint("name: $name");
       // description
-      description = parser.querySelector("div.manga-excerpt > p").text;
+      description = parser
+          .querySelector("div.post-content > div.manga-excerpt > p > span")
+          .text;
       // debugPrint("description: $description");
       // img
       img = parser.querySelector("div.summary_image > a > img").src;
@@ -174,14 +129,20 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // authors
       List<Result>? listaInfo =
           parser.querySelectorAll("div.post-content > div.post-content_item");
+      StringBuffer buffer = StringBuffer();
       for (Result info in listaInfo) {
         try {
           final String txt =
               info.querySelector("div.summary-heading > h5")!.text!;
-          if (txt.contains("Autor") || txt.contains("Estudio")) {
+          if (txt.contains("Autor")) {
             final String value =
                 info.querySelector("div.summary-content > div > a")!.text!;
-            authors = value;
+            buffer.write(value);
+          } else if (txt.contains("Artista")) {
+            final String value =
+                info.querySelector("div.summary-content > div > a")!.text!;
+            buffer.write(
+                ' ,$value'); // {info.text?.replaceFirst("Artista", "").trim()}
           } else if (txt.contains("Gênero")) {
             // genres
             List<Result>? genresResult = parser.querySelectorAll(
@@ -195,6 +156,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           debugPrint("não encontrado o elemento: $e");
         }
       }
+
+      authors = buffer.toString();
       // debugPrint("authors: $authors");
       // debugPrint("genres: $genres");
       final List<Result> stateResult = parser.querySelectorAll(
@@ -208,10 +171,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
               .text;
           final String value =
               stateResultado.querySelector("div.summary-content")!.text!;
-          state = "${value.trim()}${isInHiato == null ? "" : ", $isInHiato"}";
+          status = "${value.trim()}${isInHiato == null ? "" : ", $isInHiato"}";
         }
       }
-      // debugPrint("genres: $genres");
+      // debugPrint("state: $status");
       // chapters
       final Response response =
           await dio.post("https://prismascans.net/manga/$link/ajax/chapters/");
@@ -249,15 +212,16 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         ));
         // debugPrint("capitulo adicionado! $capName");
       }
+      // debugPrint("length de cap> ${chapters.length}");
 
       return MangaInfoOffLineModel(
-        name: name ?? "erro",
+        name: name?.trim() ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
-        state: state ?? "Estado desconhecido",
-        authors: authors ?? "Autor desconhecido",
-        link: "https://neoxscans.net/manga/$link/",
-        idExtension: 14,
+        authors: authors,
+        state: status ?? "Estado desconhecido",
+        link: "https://prismascans.net/manga/$link/",
+        idExtension: 13,
         genres: genres,
         alternativeName: false,
         chapters: chapters.length,
@@ -266,7 +230,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     }
     return null;
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionMangaChan: $e");
     return null;
   }
 }
@@ -276,26 +240,25 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ============================================================================
 
 Future<List<String>> scrapingLeitor(String id) async {
-  // shounen-no-abyss_cap-tulo-01 https://mundomangakun.com.br/shounen-no-abyss-capitulo-114/
   try {
-    var parser = await Chaleno().load("https://mundomangakun.com.br/$id/");
+    var parser = await Chaleno()
+        .load("https://prismascans.net/manga/${id.replaceAll("__", "/")}");
 
-    List<Result>? area = parser?.querySelectorAll("div.wrapper > script");
-    // area?.forEach((element) {
-    //   debugPrint("area: ${element.html}");
-    // });
+    final List<Result>? resultHtml =
+        parser?.querySelectorAll("div.reading-content > div.page-break > img");
 
-    List<String> corteForDecode1 = area![0].html!.split('"images":["');
-    List<String> corteForDecode2 = corteForDecode1[1].split('"]}]');
-    // debugPrint('result: $resultHtml');
-
-    List<String> bruteResultPages = corteForDecode2[0].split('","');
-    List<String> resultPages =
-        bruteResultPages.map((img) => img.replaceAll('\\', '')).toList();
+    List<String> resultPages = [];
+    if (resultHtml != null) {
+      for (Result image in resultHtml) {
+        List<String> cortePage1 = image.html!.split('src="');
+        List<String> cortePage2 = cortePage1[1].split('" class');
+        resultPages.add(cortePage2[0].trim());
+      }
+    }
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at EXtensionMangaChan: $e");
     debugPrint("$s");
     return [];
   }
@@ -306,25 +269,24 @@ Future<List<String>> scrapingLeitor(String id) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load("https://mundomangakun.com.br/?s=$txt");
+    var parser = await Chaleno().load("https://prismascans.net/?s=$txt&post_type=wp-manga&op=&author=&artist=&release=&adult=");
 
-    var resultHtml = parser?.querySelector("div.bixbox > div.listupd");
+    var resultHtml = parser?.querySelector("div.search-wrap > div.tab-content-wrap > div.c-tabs-item");
     List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
       // projeto
-      var projetoData = resultHtml.querySelectorAll("div.bs > div.bsx");
-      // print(projetoData);
+      var projetoData = resultHtml.querySelectorAll("div.row");
       if (projetoData != null) {
         List<Map<String, dynamic>> projetoBooks =
             projetoData.map((Result data) {
           // name
-          String? name = data.querySelector("a > div.bigor > div.tt")!.text;
+          String? name = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!.text;
           // debugPrint("name: $name");
           // img
-          String? img = data.querySelector("a > div.limit > img")!.src;
+          String? img = data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
           // debugPrint("img: $img");
           // link
-          String? link = data.querySelector("a")!.href;
+          String? link = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!.href;
           // debugPrint("link: $link");
           List<String> corteLink = link!.split("manga/");
           // print(data.html);
@@ -332,7 +294,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
             "name": name?.trim() ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
             "img": img ?? "",
-            "idExtension": 3
+            "idExtension": 13
           };
         }).toList();
 
@@ -342,7 +304,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");
     debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
