@@ -11,7 +11,7 @@ class YabuFetchServices {
   Future<List<Map<String, dynamic>>> search(String txt) async {
     try {
       var data = await dio.post(
-          'https://manga-search-server.herokuapp.com/search',
+          'https://manga-search-server.onrender.com/search',
           data: {"txt": txt});
       // debugPrint(data.data['data']);
 

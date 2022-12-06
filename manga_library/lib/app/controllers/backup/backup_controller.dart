@@ -105,11 +105,16 @@ class BackupCore {
 
       await hiveController.updateHomePage(homePageData ?? []);
       // ================ marks ===================
-      List<MarkChaptersModel> marksList = data['marks']
-          .map<MarkChaptersModel>(
-              (dynamic json) => MarkChaptersModel.fromJson(json))
-          .toList();
-      await hiveController.updateMarks(marksList);
+      // esta verificação é algo temporario e pode ser retirada
+      if (data['marks'] != null) {
+        List<MarkChaptersModel> marksList = data['marks']
+            .map<MarkChaptersModel>(
+                (dynamic json) => MarkChaptersModel.fromJson(json))
+            .toList();
+        await hiveController.updateMarks(marksList);
+      } else {
+        hiveController.writeMarks();
+      }
 
       // ================ libraries ====================- updateLibraries(List<LibraryModel> listModel)
       List<LibraryModel> libraryList = data['libraries']
