@@ -189,6 +189,10 @@ Widget getFirstPage(LeitorController controller) {
                       value: "webview",
                       child: Text('Webview (on-line)'),
                     ),
+                    DropdownMenuItem(
+                      value: "novel",
+                      child: Text('Novel (only novel)'),
+                    ),
                   ],
                 ),
               )

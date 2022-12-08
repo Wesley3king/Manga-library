@@ -17,11 +17,12 @@ void main() {
 
   // getPages
   test("deve retornar um model Capitulos", () async {
-    //manga
-    var data = await extend.getPages("seduzindo-o-duque-do-norte-2__capitulo-1__", [
+    //manga seduzindo-o-duque-do-norte-2__capitulo-1__
+    // novel a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__
+    var data = await extend.getPages("a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__", [
       Capitulos(
-        capitulo: "1",
-        id: "seduzindo-o-duque-do-norte-2__capitulo-1__",
+        capitulo: "3",
+        id: "a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__",
         description: "",
         mark: false,
         download: false,
@@ -34,7 +35,8 @@ void main() {
   });
 
   test("deve retornar um SearchModel", () async {
-    var data = await extend.search("ju");
+    /// não funciona no site original
+    var data = await extend.search("cavaleira");
     debugPrint('$data');
   });
 }

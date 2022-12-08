@@ -22,14 +22,12 @@ Widget buildSetLeitorType(LeitorController controller) {
     {"option": "Lista ltr", "value": "ltrlist"},
     {"option": "Lista rtl", "value": "rtllist"},
     {"option": "Webtoon", "value": "webtoon"},
-    {"option": "Webview (on-line)", "value": "webview"}
+    {"option": "Webview (on-line)", "value": "webview"},
+    {"option": "Novel (only for novel)", "value": "novel"}
   ];
 
   String type = "";
   switch (controller.leitorType) {
-    // case LeitorTypes.pattern:
-    //   type = "pattern";
-    //   break;
     case LeitorTypes.vertical:
       type = "vertical";
       break;
@@ -50,6 +48,9 @@ Widget buildSetLeitorType(LeitorController controller) {
       break;
     case LeitorTypes.webview:
       type = "webview";
+      break;
+    case LeitorTypes.novel:
+      type = "novel";
       break;
   }
 

@@ -16,7 +16,7 @@ class MangaInfoOffLineModel {
   late final String authors;
   late final String description;
   late final String state;
-  late final String img;
+  late String img;
   late final String link;
   late final int idExtension;
   late final List<String> genres;

@@ -172,8 +172,9 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
         if (chaptersController.state.value == ChaptersStates.sucess) {
           await widget.controller.updateBook(
               widget.link,
-              /*chaptersController*/
-              widget.dados.idExtension);
+              widget.dados.idExtension,
+              img: widget.dados.img
+            );
         }
       },
       child: AnimatedBuilder(

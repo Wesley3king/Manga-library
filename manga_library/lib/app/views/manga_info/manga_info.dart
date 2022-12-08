@@ -54,7 +54,10 @@ class _MangaInfoState extends State<MangaInfo> {
             if (mangaInfoController.state.value == MangaInfoStates.sucess) {
               generateMessage(context, "Atualizando...");
               await mangaInfoController.updateBook(
-                      widget.link, widget.idExtension)
+                      widget.link,
+                      widget.idExtension,
+                      img: mangaInfoController.data.img
+                    )
                   ? generateMessage(context, "Atualizado com Sucesso!")
                   : generateMessage(context, 'Falha ao atualizar!');
             }

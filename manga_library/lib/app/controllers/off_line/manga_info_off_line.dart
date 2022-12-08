@@ -130,14 +130,14 @@ class MangaInfoOffLineController {
             log("manga off-line found!!! == doing changes");
             model.capitulos = capitulos;
             data[i] = model;
-            if (!GlobalData.settings.updateTheCovers) {
+            if (GlobalData.settings.updateTheCovers) {
               data[i].img = img!;
             }
+            bool sucess = await _hiveController.updateBook(data);
+            log("operação de atualização: ${sucess ? "sucess" : "failed"}!");
             break;
           }
         }
-        bool sucess = await _hiveController.updateBook(data);
-        log("operação de atualização: ${sucess ? "sucess" : "failed"}!");
         return true;
       } else {
         return false;

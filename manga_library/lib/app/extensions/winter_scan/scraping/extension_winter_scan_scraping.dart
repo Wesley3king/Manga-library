@@ -198,8 +198,8 @@ Future<List<String>> scrapingLeitor(String id) async {
     final Result? novelParser =
         parser?.querySelector("div.reading-content > div.text-left");
     if (novelParser == null) {
-      final List<Result>? resultHtml =
-        parser?.querySelectorAll("div.reading-content > div.page-break > img");
+      final List<Result>? resultHtml = parser
+          ?.querySelectorAll("div.reading-content > div.page-break > img");
       if (resultHtml != null) {
         for (Result image in resultHtml) {
           List<String> cortePage1 = image.html!.split('src="');
@@ -209,6 +209,11 @@ Future<List<String>> scrapingLeitor(String id) async {
       }
     } else {
       /// implement this [ novel ]
+      resultPages.add("== NOVEL READER ==");
+      List<Result>? lines = novelParser.querySelectorAll("p > span");
+      for (Result line in lines!) {
+        resultPages.add('${line.text}');
+      }
     }
 
     return resultPages;
@@ -224,48 +229,47 @@ Future<List<String>> scrapingLeitor(String id) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load(
-        "https://prismascans.net/?s=$txt&post_type=wp-manga&op=&author=&artist=&release=&adult=");
+    // var parser = await Chaleno().load("https://winterscan.com/?s=$txt");
 
-    var resultHtml = parser?.querySelector(
-        "div.search-wrap > div.tab-content-wrap > div.c-tabs-item");
+    // var resultHtml = parser?.querySelector(
+    //     "div.search-wrap > div.tab-content-wrap > div.c-tabs-item");
     List<Map<String, dynamic>> books = [];
-    if (resultHtml != null) {
-      // projeto
-      var projetoData = resultHtml.querySelectorAll("div.row");
-      if (projetoData != null) {
-        List<Map<String, dynamic>> projetoBooks =
-            projetoData.map((Result data) {
-          // name
-          String? name = data
-              .querySelector(
-                  "div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!
-              .text;
-          // debugPrint("name: $name");
-          // img
-          String? img =
-              data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
-          // debugPrint("img: $img");
-          // link
-          String? link = data
-              .querySelector(
-                  "div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!
-              .href;
-          // debugPrint("link: $link");
-          List<String> corteLink = link!.split("manga/");
-          // print(data.html);
-          return {
-            "name": name?.trim() ?? "error",
-            "link": corteLink[1].replaceAll("/", ""),
-            "img": img ?? "",
-            "idExtension": 13
-          };
-        }).toList();
+    // if (resultHtml != null) {
+    //   // projeto
+    //   var projetoData = resultHtml.querySelectorAll("div.row");
+    //   if (projetoData != null) {
+    //     List<Map<String, dynamic>> projetoBooks =
+    //         projetoData.map((Result data) {
+    //       // name
+    //       String? name = data
+    //           .querySelector(
+    //               "div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!
+    //           .text;
+    //       // debugPrint("name: $name");
+    //       // img
+    //       String? img =
+    //           data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
+    //       // debugPrint("img: $img");
+    //       // link
+    //       String? link = data
+    //           .querySelector(
+    //               "div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!
+    //           .href;
+    //       // debugPrint("link: $link");
+    //       List<String> corteLink = link!.split("manga/");
+    //       // print(data.html);
+    //       return {
+    //         "name": name?.trim() ?? "error",
+    //         "link": corteLink[1].replaceAll("/", ""),
+    //         "img": img ?? "",
+    //         "idExtension": 13
+    //       };
+    //     }).toList();
 
-        books.addAll(projetoBooks);
-      }
-    }
-    debugPrint("sucesso no scraping");
+    //     books.addAll(projetoBooks);
+    //   }
+    // }
+    // debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
     debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");

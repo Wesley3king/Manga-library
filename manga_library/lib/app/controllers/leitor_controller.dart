@@ -78,7 +78,8 @@ class LeitorController {
   // ========== SCROLL WEBTOON ===========
   static int scrollWebtoonValue = 400;
 
-  void start(String link, String id, int idExtension, {bool? isFirstTime}) async {
+  void start(String link, String id, int idExtension,
+      {bool? isFirstTime}) async {
     state.value = LeitorStates.loading;
     try {
       capitulos = GlobalData.mangaModel.capitulos;
@@ -95,13 +96,19 @@ class LeitorController {
         }
       }
       // processar informações
-      atualInfo = getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
+      atualInfo =
+          getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
       Capitulos cap =
           await mapOfExtensions[idExtension]!.getPages(id, capitulos);
       // debugPrint("$cap");
       atualChapter = cap;
+
+      /// veificar se é uma novel
+      if (cap.pages[0].contains("== NOVEL READER ==")) {
+        setReaderType("novel");
+      }
       isMarked.value = cap.mark;
       // marcar o capitulo como lido
       if (atualInfo.id ==
@@ -211,6 +218,9 @@ class LeitorController {
         break;
       case "webview":
         leitorType = LeitorTypes.webview;
+        break;
+      case "novel":
+        leitorType = LeitorTypes.novel;
         break;
     }
     ReaderNotifier.instance.notify();
@@ -390,18 +400,28 @@ class ReaderNotifier extends ChangeNotifier {
 
 enum LeitorStates { start, loading, sucess, error }
 
-enum LeitorTypes { vertical, ltr, rtl, ltrlist, rtllist, webtoon, webview }
-
-enum LeitorUiTypes {
-  pattern,
+enum LeitorTypes {
   vertical,
   ltr,
   rtl,
   ltrlist,
   rtllist,
   webtoon,
-  webview
+  webview,
+  novel
 }
+
+// enum LeitorUiTypes {
+//   pattern,
+//   vertical,
+//   ltr,
+//   rtl,
+//   ltrlist,
+//   rtllist,
+//   webtoon,
+//   webview,
+//   novel
+// }
 
 enum LeitorFilterQuality { none, low, medium, hight }
 
@@ -455,6 +475,8 @@ class PagesController {
       case LeitorTypes.webview:
         webViewController?.callJsMethod('scrollToIndex', [index]);
         break;
+      case LeitorTypes.novel:
+        break;
     }
   }
 
@@ -492,6 +514,8 @@ class PagesController {
       case LeitorTypes.webview:
         // implement this
         //webViewController?.callJsMethod('scrollToIndex', [index]);
+        break;
+      case LeitorTypes.novel:
         break;
     }
   }

@@ -113,7 +113,7 @@ class MangaInfoController {
   }
 
   Future<bool> updateBook(String url, int idExtension,
-      {bool isAnUpdateFromCore = false}) async {
+      {bool isAnUpdateFromCore = false, String? img}) async {
     try {
       debugPrint("l= $url  - atualizando...");
 
@@ -134,7 +134,7 @@ class MangaInfoController {
         if (offLineBook == null) {
           /// aqui retorno true -- MAS O MANGA NÃO É ATUALIZADO, já que não existe ná memória
           return true;
-        } else {}
+        }
       }
 
       if (isAnOffLineBook) {
@@ -157,9 +157,10 @@ class MangaInfoController {
             MangaInfoOffLineController();
         debugPrint("inserindo na base de dados!");
         await mangaInfoOffLineController.updateBook(
-            model: data,
-            img: offLineBook?.img,
-            capitulos: data.capitulos);
+          model: data,
+          img: img ?? offLineBook?.img,
+          capitulos: data.capitulos
+        );
         debugPrint("inserindo com SUCESSO na base de dados!");
       } else {
         // isn't an off ine book

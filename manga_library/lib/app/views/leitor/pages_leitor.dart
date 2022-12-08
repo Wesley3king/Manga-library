@@ -7,6 +7,7 @@ import 'package:manga_library/app/controllers/leitor_controller.dart';
 // import 'package:manga_library/app/views/components/leitor/pages_states.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/leitor/novel_reader/novel_reader.dart';
 import 'package:manga_library/app/views/leitor/scrollable_list_view/scrollable_list_reader.dart';
 import 'package:manga_library/app/views/leitor/web_view/web_view_reader.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -17,12 +18,13 @@ class PagesLeitor extends StatefulWidget {
   final PagesController controller;
   final String link;
   final String id;
-  const PagesLeitor(
-      {super.key,
-      required this.link,
-      required this.id,
-      required this.leitorController,
-      required this.controller,});
+  const PagesLeitor({
+    super.key,
+    required this.link,
+    required this.id,
+    required this.leitorController,
+    required this.controller,
+  });
 
   @override
   State<PagesLeitor> createState() => _PagesLeitorState();
@@ -215,6 +217,10 @@ class _PagesLeitorState extends State<PagesLeitor> {
       case LeitorTypes.webtoon:
         // return newLeitor(filterQuality, color);
         return webtoonReader(filterQuality, color);
+      case LeitorTypes.novel:
+        return NovelReader(
+            pages: widget.leitorController.atualChapter.pages,
+            backgroundColor: color);
       case LeitorTypes.webview:
         return MyWebviewx(
           pages: widget.leitorController.atualChapter.pages,
@@ -262,10 +268,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
               } else if (widget.leitorController.isblackAndWhiteFilter) {
                 return ColorFiltered(
                   colorFilter: const ColorFilter.mode(
-                      Color.fromARGB(
-                          255, 0, 0, 0
-                        ),
-                      BlendMode.color),
+                      Color.fromARGB(255, 0, 0, 0), BlendMode.color),
                   child: _leitorType(widget.leitorController.leitorType,
                       _getFilterQuality(), _getColor()),
                 );
