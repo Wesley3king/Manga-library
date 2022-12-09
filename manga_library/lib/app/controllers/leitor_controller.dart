@@ -273,6 +273,18 @@ class LeitorController {
       case "white":
         backgroundColor = LeitorBackgroundColor.white;
         break;
+      case "grey":
+        backgroundColor = LeitorBackgroundColor.grey;
+        break;
+      case "blue":
+        backgroundColor = LeitorBackgroundColor.blue;
+        break;
+      case "green":
+        backgroundColor = LeitorBackgroundColor.green;
+        break;
+      case "pink":
+        backgroundColor = LeitorBackgroundColor.pink;
+        break;
     }
     ReaderNotifier.instance.notify();
   }
@@ -427,7 +439,7 @@ enum LeitorFilterQuality { none, low, medium, hight }
 
 enum LeitorUiFilterQuality { pattern, none, low, medium, hight }
 
-enum LeitorBackgroundColor { black, white }
+enum LeitorBackgroundColor { black, white, grey, blue, green, pink }
 
 enum ReaderLayouts { l, bordersRTL, bordersLTR, none }
 
@@ -476,6 +488,7 @@ class PagesController {
         webViewController?.callJsMethod('scrollToIndex', [index]);
         break;
       case LeitorTypes.novel:
+        scrollControllerList.jumpTo(index: index);
         break;
     }
   }
@@ -516,6 +529,10 @@ class PagesController {
         //webViewController?.callJsMethod('scrollToIndex', [index]);
         break;
       case LeitorTypes.novel:
+        double position = action == ReaderPageAction.next
+            ? (scrollController.offset + LeitorController.scrollWebtoonValue)
+            : (scrollController.offset - LeitorController.scrollWebtoonValue);
+        scrollController.animateTo(position, duration: duration, curve: curve);
         break;
     }
   }

@@ -31,8 +31,7 @@ class ExtensionWinterScan implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) =>
-      'https://mundomangakun.com.br/projeto/$pieceOfLink/';
+  String getLink(String pieceOfLink) => "https://winterscan.com/manga/$pieceOfLink/";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {

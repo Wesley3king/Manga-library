@@ -11,6 +11,7 @@ Map<String, Icon> readerTypeIcons = {
   "rtllist": const Icon(Icons.no_cell_outlined),
   "webtoon": const Icon(Icons.system_security_update),
   "webview": const Icon(Icons.system_security_update),
+  "novel": const Icon(Icons.text_snippet_outlined)
 };
 
 Widget buildSetLeitorType(LeitorController controller) {

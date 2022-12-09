@@ -126,7 +126,11 @@ buildSettingsModel() {
           "function": functions['Cor de fundo'],
           "optionsAndValues": [
             {"option": "Preto", "value": "black"},
-            {"option": "Branco", "value": "white"}
+            {"option": "Branco", "value": "white"},
+            {"option": "Cinza", "value": "grey"},
+            {"option": "Azul", "value": "blue"},
+            {"option": "Verde", "value": "green"},
+            {"option": "Rosa", "value": "pink"}
           ]
         },
         {

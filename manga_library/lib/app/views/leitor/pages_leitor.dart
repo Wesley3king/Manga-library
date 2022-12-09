@@ -219,12 +219,15 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return webtoonReader(filterQuality, color);
       case LeitorTypes.novel:
         return NovelReader(
-            pages: widget.leitorController.atualChapter.pages,
-            backgroundColor: color);
+          pages: widget.leitorController.atualChapter.pages,
+          backgroundColor: color,
+          controller: widget.controller,
+        );
       case LeitorTypes.webview:
         return MyWebviewx(
           pages: widget.leitorController.atualChapter.pages,
           controller: widget.controller,
+          leitorController: widget.leitorController,
           color: color,
         );
       case LeitorTypes.ltrlist:
@@ -237,10 +240,20 @@ class _PagesLeitorState extends State<PagesLeitor> {
 
   /// obtem a cor de fundo
   Color _getColor() {
-    return widget.leitorController.backgroundColor ==
-            LeitorBackgroundColor.black
-        ? Colors.black
-        : Colors.white;
+    switch (widget.leitorController.backgroundColor) {
+      case LeitorBackgroundColor.black:
+        return Colors.black;
+      case LeitorBackgroundColor.white:
+        return Colors.white;
+      case LeitorBackgroundColor.grey:
+        return Colors.grey;
+      case LeitorBackgroundColor.blue:
+        return const Color.fromARGB(255, 191, 207, 219);
+      case LeitorBackgroundColor.green:
+        return const Color.fromARGB(255, 193, 221, 193);
+      case LeitorBackgroundColor.pink:
+        return const Color.fromARGB(255, 233, 189, 185);
+    }
   }
 
   Widget _stateManagement(LeitorStates state) {

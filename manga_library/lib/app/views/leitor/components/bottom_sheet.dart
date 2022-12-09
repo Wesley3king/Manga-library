@@ -407,6 +407,22 @@ Widget getSecondPage(BuildContext context, LeitorController controller) {
                     value: "white",
                     child: Text('Branco'),
                   ),
+                  DropdownMenuItem(
+                    value: "grey",
+                    child: Text('Cinza'),
+                  ),
+                  DropdownMenuItem(
+                    value: "blue",
+                    child: Text('Azul'),
+                  ),
+                  DropdownMenuItem(
+                    value: "green",
+                    child: Text('Verde'),
+                  ),
+                  DropdownMenuItem(
+                    value: "pink",
+                    child: Text('Rosa'),
+                  ),
                 ],
               ),
             )

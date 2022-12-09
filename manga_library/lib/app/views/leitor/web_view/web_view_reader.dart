@@ -8,11 +8,13 @@ import 'package:webviewx/webviewx.dart';
 class MyWebviewx extends StatefulWidget {
   final List<String> pages;
   final PagesController controller;
+  final LeitorController leitorController;
   final Color color;
   const MyWebviewx(
       {super.key,
       required this.pages,
       required this.color,
+      required this.leitorController,
       required this.controller});
 
   @override
@@ -23,10 +25,19 @@ class _MyWebviewxState extends State<MyWebviewx> {
   // bool showThis = false;
   late WebViewXController webviewController;
   String getColor() {
-    if (widget.color == Colors.black) {
-      return "black";
-    } else {
-      return "white";
+    switch (widget.leitorController.backgroundColor) {
+      case LeitorBackgroundColor.black:
+        return "black";
+      case LeitorBackgroundColor.white:
+        return "white";
+      case LeitorBackgroundColor.grey:
+        return "grey";
+      case LeitorBackgroundColor.blue:
+        return "rgba(191, 207, 219)";
+      case LeitorBackgroundColor.green:
+        return "rgba(193, 221, 193)";
+      case LeitorBackgroundColor.pink:
+        return "rgba(233, 189, 185)";
     }
   }
 
