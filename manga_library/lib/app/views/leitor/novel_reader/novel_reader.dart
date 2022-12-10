@@ -7,29 +7,52 @@ class NovelReader extends StatefulWidget {
   final List<String> pages;
   final Color backgroundColor;
   final PagesController controller;
-  const NovelReader({super.key, required this.pages, required this.backgroundColor, required this.controller});
+  const NovelReader(
+      {super.key,
+      required this.pages,
+      required this.backgroundColor,
+      required this.controller});
 
   @override
   State<NovelReader> createState() => _NovelReaderState();
 }
 
 class _NovelReaderState extends State<NovelReader> {
-  final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+  double screenWidth = 360;
+  List<double> listHeight = <double>[];
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
 
   Widget generateLine(int index) {
-    if (widget.backgroundColor == Colors.black || widget.backgroundColor == Colors.grey) {
-      return Text(widget.pages[index], style: const TextStyle(color: Colors.white),);
+    double sizeOfCaracteresInPx = 3;
+    listHeight.add(
+        (((widget.pages[index].length * sizeOfCaracteresInPx) / screenWidth) *
+                10) +
+            6.0);
+
+    /// troca a cor das letras de acordo com o backgroundColor
+    if (widget.backgroundColor == Colors.black ||
+        widget.backgroundColor == Colors.grey) {
+      return Text(
+        widget.pages[index],
+        style: const TextStyle(color: Colors.white),
+      );
     } else {
-      return Text(widget.pages[index], style: const TextStyle(color: Colors.black),);
+      return Text(
+        widget.pages[index],
+        style: const TextStyle(color: Colors.black),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    activePositionListener();
     return Container(
       color: widget.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ScrollablePositionedList.builder(
           itemCount: (widget.pages.length - 1),
           scrollController: widget.controller.scrollController,
@@ -42,5 +65,64 @@ class _NovelReaderState extends State<NovelReader> {
         ),
       ),
     );
+  }
+
+  /// notifica o paragrafo identificado
+  // void get positionsView => ValueListenableBuilder<Iterable<ItemPosition>>(
+  //       valueListenable: itemPositionsListener.itemPositions,
+  //       builder: (context, positions, child) {
+  //         // int? min;
+  //         int? max;
+  //         if (positions.isNotEmpty) {
+  //           // Determine the first visible item by finding the item with the
+  //           // smallest trailing edge that is greater than 0.  i.e. the first
+  //           // item whose trailing edge in visible in the viewport.
+
+  //           // min = positions
+  //           //     .where((ItemPosition position) => position.itemTrailingEdge > 0)
+  //           //     .reduce((ItemPosition min, ItemPosition position) =>
+  //           //         position.itemTrailingEdge < min.itemTrailingEdge
+  //           //             ? position
+  //           //             : min)
+  //           //     .index;
+
+  //           // Determine the last visible item by finding the item with the
+  //           // greatest leading edge that is less than 1.  i.e. the last
+  //           // item whose leading edge in visible in the viewport.
+  //           max = positions
+  //               .where((ItemPosition position) => position.itemLeadingEdge < 1)
+  //               .reduce((ItemPosition max, ItemPosition position) =>
+  //                   position.itemLeadingEdge > max.itemLeadingEdge
+  //                       ? position
+  //                       : max)
+  //               .index;
+  //         }
+  //         if (max != null) {
+  //           Future.delayed(const Duration(milliseconds: 100),
+  //               () => widget.controller.setPage = ((max ?? 0) + 1));
+  //         }
+  //         return Container();
+  //       },
+  //     );
+  void activePositionListener() {
+    itemPositionsListener.itemPositions.addListener(() {
+      Iterable<ItemPosition> positions =
+          itemPositionsListener.itemPositions.value;
+      int? max;
+      if (positions.isNotEmpty) {
+        // Determine the last visible item by finding the item with the
+        // greatest leading edge that is less than 1.  i.e. the last
+        // item whose leading edge in visible in the viewport.
+        max = positions
+            .where((ItemPosition position) => position.itemLeadingEdge < 1)
+            .reduce((ItemPosition max, ItemPosition position) =>
+                position.itemLeadingEdge > max.itemLeadingEdge ? position : max)
+            .index;
+      }
+      if (max != null) {
+        Future.delayed(const Duration(milliseconds: 100),
+            () => widget.controller.setPage = ((max ?? 0) + 1));
+      }
+    });
   }
 }

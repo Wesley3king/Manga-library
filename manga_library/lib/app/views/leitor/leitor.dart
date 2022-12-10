@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/system_navigation_and_app_bar_styles.dart';
 import 'package:manga_library/app/views/leitor/components/bottom_sheet.dart';
 import 'package:manga_library/app/views/leitor/components/layouts/layout_border.dart';
+import 'package:manga_library/app/views/leitor/components/layouts/layout_border_ltr.dart';
 import 'package:manga_library/app/views/leitor/components/layouts/layout_l.dart';
 import 'package:manga_library/app/views/leitor/config_components.dart';
 // import 'package:flutter/services.dart';
@@ -273,7 +274,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
             controller: controller,
             leitorType: leitorController.leitorType);
       case ReaderLayouts.bordersRTL:
-        return LayoutBorder(
+        return LayoutBorderRTL(
             notifier: isVisible,
             controller: controller,
             leitorType: leitorController.leitorType);

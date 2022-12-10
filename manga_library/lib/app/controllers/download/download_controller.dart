@@ -65,10 +65,10 @@ class DownloadController {
         );
         if (result) {
           dataToRemove.add({
-              "idExtension": model.model.idExtension,
-              "link": model.model.link,
-              "idChapter": model.capitulo.id
-            });
+            "idExtension": model.model.idExtension,
+            "link": model.model.link,
+            "idChapter": model.capitulo.id
+          });
           model.state?.value = DownloadStates.delete;
         } else {
           ++model.attempts;
@@ -96,10 +96,9 @@ class DownloadController {
       for (Map<String, dynamic> removeData in dataToRemove) {
         // filaDeDownload.removeAt(index);
         filaDeDownload.removeWhere((DownloadModel downloadModel) =>
-          downloadModel.capitulo.id == removeData["idChapter"] &&
-          downloadModel.model.idExtension == removeData["idExtension"] &&
-          downloadModel.model.link == removeData["link"]
-        );
+            downloadModel.capitulo.id == removeData["idChapter"] &&
+            downloadModel.model.idExtension == removeData["idExtension"] &&
+            downloadModel.model.link == removeData["link"]);
         //model.state?.value = DownloadStates.delete;
       }
       if (filaDeDownload.isNotEmpty) downloadMachine();
@@ -143,6 +142,7 @@ class DownloadController {
       );
       // caso seja null deu um erro!
       if (downloadedPagesPath == null) return false;
+
       /// adiciona o download a memória
       downloadModels.add(DownloadPagesModel(
           id: capitulo.id,
@@ -152,13 +152,15 @@ class DownloadController {
           img: model.img,
           name: model.name,
           pages: downloadedPagesPath));
+
       /// save in database
       bool isSaved = await hiveController.updateDownloads(downloadModels);
       if (!isSaved) {
         deleteDownloadForCancel(downloadedPagesPath[0]);
         return false;
       } else {
-        mangaInfoController?.updateChaptersAfterDownload(model.link, model.idExtension);
+        mangaInfoController?.updateChaptersAfterDownload(
+            model.link, model.idExtension);
       }
       log("capitulo ${capitulo.capitulo} baixado com sucesso!!!");
       return true;
@@ -263,5 +265,16 @@ class DownloadController {
       debugPrint("erro fatal no download!: $e");
       return null;
     }
+  }
+
+  /// baixa uma novel
+  Future<bool> downloadNovel({
+    required Capitulos capitulo,
+    required String link,
+    required String name,
+    required int idExtension,
+    required int index,
+  }) async {
+    return true;
   }
 }
