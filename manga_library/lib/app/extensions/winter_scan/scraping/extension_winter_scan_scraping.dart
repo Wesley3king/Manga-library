@@ -208,7 +208,6 @@ Future<List<String>> scrapingLeitor(String id) async {
         }
       }
     } else {
-      /// implement this [ novel ]
       resultPages.add("== NOVEL READER ==");
       List<Result>? lines = novelParser.querySelectorAll("p > span");
       for (Result line in lines!) {

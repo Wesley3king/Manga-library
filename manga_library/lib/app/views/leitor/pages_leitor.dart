@@ -218,8 +218,11 @@ class _PagesLeitorState extends State<PagesLeitor> {
         // return newLeitor(filterQuality, color);
         return webtoonReader(filterQuality, color);
       case LeitorTypes.novel:
+        final List<String> pages = widget.leitorController.atualChapter.download
+            ? widget.leitorController.atualChapter.downloadPages
+            : widget.leitorController.atualChapter.pages;
         return NovelReader(
-          pages: widget.leitorController.atualChapter.pages,
+          pages: pages,
           backgroundColor: color,
           controller: widget.controller,
         );

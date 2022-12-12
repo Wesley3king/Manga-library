@@ -114,18 +114,22 @@ class DownloadController {
     required String pieceOfLink,
     required MangaInfoOffLineModel model,
     required int index,
-    // ValueNotifier<Map<String, int?>>? downloadProgress
   }) async {
     final HiveController hiveController = HiveController();
-    // final MangaInfoOffLineController mangaInfoOffLineController =
-    //     MangaInfoOffLineController();
-    // final HiveController _hiveController = HiveController();
     try {
-      log("process - pages = ${capitulo.pages.length}");
-
-      /// pega os daddos atuais do banco
-      // MangaInfoOffLineModel? atualBook = await mangaInfoOffLineController
-      //     .verifyDatabase(model.link, model.idExtension);
+      log("processOneChapter - DOWNLOAD - pages= ${capitulo.pages.length}");
+      /// verifica se este capítulo é de uma novel
+      if (capitulo.pages[0].contains("== NOVEL READER ==")) {
+        return await downloadNovel(
+            capitulo: capitulo,
+            link: model.link,
+            pieceOfLink: pieceOfLink,
+            name: model.name,
+            img: model.img,
+            idExtension: model.idExtension,
+            index: index,
+            hiveController: hiveController);
+      }
 
       /// pega todos os downloads
       List<DownloadPagesModel> downloadModels =
@@ -246,7 +250,6 @@ class DownloadController {
         });
         if (imageId == null) {
           log("SEM PERMISSÃO!");
-
           return null;
         }
 
@@ -271,10 +274,35 @@ class DownloadController {
   Future<bool> downloadNovel({
     required Capitulos capitulo,
     required String link,
+    required String pieceOfLink,
+    required String img,
     required String name,
     required int idExtension,
     required int index,
+    required HiveController hiveController
   }) async {
-    return true;
+      /// pega todos os downloads
+      List<DownloadPagesModel> downloadModels =
+          await hiveController.getDownloads();
+      /// adiciona o download a memória
+      downloadModels.add(DownloadPagesModel(
+          id: capitulo.id,
+          chapter: capitulo.capitulo,
+          idExtension: idExtension,
+          link: pieceOfLink,
+          img: img,
+          name: name,
+          pages: capitulo.pages));
+
+      /// save in database
+      bool isSaved = await hiveController.updateDownloads(downloadModels);
+      if (!isSaved) return false;
+
+      mangaInfoController?.updateChaptersAfterDownload(
+        link,
+        idExtension
+      );
+      log("capitulo ${capitulo.capitulo} baixado com sucesso!!!");
+      return true;
   }
 }

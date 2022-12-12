@@ -258,7 +258,7 @@ Future<List<String>> scrapingLeitor(String id) async {
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMangaChan: $e");
+    debugPrint("erro no scrapingLeitor at EXtensionPrismaScan: $e");
     debugPrint("$s");
     return [];
   }
@@ -304,7 +304,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionPrismaScan: $e");
     debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];

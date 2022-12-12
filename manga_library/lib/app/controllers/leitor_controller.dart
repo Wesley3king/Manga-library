@@ -106,7 +106,7 @@ class LeitorController {
       atualChapter = cap;
 
       /// veificar se é uma novel
-      if (cap.pages[0].contains("== NOVEL READER ==")) {
+      if (cap.downloadPages[0].contains("== NOVEL READER ==")) {
         setReaderType("novel");
       }
       isMarked.value = cap.mark;
