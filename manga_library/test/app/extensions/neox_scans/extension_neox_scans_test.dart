@@ -11,7 +11,7 @@ void main() {
   });
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('jungle-juice25');
+    var data = await extend.mangaDetail('o-comeco-depois-do-fim-101032');
     debugPrint('$data');
   });
 

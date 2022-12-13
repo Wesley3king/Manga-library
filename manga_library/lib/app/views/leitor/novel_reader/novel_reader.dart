@@ -24,7 +24,7 @@ class _NovelReaderState extends State<NovelReader> {
       ItemPositionsListener.create();
 
   Widget generateLine(int index) {
-    double sizeOfCaracteresInPx = 3;
+    double sizeOfCaracteresInPx = 3.1;
     listHeight.add(
         (((widget.pages[index].length * sizeOfCaracteresInPx) / screenWidth) *
                 10) +
@@ -54,20 +54,31 @@ class _NovelReaderState extends State<NovelReader> {
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
+    final int quantidyOfPages = (widget.pages.length + 1);
     activePositionListener();
     return Container(
       color: widget.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ScrollablePositionedList.builder(
-          itemCount: (widget.pages.length - 1),
+          itemCount: quantidyOfPages,
           scrollController: widget.controller.scrollController,
           itemScrollController: widget.controller.scrollControllerList,
           itemPositionsListener: itemPositionsListener,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3.0),
-            child: generateLine(index + 1),
-          ),
+          itemBuilder: (context, index) {
+            if (index == 0 || (index + 1) == quantidyOfPages) {
+              const double height = 10.0;
+              listHeight.add(height);
+              return const SizedBox(
+                height: height,
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: generateLine(index),
+              );
+            }
+          },
         ),
       ),
     );
@@ -89,8 +100,13 @@ class _NovelReaderState extends State<NovelReader> {
           .index;
     }
     if (max != null) {
-      Future.delayed(const Duration(milliseconds: 100),
-          () => widget.controller.setPage = ((max ?? 0) + 1));
+      Future.delayed(const Duration(milliseconds: 100), () {
+        int index = max ?? 0;
+        // if (!(index >= widget.pages.length)) {
+        //   ;
+        // }
+        widget.controller.setPage = index;
+      });
     }
   }
 

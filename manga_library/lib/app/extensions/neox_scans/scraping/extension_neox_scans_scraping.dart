@@ -213,11 +213,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       }
       // debugPrint("genres: $genres");
       // chapters
-      final Response response =
-          await dio.post("https://prismascans.net/manga/$link/ajax/chapters/");
-      final Parser chaptersParser = Parser(response.data);
-      List<Result> chaptersResult =
-          chaptersParser.querySelectorAll("ul.main > li.wp-manga-chapter");
+      List<Result> chaptersResult = parser.querySelectorAll("ul.main > li.wp-manga-chapter");
 
       for (Result result in chaptersResult) {
         // debugPrint("inice: $indice / cap: ${chaptersResult.length}");
@@ -251,7 +247,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       }
 
       return MangaInfoOffLineModel(
-        name: name ?? "erro",
+        name: name?.trim() ?? "erro",
         description: description ?? "erro",
         img: img ?? "erro",
         state: state ?? "Estado desconhecido",

@@ -47,7 +47,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     models.add(ModelHomePage.fromJson(destaques));
     return models;
   } catch (e) {
-    debugPrint("erro no scrapingHomePage at ExtensionMangaChan: $e");
+    debugPrint("erro no scrapingHomePage at ExtensionWinterScan: $e");
     return [];
   }
 }
@@ -181,7 +181,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     }
     return null;
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionMangaChan: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionWinterScan: $e");
     return null;
   }
 }
@@ -210,14 +210,21 @@ Future<List<String>> scrapingLeitor(String id) async {
     } else {
       resultPages.add("== NOVEL READER ==");
       List<Result>? lines = novelParser.querySelectorAll("p > span");
-      for (Result line in lines!) {
-        resultPages.add('${line.text}');
+      if (lines != null && lines.isEmpty) {
+        lines = novelParser.querySelectorAll("p");
+        for (Result line in lines!) {
+          resultPages.add('${line.text}');
+        }
+      } else {
+        for (Result line in lines!) {
+          resultPages.add('${line.text}');
+        }
       }
     }
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMangaChan: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionWinterScan: $e");
     debugPrint("$s");
     return [];
   }
@@ -271,7 +278,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     // debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionWinterScan: $e");
     debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
