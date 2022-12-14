@@ -17,11 +17,25 @@ void main() {
 
   // getPages
   test("deve retornar um model Capitulos", () async {
-    //shounen-no-abyss-capitulo-114  shounen-no-abyss_cap-tulo-109
-    var data = await extend.getPages("jungle-juice25__cap-83-fim-da-primeira-temporada__", [
+    ///manga
+    // var data = await extend.getPages("o-comeco-depois-do-fim-101032__cap-166__", [
+    //   Capitulos(
+    //     capitulo: "166",
+    //     id: "o-comeco-depois-do-fim-101032__cap-166__",
+    //     description: "",
+    //     mark: false,
+    //     download: false,
+    //     downloadPages: [],
+    //     pages: [],
+    //     readed: false
+    //   )
+    // ]);
+
+    /// novel 
+    var data = await extend.getPages("the-player-that-cant-level-up-novel-101032__cap-108__", [
       Capitulos(
-        capitulo: "83",
-        id: "jungle-juice25__cap-83-fim-da-primeira-temporada__",
+        capitulo: "108",
+        id: "the-player-that-cant-level-up-novel-101032__cap-108__",
         description: "",
         mark: false,
         download: false,
@@ -34,7 +48,7 @@ void main() {
   });
 
   test("deve retornar um SearchModel", () async {
-    var data = await extend.search("ju");
+    var data = await extend.search("the beg");
     debugPrint('$data');
   });
 }

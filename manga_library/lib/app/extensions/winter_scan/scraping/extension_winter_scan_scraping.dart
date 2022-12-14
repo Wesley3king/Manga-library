@@ -197,7 +197,7 @@ Future<List<String>> scrapingLeitor(String id) async {
         .load("https://winterscan.com/manga/${id.replaceAll("__", "/")}");
     final Result? novelParser =
         parser?.querySelector("div.reading-content > div.text-left");
-    if (novelParser == null) {
+    if (novelParser?.html == null) {
       final List<Result>? resultHtml = parser
           ?.querySelectorAll("div.reading-content > div.page-break > img");
       if (resultHtml != null) {
@@ -209,7 +209,7 @@ Future<List<String>> scrapingLeitor(String id) async {
       }
     } else {
       resultPages.add("== NOVEL READER ==");
-      List<Result>? lines = novelParser.querySelectorAll("p > span");
+      List<Result>? lines = novelParser!.querySelectorAll("p > span");
       if (lines != null && lines.isEmpty) {
         lines = novelParser.querySelectorAll("p");
         for (Result line in lines!) {

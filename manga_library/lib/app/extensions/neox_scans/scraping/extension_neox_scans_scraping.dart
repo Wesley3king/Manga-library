@@ -262,7 +262,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     }
     return null;
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionNeoxScans: $e");
     return null;
   }
 }
@@ -272,26 +272,40 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ============================================================================
 
 Future<List<String>> scrapingLeitor(String id) async {
-  // shounen-no-abyss_cap-tulo-01 https://mundomangakun.com.br/shounen-no-abyss-capitulo-114/
   try {
-    var parser = await Chaleno().load("https://mundomangakun.com.br/$id/");
-
-    List<Result>? area = parser?.querySelectorAll("div.wrapper > script");
-    // area?.forEach((element) {
-    //   debugPrint("area: ${element.html}");
-    // });
-
-    List<String> corteForDecode1 = area![0].html!.split('"images":["');
-    List<String> corteForDecode2 = corteForDecode1[1].split('"]}]');
-    // debugPrint('result: $resultHtml');
-
-    List<String> bruteResultPages = corteForDecode2[0].split('","');
-    List<String> resultPages =
-        bruteResultPages.map((img) => img.replaceAll('\\', '')).toList();
+    List<String> resultPages = [];
+    var parser = await Chaleno()
+        .load("https://neoxscans.net/manga/${id.replaceAll("__", "/")}");
+    final Result? novelParser =
+        parser?.querySelector("div.reading-content > div.text-left");
+    if (novelParser?.html == null) {
+      final List<Result>? resultHtml = parser
+          ?.querySelectorAll("div.reading-content > div.page-break > img");
+      if (resultHtml != null) {
+        for (Result image in resultHtml) {
+          List<String> cortePage1 = image.html!.split('src="');
+          List<String> cortePage2 = cortePage1[1].split('" class');
+          resultPages.add(cortePage2[0].trim());
+        }
+      }
+    } else {
+      resultPages.add("== NOVEL READER ==");
+      List<Result>? lines = novelParser!.querySelectorAll("p > span");
+      if (lines != null && lines.isEmpty) {
+        lines = novelParser.querySelectorAll("p");
+        for (Result line in lines!) {
+          resultPages.add('${line.text}');
+        }
+      } else {
+        for (Result line in lines!) {
+          resultPages.add('${line.text}');
+        }
+      }
+    }
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionNeoxScans: $e");
     debugPrint("$s");
     return [];
   }
@@ -302,25 +316,20 @@ Future<List<String>> scrapingLeitor(String id) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load("https://mundomangakun.com.br/?s=$txt");
+    var parser = await Chaleno().load("https://neoxscans.net/?s=$txt&post_type=wp-manga");
 
-    var resultHtml = parser?.querySelector("div.bixbox > div.listupd");
+    List<Result>? resultHtml = parser?.querySelectorAll("div.c-tabs-item > div.c-tabs-item__content");
     List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
-      // projeto
-      var projetoData = resultHtml.querySelectorAll("div.bs > div.bsx");
-      // print(projetoData);
-      if (projetoData != null) {
-        List<Map<String, dynamic>> projetoBooks =
-            projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks = resultHtml.map((Result data) {
           // name
-          String? name = data.querySelector("a > div.bigor > div.tt")!.text;
+          String? name = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3")!.text;
           // debugPrint("name: $name");
           // img
-          String? img = data.querySelector("a > div.limit > img")!.src;
+          String? img = data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
           // debugPrint("img: $img");
           // link
-          String? link = data.querySelector("a")!.href;
+          String? link = data.querySelector("div.col-4 > div.tab-thumb > a")!.href;
           // debugPrint("link: $link");
           List<String> corteLink = link!.split("manga/");
           // print(data.html);
@@ -328,19 +337,17 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
             "name": name?.trim() ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
             "img": img ?? "",
-            "idExtension": 3
+            "idExtension": 14
           };
         }).toList();
 
         books.addAll(projetoBooks);
-      }
     }
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionNeoxScans: $e");
     debugPrint('$s');
-    //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
   }
 }

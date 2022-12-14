@@ -13,11 +13,11 @@ class ExtensionNeoxScans implements Extension {
   @override
   String nome = "Neox Scans";
   @override
-  String extensionPoster = "Mundo-Manga-Kun.png";
+  String extensionPoster = "Neox-Scans.webp";
   @override
   int id = 14;
   @override
-  bool nsfw = true;
+  bool nsfw = false;
 
   @override
   Future<List<ModelHomePage>> homePage() async {
@@ -31,7 +31,7 @@ class ExtensionNeoxScans implements Extension {
 
   @override
   String getLink(String pieceOfLink) =>
-      'https://mundomangakun.com.br/projeto/$pieceOfLink/';
+      'https://neoxscans.net/manga/$pieceOfLink/';
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -69,7 +69,7 @@ class ExtensionNeoxScans implements Extension {
 
   @override
   Future<List<Books>> search(String txt) async {
-    debugPrint("MUNDO MANGA KUN SEARCH STARTING...");
+    debugPrint("NEOX SCANS SEARCH STARTING...");
     try {
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
@@ -87,7 +87,7 @@ class ExtensionNeoxScans implements Extension {
       debugPrint('$data');
       return data.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
-      debugPrint("erro no search at ExtensionMundoMangaKun: $e");
+      debugPrint("erro no search at ExtensionNeoxScans: $e");
       return [];
     }
   }

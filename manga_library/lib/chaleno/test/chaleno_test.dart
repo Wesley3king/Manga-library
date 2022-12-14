@@ -10,7 +10,7 @@ void main() {
 
   /// get union mangas
   test("obter os dados do union mangas", () async {
-    var data = await Chaleno().load("https://goldenmangas.top/mangabr/forget-about-my-husband-id-rather-go-make-money/01");
+    var data = await Chaleno().load("https://www.hq-now.com/hq/3032/power-rangers-2020");
     print(data?.html);
   });
   // group('Test Parser class', () {
