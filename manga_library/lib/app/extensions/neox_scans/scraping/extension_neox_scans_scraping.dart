@@ -229,9 +229,10 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // debugPrint("replaced link: $replacedLink");
 
         // name cap
-        String? capName = result.querySelector("a")!.text;
+        List<Result>? archors = result.querySelectorAll("a");
+        String? capName = archors![1].text;
         // String chapter = capName!.replaceAll("Capítulo ", "");
-        debugPrint("chapter name : ${capName?.trim()}");
+        // debugPrint("chapter name : ${capName?.trim()}");
         // description
         String? capDescription =
             result.querySelector("span.chapter-release-date > i")!.text;

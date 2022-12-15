@@ -12,7 +12,7 @@ void main() {
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
     // death-is-the-only-ending-for-the-villainess-101032 o-comeco-depois-do-fim-101032
-    var data = await extend.mangaDetail('o-comeco-depois-do-fim-101032');
+    var data = await extend.mangaDetail('death-is-the-only-ending-for-the-villainess-101032');
     debugPrint('$data');
   });
 

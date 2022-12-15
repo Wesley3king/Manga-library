@@ -119,6 +119,7 @@ flutter:
     - assets/extesion_posters/Prisma-Scan.webp
     - assets/extesion_posters/See-Mangas.png
     - assets/extesion_posters/Neox-Scans.webp
+    - assets/extesion_posters/Hq-Now.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
