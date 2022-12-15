@@ -4,6 +4,7 @@ import 'package:manga_library/app/extensions/manga_chan/extension_manga_chan.dar
 import 'package:manga_library/app/extensions/manga_yabu/extension_yabu.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/extensions/mundo_manga_kun/extension_mundo_manga_kun.dart';
+import 'package:manga_library/app/extensions/neox_scans/extension_neox_scans.dart';
 import 'package:manga_library/app/extensions/nhen/extension_nhen.dart';
 import 'package:manga_library/app/extensions/nhen_br/extension_n_hen_br.dart';
 import 'package:manga_library/app/extensions/prisma_scan/extension_prisma_scans.dart';
@@ -28,7 +29,8 @@ final List<Extension> listOfExtensions = [
   ExtensionYabutoon(),
   ExtensionPrismaScan(),
   ExtensionSeeMangas(),
-  ExtensionWinterScan()
+  ExtensionWinterScan(),
+  ExtensionNeoxScans()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -44,6 +46,7 @@ final Map<int, Extension> mapOfExtensions = {
   11: ExtensionGekkouScans(),
   12: ExtensionYabutoon(),
   13: ExtensionPrismaScan(),
+  14: ExtensionNeoxScans(),
   15: ExtensionWinterScan(),
   16: ExtensionSeeMangas()
 };

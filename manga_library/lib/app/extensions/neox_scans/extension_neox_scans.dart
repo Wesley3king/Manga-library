@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/neox_scans/scraping/extension_neox_scans_scraping.dart';
-// import 'package:manga_library/app/models/extension_model.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
