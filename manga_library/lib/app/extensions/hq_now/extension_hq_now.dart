@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/hq_now/repositories/extension_hq_now_repositories.dart';
-import 'package:manga_library/app/extensions/neox_scans/scraping/extension_neox_scans_scraping.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
@@ -44,8 +43,6 @@ class ExtensionHqNow implements Extension {
         pages: [],
         readed: false);
     for (int i = 0; i < listChapters.length; ++i) {
-      // print(
-      //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
       if (listChapters[i].id == id) {
         result = listChapters[i];
         break;

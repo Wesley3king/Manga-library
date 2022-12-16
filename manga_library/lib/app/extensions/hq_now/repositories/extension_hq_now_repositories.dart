@@ -77,7 +77,7 @@ class HqNowRepositories {
       /// chapters
       List<Capitulos> capitulos = List.from(processedData['capitulos'])
           .map<Capitulos>((json) => Capitulos(
-              id: json['id'],
+              id: json['id'].toString(),
               capitulo: 'Cap. ${json['number']}',
               description: "",
               download: false,
@@ -98,7 +98,7 @@ class HqNowRepositories {
           genres: [],
           alternativeName: false,
           chapters: capitulos.length,
-          capitulos: capitulos);
+          capitulos: capitulos.reversed.toList());
     } catch (e) {
       debugPrint("erro no getMangaDetail at HqNowRepositories: $e");
       return null;
@@ -137,7 +137,7 @@ class HqNowRepositories {
       books = List.from(data.data['data']['getHqsByName']).map<
           Map<String, dynamic>>((json) => {
           "name": json['name'],
-          "link": json['id'],
+          "link": json['id'].toString(),
           "img": 'https://1.bp.blogspot.com/-xlPr2UhNhSw/XzLpoWQV-zI/AAAAAAABOPk/8kaHudcGY_85k3TeTpdPn4bm2-tqN8v2QCNcBGAsYHQ/s1600/molde-hqs2-anos-2000-parte-1.jpg',
           "idExtension": 17
         }).toList();

@@ -38,6 +38,17 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   ValueNotifier<bool> isVisible =
       ValueNotifier<bool>(GlobalData.settings.showControls);
 
+  /// get max value of pages
+  double get getMax => leitorController.atualChapter.download
+      ? leitorController.atualChapter.downloadPages.length.toDouble()
+        : leitorController.atualChapter.pages.isEmpty
+          ? 1.0
+           : leitorController.atualChapter.pages.length.toDouble();
+  // double getv() {
+  //   debugPrint("value: $getMax");
+  //   return getMax;
+  // }
+
   // =========================================================================
   //                    ---- CONTROLS ----
   // =========================================================================
@@ -169,18 +180,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                                 ),
                                 child: Slider(
                                   value: controller.state.value.toDouble(),
-                                  max: leitorController.atualChapter.id == ""
-                                      ? 1.0
-                                      : leitorController.atualChapter.download
-                                          ? leitorController
-                                              .atualChapter.downloadPages.length
-                                              .toDouble()
-                                          : leitorController
-                                                  .atualChapter.pages.isEmpty
-                                              ? 1.0
-                                              : leitorController
-                                                  .atualChapter.pages.length
-                                                  .toDouble(),
+                                  max: getMax,
                                   min: 1.0,
                                   onChanged: (value) => controller.scrollTo(
                                       value.toInt(),
@@ -290,7 +290,8 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    leitorController.start(widget.link, widget.id, widget.idExtension, isFirstTime: true);
+    leitorController.start(widget.link, widget.id, widget.idExtension,
+        isFirstTime: true);
     bottomSheetController = AnimationController(vsync: this);
   }
 

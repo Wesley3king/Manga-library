@@ -96,8 +96,7 @@ class LeitorController {
         }
       }
       // processar informações
-      atualInfo =
-          getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
+      atualInfo = getReaderModel(id, capitulos) ?? ReaderChapter(index: 0, id: id);
       // buscar pelas paginas
       debugPrint("======= capitulos ==========");
       Capitulos cap =
@@ -106,7 +105,7 @@ class LeitorController {
       atualChapter = cap;
 
       /// veificar se é uma novel
-      if (cap.downloadPages[0].contains("== NOVEL READER ==")) {
+      if (cap.downloadPages.isNotEmpty && cap.downloadPages[0].contains("== NOVEL READER ==")) {
         setReaderType("novel");
       }
       isMarked.value = cap.mark;
