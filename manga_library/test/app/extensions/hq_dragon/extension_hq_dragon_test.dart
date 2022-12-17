@@ -17,10 +17,10 @@ void main() {
 
   // getPages
   test("deve retornar um model Capitulos", () async {
-    var data = await extend.getPages("the-player-that-cant-level-up-novel-101032__cap-108__", [
+    var data = await extend.getPages("Arcana_Mistica_(2007)--01", [
       Capitulos(
-        capitulo: "108",
-        id: "the-player-that-cant-level-up-novel-101032__cap-108__",
+        capitulo: "01",
+        id: "Arcana_Mistica_(2007)--01",
         description: "",
         mark: false,
         download: false,
@@ -33,7 +33,7 @@ void main() {
   });
 
   test("deve retornar um SearchModel", () async {
-    var data = await extend.search("the beg");
+    var data = await extend.search("suicide");
     debugPrint('$data');
   });
 }

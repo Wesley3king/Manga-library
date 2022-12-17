@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/hq_dragon/scraping/extension_hq_dragon_scraping.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
-import 'package:manga_library/app/extensions/union_mangas/repositories/fetch_services.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
@@ -30,8 +29,7 @@ class ExtensionHqDragon implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) =>
-      "https://unionleitor.top/pagina-manga/$pieceOfLink";
+  String getLink(String pieceOfLink) => "https://hqdragon.com/hq/${pieceOfLink.replaceAll("--", "/")}";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -45,8 +43,6 @@ class ExtensionHqDragon implements Extension {
         pages: [],
         readed: false);
     for (int i = 0; i < listChapters.length; ++i) {
-      // print(
-      //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
       if (listChapters[i].id == id) {
         result = listChapters[i];
         break;
@@ -70,7 +66,7 @@ class ExtensionHqDragon implements Extension {
   @override
   Future<List<Books>> search(String txt) async {
     try {
-      debugPrint("UNION SEARCH STARTING...");
+      debugPrint("HQ DRAGON SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 
@@ -82,20 +78,7 @@ class ExtensionHqDragon implements Extension {
           buffer.write('$str+');
         }
       }
-      dynamic data = await searchService(buffer.toString().toLowerCase());
-      // print("test: ${data is String ? "true":"false"}");
-      // print(data.keys);
-      List<Map> books = [];
-      for (int i = 0; i < data['items'].length; ++i) {
-        Map book = data['items'][i];
-
-        books.add({
-          "name": book["titulo"],
-          "img": book['imagem'],
-          "link": book['url'],
-          "idExtension": id
-        });
-      }
+      List<Map<String, dynamic>> data = await compute(scrapingSearch, buffer.toString().toLowerCase());
       // print('---------------------------------------------');
       // print(books);
       return data.map<Books>((json) => Books.fromJson(json)).toList();

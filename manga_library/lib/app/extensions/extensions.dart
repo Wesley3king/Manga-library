@@ -1,5 +1,6 @@
 import 'package:manga_library/app/extensions/gekkou_scans/extesion_gekkou_scans.dart';
 import 'package:manga_library/app/extensions/hen_season/extension_hen_season.dart';
+import 'package:manga_library/app/extensions/hq_dragon/extension_hq_dragon.dart';
 import 'package:manga_library/app/extensions/hq_now/extension_hq_now.dart';
 import 'package:manga_library/app/extensions/manga_chan/extension_manga_chan.dart';
 import 'package:manga_library/app/extensions/manga_yabu/extension_yabu.dart';
@@ -32,7 +33,8 @@ final List<Extension> listOfExtensions = [
   ExtensionSeeMangas(),
   ExtensionWinterScan(),
   ExtensionNeoxScans(),
-  ExtensionHqNow()
+  ExtensionHqNow(),
+  ExtensionHqDragon()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -51,9 +53,6 @@ final Map<int, Extension> mapOfExtensions = {
   14: ExtensionNeoxScans(),
   15: ExtensionWinterScan(),
   16: ExtensionSeeMangas(),
-  17: ExtensionHqNow()
+  17: ExtensionHqNow(),
+  18: ExtensionHqDragon()
 };
-
-// final Map<int, dynamic> fetchServiceExtensions = {
-//   1: YabuFetchServices(),
-// };

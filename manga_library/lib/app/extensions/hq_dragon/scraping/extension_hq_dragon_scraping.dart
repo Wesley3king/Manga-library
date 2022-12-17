@@ -34,7 +34,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
 
       books.add({
         "name": splitedName[0].trim(),
-        "url": linkCorte1[1].replaceAll("/", "__"),
+        "url": linkCorte1[1].replaceAll("/", "--"),
         "img": img ?? ""
       });
     }
@@ -49,7 +49,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     models.add(ModelHomePage.fromJson(destaques));
     return models;
   } catch (e) {
-    debugPrint("erro no scrapingHomePage at ExtensionUnionMangas: $e");
+    debugPrint("erro no scrapingHomePage at ExtensionHqDragon: $e");
     return [];
   }
 }
@@ -60,7 +60,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
   try {
     var parser = await Chaleno()
-        .load("https://hqdragon.com/hq/${link.replaceAll("__", "/")}");
+        .load("https://hqdragon.com/hq/${link.replaceAll("--", "/")}");
 
     String? name;
     String? description;
@@ -70,7 +70,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     // List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
-      final String html = parser.html!;
+      // final String html = parser.html!;
       // debugPrint(html);
       // name
       name = parser.querySelector("div.col-md-12 > h3.pb-3").text;
@@ -81,29 +81,33 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       for (Result result in info) {
         String text = result.text!;
         if (text.contains("Sinopse")) {
-          description = text;
+          List<String> corteDecription = text.split("Sinopse:");
+          description = corteDecription[1].trim();
         } else if (text.contains("Editora")) {
-          authors = text;
+          List<String> corteEditora = text.split(": ");
+          authors = corteEditora[1];
         } else if (text.contains("Status")) {
-          state = text;
+          List<String> corteState = text.split(": ");
+          state = corteState[1];
         }
       }
       // description = parser.querySelector(".panel-body").text;
-      debugPrint("description: $description");
+      // debugPrint("description: $description");
       // img
       img = parser.querySelector("div.col-md-4 > img.img-fluid").src;
-      debugPrint("img: $img");
+      // debugPrint("img: $img");
 
       // chapters
       List<Result> chaptersResult =
           parser.querySelectorAll("table.table > tbody > tr");
-      debugPrint("length de cap: ${chaptersResult.length}");
+      // debugPrint("length de cap: ${chaptersResult.length}");
 
       /// remove a descrição
       chaptersResult.removeAt(0);
 
       for (int i = 0; i < chaptersResult.length; ++i) {
-        Result element = chaptersResult[i].querySelector("td > a")!;
+        // debugPrint("${chaptersResult[i].html}");
+        Result element = chaptersResult[i].querySelector("a")!;
         // link
         String? link = element.href;
         // pula para o próximo em caso de já existir
@@ -138,7 +142,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         authors: authors ?? "Autor Desconhecido",
         state: state ?? "EStado desconhecido",
         img: img ?? "erro",
-        link: "https://hqdragon.com/hq/${link.replaceAll("__", "/")}",
+        link: "https://hqdragon.com/hq/${link.replaceAll("--", "/")}",
         idExtension: 18,
         genres: [],
         alternativeName: false,
@@ -148,7 +152,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     }
     return null;
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionUnionMangas: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionHqDragon: $e");
     return null;
   }
 }
@@ -158,22 +162,17 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ============================================================================
 
 Future<List<String>> scrapingLeitor(String id) async {
-  // shounen-no-abyss_cap-tulo-01
   try {
-    List<String> mangaAndChapter = id.split("--");
-    var parser = await Chaleno().load(
-        "https://unionleitor.top/leitor/${mangaAndChapter[0]}/${mangaAndChapter[1]}");
+    var parser = await Chaleno()
+        .load("https://hqdragon.com/leitor/${id.replaceAll("--", "/")}");
 
-    var resultHtml = parser?.querySelectorAll(".img-responsive");
+    var resultHtml = parser?.querySelectorAll("img.img-responsive");
 
     List<String> resultPages = [];
     if (resultHtml != null) {
-      for (int i = 0; i < 2; ++i) {
-        resultHtml.removeAt(0);
-      }
       for (Result image in resultHtml) {
         String? page = image.src;
-        debugPrint("img: $page");
+        // debugPrint("img: $page");
         if (page != null) {
           resultPages.add(page);
         }
@@ -182,8 +181,45 @@ Future<List<String>> scrapingLeitor(String id) async {
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionUnionMangas: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionHqDragon: $e");
     debugPrint('$s');
+    return [];
+  }
+}
+
+// ============== SEARCH ==============
+Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
+  try {
+    Parser? parser =
+        await Chaleno().load("https://hqdragon.com/pesquisa?nome_hq=$txt");
+    // Result? result = parser?.querySelector("div.row");
+    // books
+    List<Map<String, dynamic>> books = [];
+    List<Result>? results = parser?.querySelectorAll("div.row > div.col-sm-6");
+    for (Result book in results!) {
+      List<Result> anchors = book.querySelectorAll("a")!;
+      // name
+      String? name = anchors[1].text;
+      debugPrint("name: $name");
+      // img
+      String? img = anchors[0].querySelector("img")!.src;
+      debugPrint("img: $img");
+      // link
+      String? link = anchors[0].href;
+       debugPrint("link: $link");
+      List<String> corteLink = link!.split("hq/");
+
+      books.add({
+        "name": name ?? "error",
+        "link": corteLink[1].replaceAll("/", "--"),
+        "img": img ??
+            "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg",
+        "idExtension": 18
+      });
+    }
+    return books;
+  } catch (e) {
+    debugPrint("erro no scrapingSearch at ExtensionHqDragon: $e");
     return [];
   }
 }

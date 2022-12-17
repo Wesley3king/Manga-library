@@ -152,7 +152,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
 Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   try {
     var parser = await Chaleno().load("https://neoxscans.net/manga/$link/");
-
+    // debugPrint("parser: ${parser?.html}");
     String? name;
     String? description;
     String? img;
