@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
-import 'package:manga_library/app/extensions/nhen_net/scraping/extension_nhen_net_scraping.dart';
+import 'package:manga_library/app/extensions/mundo_webtoon/scraping/extension_mundo_webtoon_scraping.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
 
-class ExtensionNHenNet implements Extension {
+class ExtensionMundoWebtoon implements Extension {
   @override
   dynamic fetchServices;
   @override
-  String nome = "NHentai.net";
+  String nome = "Mundo Webtoon";
   @override
-  String extensionPoster = "N-Hentai.png";
+  String extensionPoster = "Universo-Hentai.png";
   @override
-  int id = 19;
+  int id = 20;
   @override
   bool nsfw = true;
 
@@ -29,22 +29,47 @@ class ExtensionNHenNet implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => "https://nhentai.net/g/$pieceOfLink/";
+  String getLink(String pieceOfLink) =>
+      "https://universohentai.com/$pieceOfLink/";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
-    return listChapters[0];
+    Capitulos result = Capitulos(
+        capitulo: "",
+        id: "",
+        description: "",
+        mark: false,
+        download: false,
+        downloadPages: [],
+        pages: [],
+        readed: false);
+    for (int i = 0; i < listChapters.length; ++i) {
+      // print(
+      //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
+      if (listChapters[i].id == id) {
+        result = listChapters[i];
+        break;
+      }
+    }
+    if (!result.download) {
+      try {
+        result.pages = await compute(scrapingLeitor, id);
+      } catch (e) {
+        debugPrint("erro - não foi possivel obter as paginas on-line: $e");
+      }
+    }
+    return result;
   }
 
   @override
   Future<List<String>> getPagesForDownload(String url) async {
-    return [];
+    return await compute(scrapingLeitor, url);
   }
 
   @override
   Future<List<Books>> search(String txt) async {
     try {
-      debugPrint("NHENT.NET SEARCH STARTING...");
+      debugPrint("MUNDO WEBTOON SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 
@@ -61,7 +86,7 @@ class ExtensionNHenNet implements Extension {
 
       return books.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
-      debugPrint("erro no search at ExtensionNhen.net: $e");
+      debugPrint("erro no search at ExtensionUnionMangas: $e");
       return [];
     }
   }
