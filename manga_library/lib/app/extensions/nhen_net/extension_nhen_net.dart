@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
-import 'package:manga_library/app/extensions/nhen/scraping/nhen_scraping.dart';
+import 'package:manga_library/app/extensions/nhen_net/scraping/extension_nhen_net_scraping.dart';
 
 import '../../models/home_page_model.dart';
 import '../../models/libraries_model.dart';
 import '../../models/manga_info_offline_model.dart';
 
-class ExtensionNHen implements Extension {
+class ExtensionNHenNet implements Extension {
   @override
   dynamic fetchServices;
   @override
-  String nome = "NHentai";
+  String nome = "NHentai.net";
   @override
   String extensionPoster = "N-Hentai.png";
   @override
-  int id = 5;
+  int id = 19;
   @override
   bool nsfw = true;
 
@@ -29,7 +29,7 @@ class ExtensionNHen implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => "https://nhentai.to/g/$pieceOfLink";
+  String getLink(String pieceOfLink) => "https://nhentai.net/g/$pieceOfLink/";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {
@@ -61,7 +61,7 @@ class ExtensionNHen implements Extension {
 
       return books.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
-      debugPrint("erro no search at ExtensionUnionMangas: $e");
+      debugPrint("erro no search at ExtensionNhen.net: $e");
       return [];
     }
   }

@@ -2,7 +2,7 @@ import 'package:chaleno/chaleno.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Parser? parser;
+  // Parser? parser;
 
   // setUp(() async {
   //   parser = await Chaleno().load('https://github.com/antonio-nicolau');
@@ -10,7 +10,7 @@ void main() {
 
   /// get union mangas
   test("obter os dados do union mangas", () async {
-    var data = await Chaleno().load("https://www.hq-now.com/hq/3032/power-rangers-2020");
+    var data = await Chaleno().load("https://nhentai.net/g/428486");
     print(data?.html);
   });
   // group('Test Parser class', () {
