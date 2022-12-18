@@ -158,8 +158,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       String page = corteImg2[1];
       // retirar a versão pequena
       List<String> cortePage = page.split(
-          "/"); // https://cdn.dogehls.xyz/galleries/2216481/1t.jpg // https://cdn.dogehls.xyz/galleries/2216481/1.jpg
-      // cortePage = cortePage.reversed.toList();
+          "/");
       String modificatedImage = cortePage[5].replaceAll("t", "");
       List<String> domain = cortePage[2].split(".");
       String domainNum = domain[0].replaceFirst("t", "");
@@ -193,7 +192,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       ],
     );
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionNHent: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionNhen.net: $e");
     return null;
   }
 }
@@ -203,46 +202,47 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load("https://nhentai.to/search?q=$txt");
+    var dataResponse = await dio.get("https://nhentai.net/search/?q=$txt");
+    Parser parser = Parser(dataResponse.data);
 
-    var resultHtml = parser?.querySelector("div.index-container");
+    var resultHtml = parser.querySelector("div.index-container");
     List<Map<String, dynamic>> books = [];
 
-    if (resultHtml != null) {
-      // projeto
-      var projetoData = resultHtml.querySelectorAll("div.gallery");
-      // print(projetoData);
-      if (projetoData != null) {
-        List<Map<String, dynamic>> projetoBooks =
-            projetoData.map((Result data) {
-          // name
-          String? name = data.querySelector("a div.caption")!.text;
-          // debugPrint("name: $name");
-          // img
-          String? img = data.querySelector("a img")!.src;
-          // debugPrint("img: $img"); // https://cdn.dogehls.xyz/galleries/2209475/thumb.jpg
-          // link
-          String? link = data.querySelector("a")!.href;
-          List<String> corteLink = link!.split("g/");
-          // debugPrint("link: ${corteLink[1]}");
-          // print(data.html);
-          return {
-            "name": name ?? "error",
-            "link": corteLink[1].replaceAll("/", ""),
-            "img": "https://cdn.dogehls.xyz/$img",
-            "idExtension": 5
-          };
-        }).toList();
+    // projeto
+    var projetoData = resultHtml.querySelectorAll("div.gallery");
+    if (projetoData != null) {
+      List<Map<String, dynamic>> projetoBooks =
+          projetoData.map((Result data) {
+        // name
+        String? name = data.querySelector("a div.caption")!.text;
+        // debugPrint("name: $name");
+        // img
+        // Result imgResult = data.querySelector("a img")!;
+        List<String> corteNoscript = data.html!.split("<noscript><img");
+        List<String> corteImg1 = corteNoscript[1].split('" width="');
+        List<String> corteImg2 = corteImg1[0].split('src="');
+        String img = corteImg2[1];
+        // debugPrint("img: $img");
+        // link
+        String? link = data.querySelector("a")!.href;
+        List<String> corteLink = link!.split("g/");
+        // debugPrint("link: ${corteLink[1]}");
+        // print(data.html);
+        return {
+          "name": name ?? "error",
+          "link": corteLink[1].replaceAll("/", ""),
+          "img": img,
+          "idExtension": 19
+        };
+      }).toList();
 
-        books.addAll(projetoBooks);
-      }
+      books.addAll(projetoBooks);
     }
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at EXtensionNhen.net: $e");
     debugPrint('$s');
-    //return SearchModel(font: "", books: [], idExtension: 3);
     return [];
   }
 }

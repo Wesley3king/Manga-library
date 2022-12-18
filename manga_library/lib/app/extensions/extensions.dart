@@ -9,6 +9,7 @@ import 'package:manga_library/app/extensions/mundo_manga_kun/extension_mundo_man
 import 'package:manga_library/app/extensions/neox_scans/extension_neox_scans.dart';
 import 'package:manga_library/app/extensions/nhen/extension_nhen.dart';
 import 'package:manga_library/app/extensions/nhen_br/extension_n_hen_br.dart';
+import 'package:manga_library/app/extensions/nhen_net/extension_nhen_net.dart';
 import 'package:manga_library/app/extensions/prisma_scan/extension_prisma_scans.dart';
 import 'package:manga_library/app/extensions/see_mangas/extension_see_mangas.dart';
 import 'package:manga_library/app/extensions/silence_scan/extension_silence_scan.dart';
@@ -34,7 +35,8 @@ final List<Extension> listOfExtensions = [
   ExtensionWinterScan(),
   ExtensionNeoxScans(),
   ExtensionHqNow(),
-  ExtensionHqDragon()
+  ExtensionHqDragon(),
+  ExtensionNHenNet()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -54,5 +56,6 @@ final Map<int, Extension> mapOfExtensions = {
   15: ExtensionWinterScan(),
   16: ExtensionSeeMangas(),
   17: ExtensionHqNow(),
-  18: ExtensionHqDragon()
+  18: ExtensionHqDragon(),
+  19: ExtensionNHenNet()
 };

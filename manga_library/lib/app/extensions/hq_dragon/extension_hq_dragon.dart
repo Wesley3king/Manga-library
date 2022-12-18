@@ -12,7 +12,7 @@ class ExtensionHqDragon implements Extension {
   @override
   String nome = "Hq Dragon";
   @override
-  String extensionPoster = "Union-Mangas.png";
+  String extensionPoster = "Hq-Dragon.jpg";
   @override
   int id = 18;
   @override
