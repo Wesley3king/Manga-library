@@ -278,6 +278,14 @@ class _MangaDetailsState extends State<MangaDetails> {
         const SizedBox(
           height: 10,
         ),
+        ElevatedButton(
+          onPressed: (){}, 
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+            backgroundColor: MaterialStateProperty.all<Color>(configSystemController.colorManagement())
+          ),
+          child: const Text("Continuar")
+        ),
         const Divider(),
       ],
     );

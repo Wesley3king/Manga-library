@@ -14,7 +14,7 @@ class ExtensionWinterScan implements Extension {
   @override
   String nome = "Winter Scan";
   @override
-  String extensionPoster = "Mundo-Manga-Kun.png";
+  String extensionPoster = "Winter-Scan.png";
   @override
   int id = 15;
   @override

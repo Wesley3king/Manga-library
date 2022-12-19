@@ -108,7 +108,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         }
       }
 
-      authors = buffer.toString();
+      authors = buffer.toString() == "" ? "Autor desconhecido" : buffer.toString();
       // debugPrint("authors: $authors");
       // debugPrint("genres: $genres");
       final List<Result> stateResult =
@@ -149,7 +149,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         // debugPrint("chapter name : $capName");
         // description
         String? capDescription =
-            result.querySelector("span.chapter-release-date > i")!.text;
+            result.querySelector("span.chapter-release-date > i")?.text;
 
         chapters.add(Capitulos(
           id: replacedLink,

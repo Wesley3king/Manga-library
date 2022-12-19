@@ -10,8 +10,9 @@ void main() {
     debugPrint("data: $data");
   });
   test("deve retornar um MangaInfoOffLineModel", () async {
+    // mangabr__bleach-scan-br1-gm  mangabr__chainsaw-man-br3-gm
     var data =
-        await extend.mangaDetail("mangabr__chainsaw-man-br3-gm");
+        await extend.mangaDetail("mangabr__bleach-scan-br1-gm");
     debugPrint("data: $data");
   });
 

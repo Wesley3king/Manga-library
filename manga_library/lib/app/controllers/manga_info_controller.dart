@@ -5,6 +5,7 @@ import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
+import 'package:manga_library/app/models/continue_to_read_model.dart';
 import 'package:manga_library/app/models/downloads_pages_model.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
@@ -130,7 +131,8 @@ class MangaInfoController {
       MangaInfoOffLineModel? offLineBook;
 
       if (isAnUpdateFromCore) {
-        offLineBook = await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
+        offLineBook =
+            await _mangaInfoOffLineController.verifyDatabase(url, idExtension);
         if (offLineBook == null) {
           /// aqui retorno true -- MAS O MANGA NÃO É ATUALIZADO, já que não existe ná memória
           return true;
@@ -157,10 +159,9 @@ class MangaInfoController {
             MangaInfoOffLineController();
         debugPrint("inserindo na base de dados!");
         await mangaInfoOffLineController.updateBook(
-          model: data,
-          img: img ?? offLineBook?.img,
-          capitulos: data.capitulos
-        );
+            model: data,
+            img: img ?? offLineBook?.img,
+            capitulos: data.capitulos);
         debugPrint("inserindo com SUCESSO na base de dados!");
       } else {
         // isn't an off ine book
@@ -206,6 +207,7 @@ class ChaptersController {
   ValueNotifier<ChaptersStates> state =
       ValueNotifier<ChaptersStates>(ChaptersStates.start);
   static List<Capitulos> capitulosCorrelacionados = [];
+  ContinueToReadModel? continueToRead;
 
   void start(
       List<Capitulos> listaCapitulos, String link, int idExtension) async {
@@ -240,6 +242,7 @@ class ChaptersController {
       // MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
       // GlobalData.capitulosDisponiveis;
       // print("");
+      setCountinueToRead();
       GlobalData.mangaModel.capitulos = capitulosCorrelacionados;
       state.value = ChaptersStates.sucess;
     } catch (e) {
@@ -260,10 +263,10 @@ class ChaptersController {
           chaptersList: listaCapitulos);
       await updateChapters(link, idExtension);
       await correlacionarMarks(idExtension, link);
+      setCountinueToRead();
       // }
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
-      // print(capitulosCorrelacionados);
       state.value = ChaptersStates.sucess;
       return true;
     } catch (e) {
@@ -335,8 +338,8 @@ class ChaptersController {
             adicionado = true;
           }
         }
-        debugPrint("---------- listaCapitulosCorrelacionados");
-        debugPrint('$listaCapitulosCorrelacionadosLidos');
+        // debugPrint("---------- listaCapitulosCorrelacionados");
+        // debugPrint('$listaCapitulosCorrelacionadosLidos');
         capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       }
       debugPrint('- updateChapters - end');
@@ -344,6 +347,35 @@ class ChaptersController {
     } catch (e) {
       debugPrint('erro no updateChapters at ChaptersController: $e');
       state.value = ChaptersStates.error;
+    }
+  }
+
+  // ==========================================================
+  //    ---------- Obtem o Capitulo a ser lido -------------
+  // ==========================================================
+  void setCountinueToRead() {
+    bool foundChapter = false;
+    for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
+      if (capitulosCorrelacionados[i].readed) {
+        if (i != 0) {
+          continueToRead = ContinueToReadModel(
+              id: capitulosCorrelacionados[i - 1].id,
+              chapter: capitulosCorrelacionados[i - 1].capitulo);
+        } else {
+          continueToRead = ContinueToReadModel(
+              id: capitulosCorrelacionados[i].id,
+              chapter: capitulosCorrelacionados[i].capitulo);
+        }
+        foundChapter = true;
+        debugPrint('CountinueToRead - Configurado!');
+        break;
+      }
+    }
+    if (!foundChapter) {
+      final int maxIndice = capitulosCorrelacionados.length - 1;
+      continueToRead = ContinueToReadModel(
+          id: capitulosCorrelacionados[maxIndice].id,
+          chapter: capitulosCorrelacionados[maxIndice].capitulo);
     }
   }
 

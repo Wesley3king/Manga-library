@@ -30,17 +30,29 @@ class _NovelReaderState extends State<NovelReader> {
                 10) +
             6.0);
 
+    return generateText(index);
+  }
+
+  Widget generateText(int index) {
+    late Color color;
     /// troca a cor das letras de acordo com o backgroundColor
     if (widget.backgroundColor == Colors.black ||
         widget.backgroundColor == Colors.grey) {
+      color = Colors.white;
+    } else {
+      color = Colors.black;
+    }
+    /// caso seja um indicador de mudança de cenário
+    if (widget.pages[index] == "***") {
       return Text(
         widget.pages[index],
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: color),
+        textAlign: TextAlign.center,
       );
     } else {
       return Text(
         widget.pages[index],
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: color),
       );
     }
   }
@@ -67,7 +79,7 @@ class _NovelReaderState extends State<NovelReader> {
           itemPositionsListener: itemPositionsListener,
           itemBuilder: (context, index) {
             if (index == 0 || (index + 1) == quantidyOfPages) {
-              const double height = 10.0;
+              const double height = 25.0;
               listHeight.add(height);
               return const SizedBox(
                 height: height,

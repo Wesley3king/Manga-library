@@ -11,7 +11,8 @@ void main() {
   });
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('seduzindo-o-duque-do-norte-2');
+    // a-cavaleira-do-imperador seduzindo-o-duque-do-norte-2
+    var data = await extend.mangaDetail('a-cavaleira-do-imperador');
     debugPrint('$data');
   });
 

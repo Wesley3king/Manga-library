@@ -109,7 +109,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // debugPrint("name: $name");
       try {
         description =
-            parser.querySelector("div.andro_product-excerpt > p").text;
+            parser.querySelector("div.andro_product-excerpt > p").text ?? parser.querySelector("div.andro_product-excerpt").text?.trim();
         // debugPrint("description: $description");
         // img
         img = parser.querySelector("div.andro_product-single-thumb > img").src;
