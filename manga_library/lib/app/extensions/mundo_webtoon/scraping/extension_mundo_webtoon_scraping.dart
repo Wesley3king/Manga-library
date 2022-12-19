@@ -236,22 +236,20 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     Parser? parser = await Chaleno().load("https://mundowebtoon.com/mangas.php?busca=$txt");
     // books
     List<Map<String, dynamic>> books = [];
-    List<Result> results = parser!.querySelectorAll("div.row > div.col-lg-2");
+    List<Result> results = parser!.querySelectorAll("div.row > div.col-lg-2 > div.andro_product");
     for (Result book in results) {
       // name
-      String? name = book.querySelector("a span.video-titulo")!.text;
+      String? name = book.querySelector("div.andro_product-body > span.andro_product-title > a")!.text;
       // debugPrint("name: $name");
       // img
-      String? img = book.querySelector("a img")!.src;
+      String? img = book.querySelector("div.andro_product-thumb > a > img")!.src;
       debugPrint("img: $img");
       // link
-      String? link = book.querySelector("a")!.href;
-      //  debugPrint("link: $link");
-      List<String> corteLink = link!.split("com/");
+      String link = book.querySelector("div.andro_product-thumb > a")!.href!;
 
       books.add({
-        "name": name ?? "error",
-        "link": corteLink[1].replaceAll("/", ""),
+        "name": name?.trim() ?? "error",
+        "link": link.replaceAll("/", "__"),
         "img": img ??
             "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg",
         "idExtension": 20

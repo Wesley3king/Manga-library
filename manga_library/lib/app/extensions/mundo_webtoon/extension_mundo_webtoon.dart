@@ -12,7 +12,7 @@ class ExtensionMundoWebtoon implements Extension {
   @override
   String nome = "Mundo Webtoon";
   @override
-  String extensionPoster = "Universo-Hentai.png";
+  String extensionPoster = "Mundo-Webtoon.png";
   @override
   int id = 20;
   @override
@@ -30,7 +30,7 @@ class ExtensionMundoWebtoon implements Extension {
 
   @override
   String getLink(String pieceOfLink) =>
-      "https://universohentai.com/$pieceOfLink/";
+      "https://mundowebtoon.com/${pieceOfLink.replaceAll("__", "/")}";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {

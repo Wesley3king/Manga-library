@@ -6,6 +6,7 @@ import 'package:manga_library/app/extensions/manga_chan/extension_manga_chan.dar
 import 'package:manga_library/app/extensions/manga_yabu/extension_yabu.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/extensions/mundo_manga_kun/extension_mundo_manga_kun.dart';
+import 'package:manga_library/app/extensions/mundo_webtoon/extension_mundo_webtoon.dart';
 import 'package:manga_library/app/extensions/neox_scans/extension_neox_scans.dart';
 import 'package:manga_library/app/extensions/nhen/extension_nhen.dart';
 import 'package:manga_library/app/extensions/nhen_br/extension_n_hen_br.dart';
@@ -36,7 +37,8 @@ final List<Extension> listOfExtensions = [
   ExtensionNeoxScans(),
   ExtensionHqNow(),
   ExtensionHqDragon(),
-  ExtensionNHenNet()
+  ExtensionNHenNet(),
+  ExtensionMundoWebtoon()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -57,5 +59,6 @@ final Map<int, Extension> mapOfExtensions = {
   16: ExtensionSeeMangas(),
   17: ExtensionHqNow(),
   18: ExtensionHqDragon(),
-  19: ExtensionNHenNet()
+  19: ExtensionNHenNet(),
+  20: ExtensionMundoWebtoon()
 };
