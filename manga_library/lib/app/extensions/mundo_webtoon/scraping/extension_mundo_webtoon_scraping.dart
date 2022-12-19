@@ -1,4 +1,5 @@
 import 'package:chaleno/chaleno.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../models/home_page_model.dart';
@@ -105,44 +106,57 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     if (parser != null) {
       // name
       name = parser.querySelector("div.mangaTitulo h3").text;
-      debugPrint("name: $name");
+      // debugPrint("name: $name");
       try {
         description =
             parser.querySelector("div.andro_product-excerpt > p").text;
-        debugPrint("description: $description");
+        // debugPrint("description: $description");
         // img
         img = parser.querySelector("div.andro_product-single-thumb > img").src;
-        debugPrint("img: $img");
+        // debugPrint("img: $img");
         // authors
         List<Result> itens = parser.querySelectorAll("div.BlDataItem");
         const String identify = "div.andro_product-meta-item > a";
-        authors ='${itens[0].querySelector(identify)?.text?.trim()}, ${itens[1].querySelector(identify)?.text}';
+        authors =
+            '${itens[0].querySelector(identify)?.text?.trim()}, ${itens[1].querySelector(identify)?.text}';
         // state
         state = itens[2].querySelector(identify)?.text;
         // genres
-        List<Result> generos =
-            parser.querySelectorAll("div.col-md-12 > div.row > div.col-md-12 > div.andro_product-meta-item > a");
-          for (int i = 0; i < generos.length; ++i) {
-            genres.add("${generos[i].text}");
-          }
-        debugPrint("genres: $genres");
+        List<Result> generos = parser.querySelectorAll(
+            "div.col-md-12 > div.row > div.col-md-12 > div.andro_product-meta-item > a");
+        for (int i = 0; i < generos.length; ++i) {
+          genres.add("${generos[i].text}");
+        }
+        // debugPrint("genres: $genres");
         // chapters
-        List<Result> chapterResults = parser.querySelectorAll("div.capitulos > div.andro_single-pagination-item > div.row > div.col-sm-7 > div > a.color_gray");
+        List<Result> chapterResults = parser.querySelectorAll(
+            "div.capitulos > div.andro_single-pagination-item > div.row > div.col-sm-7 > div.CapitulosListaItem");
         for (int i = 0; i < chapterResults.length; i++) {
-          debugPrint("chapter in evaluate: $i");
+          // debugPrint("chapter in evaluate: $i");
+          List<Result> anchors =
+              chapterResults[i].querySelectorAll("a.color_gray")!;
           // link
-          String link = chapterResults[i].href!;
+          String link = anchors[0].href!;
           String replacedLink = link.replaceAll("/", "__");
           // debugPrint("replced link: $replacedLink");
 
           // name cap
-          String capName = chapterResults[i].querySelector("h5")!.text!;
+          String capName = anchors[0].querySelector("h5")!.text!;
           List<String> corteDescription = capName.split("(");
+          // scan
+          StringBuffer scan = StringBuffer();
+          for (int scanIndice = 1; scanIndice < anchors.length; ++scanIndice) {
+            if (scanIndice == 1) {
+              scan.write("${anchors[scanIndice].text}");
+            } else {
+              scan.write(", ${anchors[scanIndice].text}");
+            }
+          }
 
           chapters.add(Capitulos(
             id: replacedLink,
             capitulo: corteDescription[0].trim(),
-            description: '(${corteDescription[1].trim()} - ${chapterResults[i + 1].text}',
+            description: '(${corteDescription[1].trim()} - ${scan.toString()}',
             download: false,
             readed: false,
             mark: false,
@@ -178,18 +192,35 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 }
 
 Future<List<String>> scrapingLeitor(String url) async {
+  final Dio dio = Dio(BaseOptions(
+    contentType: "application/x-www-form-urlencoded",
+    headers: {
+    "origin": "https://mundowebtoon.com",
+    "referer": "https://mundowebtoon.com/mangabr/chainsaw-man-br3-gm/102",
+    "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "Linux",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+    "x-requested-with": "XMLHttpRequest"
+  }));
   try {
-    Parser? parser =
-        await Chaleno().load("https://universohentai.com/galeria/?id=$url");
+    List<String> corteId = url.split("__");
+    var data = await dio.post("https://mundowebtoon.com/leitor_image.php", data: {
+      "data": corteId[1],
+      "num": corteId[2],
+      "modo": "1",
+      "busca": "img"
+    });
     List<String> pages = [];
-    if (parser != null) {
-      Result? result = parser.querySelector("div.galeria-foto");
-      List<Result>? elements = result.querySelectorAll("a");
+    if (data.data != null) {
+      Parser parser = Parser(data.data);
+      List<Result> elements = parser.querySelectorAll("img");
 
-      if (elements != null) {
-        for (Result page in elements) {
-          pages.add(page.href ?? "erro");
-        }
+      for (Result page in elements) {
+        pages.add(page.src!);
       }
     }
     return pages;
@@ -202,12 +233,11 @@ Future<List<String>> scrapingLeitor(String url) async {
 // ============== SEARCH ==============
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    Parser? parser = await Chaleno().load("https://universohentai.com/?s=$txt");
-    Result? result = parser?.querySelector("div.videos");
+    Parser? parser = await Chaleno().load("https://mundowebtoon.com/mangas.php?busca=$txt");
     // books
     List<Map<String, dynamic>> books = [];
-    List<Result>? results = result?.querySelectorAll("div.video-thumb");
-    for (Result book in results!) {
+    List<Result> results = parser!.querySelectorAll("div.row > div.col-lg-2");
+    for (Result book in results) {
       // name
       String? name = book.querySelector("a span.video-titulo")!.text;
       // debugPrint("name: $name");
@@ -224,7 +254,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
         "link": corteLink[1].replaceAll("/", ""),
         "img": img ??
             "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg",
-        "idExtension": 6
+        "idExtension": 20
       });
     }
     return books;

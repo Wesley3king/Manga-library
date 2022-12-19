@@ -16,9 +16,9 @@ void main() {
   });
 
   test("deve retornar um model Capitulos com as paginas", () async {
-    var data = await extend.getPages("14859", [
+    var data = await extend.getPages("mangabr__chainsaw-man-br3-gm__113", [
       Capitulos(
-          id: "14859",
+          id: "mangabr__chainsaw-man-br3-gm__113",
           capitulo: "1",
           description: "",
           download: false,
