@@ -2,10 +2,12 @@ class ContinueToReadModel {
   ContinueToReadModel({
     required this.id,
     required this.chapter,
+    required this.isStart
   });
-  late final String id;
-  late final String chapter;
-  
+  late String id;
+  late String chapter;
+  late bool isStart;
+
   // ContinueToReadModel.fromJson(Map<String, dynamic> json){
   //   id = json['id'];
   //   chapter = json['chapter'];

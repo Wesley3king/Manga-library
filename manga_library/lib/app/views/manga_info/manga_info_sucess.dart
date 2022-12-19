@@ -190,6 +190,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
                         link: widget.link,
                         dados: widget.dados,
                         controller: widget.controller,
+                        chaptersController: chaptersController,
                       );
                     } else if (index == 1) {
                       return const SizedBox(
@@ -222,6 +223,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
                         link: widget.link,
                         dados: widget.dados,
                         controller: widget.controller,
+                        chaptersController: chaptersController,
                       );
                     } else if (index == 1) {
                       return const SizedBox(
@@ -260,6 +262,7 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
                           link: widget.link,
                           dados: widget.dados,
                           controller: widget.controller,
+                          chaptersController: chaptersController,
                         );
                       } else if (index ==
                           (ChaptersController.capitulosCorrelacionados.length +

@@ -18,7 +18,7 @@ class ExtensionSeeMangas implements Extension {
   @override
   int id = 16;
   @override
-  bool nsfw = true;
+  bool nsfw = false;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

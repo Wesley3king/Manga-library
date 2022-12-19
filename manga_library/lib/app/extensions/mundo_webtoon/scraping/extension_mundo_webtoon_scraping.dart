@@ -109,7 +109,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // debugPrint("name: $name");
       try {
         description =
-            parser.querySelector("div.andro_product-excerpt > p").text ?? parser.querySelector("div.andro_product-excerpt").text?.trim();
+            parser.querySelector("div.andro_product-excerpt > p").text ??
+                parser.querySelector("div.andro_product-excerpt").text?.trim();
         // debugPrint("description: $description");
         // img
         img = parser.querySelector("div.andro_product-single-thumb > img").src;
@@ -192,28 +193,30 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 }
 
 Future<List<String>> scrapingLeitor(String url) async {
-  final Dio dio = Dio(BaseOptions(
-    contentType: "application/x-www-form-urlencoded",
-    headers: {
+  final Dio dio = Dio(
+      BaseOptions(contentType: "application/x-www-form-urlencoded", headers: {
     "origin": "https://mundowebtoon.com",
     "referer": "https://mundowebtoon.com/mangabr/chainsaw-man-br3-gm/102",
-    "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+    "sec-ch-ua":
+        '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "Linux",
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+    "user-agent":
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
     "x-requested-with": "XMLHttpRequest"
   }));
   try {
     List<String> corteId = url.split("__");
-    var data = await dio.post("https://mundowebtoon.com/leitor_image.php", data: {
-      "data": corteId[1],
-      "num": corteId[2],
-      "modo": "1",
-      "busca": "img"
-    });
+    var data = await dio.post("https://mundowebtoon.com/leitor_image.php",
+        data: {
+          "data": corteId[1],
+          "num": corteId[2],
+          "modo": "1",
+          "busca": "img"
+        });
     List<String> pages = [];
     if (data.data != null) {
       Parser parser = Parser(data.data);
@@ -233,25 +236,33 @@ Future<List<String>> scrapingLeitor(String url) async {
 // ============== SEARCH ==============
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    Parser? parser = await Chaleno().load("https://mundowebtoon.com/mangas.php?busca=$txt");
+    Parser? parser =
+        await Chaleno().load("https://mundowebtoon.com/mangas.php?busca=$txt");
     // books
     List<Map<String, dynamic>> books = [];
-    List<Result> results = parser!.querySelectorAll("div.row > div.col-lg-2 > div.andro_product");
+    List<Result> results =
+        parser!.querySelectorAll("div.row > div.col-lg-2 > div.andro_product");
     for (Result book in results) {
       // name
-      String? name = book.querySelector("div.andro_product-body > span.andro_product-title > a")!.text;
+      String? name = book
+          .querySelector(
+              "div.andro_product-body > span.andro_product-title > a")!
+          .text;
       // debugPrint("name: $name");
+      // debugPrint("html; ${book.html}");
       // img
-      String? img = book.querySelector("div.andro_product-thumb > a > img")!.src;
-      debugPrint("img: $img");
+      List<String> corteImg1 = book.html!.split('data-src="');
+      List<String> corteImg2 = corteImg1[1].split('" src=');
+      // String? img =
+          // book.querySelector("div.andro_product-thumb > a > img")!.src;
+      // debugPrint("img: $img");
       // link
       String link = book.querySelector("div.andro_product-thumb > a")!.href!;
 
       books.add({
         "name": name?.trim() ?? "error",
         "link": link.replaceAll("/", "__"),
-        "img": img ??
-            "https://www.gov.br/esocial/pt-br/noticias/erro-301-o-que-fazer/istock-538166792.jpg/@@images/0e47669f-288f-40b1-ac3c-77aa648636b8.jpeg",
+        "img": corteImg2[0],
         "idExtension": 20
       });
     }

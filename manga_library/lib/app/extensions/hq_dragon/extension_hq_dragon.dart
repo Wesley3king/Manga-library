@@ -16,7 +16,7 @@ class ExtensionHqDragon implements Extension {
   @override
   int id = 18;
   @override
-  bool nsfw = true;
+  bool nsfw = false;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

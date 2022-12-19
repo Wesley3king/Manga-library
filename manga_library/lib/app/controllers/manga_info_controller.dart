@@ -263,8 +263,7 @@ class ChaptersController {
           chaptersList: listaCapitulos);
       await updateChapters(link, idExtension);
       await correlacionarMarks(idExtension, link);
-      setCountinueToRead();
-      // }
+      
       state.value = ChaptersStates.loading;
       log("atualizando a view!");
       state.value = ChaptersStates.sucess;
@@ -343,6 +342,7 @@ class ChaptersController {
         capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       }
       debugPrint('- updateChapters - end');
+      setCountinueToRead();
       state.value = ChaptersStates.sucess;
     } catch (e) {
       debugPrint('erro no updateChapters at ChaptersController: $e');
@@ -360,11 +360,15 @@ class ChaptersController {
         if (i != 0) {
           continueToRead = ContinueToReadModel(
               id: capitulosCorrelacionados[i - 1].id,
-              chapter: capitulosCorrelacionados[i - 1].capitulo);
+              chapter: capitulosCorrelacionados[i - 1].capitulo,
+              isStart: false
+            );
         } else {
           continueToRead = ContinueToReadModel(
               id: capitulosCorrelacionados[i].id,
-              chapter: capitulosCorrelacionados[i].capitulo);
+              chapter: capitulosCorrelacionados[i].capitulo,
+              isStart: false
+            );
         }
         foundChapter = true;
         debugPrint('CountinueToRead - Configurado!');
@@ -375,7 +379,9 @@ class ChaptersController {
       final int maxIndice = capitulosCorrelacionados.length - 1;
       continueToRead = ContinueToReadModel(
           id: capitulosCorrelacionados[maxIndice].id,
-          chapter: capitulosCorrelacionados[maxIndice].capitulo);
+          chapter: capitulosCorrelacionados[maxIndice].capitulo,
+          isStart: true
+      );
     }
   }
 

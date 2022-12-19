@@ -18,7 +18,7 @@ class ExtensionWinterScan implements Extension {
   @override
   int id = 15;
   @override
-  bool nsfw = true;
+  bool nsfw = false;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

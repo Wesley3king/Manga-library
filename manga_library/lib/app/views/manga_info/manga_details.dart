@@ -14,13 +14,15 @@ class MangaDetails extends StatefulWidget {
   final String link;
   final MangaInfoOffLineModel dados;
   final MangaInfoController controller;
+  final ChaptersController chaptersController;
   // final List<Capitulos>? capitulosDisponiveis;
-  const MangaDetails(
-      {super.key,
-      required this.link,
-      required this.dados,
-      required this.controller,
-    });
+  const MangaDetails({
+    super.key,
+    required this.link,
+    required this.dados,
+    required this.controller,
+    required this.chaptersController
+  });
 
   @override
   State<MangaDetails> createState() => _MangaDetailsState();
@@ -36,6 +38,20 @@ class _MangaDetailsState extends State<MangaDetails> {
     isExpanded.value = !isExpanded.value;
     debugPrint("is showing: $isExpanded");
   }
+
+  // ======== BUILD CONTINUE TO READ ==========
+  Widget get getButton => widget.chaptersController.continueToRead != null ? ElevatedButton(
+            onPressed: () => GoRouter.of(context).push(
+                  '/leitor/${widget.link}/${widget.chaptersController.continueToRead!.id}/${widget.dados.idExtension}'),
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18))),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    configSystemController.colorManagement())),
+            child: Text(widget.chaptersController.continueToRead!.isStart ?
+            "Começar no ${widget.chaptersController.continueToRead!.chapter}" :
+            "Continuar no ${widget.chaptersController.continueToRead!.chapter}"
+            )) : Container();
 
   // ======== BUILD CATEGORIES =================
   Widget buildCategories() {
@@ -205,10 +221,9 @@ class _MangaDetailsState extends State<MangaDetails> {
                           height: 4,
                         ),
                         Flexible(
-                          child: Text(
-                            mapOfExtensions[widget.dados.idExtension]!.nome
-                          )
-                        )
+                            child: Text(
+                                mapOfExtensions[widget.dados.idExtension]!
+                                    .nome))
                       ],
                     ),
                   )
@@ -237,8 +252,8 @@ class _MangaDetailsState extends State<MangaDetails> {
                 capitulos: widget.controller.capitulosDisponiveis ?? [],
               ),
               TextButton(
-                  onPressed: () => GoRouter.of(context)
-                      .push('/webview/${widget.link}/${widget.dados.idExtension}'),
+                  onPressed: () => GoRouter.of(context).push(
+                      '/webview/${widget.link}/${widget.dados.idExtension}'),
                   child: Column(
                     children: const [
                       Icon(
@@ -278,14 +293,12 @@ class _MangaDetailsState extends State<MangaDetails> {
         const SizedBox(
           height: 10,
         ),
-        ElevatedButton(
-          onPressed: (){}, 
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-            backgroundColor: MaterialStateProperty.all<Color>(configSystemController.colorManagement())
-          ),
-          child: const Text("Continuar")
-        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width - 20,
+              child: getButton))),
         const Divider(),
       ],
     );
