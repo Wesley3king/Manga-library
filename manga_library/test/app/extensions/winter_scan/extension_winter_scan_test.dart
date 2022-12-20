@@ -10,28 +10,31 @@ void main() {
     debugPrint('$data');
   });
   // manga detail
-   test("deve retornar um ModelMangaInfoOffLine", () async {
+  test("deve retornar um ModelMangaInfoOffLine", () async {
     // a-cavaleira-do-imperador seduzindo-o-duque-do-norte-2
-    var data = await extend.mangaDetail('a-cavaleira-do-imperador');
-    debugPrint('$data');
+    // i-worked-myself-to-death-and-reincarnated-as-the-queen-of-his-majesty-who-is-younger-than-me
+    var data = await extend.mangaDetail(
+        'i-worked-myself-to-death-and-reincarnated-as-the-queen-of-his-majesty-who-is-younger-than-me');
+    debugPrint('${data?.description}');
   });
 
   // getPages
   test("deve retornar um model Capitulos", () async {
     //manga seduzindo-o-duque-do-norte-2__capitulo-1__
     // novel a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__
-    var data = await extend.getPages("a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__", [
-      Capitulos(
-        capitulo: "3",
-        id: "a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__",
-        description: "",
-        mark: false,
-        download: false,
-        downloadPages: [],
-        pages: [],
-        readed: false
-      )
-    ]);
+    var data = await extend.getPages(
+        "a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__",
+        [
+          Capitulos(
+              capitulo: "3",
+              id: "a-relacao-simbiotica-entre-uma-lebre-e-uma-pantera-negra__capitulo-3__",
+              description: "",
+              mark: false,
+              download: false,
+              downloadPages: [],
+              pages: [],
+              readed: false)
+        ]);
     debugPrint('${data.pages}');
   });
 

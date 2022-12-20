@@ -74,6 +74,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // description
       description = parser
           .querySelector("div.description-summary > div.summary__content")
+          .text ?? parser
+          .querySelector("div.manga-excerpt")
           .text;
       // debugPrint("description: $description");
       // img
