@@ -11,7 +11,8 @@ void main() {
     debugPrint("length: ${data.length}");
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('tales-of-demons-and-gods');
+    // tales-of-demons-and-gods wind-breaker
+    var data = await extend.mangaDetail('wind-breaker');
     debugPrint('${data?.capitulos.length}');
     debugPrint('${data?.capitulos[0].description}');
   });

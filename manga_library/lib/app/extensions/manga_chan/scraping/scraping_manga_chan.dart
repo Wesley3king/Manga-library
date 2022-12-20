@@ -9,15 +9,50 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
+    List<Map<String, String>> books = [];
+    // ==============================================
+    // -----------------  destaques  ----------------
+    List<Result> destaquesItens = parser!.querySelectorAll("div.bixbox > div.listupd > div.bs > div.bsx > a");
+    books = [];
 
+    for (Result html in destaquesItens) {
+      // name
+      String? name = html.querySelector("div.bigor > div.tt")!.text;
+
+      // debugPrint("name: $name");
+      // img
+      String? img = html.querySelector("div.limit > img")!.src;
+      // debugPrint("img: $img");
+      // link
+      String? link = html.href;
+      // debugPrint("link: $link");
+      List<String> linkCorte1 = link!.split("manga/");
+      // debugPrint("link cortado: ${linkCorte1[1]}");
+
+      books.add({
+        "name": name?.trim() ?? "erro",
+        "url": linkCorte1[1].replaceAll("/", ""),
+        "img": img ?? ""
+      });
+      // debugPrint("book adicionado!!!");
+    }
+    // print(books);
+    // monat model destaques
+    if (books.isNotEmpty) {
+      debugPrint("montando o model destaques");
+      Map<String, dynamic> maislidos = {
+        "idExtension": 10,
+        "title": "Mangás Chan Destaques",
+        "books": books
+      };
+      models.add(ModelHomePage.fromJson(maislidos));
+    }
     // ==================================================================
     //          -- ULTIMAS ATUALIZAÇÕES --
-    Result? lancamentos =
-        parser?.querySelector("div.postbody > div.bixbox > div.listupd");
+    books = [];
     List<Result>? lancametosItens =
-        lancamentos?.querySelectorAll("div > div.utao");
-    List<Map<String, String>> books = [];
-    for (Result html in lancametosItens!) {
+        parser.querySelectorAll("div.bixbox > div.listupd > div.utao");
+    for (Result html in lancametosItens) {
       // name
       String? name = html.querySelector("div.uta > div.luf > a > h4")!.text;
       // debugPrint("name: $name");
@@ -30,7 +65,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       List<String> linkCorte1 = link!.split("manga/");
 
       books.add({
-        "name": name!,
+        "name": name!.trim(),
         "url": linkCorte1[1].replaceAll("/", ""),
         "img": img ?? ""
       });
@@ -45,9 +80,8 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     };
     models.add(ModelHomePage.fromJson(destaques));
     // mais lidos
-    Result? result3 = parser
-        ?.querySelector("div.section > div#wpop-items > div.serieslist > ul");
-    List<Result>? maisLidosItens = result3?.querySelectorAll("li");
+    Result? result3 = parser.querySelector("div.section > div#wpop-items > div.serieslist > ul");
+    List<Result>? maisLidosItens = result3.querySelectorAll("li");
     // print(result3?.html);
     // print("data: $result3 / li: $maisLidosItens");
     books = [];
@@ -67,7 +101,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       // debugPrint("link cortado: ${linkCorte1[1]}");
 
       books.add({
-        "name": name ?? "erro",
+        "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
         "img": img ?? ""
       });
@@ -106,13 +140,13 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     List<String> genres = [];
     List<Capitulos> chapters = [];
     if (parser != null) {
+      // debugPrint("html: ${parser.html}");
       // name
-      name = parser.querySelector("div.seriestuheader h1.entry-title").text;
+      name = parser.querySelector("div#titlemove > h1.entry-title").text;
       // debugPrint("name: $name");
       // description
       description = parser
-          .querySelector(
-              "div.seriestucontent > div.seriestucontentr > div.seriestuhead > div > p")
+          .querySelector("div.wd-full > div.entry-content-single > p")
           .text;
       // debugPrint("description: $description");
       // img
@@ -120,13 +154,13 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // debugPrint("img: $img");
       // authors
       List<Result>? listaInfo =
-          parser.querySelectorAll("table.infotable > tbody > tr");
+          parser.querySelectorAll("div.tsinfo > div.imptdt");
       StringBuffer buffer = StringBuffer();
       for (Result info in listaInfo) {
         if (info.text!.contains("Autor")) {
           buffer.write('${info.text?.replaceFirst("Autor", "").trim()}');
         } else if (info.text!.contains("Artista")) {
-          buffer.write(' ,${info.text?.replaceFirst("Artista", "").trim()}');
+          buffer.write(', ${info.text?.replaceFirst("Artista", "").trim()}');
         }
       }
 
@@ -136,8 +170,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       status = listaInfo[0].text?.replaceFirst("Status", "").trim();
       // debugPrint("state: $status");
       // genres
-      List<Result>? genresResult = parser.querySelectorAll(
-          "div.seriestucontent > div.seriestucontentr > div.seriestucont > div.seriestucontr > div.seriestugenre > a");
+      List<Result>? genresResult =
+          parser.querySelectorAll("div.wd-full > span.mgen > a");
       // print(genresResult);
 
       for (int i = 0; i < genresResult.length; ++i) {
@@ -256,7 +290,8 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
         // for (Result result in projetoData) {
 
         // }
-        List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks =
+            projetoData.map((Result data) {
           // name
           String? name = data.querySelector("a div.tt")!.text;
           // debugPrint("name: $name");
