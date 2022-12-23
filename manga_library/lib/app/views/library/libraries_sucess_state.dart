@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manga_library/app/controllers/library_controller.dart';
+import 'package:manga_library/app/views/library/controllers/library_controller.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/library/library_grid.dart';

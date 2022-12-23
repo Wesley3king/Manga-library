@@ -14,10 +14,10 @@ class LibraryModel {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['library'] = library;
-    _data['books'] = books.map((e) => e.toJson()).toList();
-    return _data;
+    final data = <String, dynamic>{};
+    data['library'] = library;
+    data['books'] = books.map((e) => e.toJson()).toList();
+    return data;
   }
 }
 
@@ -25,29 +25,30 @@ class Books {
   Books({
     required this.name,
     required this.link,
-    required this.img,
+    this.img = "",
+    this.restantChapters = 0,
     required this.idExtension,
   });
-  late final String name;
+  late String name;
   late final String link;
-  late final String img;
+  late String img;
+  late int restantChapters;
   late final int idExtension;
 
   Books.fromJson(Map<dynamic, dynamic> json) {
-    // print("=========================================== books");
-    // print(json);
-    name = json['name'];
+    name = json['name'] ?? "";
     link = json['link'];
-    img = json['img'];
+    img = json['img'] ?? "";
+    restantChapters = json['restantChapters'] ?? 0;
     idExtension = json['idExtension'];
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['link'] = link;
-    _data['img'] = img;
-    _data['idExtension'] = idExtension;
-    return _data;
+    final data = <String, dynamic>{};
+    // data['name'] = name;
+    data['link'] = link;
+    // data['img'] = img;
+    data['idExtension'] = idExtension;
+    return data;
   }
 }

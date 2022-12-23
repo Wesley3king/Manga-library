@@ -589,7 +589,7 @@ class DialogController {
       {required String link,
       required MangaInfoOffLineModel model,
       required List<Capitulos> capitulos}) async {
-    debugPrint('inicio do processo de atualização da library');
+    debugPrint('inicio do processo de adicionar/remover da library');
 
     bool haveError = false;
     dataLibrary = await hiveController.getLibraries();

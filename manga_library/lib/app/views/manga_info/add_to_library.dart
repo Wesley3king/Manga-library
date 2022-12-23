@@ -66,9 +66,6 @@ class _AddToLibraryState extends State<AddToLibrary> {
     }
     List<Widget> checkboxes = [];
     for (int i = 0; i < resultadoForOcultLibrary.length; ++i) {
-      debugPrint(
-          "estranho: ${resultadoForOcultLibrary[i]['selected']} \n selcted: ${resultadoForOcultLibrary[i]['selected']}");
-
       checkboxes.add(CheckboxListTile(
         title: Text(resultadoForOcultLibrary[i]['library']),
         value: resultadoForOcultLibrary[i]['selected'],
@@ -99,9 +96,9 @@ class _AddToLibraryState extends State<AddToLibrary> {
               _dialogController.addOrRemoveFromOcultLibrary(
                 resultadoForOcultLibrary,
                 {
-                  "name": widget.dados.name,
+                  // "name": widget.dados.name,
                   "link": widget.link,
-                  "img": widget.dados.img,
+                  // "img": widget.dados.img,
                   "idExtension": widget.dados.idExtension
                 },
                 link: widget.link,
@@ -270,9 +267,9 @@ class _AddToLibraryState extends State<AddToLibrary> {
     await _dialogController.addOrRemoveFromLibrary(
       resultado,
       {
-        "name": widget.dados.name,
+        // "name": widget.dados.name,
         "link": widget.link, // '${widget.link}/'
-        "img": widget.dados.img,
+        // "img": widget.dados.img,
         "idExtension": widget.dados.idExtension
       },
       link: widget.link,
