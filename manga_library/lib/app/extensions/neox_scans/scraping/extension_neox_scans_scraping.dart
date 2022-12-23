@@ -163,10 +163,12 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     if (parser != null) {
       // name
       name = parser.querySelector("div.post-title > h1").text;
+
       // debugPrint("name: $name");
       // description
-      description = parser.querySelector("div.manga-excerpt > p").text;
-      // debugPrint("description: $description");
+      description = parser.querySelector("div.manga-excerpt > p").text ??
+          parser.querySelector("div.manga-excerpt > div > div").text;
+      debugPrint("description: $description");
       // img
       img = parser.querySelector("div.summary_image > a > img").src;
       // debugPrint("img: $img");
@@ -213,7 +215,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           state = value.trim();
         }
       }
-      // debugPrint("genres: $genres");
+      debugPrint("genres: $genres");
       // chapters
       List<Result> chaptersResult =
           parser.querySelectorAll("ul.main > li.wp-manga-chapter");
@@ -253,7 +255,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
       return MangaInfoOffLineModel(
         name: name?.trim() ?? "erro",
-        description: description ?? "erro",
+        description: description?.trim() ?? "erro",
         img: img ?? "erro",
         state: state ?? "Estado desconhecido",
         authors: authors ?? "Autor desconhecido",

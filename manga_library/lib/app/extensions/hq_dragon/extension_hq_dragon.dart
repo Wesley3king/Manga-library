@@ -17,6 +17,8 @@ class ExtensionHqDragon implements Extension {
   int id = 18;
   @override
   bool nsfw = false;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

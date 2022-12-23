@@ -19,6 +19,8 @@ class ExtensionSeeMangas implements Extension {
   int id = 16;
   @override
   bool nsfw = false;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

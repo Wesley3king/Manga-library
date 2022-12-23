@@ -1,6 +1,3 @@
-import 'dart:convert';
-// import 'dart:developer';
-
 import 'package:chaleno/chaleno.dart';
 import 'package:flutter/rendering.dart';
 
@@ -145,7 +142,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
           state = txt.replaceFirst("tag ", "");
         } else if (txt.contains("Generos")) {
           List<String> corteGeneros = txt.split("Generos: ");
-          genres = corteGeneros[1].split(", ");
+          genres = corteGeneros[1].split(",");
+          genres = genres.map<String>((str) => str.trim()).toList();
         }
       }
       // capitulos

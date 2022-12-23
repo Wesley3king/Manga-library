@@ -18,6 +18,8 @@ class ExtensionUnionMangas implements Extension {
   int id = 4;
   @override
   bool nsfw = true;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

@@ -4,6 +4,8 @@ import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/settings_model.dart';
 import 'package:manga_library/app/views/configurations/config_pages/controller/page_config_controller.dart';
 
+import '../../../controllers/message_core.dart';
+
 List<Widget> generateOptions(List<dynamic> settingsAndContainers,
     BuildContext context, SettingsOptionsController controller) {
   List<Widget> widgets = [];
@@ -208,7 +210,7 @@ class InputTypes {
                             if (oldPassword !=
                                 GlobalData
                                     .settings.hiddenLibraryPassword) {
-                              showSnackBar(context, "Senha Incorreta!");
+                              MessageCore.showMessage("Senha Incorreta!");
                             } else {
                               isAuthorized = true;
                             }
@@ -288,9 +290,5 @@ class InputTypes {
                 ));
       },
     );
-  }
-
-  void showSnackBar(BuildContext context, String txt) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(txt)));
   }
 }

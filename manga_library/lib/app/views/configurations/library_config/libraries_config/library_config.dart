@@ -4,6 +4,7 @@ import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/views/configurations/library_config/libraries_config/controller/library_config_controller.dart';
 
+import '../../../../controllers/message_core.dart';
 import '../../../../models/libraries_model.dart';
 
 class LibraryConfigMain extends StatefulWidget {
@@ -174,9 +175,7 @@ class _LibraryConfigMainState extends State<LibraryConfigMain> {
                     if (GlobalData.settings.hiddenLibraryPassword == value) {
                       GoRouter.of(context).push('/configlibrary/true');
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Senha incorreta!'))
-                      );
+                      MessageCore.showMessage('Senha incorreta!');
                     }
                     Navigator.of(context).pop();
                   },

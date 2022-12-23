@@ -17,6 +17,8 @@ class ExtensionMangaChan implements Extension {
   int id = 10;
   @override
   bool nsfw = false;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

@@ -18,6 +18,8 @@ class ExtensionYabutoon implements Extension {
   int id = 12;
   @override
   bool nsfw = false;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {
@@ -30,7 +32,8 @@ class ExtensionYabutoon implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => 'https://yabutoons.com/webtoon/$pieceOfLink/';
+  String getLink(String pieceOfLink) =>
+      'https://yabutoons.com/webtoon/$pieceOfLink/';
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {

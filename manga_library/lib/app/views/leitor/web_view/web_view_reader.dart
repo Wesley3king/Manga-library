@@ -84,6 +84,8 @@ class _MyWebviewxState extends State<MyWebviewx> {
     <script>
         var local = window.document.querySelector("div#images");
         var index = 0;
+        var scrollPosition = 0;
+        var listaHeight = [];
         var lista = [$buffer];
 
         /// scroll to
@@ -95,14 +97,42 @@ class _MyWebviewxState extends State<MyWebviewx> {
             console.log('erro '+e);
           }
         }
+        /// scroll
+        function scrollSome(val, isNext) {
+          var valueScroll = isNext ? this.screenY + val : this.screenY - val;
+          window.scrollTo(valueScroll, valueScroll);
+          this.screenY = valueScroll;
+        }
+        /**
+         * escuta a posição da tela
+        */
+        window.addEventListener("scroll", (event) => {
+            scrollPosition = this.scrollY + window.innerHeight;
+            let isCalculating = true;
+            let calculatedValue = 0;
+            let indice = 0;
+            while (isCalculating) {
+                calculatedValue += listaHeight[indice];
+                if (scrollPosition <= calculatedValue && scrollPosition >= (calculatedValue - listaHeight[indice])) {
+                    testPlatformSpecificMethod(indice);
+                    console.log(indice);
+                    isCalculating = false;
+                }
+                indice++;
+                if (indice == 22) {
+                    isCalculating = false;
+                }
+            }
+        });
 
         async function renderCore(src) {
             const img = new Image();
             img.setAttribute("id", `img`+ index);
-            img.setAttribute("onclick", `testPlatformSpecificMethod(`+index+`)`);
+            // img.setAttribute("onclick", `testPlatformSpecificMethod(`+index+`)`);
             img.onload = function() {
               img.setAttribute("width", window.innerWidth + `px`);
-              
+              let heightOfImage = (window.innerWidth * this.height) / this.width;
+              listaHeight.push(Number.parseFloat(heightOfImage));
               local.appendChild(img);
               index++;
               machineRender();

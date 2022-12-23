@@ -12,7 +12,8 @@ void main() {
   // manga detail
   test("deve retornar um ModelMangaInfoOffLine", () async {
     // death-is-the-only-ending-for-the-villainess-512129 o-comeco-depois-do-fim-512129
-    var data = await extend.mangaDetail('o-comeco-depois-do-fim-512129');
+    // he-player-that-cant-level-up-novel-708031 return-of-the-frozen-player-novel-708031
+    var data = await extend.mangaDetail('he-player-that-cant-level-up-novel-708031');
     debugPrint('$data');
   });
 

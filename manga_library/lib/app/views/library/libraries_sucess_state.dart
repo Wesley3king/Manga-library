@@ -5,6 +5,7 @@ import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/library/library_grid.dart';
 
+import '../../controllers/message_core.dart';
 import '../../controllers/system_config.dart';
 
 class LibrarrySucessState extends StatefulWidget {
@@ -12,7 +13,10 @@ class LibrarrySucessState extends StatefulWidget {
   final LibraryController controller;
   final ScrollController controllerScroll;
   const LibrarrySucessState(
-      {super.key, required this.dados, required this.controllerScroll, required this.controller});
+      {super.key,
+      required this.dados,
+      required this.controllerScroll,
+      required this.controller});
 
   @override
   State<LibrarrySucessState> createState() => _LibrarrySucessStateState();
@@ -77,8 +81,7 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
       if (text == GlobalData.settings.hiddenLibraryPassword) {
         GoRouter.of(context).push('/ocultlibrary');
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Acesso Negado!")));
+        MessageCore.showMessage("Senha incorreta");
       }
     }
   }
@@ -136,7 +139,11 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
             IconButton(
                 onPressed: () => goToOcultLibrary(),
                 icon: const Icon(Icons.lock)),
-            ValueListenableBuilder(valueListenable: widget.controller.ordemState, builder: (context, value, child) => buildSetTemporallyOrdem(widget.controller),)
+            ValueListenableBuilder(
+              valueListenable: widget.controller.ordemState,
+              builder: (context, value, child) =>
+                  buildSetTemporallyOrdem(widget.controller),
+            )
           ],
           pinned: true,
           snap: true,
@@ -146,7 +153,9 @@ class _LibrarrySucessStateState extends State<LibrarrySucessState>
             child: TabBar(
               isScrollable: true,
               // indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: ConfigSystemController.instance.isDarkTheme ? Colors.white : Colors.black,
+              labelColor: ConfigSystemController.instance.isDarkTheme
+                  ? Colors.white
+                  : Colors.black,
               indicatorWeight: 2.5,
               controller: tabController,
               indicatorColor: configSystemController.colorManagement(),

@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../controllers/leitor_controller.dart';
 
 class ScrollablePositionedListPage extends StatefulWidget {
   final bool isOffLine;
+  final int idExtension;
   final String chapterId;
   final PagesController controller;
   final FilterQuality filterQuality;
@@ -18,6 +20,7 @@ class ScrollablePositionedListPage extends StatefulWidget {
       {super.key,
       required this.chapterId,
       required this.lista,
+      required this.idExtension,
       required this.color,
       required this.filterQuality,
       required this.isOffLine,
@@ -173,6 +176,7 @@ class ScrollablePositionedListPageState
   // get on line image
   Future<Uint8List> getOnLineImage(String src) async {
     Response<List<int>> rs = await Dio(BaseOptions(
+      headers: mapOfExtensions[widget.idExtension]!.fetchImagesHeader,
       connectTimeout: 60000,
     )).get<List<int>>(src, options: Options(responseType: ResponseType.bytes));
     return Uint8List.fromList(rs.data!);

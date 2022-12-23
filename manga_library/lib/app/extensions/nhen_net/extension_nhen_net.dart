@@ -17,6 +17,8 @@ class ExtensionNHenNet implements Extension {
   int id = 19;
   @override
   bool nsfw = true;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

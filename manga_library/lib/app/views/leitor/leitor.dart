@@ -329,6 +329,7 @@ class _LeitorState extends State<Leitor> with SingleTickerProviderStateMixin {
                     leitorController: leitorController,
                     controller: controller,
                     link: widget.link,
+                    idExtension: widget.idExtension,
                     id: widget.id,
                   )),
               ValueListenableBuilder(

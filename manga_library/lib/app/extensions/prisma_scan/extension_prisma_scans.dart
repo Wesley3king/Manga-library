@@ -17,6 +17,8 @@ class ExtensionPrismaScan implements Extension {
   int id = 13;
   @override
   bool nsfw = false;
+  @override
+  Map<String, dynamic>? fetchImagesHeader;
 
   @override
   Future<List<ModelHomePage>> homePage() async {

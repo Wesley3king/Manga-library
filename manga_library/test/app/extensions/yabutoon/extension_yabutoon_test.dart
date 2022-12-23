@@ -13,7 +13,8 @@ void main() {
   });
 
   test("deve retornar um MangaInfoOffLineModel", () async {
-    var data = await extend.mangaDetail("tales-of-demons-and-gods");
+    // unordinary tales-of-demons-and-gods
+    var data = await extend.mangaDetail("unordinary");
     debugPrint("data: $data");
   });
   test("deve retornar um model Capitulos com as paginas do leitor", () async {

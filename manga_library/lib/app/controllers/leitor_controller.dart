@@ -525,7 +525,7 @@ class PagesController {
         break;
       case LeitorTypes.webview:
         // implement this
-        //webViewController?.callJsMethod('scrollToIndex', [index]);
+        // webViewController?.callJsMethod('scrollSome', [LeitorController.scrollWebtoonValue, action == ReaderPageAction.next]);
         break;
       case LeitorTypes.novel:
         double position = action == ReaderPageAction.next

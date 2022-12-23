@@ -17,12 +17,14 @@ class PagesLeitor extends StatefulWidget {
   final LeitorController leitorController;
   final PagesController controller;
   final String link;
+  final int idExtension;
   final String id;
   const PagesLeitor({
     super.key,
     required this.link,
     required this.id,
     required this.leitorController,
+    required this.idExtension,
     required this.controller,
   });
 
@@ -108,9 +110,9 @@ class _PagesLeitorState extends State<PagesLeitor> {
       itemScrollController: widget.controller.scrollControllerList,
       // cacheExtent: 8000.0,
       itemBuilder: (context, index) => GestureDetector(
-        onTap: () {
-          widget.controller.setPage = index;
-        },
+        // onTap: () {
+        //   widget.controller.setPage = index;
+        // },
         child: MyPageImage(
           capitulo: widget.leitorController.atualChapter,
           index: index,
@@ -162,6 +164,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
         filterQuality: filterQuality,
         isOffLine: widget.leitorController.atualChapter.download,
         chapterId: widget.leitorController.atualChapter.id,
+        idExtension: widget.idExtension,
         controller: widget.controller);
   }
 

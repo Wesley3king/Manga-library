@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/download/download_controller.dart';
+import 'package:manga_library/app/controllers/message_core.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
@@ -27,23 +28,6 @@ class _MangaInfoState extends State<MangaInfo> {
     );
   }
 
-  /// generate an Message
-  void generateMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: ConfigSystemController.instance.isDarkTheme
-          ? const Color.fromARGB(255, 17, 17, 17)
-          : Colors.white,
-      content: Text(
-        message,
-        style: TextStyle(
-            color: ConfigSystemController.instance.isDarkTheme
-                ? Colors.white
-                : Colors.black),
-      ),
-    ));
-  }
-
   /// menu
   Widget _generateMenu() {
     return PopupMenuButton(
@@ -52,14 +36,14 @@ class _MangaInfoState extends State<MangaInfo> {
           child: const Text('Atualizar'),
           onTap: () async {
             if (mangaInfoController.state.value == MangaInfoStates.sucess) {
-              generateMessage(context, "Atualizando...");
+              MessageCore.showMessage("Atualizando...");
               await mangaInfoController.updateBook(
                       widget.link,
                       widget.idExtension,
                       img: mangaInfoController.data.img
                     )
-                  ? generateMessage(context, "Atualizado com Sucesso!")
-                  : generateMessage(context, 'Falha ao atualizar!');
+                  ? MessageCore.showMessage("Atualizado com Sucesso!")
+                  : MessageCore.showMessage('Falha ao atualizar!');
             }
           },
         ),

@@ -1,5 +1,9 @@
+import 'dart:math';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/controllers/home_page_controller.dart';
 import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
@@ -38,6 +42,8 @@ class _SucessState extends State<Sucess> {
 
   @override
   Widget build(BuildContext context) {
+    final int sortExtension = Random().nextInt(widget.dados.length);
+    final int sortIndice = Random().nextInt(widget.dados[sortExtension].books.length);
     return RefreshIndicator(
       color: configSystemController.colorManagement(),
       onRefresh: () => widget.controller.update(),
@@ -54,7 +60,7 @@ class _SucessState extends State<Sucess> {
                       width: MediaQuery.of(context).size.width,
                       height: 330,
                       child: CachedNetworkImage(
-                        imageUrl: widget.dados[0].books[0].img,
+                        imageUrl: widget.dados[sortExtension].books[sortIndice].img,
                         placeholder: (context, url) => Container(
                           color: Colors.grey,
                         ),
@@ -65,21 +71,33 @@ class _SucessState extends State<Sucess> {
                       )),
                   Container(
                     decoration: BoxDecoration(
-                      gradient: ConfigSystemController.instance.isDarkTheme ? const LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [Color.fromARGB(255, 48, 48, 48), Color.fromARGB(43, 0, 0, 0)],
-                          stops: [0.1, 1]) : 
-                          const  LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [Color.fromARGB(255, 250, 250, 250), Color.fromARGB(43, 0, 0, 0)],
-                            stops: [0.1, 1]
-                          ),
+                      gradient: ConfigSystemController.instance.isDarkTheme
+                          ? const LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                  Color.fromARGB(255, 48, 48, 48),
+                                  Color.fromARGB(43, 0, 0, 0)
+                                ],
+                              stops: [
+                                  0.1,
+                                  1
+                                ])
+                          : const LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                  Color.fromARGB(255, 250, 250, 250),
+                                  Color.fromARGB(43, 0, 0, 0)
+                                ],
+                              stops: [
+                                  0.1,
+                                  1
+                                ]),
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => debugPrint(GlobalData.settings.theme),
+                    onTap: () => GoRouter.of(context).push('/detail/${widget.dados[sortExtension].books[sortIndice].url}/${widget.dados[sortExtension].books[sortIndice].idExtension}'),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -88,9 +106,9 @@ class _SucessState extends State<Sucess> {
                         children: [
                           SizedBox(
                               width: 150,
-                              height: 240,
+                              height: 220,
                               child: CachedNetworkImage(
-                                imageUrl: widget.dados[0].books[0].img,
+                                imageUrl: widget.dados[sortExtension].books[sortIndice].img,
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey,
                                 ),
@@ -103,12 +121,11 @@ class _SucessState extends State<Sucess> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Flexible(
-                            child: Text(widget.dados[0].books[0].name,
-                                style: const TextStyle(
-                                  // color: Colors.white,
-                                  fontSize: 20,
-                                )),
+                          AutoSizeText(
+                            widget.dados[sortExtension].books[sortIndice].name,
+                            maxLines: 1,
+                            maxFontSize: 20,
+                            minFontSize: 18,
                           ),
                           const SizedBox(
                             height: 15,
@@ -121,7 +138,9 @@ class _SucessState extends State<Sucess> {
               ),
             ),
             buildLists(),
-            const SizedBox(height: 50,)
+            const SizedBox(
+              height: 50,
+            )
           ],
         ),
       ),
