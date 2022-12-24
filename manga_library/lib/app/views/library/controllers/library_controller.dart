@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/message_core.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
@@ -7,6 +6,7 @@ import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/library/functions/library_functions.dart';
 
 import '../../../models/client_data_model.dart';
 
@@ -100,7 +100,23 @@ class LibraryController {
 
   Future<List<LibraryModel>> getProcessedDataForLibrary() async {
     final List<LibraryModel> models = await hiveController.getLibraries();
-    return await ProcessDataFromLibrary().processLibraryData(models) ?? [];
+    final List<MangaInfoOffLineModel>? booksModels =
+        await hiveController.getBooks();
+    if (booksModels == null) {
+      MessageCore.showMessage(
+          "models é nulo(algo deu errado na contrução dos models) em HiveController.getBooks");
+      state.value = LibraryStates.error;
+    }
+    ClientDataModel clientData = await hiveController.getClientData();
+    final List<LibraryModel>? processedData = await compute(
+        ProcessDataFromLibrary.processLibraryData,
+        [models, booksModels, clientData]);
+    if (processedData == null) {
+      state.value = LibraryStates.error;
+      return [];
+    } else {
+      return processedData;
+    }
   }
 }
 
@@ -152,88 +168,5 @@ class OrdenateLibrary {
       models[i].books = books;
     }
     return models;
-  }
-}
-
-class ProcessDataFromLibrary {
-  final MangaInfoOffLineController _controller = MangaInfoOffLineController();
-  final HiveController _hiveController = HiveController();
-
-  /// ========== PROCESS DATA ===============
-  Future<List<LibraryModel>?> processLibraryData(
-      List<LibraryModel> data) async {
-    try {
-      final List<MangaInfoOffLineModel>? models =
-          await _hiveController.getBooks();
-      if (models == null) {
-        throw Exception(
-            "models é nulo(algo deu errado na contrução dos models) em HiveController.getBooks");
-      }
-      ClientDataModel clientData = await _hiveController.getClientData();
-      for (int modelIndex = 0; modelIndex < data.length; modelIndex++) {
-        for (int bookIndex = 0;
-            bookIndex < data[modelIndex].books.length;
-            bookIndex++) {
-          MangaInfoOffLineModel? modelData = await compute(getModelFromData, [
-            data[modelIndex].books[bookIndex].link,
-            data[modelIndex].books[bookIndex].idExtension,
-            models
-          ]);
-          final Books bookData = await compute(processOneModel,
-              [data[modelIndex].books[bookIndex], modelData!, clientData]);
-          data[modelIndex].books[bookIndex] = bookData;
-        }
-      }
-      return data;
-    } catch (e) {
-      debugPrint(
-          "erro no processLibraryData at library/controllers/library_controller.dart: $e");
-      MessageCore.showMessage(e.toString());
-      return null;
-    }
-  }
-
-  /// =============== PROCESS ONE BOOK ==================
-  static Future<Books> processOneModel(List<dynamic> objects) async {
-    Books model = objects[0];
-    MangaInfoOffLineModel data = objects[1];
-    ClientDataModel clientData = objects[2];
-    // achar os capitulos lidos do manga pelo link
-    List<dynamic> capitulosLidos = [];
-    String completUrl = model.link.contains("http")
-        ? model.link
-        : mapOfExtensions[model.idExtension]!.getLink(model.link);
-    RegExp regex = RegExp(completUrl, dotAll: true, caseSensitive: false);
-
-    for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
-      if (clientData.capitulosLidos[i]['link'].contains(regex)) {
-        /// modify restantChapters
-        model.restantChapters = data.chapters - capitulosLidos.length;
-        break;
-      }
-    }
-
-    /// modify name
-    model.name = data.name;
-    return model;
-  }
-
-  static MangaInfoOffLineModel? getModelFromData(List<dynamic> objects) {
-    String link = objects[0];
-    final int idExtension = objects[1];
-    final List<MangaInfoOffLineModel> lista = objects[2];
-    if (!link.contains("/")) {
-      link = mapOfExtensions[idExtension]!.getLink(link);
-    }
-    RegExp regex = RegExp(link, caseSensitive: false);
-    for (int i = 0; i < lista.length; ++i) {
-      if ((lista[i].link.contains(regex)) &&
-          (lista[i].idExtension == idExtension)) {
-        debugPrint("achado na memória!");
-        return lista[i];
-      }
-    }
-    debugPrint("não encontrei o manga na memoria");
-    return null;
   }
 }

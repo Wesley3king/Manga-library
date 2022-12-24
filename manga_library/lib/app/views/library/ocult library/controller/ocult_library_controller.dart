@@ -1,6 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/controllers/message_core.dart';
+import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/library/functions/library_functions.dart';
 
 import '../../../../models/globais.dart';
 
@@ -19,25 +24,22 @@ class OcultLibraryController {
     state.value = OcultLibraryStates.loading;
     try {
       // ocultLibrariesData = await hiveController.getOcultLibraries();
-       await updateTemporallyOrdem("pattern");
+      await updateTemporallyOrdem("pattern");
       state.value = OcultLibraryStates.sucess;
-
     } catch (e, s) {
       debugPrint('erro no start LibraryOcultController: $e');
       debugPrint('$s');
       state.value = OcultLibraryStates.error;
     }
   }
+
   Future<void> updateTemporallyOrdem(String type) async {
-    debugPrint("passou 1 !");
     setStateOrdenacion(type);
-    debugPrint("passou 2 !");
     await setLibraryOrdem(ordemState.value);
     state.value = OcultLibraryStates.loading;
     debugPrint("CHEGOU AQUI!");
     // set state
     state.value = OcultLibraryStates.sucess;
-    debugPrint("Finalizou");
   }
 
   void setStateOrdenacion(String type) {
@@ -61,28 +63,51 @@ class OcultLibraryController {
 
   setLibraryOrdem(OcultLibraryOrdem ordem) async {
     ocultLibrariesData.isEmpty
-        ? ocultLibrariesData = await hiveController.getOcultLibraries()
+        ? ocultLibrariesData = await getProcessedDataForOcultLibrary()
         : debugPrint("não está vazio em setLibraryOrdem");
 
     switch (ordem) {
       case OcultLibraryOrdem.oldToNew:
         if (oldOrdem == OcultLibraryOrdem.newToOld) {
-          ocultLibrariesData = await _ordenateLibrary.reverse(ocultLibrariesData);
+          ocultLibrariesData =
+              await _ordenateLibrary.reverse(ocultLibrariesData);
         } else if (oldOrdem == OcultLibraryOrdem.aToZ) {
-          ocultLibrariesData = await hiveController.getOcultLibraries();
+          ocultLibrariesData = await getProcessedDataForOcultLibrary();
           // librariesData = await _ordenateLibrary.
         }
         break;
       case OcultLibraryOrdem.newToOld:
         if (oldOrdem == OcultLibraryOrdem.oldToNew) {
-          ocultLibrariesData = await _ordenateLibrary.reverse(ocultLibrariesData);
+          ocultLibrariesData =
+              await _ordenateLibrary.reverse(ocultLibrariesData);
         } else if (oldOrdem == OcultLibraryOrdem.aToZ) {
-          ocultLibrariesData = await hiveController.getOcultLibraries();
+          ocultLibrariesData = await getProcessedDataForOcultLibrary();
         }
         break;
       case OcultLibraryOrdem.aToZ:
         ocultLibrariesData = await _ordenateLibrary.toAZ(ocultLibrariesData);
         break;
+    }
+  }
+
+  Future<List<LibraryModel>> getProcessedDataForOcultLibrary() async {
+    final List<LibraryModel> models = await hiveController.getOcultLibraries();
+    final List<MangaInfoOffLineModel>? booksModels =
+        await hiveController.getBooks();
+    if (booksModels == null) {
+      MessageCore.showMessage(
+          "models é nulo(algo deu errado na contrução dos models) em HiveController.getBooks");
+      state.value = OcultLibraryStates.error;
+    }
+    ClientDataModel clientData = await hiveController.getClientData();
+    final List<LibraryModel>? processedData = await compute(
+        ProcessDataFromLibrary.processLibraryData,
+        [models, booksModels, clientData]);
+    if (processedData == null) {
+      state.value = OcultLibraryStates.error;
+      return [];
+    } else {
+      return processedData;
     }
   }
 }
@@ -125,7 +150,9 @@ class OrdenateOcultLibrary {
         }
         // remove estes livros, depois limpa a lista de remoção
         for (Map<String, dynamic> map in removeLinks) {
-          allBooks.removeWhere((book) => (book.link == map['link']) && (book.idExtension == map['idExtension']));
+          allBooks.removeWhere((book) =>
+              (book.link == map['link']) &&
+              (book.idExtension == map['idExtension']));
         }
         removeLinks.clear();
       }

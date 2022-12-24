@@ -128,7 +128,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
       debugPrint("montando o model Mais lidos da semana");
       Map<String, dynamic> maislidos = {
         "idExtension": 3,
-        "title": "Silence Scan mais lidos da semana",
+        "title": "Mundo Manga Kun mais lidos da semana",
         "books": books
       };
       models.add(ModelHomePage.fromJson(maislidos));

@@ -124,6 +124,7 @@ class _SucessState extends State<Sucess> {
                           AutoSizeText(
                             widget.dados[sortExtension].books[sortIndice].name,
                             maxLines: 1,
+                            textAlign: TextAlign.center,
                             maxFontSize: 20,
                             minFontSize: 18,
                           ),

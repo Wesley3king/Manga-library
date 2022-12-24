@@ -17,7 +17,7 @@ void main() {
   });
 
   test("deve retornar um model SearchModel", () async {
-    var data = await extend.search("hh"); // 296092  402560
+    var data = await extend.search("kaede");
     debugPrint("name: ${data[0].img}");
     // debugPrint("page: ${data.capitulos[0].pages}");
   });

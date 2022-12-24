@@ -152,13 +152,16 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
       var projetoData = resultHtml.querySelectorAll("div.gallery");
       // print(projetoData);
       if (projetoData != null) {
-        List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
+        List<Map<String, dynamic>> projetoBooks =
+            projetoData.map((Result data) {
           // name
           String? name = data.querySelector("a div.caption")!.text;
           // debugPrint("name: $name");
           // img
-          String? img = data.querySelector("a img")!.src;
-          // debugPrint("img: $img"); // https://cdn.dogehls.xyz/galleries/2209475/thumb.jpg
+          List<Result>? resultsImg = data.querySelectorAll("a > img");
+
+          String? img = resultsImg?[1].src;
+          // debugPrint("img: $img");
           // link
           String? link = data.querySelector("a")!.href;
           List<String> corteLink = link!.split("g/");
@@ -167,7 +170,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
           return {
             "name": name ?? "error",
             "link": corteLink[1].replaceAll("/", ""),
-            "img": "https://cdn.dogehls.xyz/$img",
+            "img": img,
             "idExtension": 5
           };
         }).toList();

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
 import 'package:manga_library/app/views/library/functions/library_functions.dart';
 
@@ -14,6 +15,7 @@ class LibraryItens extends StatefulWidget {
 
 class _LibraryItensState extends State<LibraryItens>
     with AutomaticKeepAliveClientMixin {
+  final ConfigSystemController configSystemController = ConfigSystemController();
   // late ScrollController _scrollController;
   late List<double> sizeOfBooks;
   Widget createBook(BuildContext context, int index) {
@@ -44,6 +46,36 @@ class _LibraryItensState extends State<LibraryItens>
                 ),
               ),
             ),
+            widget.data.books[index].restantChapters != 0 ?
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: configSystemController.colorManagement(),
+                      borderRadius: const BorderRadius.all(Radius.circular(7))
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Text(
+                        widget.data.books[index].restantChapters.toString(),
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ) : Container(),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
