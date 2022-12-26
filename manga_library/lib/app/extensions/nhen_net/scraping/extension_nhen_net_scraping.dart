@@ -5,27 +5,46 @@ import 'package:flutter/rendering.dart';
 import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 
+final Map<String, dynamic> header = {
+  "cookie": null,
+  "sec-ch-ua":
+      '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": '"Linux"',
+  "sec-fetch-dest": "document",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-site": "none",
+  "sec-fetch-user": "?1",
+  "upgrade-insecure-requests": "1",
+  "user-agent":
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+};
 final Dio dio = Dio(BaseOptions(
-  headers: {
-    "cookie":
-        "cf_clearance=jxmiPRndhqutmEWrJo7GM2nekBeoSXhzEsBxjJ5GmI8-1671372030-0-150; csrftoken=8ZSjJ09FBBty9v9ri2Yd8qIJp0768T2vik6wskxfAqD0fytKAhssVaMCGJmrqzij",
-    "sec-ch-ua":
-        '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Linux"',
-    "sec-fetch-dest": "document",
-    "sec-fetch-mode": "navigate",
-    "sec-fetch-site": "none",
-    "sec-fetch-user": "?1",
-    "upgrade-insecure-requests": "1",
-    "user-agent":
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
-  },
+  headers: header,
 ));
+
+Future<void> fetchToken() async {
+  if (header["cookie"] == null) {
+    try {
+      
+    } catch (e) {
+      debugPrint("erro no fetchToken at ExtensionNHen.net: $e");
+    }
+    var data = await dio.get("https://wesley3king.github.io/reactJS/token/token_n.json");
+    debugPrint("token: ${data.data['cookie']}");
+    header["cookie"] = data.data['cookie'];
+    dio.options.headers = header;
+  } else {
+    debugPrint("token found!");
+  }
+}
 
 Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
   const String indentify = "div.index-container";
   List<ModelHomePage> models = [];
+
+  /// verify token
+  await fetchToken();
   try {
     var dataResponse = await dio.get("https://nhentai.net/");
     Parser parser = Parser(dataResponse.data);
@@ -101,6 +120,8 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
 // manga Detail
 Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   const String indenify = "div#info";
+  /// verify token
+  await fetchToken();
   try {
     var dataResponse = await dio.get("https://nhentai.net/g/$link/");
     Parser parser = Parser(dataResponse.data);
@@ -157,8 +178,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       List<String> corteImg2 = corteImg1[0].split('src="');
       String page = corteImg2[1];
       // retirar a versão pequena
-      List<String> cortePage = page.split(
-          "/");
+      List<String> cortePage = page.split("/");
       String modificatedImage = cortePage[5].replaceAll("t", "");
       List<String> domain = cortePage[2].split(".");
       String domainNum = domain[0].replaceFirst("t", "");
@@ -202,6 +222,8 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
+    /// verify token
+    await fetchToken();
     var dataResponse = await dio.get("https://nhentai.net/search/?q=$txt");
     Parser parser = Parser(dataResponse.data);
 
@@ -211,8 +233,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     // projeto
     var projetoData = resultHtml.querySelectorAll("div.gallery");
     if (projetoData != null) {
-      List<Map<String, dynamic>> projetoBooks =
-          projetoData.map((Result data) {
+      List<Map<String, dynamic>> projetoBooks = projetoData.map((Result data) {
         // name
         String? name = data.querySelector("a div.caption")!.text;
         // debugPrint("name: $name");
