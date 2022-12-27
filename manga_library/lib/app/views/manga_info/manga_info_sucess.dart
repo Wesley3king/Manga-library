@@ -277,7 +277,27 @@ class _SucessMangaInfoState extends State<SucessMangaInfo> with RouteAware {
                   ),
                 );
               case ChaptersStates.error:
-                return _error;
+                return VsScrollbar(
+                  controller: _scrollController,
+                  style: const VsScrollbarStyle(
+                      color: Color.fromARGB(223, 158, 158, 158)),
+                  child: ScrollablePositionedList.builder(
+                    scrollController: _scrollController,
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return MangaDetails(
+                          link: widget.link,
+                          dados: widget.dados,
+                          controller: widget.controller,
+                          chaptersController: chaptersController,
+                        );
+                      } else {
+                        return _error;
+                      }
+                    },
+                  ),
+                );
             }
           }),
     );

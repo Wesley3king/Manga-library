@@ -4,13 +4,14 @@ import 'package:manga_library/app/controllers/manga_info_controller.dart';
 import 'package:manga_library/app/models/client_data_model.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/libraries_model.dart';
+import 'package:dart_date/dart_date.dart';
 
 class UpdatesCore {
   static bool isUpdating = false;
 
   static void verifyIfIsTimeToUpdate() async {
     HiveController hiveController = HiveController();
-    if (true) { // GlobalData.settings.update != "0"
+    if (GlobalData.settings.update != "0") {
       /*
       {"option": "Nunca", "value": "0"},
       {"option": "A cada 6 Horas", "value": "6"},
@@ -19,84 +20,31 @@ class UpdatesCore {
       {"option": "Uma vez na Semana", "value": "1"}
       */
 
-      //ClientDataModel clientData = await hiveController.getClientData();
-
-      /// get time
-      String getDateTime() => '${DateTime.now()}';
-
-      List<List<String>> processDate(String date) {
-        List<String> splitedDate = date.split('.');
-        List<String> dateAndHours = splitedDate[0].split(" ");
-
-        /// hours
-        List<String> hours = dateAndHours[1].split(":");
-
-        /// date
-        List<String> dates = dateAndHours[0].split("-");
-        return [hours, dates];
-      }
-
+      ClientDataModel clientData = await hiveController.getClientData();
       // now
-      List<List<String>> dateNow = processDate("2022-12-31 23:56:43"); // getDateTime()
-      // last    2022-12-27 11:56:43
-      List<List<String>> dateLastUpdate = processDate("2023-01-01 5:56:43"); // clientData.lastUpdate
+      final DateTime nowTime = DateTime.now();
+      // last
+      final DateTime lastUpdateTime =
+          DateTime.parse(clientData.lastUpdate);
 
       /// A cada 6 Horas
-      bool verify6() {
-        if ((int.parse(dateNow[0][0]) - int.parse(dateLastUpdate[0][0])) >= 6) {
-          return true;
-        } else if ((int.parse(dateNow[0][0]) +
-                (24 - int.parse(dateLastUpdate[0][0]))) >=
-            6 && dateNow[1][2] != dateLastUpdate[1][2]) {
-          return true;
-        }
-        debugPrint("Não é hora de ATUALIZAR!");
-        return false;
-      }
+      bool verify6() => (nowTime - const Duration(hours: 6)) >= lastUpdateTime;
 
       /// A cada 12 Horas
-      bool verify12() {
-        if ((int.parse(dateNow[0][0]) - int.parse(dateLastUpdate[0][0])) >=
-            12) {
-          return true;
-        } else if ((int.parse(dateNow[0][0]) +
-                (24 - int.parse(dateLastUpdate[0][0]))) >=
-            12) {
-          return true;
-        }
-        return false;
-      }
+      bool verify12() =>
+          (nowTime - const Duration(hours: 12)) >= lastUpdateTime;
 
       /// Uma vez ao dia
-      bool verify24() {
-        if (int.parse(dateNow[1][2]) >= (int.parse(dateLastUpdate[1][2]) + 1)) {
-          return true;
-        } else if ((int.parse(dateNow[1][2]) +
-                (30 - int.parse(dateLastUpdate[1][2]))) >=
-            1) {
-          return true;
-        }
-        return false;
-      }
+      bool verify24() => (nowTime - const Duration(days: 1)) >= lastUpdateTime;
 
       /// uma vez por semana
-      bool verifyOneTimeOnWeek() {
-        if (int.parse(dateNow[1][2]) - int.parse(dateLastUpdate[1][2]) >= 7) {
-          return true;
-        } else if ((int.parse(dateNow[1][2]) +
-                (30 - int.parse(dateLastUpdate[1][2]))) >=
-            7) {
-          return true;
-        }
-        return false;
-      }
+      bool verifyOneTimeOnWeek() =>
+          (nowTime - const Duration(days: 7)) >= lastUpdateTime;
 
       /// vericar o intervalo de atualização
-      /// GlobalData.settings.update
-      switch ("6") {
+      switch (GlobalData.settings.update) {
         case "6":
-          final response = verify6();
-          if (response) {
+          if (verify6()) {
             start();
           }
           break;
@@ -116,8 +64,8 @@ class UpdatesCore {
           }
           break;
       }
-     // clientData.lastUpdate = getDateTime();
-     // await hiveController.updateClientData(clientData);
+      clientData.lastUpdate = '$nowTime';
+      await hiveController.updateClientData(clientData);
     }
   }
 

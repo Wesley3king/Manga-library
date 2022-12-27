@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/message_core.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/controllers/off_line/manga_info_off_line.dart';
@@ -55,68 +56,38 @@ class MangaInfoController {
       /// adiciona o pedaco do link para ser utilizado no histórico
       GlobalData.pieceOfLink = url;
       if (localData != null) {
-        debugPrint("existe na base de dados! / l= $url");
-
         data = localData;
         capitulosDisponiveis = localData.capitulos;
 
-        log("at offline start length: ${capitulosDisponiveis!.length}");
         GlobalData.mangaModel = localData;
         isAnOffLineBook = true;
-        // await _chaptersController.correlacionarCapitulos(
-        //     capitulosDisponiveis ?? [], data.capitulos, url
-        // );
         state.value = MangaInfoStates.sucess;
       } else {
         // operação OnLine
-        debugPrint("iniciando o fetch! / l= $url");
-
-        // identificar se a extensão trabalha em duas requisições
         final MangaInfoOffLineModel? dados;
-        // if (isTwoRequests) {
-        //   dados = await mapOfExtensions[idExtension]!.mangaDetail(url);
-        //   if (dados != null) {
-        //     data = dados;
-        //     state.value = MangaInfoStates.sucess1;
-        //   } else {
-        //     state.value = MangaInfoStates.error;
-        //   }
-        //   capitulosDisponiveis =
-        //       await fetchServiceExtensions[idExtension].fetchChapters(url);
-        //   //log("at online start: ${capitulosDisponiveis!.length}");
-        // } else {
         dados = await mapOfExtensions[idExtension]!.mangaDetail(url);
+        isAnOffLineBook = false;
         if (dados != null) {
           data = dados;
           capitulosDisponiveis = data.capitulos;
-          // state.value = MangaInfoStates.sucess;
         } else {
-          // state.value = MangaInfoStates.error;
-        }
-        // }
-
-        // log("at online start: ${capitulosDisponiveis!.length}");
-        GlobalData.mangaModel = data;
-
-        isAnOffLineBook = false;
-        if (state.value != MangaInfoStates.error) {
-          state.value = MangaInfoStates.sucess;
-        } else {
-          HomePageController.errorMessage = 'erro no null 2';
           state.value = MangaInfoStates.error;
+          MessageCore.showMessage(
+              "Falha ao Obter os Dados de: ${mapOfExtensions[idExtension]!.nome}");
         }
+        GlobalData.mangaModel = data;
       }
     } catch (e) {
-      debugPrint('$e');
-      HomePageController.errorMessage = 'erro no MangaInfo: $e';
+      debugPrint('Erro no start at MangaInfo: $e');
       state.value = MangaInfoStates.error;
+      MessageCore.showMessage("Erro em MangaInfo");
     }
   }
 
   Future<bool> updateBook(String url, int idExtension,
       {bool isAnUpdateFromCore = false, String? img}) async {
     try {
-      debugPrint("l= $url  - atualizando...");
+      // debugPrint("l= $url  - atualizando...");
 
       final MangaInfoOffLineModel? dados =
           await mapOfExtensions[idExtension]!.mangaDetail(url);
@@ -142,22 +113,12 @@ class MangaInfoController {
       if (isAnOffLineBook) {
         // is an off line book
         capitulosDisponiveis = dados.capitulos;
-        // debugPrint("nao é twoRequests: $capitulosDisponiveis");
 
-        // if (dados == null) {
-        //   debugPrint("dd off-line true");
-        //   capitulosFromOriginalServer = [];
-        // } else {
-        //   debugPrint("dd off-line false");
-        //   capitulosFromOriginalServer = dados.capitulos;
-        // }
-        // mapOfExtensions[idExtension].isTwoRequests;
         await chaptersController?.update(
             capitulosDisponiveis ?? [], url, idExtension);
 
         final MangaInfoOffLineController mangaInfoOffLineController =
             MangaInfoOffLineController();
-        debugPrint("inserindo na base de dados!");
         await mangaInfoOffLineController.updateBook(
             model: data,
             img: img ?? offLineBook?.img,
@@ -173,11 +134,13 @@ class MangaInfoController {
       }
       state.value = MangaInfoStates.loading;
       // aqui deve atualizar a view totalmente
+      MessageCore.showMessage("Atualizado com sucesso!");
       state.value = MangaInfoStates.sucess;
       return true;
     } catch (e) {
       debugPrint("erro no update book at mangaInfoController: $e");
       state.value = MangaInfoStates.error;
+      MessageCore.showMessage("Erro ao atualizar");
       return false;
     }
   }
@@ -214,7 +177,7 @@ class ChaptersController {
     state.value = ChaptersStates.loading;
     // GlobalData.capitulosDisponiveis;
     try {
-      debugPrint("chapter offline: ${MangaInfoController.isAnOffLineBook}");
+      // debugPrint("chapter offline: ${MangaInfoController.isAnOffLineBook}");
       if (MangaInfoController.isAnOffLineBook) {
         // capitulosCorrelacionados = listaCapitulos;
 
@@ -226,29 +189,17 @@ class ChaptersController {
         await correlacionarMarks(idExtension, link); // , listaCapitulos
 
       } else {
-        // if (MangaInfoController.isTwoRequests) {
-        //   await correlacionarCapitulos(
-        //       listaCapitulosDisponiveis ?? [], listaCapitulos, link,
-        //       idExtension: idExtension);
-        // } else {
-        //   print("isn't twoRequests");
         capitulosCorrelacionados = listaCapitulos;
         await updateChapters(link, idExtension);
         await correlacionarMarks(idExtension, link);
         // }
       }
-      // disponibilizar os capitulos correlacionados
-
-      // MangaInfoController.capitulosCorrelacionados = capitulosCorrelacionados;
-      // GlobalData.capitulosDisponiveis;
-      // print("");
       setCountinueToRead();
       GlobalData.mangaModel.capitulos = capitulosCorrelacionados;
       state.value = ChaptersStates.sucess;
     } catch (e) {
-      HomePageController.errorMessage = 'erro no catch ChapterController: $e';
-      debugPrint('erro no start ChapterController');
-      debugPrint('$e');
+      MessageCore.showMessage('Erro no start at ChaptersController');
+      debugPrint('Erro no start ChaptersController: $e');
       state.value = ChaptersStates.error;
     }
   }
@@ -263,16 +214,13 @@ class ChaptersController {
           chaptersList: listaCapitulos);
       await updateChapters(link, idExtension);
       await correlacionarMarks(idExtension, link);
-      
+
       state.value = ChaptersStates.loading;
-      log("atualizando a view!");
+      debugPrint("atualizando a view!");
       state.value = ChaptersStates.sucess;
       return true;
     } catch (e) {
-      // HomePageController.errorMessage =
-      //     'erro no update at ChapterController: $e';
-      debugPrint('erro no update ChapterController');
-      debugPrint('$e');
+      debugPrint('Erro no update ChaptersController: $e');
       state.value = ChaptersStates.error;
       return false;
     }
@@ -281,7 +229,6 @@ class ChaptersController {
   Future<void> updateChapters(String link, int idExtension) async {
     state.value = ChaptersStates.loading;
     try {
-      debugPrint('update chapters');
       // conseguir os dados
       ClientDataModel clientData = await _hiveController.getClientData();
       // achar os capitulos lidos do manga pelo link
@@ -298,13 +245,9 @@ class ChaptersController {
       }
       debugPrint('$capitulosLidos');
       List<Capitulos> listaCapitulosCorrelacionadosLidos = [];
-      // debugPrint("caplist: ${listaCapitulosDisponiveis?.length}");
 
       if (capitulosLidos.isNotEmpty) {
         for (int i = 0; i < capitulosCorrelacionados.length; ++i) {
-          // var item = capitulosCorrelacionados[i];
-          // print(
-          //     "item: ${item.capitulo} / ${item.disponivel ? "true" : "false"} / ${item.readed ? "lido" : "não lido"}");
           bool adicionado = false;
           for (int cap = 0; cap < capitulosLidos.length; ++cap) {
             if ((capitulosCorrelacionados[i].id).toString() ==
@@ -341,11 +284,11 @@ class ChaptersController {
         // debugPrint('$listaCapitulosCorrelacionadosLidos');
         capitulosCorrelacionados = listaCapitulosCorrelacionadosLidos;
       }
-      debugPrint('- updateChapters - end');
+      debugPrint('--------- update chapters finalizado -----------');
       setCountinueToRead();
       state.value = ChaptersStates.sucess;
     } catch (e) {
-      debugPrint('erro no updateChapters at ChaptersController: $e');
+      debugPrint('Erro no updateChapters at ChaptersController: $e');
       state.value = ChaptersStates.error;
     }
   }
@@ -361,14 +304,12 @@ class ChaptersController {
           continueToRead = ContinueToReadModel(
               id: capitulosCorrelacionados[i - 1].id,
               chapter: capitulosCorrelacionados[i - 1].capitulo,
-              isStart: false
-            );
+              isStart: false);
         } else {
           continueToRead = ContinueToReadModel(
               id: capitulosCorrelacionados[i].id,
               chapter: capitulosCorrelacionados[i].capitulo,
-              isStart: false
-            );
+              isStart: false);
         }
         foundChapter = true;
         debugPrint('CountinueToRead - Configurado!');
@@ -380,15 +321,14 @@ class ChaptersController {
       continueToRead = ContinueToReadModel(
           id: capitulosCorrelacionados[maxIndice].id,
           chapter: capitulosCorrelacionados[maxIndice].capitulo,
-          isStart: true
-      );
+          isStart: true);
     }
   }
 
   Future<void> marcarDesmarcar(String id, String link,
       Map<String, String> nameAndImage, int idExtension) async {
     ClientDataModel clientData = await _hiveController.getClientData();
-    debugPrint('${clientData.capitulosLidos}');
+    // debugPrint('${clientData.capitulosLidos}');
 
     // achar o manga pelo link
     // List<dynamic> capitulosLidos = [];
@@ -421,10 +361,10 @@ class ChaptersController {
         "link": completUrl,
         "capitulos": [id],
       });
-      debugPrint('não existe! adicionado...');
+      debugPrint('O model não existe! adicionando...');
       await _hiveController.updateClientData(clientData);
     }
-    debugPrint('marcar desmarcar concluido!');
+    // debugPrint('marcar desmarcar concluido!');
   }
 
   // ========================================================================
@@ -664,8 +604,6 @@ class DialogController {
       bool existe = false;
       bool executed = false;
       for (int iBook = 0; iBook < dataOcultLibrary[i].books.length; ++iBook) {
-        // print(
-        //     "i = $iBook / ${dataLibrary[i].books.length} -- tst: ${(dataLibrary[i].library == lista[i]['library']) && (dataLibrary[i].books[iBook].link == book['link']) && (dataLibrary[i].books[iBook].idExtension == book['idExtension'])} \n ${dataLibrary[i].library} == ${lista[i]['library']} && ${dataLibrary[i].books[iBook].link} == ${book['link']} ee ${dataLibrary[i].books[iBook].idExtension} == ${book['idExtension']}");
         if ((dataOcultLibrary[i].library == lista[i]['library']) &&
             (dataOcultLibrary[i].books[iBook].link == book['link']) &&
             (dataOcultLibrary[i].books[iBook].idExtension ==
@@ -738,5 +676,3 @@ class DialogController {
     }
   }
 }
-
-// enum DialogStates { start, loading, sucess, error }
