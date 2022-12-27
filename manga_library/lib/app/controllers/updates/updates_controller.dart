@@ -10,18 +10,16 @@ class UpdatesCore {
 
   static void verifyIfIsTimeToUpdate() async {
     HiveController hiveController = HiveController();
-    if (GlobalData.settings.update != "0") {
-      /// implemet teste
+    if (true) { // GlobalData.settings.update != "0"
       /*
       {"option": "Nunca", "value": "0"},
-                {"option": "A cada 6 Horas", "value": "6"},
-                {"option": "A cada 12 Horas", "value": "12"},
-                {"option": "Uma vez no Dia", "value": "24"},
-                {"option": "Uma vez na Semana", "value": "1"}
-                
-                (int.parse(dateNow[1][1]) >= (int.parse(dateLastUpdate[1][1]) + 1)) && 
-          (int.parse(dateNow[1][2]) >= (int.parse(dateLastUpdate[1][2]) + 1)) && (*/
-      ClientDataModel clientData = await hiveController.getClientData();
+      {"option": "A cada 6 Horas", "value": "6"},
+      {"option": "A cada 12 Horas", "value": "12"},
+      {"option": "Uma vez no Dia", "value": "24"},
+      {"option": "Uma vez na Semana", "value": "1"}
+      */
+
+      //ClientDataModel clientData = await hiveController.getClientData();
 
       /// get time
       String getDateTime() => '${DateTime.now()}';
@@ -39,9 +37,9 @@ class UpdatesCore {
       }
 
       // now
-      List<List<String>> dateNow = processDate(getDateTime());
-      // last
-      List<List<String>> dateLastUpdate = processDate(clientData.lastUpdate);
+      List<List<String>> dateNow = processDate("2022-12-31 23:56:43"); // getDateTime()
+      // last    2022-12-27 11:56:43
+      List<List<String>> dateLastUpdate = processDate("2023-01-01 5:56:43"); // clientData.lastUpdate
 
       /// A cada 6 Horas
       bool verify6() {
@@ -94,9 +92,11 @@ class UpdatesCore {
       }
 
       /// vericar o intervalo de atualização
-      switch (GlobalData.settings.update) {
+      /// GlobalData.settings.update
+      switch ("6") {
         case "6":
-          if (verify6()) {
+          final response = verify6();
+          if (response) {
             start();
           }
           break;
@@ -116,8 +116,8 @@ class UpdatesCore {
           }
           break;
       }
-      clientData.lastUpdate = getDateTime();
-      await hiveController.updateClientData(clientData);
+     // clientData.lastUpdate = getDateTime();
+     // await hiveController.updateClientData(clientData);
     }
   }
 

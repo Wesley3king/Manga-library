@@ -23,28 +23,17 @@ final Dio dio = Dio(BaseOptions(
   headers: header,
 ));
 
-Future<void> fetchToken() async {
-  if (header["cookie"] == null) {
-    try {
-      
-    } catch (e) {
-      debugPrint("erro no fetchToken at ExtensionNHen.net: $e");
-    }
-    var data = await dio.get("https://wesley3king.github.io/reactJS/token/token_n.json");
-    debugPrint("token: ${data.data['cookie']}");
-    header["cookie"] = data.data['cookie'];
-    dio.options.headers = header;
-  } else {
-    debugPrint("token found!");
-  }
+set setCookie(String cookie) {
+  header["cookie"] = cookie;
+  dio.options.headers = header;
 }
 
-Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
+Future<List<ModelHomePage>> scrapingHomePage(String cookie) async {
   const String indentify = "div.index-container";
   List<ModelHomePage> models = [];
 
-  /// verify token
-  await fetchToken();
+  /// configure cookie
+  setCookie = cookie;
   try {
     var dataResponse = await dio.get("https://nhentai.net/");
     Parser parser = Parser(dataResponse.data);
@@ -118,10 +107,13 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
 }
 
 // manga Detail
-Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
+Future<MangaInfoOffLineModel?> scrapingMangaDetail(List<String> data) async {
+  final String link = data[0];
+  final String cookie = data[1];
   const String indenify = "div#info";
-  /// verify token
-  await fetchToken();
+
+  /// configure cookie
+  setCookie = cookie;
   try {
     var dataResponse = await dio.get("https://nhentai.net/g/$link/");
     Parser parser = Parser(dataResponse.data);
@@ -220,10 +212,12 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ----------------------------------------------------------------------------
 //                     === SEARCH ===
 
-Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
+Future<List<Map<String, dynamic>>> scrapingSearch(List<String> data) async {
+  final String txt = data[0];
+  final String cookie = data[1];
   try {
-    /// verify token
-    await fetchToken();
+    /// configure cookie
+    setCookie = cookie;
     var dataResponse = await dio.get("https://nhentai.net/search/?q=$txt");
     Parser parser = Parser(dataResponse.data);
 

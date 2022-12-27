@@ -28,7 +28,5 @@ void main() {
     var data = await extend.homePage();
     var dados = await extend.search("brandish");
     debugPrint("name: ${dados[0].img}");
-    /// https://t7.nhentai.net/galleries/2405704/thumb.jpg
-    /// data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
   });
 }

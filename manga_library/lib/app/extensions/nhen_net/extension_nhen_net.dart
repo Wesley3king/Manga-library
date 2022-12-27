@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/extensions/nhen_net/scraping/extension_nhen_net_scraping.dart';
@@ -21,30 +20,33 @@ class ExtensionNHenNet implements Extension {
   @override
   Map<String, dynamic>? fetchImagesHeader;
 
-  final Map<String, dynamic> header = {
-    "cookie": null,
-    "sec-ch-ua":
-        '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Linux"',
-    "sec-fetch-dest": "document",
-    "sec-fetch-mode": "navigate",
-    "sec-fetch-site": "none",
-    "sec-fetch-user": "?1",
-    "upgrade-insecure-requests": "1",
-    "user-agent":
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
-  };
-  final Dio dio = Dio();
+  String? cookie;
+
+  Future<void> verifyToken() async {
+    if (cookie == null) {
+      try {
+        var data = await dio
+            .get("https://wesley3king.github.io/reactJS/token/token_n.json");
+        debugPrint("token: ${data.data['cookie']}");
+        cookie = data.data['cookie'];
+      } catch (e) {
+        debugPrint("erro no fetchToken at ExtensionNHen.net: $e");
+      }
+    } else {
+      debugPrint("token found!");
+    }
+  }
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    return await compute(scrapingHomePage, 0);
+    await verifyToken();
+    return await compute(scrapingHomePage, cookie!);
   }
 
   @override
   Future<MangaInfoOffLineModel?> mangaDetail(String link) async {
-    return await compute(scrapingMangaDetail, link);
+    await verifyToken();
+    return await compute(scrapingMangaDetail, [link, cookie!]);
   }
 
   @override
@@ -64,6 +66,7 @@ class ExtensionNHenNet implements Extension {
   Future<List<Books>> search(String txt) async {
     try {
       debugPrint("NHENT.NET SEARCH STARTING...");
+      await verifyToken();
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 
@@ -76,7 +79,7 @@ class ExtensionNHenNet implements Extension {
         }
       }
 
-      List<Map> books = await compute(scrapingSearch, buffer.toString());
+      List<Map> books = await compute(scrapingSearch, [buffer.toString(), cookie!]);
 
       return books.map<Books>((json) => Books.fromJson(json)).toList();
     } catch (e) {
