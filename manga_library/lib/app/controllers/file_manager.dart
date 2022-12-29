@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class FileManager {
     try {
       // aqui cortamos o caminho da imagem para pegar seu path e deletar o directório
       List<String> paths = imagePath.split("/0.");
-      debugPrint("path delete: ${paths[0]}");
+      // debugPrint("path delete: ${paths[0]}");
       Directory dir = Directory(paths[0]);
       await dir.delete(recursive: true);
       return true;
@@ -55,9 +54,9 @@ class FileManager {
       if (file.existsSync()) {
         debugPrint("este arquivo existe!");
       } else {
-        debugPrint("este arquivo não existe!");
+        // debugPrint("este arquivo não existe!");
         var resArchive = await file.create(recursive: false);
-        debugPrint("archive: ${resArchive.path}");
+        // debugPrint("archive: ${resArchive.path}");
 
         var jsonData = json.encode(backupData);
         var bytes = utf8.encode(jsonData);
@@ -101,13 +100,13 @@ class FileManager {
           allowedExtensions: ['gz']);
       if (data == null) {
         //status += "sem selecionar";
-        debugPrint("não selecionou um arquivo!");
+        // debugPrint("não selecionou um arquivo!");
         return false;
       } else {
         // modifique o caminho  com.example.manga_library com.king.manga_library com.king.manga_library.teste
         final path = data.files.single.path!
             .replaceFirst("Android/data/com.example.manga_library/files/", "");
-        log("arquive - path: $path");
+        // log("arquive - path: $path");
         //status += "p= $path";
         //File file = File(path);
         return await readGZFile(path);
@@ -122,10 +121,10 @@ class FileManager {
     try {
       final data = await FilePicker.platform.getDirectoryPath();
       if (data == null) {
-        log("não foi selecionado uma file!");
+        // log("não foi selecionado uma file!");
         return null;
       } else {
-        log("path: $data");
+        // log("path: $data");
         return data;
       }
     } catch (e) {
@@ -134,17 +133,4 @@ class FileManager {
     }
   }
 }
-
-// void deleteFile() async {
-//   // is working = true
-//   try {
-//     File file = File("/storage/emulated/0/image.jpg");
-
-//     var res = await file.delete(recursive: false);
-//     debugPrint("$res");
-//   } catch (e) {
-//     print('erro no delete file: $e');
-//   }
-// }
-
 

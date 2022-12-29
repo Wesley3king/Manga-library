@@ -18,7 +18,9 @@ class ExtensionNHen implements Extension {
   @override
   bool nsfw = true;
   @override
-  Map<String, dynamic>? fetchImagesHeader;
+  Map<String, dynamic>? fetchImagesHeader = {
+    "referer": "https://nhentai.to/"
+  };
 
   @override
   Future<List<ModelHomePage>> homePage() async {

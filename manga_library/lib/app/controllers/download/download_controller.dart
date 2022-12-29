@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
+import 'package:manga_library/app/controllers/message_core.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
@@ -74,6 +75,7 @@ class DownloadController {
           ++model.attempts;
           // debugPrint("erro attempts: ${model.attempts}");
           if (model.attempts >= 3) {
+            MessageCore.showMessage("Download Error: +3 Tentativas com falhas");
             if (model.attempts == 4) {
               model.state?.value = DownloadStates.download;
             } else {
@@ -118,6 +120,7 @@ class DownloadController {
     final HiveController hiveController = HiveController();
     try {
       log("processOneChapter - DOWNLOAD - pages= ${capitulo.pages.length}");
+
       /// verifica se este capítulo é de uma novel
       if (capitulo.pages[0].contains("== NOVEL READER ==")) {
         return await downloadNovel(
@@ -250,6 +253,7 @@ class DownloadController {
         });
         if (imageId == null) {
           log("SEM PERMISSÃO!");
+          MessageCore.showMessage("Download Error: SEM PERMISSÃO");
           return null;
         }
 
@@ -271,38 +275,35 @@ class DownloadController {
   }
 
   /// baixa uma novel
-  Future<bool> downloadNovel({
-    required Capitulos capitulo,
-    required String link,
-    required String pieceOfLink,
-    required String img,
-    required String name,
-    required int idExtension,
-    required int index,
-    required HiveController hiveController
-  }) async {
-      /// pega todos os downloads
-      List<DownloadPagesModel> downloadModels =
-          await hiveController.getDownloads();
-      /// adiciona o download a memória
-      downloadModels.add(DownloadPagesModel(
-          id: capitulo.id,
-          chapter: capitulo.capitulo,
-          idExtension: idExtension,
-          link: pieceOfLink,
-          img: img,
-          name: name,
-          pages: capitulo.pages));
+  Future<bool> downloadNovel(
+      {required Capitulos capitulo,
+      required String link,
+      required String pieceOfLink,
+      required String img,
+      required String name,
+      required int idExtension,
+      required int index,
+      required HiveController hiveController}) async {
+    /// pega todos os downloads
+    List<DownloadPagesModel> downloadModels =
+        await hiveController.getDownloads();
 
-      /// save in database
-      bool isSaved = await hiveController.updateDownloads(downloadModels);
-      if (!isSaved) return false;
+    /// adiciona o download a memória
+    downloadModels.add(DownloadPagesModel(
+        id: capitulo.id,
+        chapter: capitulo.capitulo,
+        idExtension: idExtension,
+        link: pieceOfLink,
+        img: img,
+        name: name,
+        pages: capitulo.pages));
 
-      mangaInfoController?.updateChaptersAfterDownload(
-        link,
-        idExtension
-      );
-      log("capitulo ${capitulo.capitulo} baixado com sucesso!!!");
-      return true;
+    /// save in database
+    bool isSaved = await hiveController.updateDownloads(downloadModels);
+    if (!isSaved) return false;
+
+    mangaInfoController?.updateChaptersAfterDownload(link, idExtension);
+    log("capitulo ${capitulo.capitulo} baixado com sucesso!!!");
+    return true;
   }
 }

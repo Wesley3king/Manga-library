@@ -70,6 +70,7 @@ class MangaInfoController {
         if (dados != null) {
           data = dados;
           capitulosDisponiveis = data.capitulos;
+          state.value = MangaInfoStates.sucess;
         } else {
           state.value = MangaInfoStates.error;
           MessageCore.showMessage(

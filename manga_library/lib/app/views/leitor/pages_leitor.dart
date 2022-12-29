@@ -6,6 +6,7 @@ import 'dart:core';
 import 'package:manga_library/app/controllers/leitor_controller.dart';
 // import 'package:manga_library/app/views/components/leitor/pages_states.dart';
 import 'package:manga_library/app/controllers/full_screen.dart';
+import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/views/leitor/novel_reader/novel_reader.dart';
 import 'package:manga_library/app/views/leitor/scrollable_list_view/scrollable_list_reader.dart';
@@ -77,7 +78,16 @@ class _PagesLeitorState extends State<PagesLeitor> {
         return FileImage(
             File(widget.leitorController.atualChapter.downloadPages[index]));
       } else {
-        return NetworkImage(widget.leitorController.atualChapter.pages[index]);
+        final dynamic firtConvert = mapOfExtensions[widget.idExtension]?.fetchImagesHeader;
+        Map<String, String>? data;
+        if (firtConvert != null) {
+          try {
+            data = Map<String, String>.from(firtConvert);
+          } catch (e) {
+            debugPrint("erro no returnAnImageProvider at photoViewLeitor: $e");
+          }
+        }
+        return NetworkImage(widget.leitorController.atualChapter.pages[index], headers: data);
       }
     }
 
@@ -116,6 +126,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
         child: MyPageImage(
           capitulo: widget.leitorController.atualChapter,
           index: index,
+          idExtension: widget.idExtension,
           filterQuality: filterQuality,
         ),
       ),
@@ -187,6 +198,7 @@ class _PagesLeitorState extends State<PagesLeitor> {
             MyPageImage(
               capitulo: widget.leitorController.atualChapter,
               index: index,
+              idExtension: widget.idExtension,
               filterQuality: filterQuality,
             )
           ],
@@ -336,10 +348,12 @@ class MyPageImage extends StatefulWidget {
   final Capitulos capitulo;
   final int index;
   final FilterQuality filterQuality;
+  final int idExtension;
   const MyPageImage(
       {super.key,
       required this.capitulo,
       required this.index,
+      required this.idExtension,
       required this.filterQuality});
 
   @override
@@ -350,6 +364,15 @@ class _MyPageImageState extends State<MyPageImage>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    final dynamic firtConvert = mapOfExtensions[widget.idExtension]?.fetchImagesHeader;
+        Map<String, String>? data;
+        if (firtConvert != null) {
+          try {
+            data = Map<String, String>.from(firtConvert);
+          } catch (e) {
+            debugPrint("erro no returnAnImageProvider at photoViewLeitor: $e");
+          }
+        }
     return IntrinsicHeight(
       child: widget.capitulo.download
           ? Image.file(
@@ -367,6 +390,7 @@ class _MyPageImageState extends State<MyPageImage>
           : Image.network(
               widget.capitulo.pages[widget.index],
               filterQuality: widget.filterQuality,
+              headers: data,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return SizedBox(

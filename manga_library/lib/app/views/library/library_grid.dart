@@ -67,7 +67,7 @@ class _LibraryItensState extends State<LibraryItens>
                         widget.data.books[index].restantChapters.toString(),
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             // fontWeight: FontWeight.bold,
                           ),
                       ),

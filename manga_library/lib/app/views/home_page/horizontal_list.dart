@@ -30,21 +30,24 @@ class _HorizontalListState extends State<HorizontalList>
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                  width: 145.0,
-                  height: 176.0,
-                  child: CachedNetworkImage(
-                    imageUrl: data.img,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey,
-                    ),
-                    errorWidget: (context, url, error) => const Center(
-                      child: Icon(Icons.report_problem),
-                    ),
-                    // useOldImageOnUrlChange: true,
-                    fit: BoxFit.fill,
-                  )
-                ),
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(9)),
+                child: SizedBox(
+                    width: 145.0,
+                    height: 176.0,
+                    child: CachedNetworkImage(
+                      imageUrl: data.img,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey,
+                      ),
+                      errorWidget: (context, url, error) => const Center(
+                        child: Icon(Icons.report_problem),
+                      ),
+                      // useOldImageOnUrlChange: true,
+                      fit: BoxFit.fill,
+                    )
+                  ),
+              ),
               Flexible(
                 child: Text(data.name,
                     overflow: TextOverflow.ellipsis,
