@@ -8,6 +8,8 @@ void main() {
 
   test("deve retornar uma lista de destaques", () async {
     var data = await extend.homePage();
+    // https://img.mangaschan.com/uploads/manga-images/m/martial-arts-reigns/thumbnail.jpg
+    // //img.mangaschan.com/uploads/manga-images/m/martial-arts-reigns/thumbnail.jpg
     debugPrint("length: ${data.length}");
   });
   test("deve retornar um ModelMangaInfoOffLine", () async {

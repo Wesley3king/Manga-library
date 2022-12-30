@@ -32,7 +32,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img ?? ""
+        "img": 'https:$img'
       });
       // debugPrint("book adicionado!!!");
     }
@@ -67,7 +67,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name!.trim(),
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img ?? ""
+        "img": 'https:$img'
       });
     }
     // print(books);
@@ -103,7 +103,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img ?? ""
+        "img": 'https:$img'
       });
       // debugPrint("book adicionado!!!");
     }
@@ -222,7 +222,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
-        img: img ?? "erro",
+        img: 'https:$img',
         authors: authors,
         state: status ?? "Estado desconhecido",
         link: "https://mangaschan.com/manga/$link/",
@@ -249,18 +249,18 @@ Future<List<String>> scrapingLeitor(String id) async {
     var parser = await Chaleno().load("https://mangaschan.com/$id/");
 
     Result? area = parser?.querySelector("div#readerarea > noscript");
-    debugPrint("area: ${area?.html}");
+    // debugPrint("area: ${area?.html}");
 
     List<String>? resultHtml = area?.html?.split('" alt=');
-    // debugPrint('result: $resultHtml');
+    debugPrint('result: $resultHtml');
 
     List<String> resultPages = [];
     if (resultHtml != null) {
       for (String image in resultHtml) {
-        if (image.contains('src="http')) {
+        if (image.contains('src="//img.manga')) {
           List<String>? page = image.split('src="'); // image on index 1
           // debugPrint("img: $page");
-          resultPages.add(page[1]);
+          resultPages.add('https:${page[1]}');
         }
       }
     }
