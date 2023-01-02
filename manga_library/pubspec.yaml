@@ -62,6 +62,7 @@ dependencies:
   screen_brightness: ^0.2.2
   fluttertoast: ^8.1.2
   dart_date: ^1.1.1
+  url_launcher: ^6.1.7
   #flutter_animated_icons: ^1.0.1
 
 dev_dependencies:
@@ -106,6 +107,7 @@ flutter:
   assets:
     - assets/imgs/new-icon-manga-mini.png
     - assets/imgs/grid-image-ready.png
+    - assets/imgs/git-hub-icon.png
     # extesion posters
     - assets/extesion_posters/Manga-Yabu.png
     - assets/extesion_posters/Mundo-Manga-Kun.png

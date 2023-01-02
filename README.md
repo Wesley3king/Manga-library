@@ -1,2 +1,3 @@
 # Manga library
- a new project
+
+a manga and novel reader for PT-BR

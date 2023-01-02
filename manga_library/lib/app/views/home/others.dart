@@ -96,7 +96,7 @@ class _OthersPageState extends State<OthersPage> {
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Sobre e Manual de Istruções'),
-              onTap: () {},
+              onTap: () => GoRouter.of(context).push('/about'),
             ),
           ],
         ),

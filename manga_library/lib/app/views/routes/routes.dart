@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/services/auth_service.dart';
+import 'package:manga_library/app/views/about/about_page.dart';
 import 'package:manga_library/app/views/auth/password_screen.dart';
 import 'package:manga_library/app/views/configurations/backup_config/backup.dart';
 import 'package:manga_library/app/views/configurations/config_options.dart';
@@ -142,5 +143,9 @@ final routes = GoRouter(
           int idExtension = int.parse(state.params['extension']!);
           return SearchShowResultsPage(idExtension: idExtension);
         },
+      ),
+      GoRoute(
+        path: '/about',
+        builder: (context, state) => const AboutPage(),
       ),
     ]);
