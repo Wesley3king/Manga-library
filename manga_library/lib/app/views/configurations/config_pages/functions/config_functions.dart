@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:manga_library/app/views/configurations/config_pages/controller/page_config_controller.dart';
+import 'package:system_settings/system_settings.dart';
 
 import '../../../../controllers/system_config.dart';
 import '../../../../models/globais.dart';
@@ -23,32 +24,31 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Atualizar":
+  "Atualizar": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor de Atualizar: $value");
+    GlobalData.settings.update = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "Atualizar as Capas": (dynamic value, SettingsOptionsController controller) {
+    debugPrint("alterar o valor de Tamanho dos quadros: $value");
+    GlobalData.settings.updateTheCovers = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
+  "Senha da Biblioteca Oculta":
       (dynamic value, SettingsOptionsController controller) {
-        debugPrint("alterar o valor de Atualizar: $value");
-        GlobalData.settings.update = value;
-        final ConfigSystemController configSystemController =
-            ConfigSystemController();
-        configSystemController.update(settings);
-        controller.updateSetting();
-      },
-  "Atualizar as Capas":
-      (dynamic value, SettingsOptionsController controller) {
-        debugPrint("alterar o valor de Tamanho dos quadros: $value");
-        GlobalData.settings.updateTheCovers = value;
-        final ConfigSystemController configSystemController =
-            ConfigSystemController();
-        configSystemController.update(settings);
-        controller.updateSetting();
-      },
-  "Senha da Biblioteca Oculta": (dynamic value, SettingsOptionsController controller) {
-        debugPrint("alterar o valor deSenha da Biblioteca Oculta: $value");
-        GlobalData.settings.hiddenLibraryPassword = value;
-        final ConfigSystemController configSystemController =
-            ConfigSystemController();
-        configSystemController.update(settings);
-        controller.updateSetting();
-      },
+    debugPrint("alterar o valor deSenha da Biblioteca Oculta: $value");
+    GlobalData.settings.hiddenLibraryPassword = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Tema": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings.theme = value;
@@ -113,7 +113,8 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Manter a tela ligada": (dynamic value, SettingsOptionsController controller) {
+  "Manter a tela ligada":
+      (dynamic value, SettingsOptionsController controller) {
     debugPrint("valor de Manter a tela ligada: $value");
     GlobalData.settings.keepScreenOn = value;
     final ConfigSystemController configSystemController =
@@ -169,7 +170,8 @@ Map<String, Function> settingsFunctions = {
         ConfigSystemController();
     configSystemController.update(settings);
   },
-  "Black and White filter": (dynamic value, SettingsOptionsController? controller) {
+  "Black and White filter":
+      (dynamic value, SettingsOptionsController? controller) {
     debugPrint("valor de Black and White filter: $value");
     GlobalData.settings.blackAndWhiteFilter = value;
     final ConfigSystemController configSystemController =
@@ -229,8 +231,7 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Multiplas Pesquisas":
-      (dynamic value, SettingsOptionsController controller) {
+  "Multiplas Pesquisas": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings.multipleSearches = value;
     final ConfigSystemController configSystemController =
@@ -254,7 +255,10 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Limpar o Cache": (dynamic value, SettingsOptionsController controller) {},
+  "Limpar o Cache": (dynamic value, SettingsOptionsController controller) {
+    // OpenSettings.openAppSetting();
+    SystemSettings.app();
+  },
   "Restaurar": (dynamic value, SettingsOptionsController controller) {
     final SystemController systemController = SystemController();
     systemController.restartApp();

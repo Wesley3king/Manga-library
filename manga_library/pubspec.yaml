@@ -63,6 +63,7 @@ dependencies:
   fluttertoast: ^8.1.2
   dart_date: ^1.1.1
   url_launcher: ^6.1.7
+  system_settings: ^2.1.0
   #flutter_animated_icons: ^1.0.1
 
 dev_dependencies:
