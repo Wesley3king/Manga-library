@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/views/about/controller/about_page_controller.dart';
 import 'package:manga_library/app/views/about/home/about_home.dart';
+import 'package:manga_library/app/views/about/manual/backup/manual_backup.dart';
+import 'package:manga_library/app/views/about/manual/downloads/manual_downloads.dart';
+import 'package:manga_library/app/views/about/manual/extensions/manual_extensions.dart';
+import 'package:manga_library/app/views/about/manual/library/manual_library.dart';
+import 'package:manga_library/app/views/about/manual/manual.dart';
+import 'package:manga_library/app/views/about/manual/ocult_library/manual_ocult_library.dart';
+import 'package:manga_library/app/views/about/manual/updates/manual_updates.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -15,17 +22,34 @@ class _AboutPageState extends State<AboutPage> {
   Widget stateManagement(AboutPageStates state) {
     switch (state) {
       case AboutPageStates.home:
-        return const AboutHomePage();
+        return AboutHomePage(controller: controller);
+      case AboutPageStates.manual:
+        return ManualPage(controller: controller);
       case AboutPageStates.library:
-        return Container();
+        return const ManualLibraryPage();
       case AboutPageStates.ocultLibrary:
-        return Container();
+        return const ManualOcultLibraryPage();
       case AboutPageStates.backup:
-        return Container();
+        return const ManualBackupPage();
       case AboutPageStates.updates:
-        return Container();
+        return const ManualUpdatesPage();
       case AboutPageStates.extensions:
-        return Container();
+        return const ManualExtensionsPage();
+      case AboutPageStates.downloads:
+        return const ManualDownloadsPage();
+    }
+  }
+
+  /// POP
+  Future<bool> exitPage() async {
+    if (controller.state.value == AboutPageStates.home) {
+      return true;
+    } else if (controller.state.value == AboutPageStates.manual) {
+      controller.state.value = AboutPageStates.home;
+      return false;
+    } else {
+      controller.state.value = AboutPageStates.manual;
+      return false;
     }
   }
 
@@ -35,9 +59,12 @@ class _AboutPageState extends State<AboutPage> {
       appBar: AppBar(
         title: const Text("Sobre"),
       ),
-      body: AnimatedBuilder(
-        animation: controller.state,
-        builder: (context, child) => stateManagement(controller.state.value),
+      body: WillPopScope(
+        onWillPop: exitPage,
+        child: AnimatedBuilder(
+          animation: controller.state,
+          builder: (context, child) => stateManagement(controller.state.value),
+        ),
       ),
     );
   }

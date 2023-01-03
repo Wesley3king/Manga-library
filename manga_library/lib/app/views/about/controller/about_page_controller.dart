@@ -11,9 +11,11 @@ class AboutPageController {
 
 enum AboutPageStates {
   home,
+  manual,
   library,
   ocultLibrary,
   backup,
   extensions,
-  updates
+  updates,
+  downloads
 }
