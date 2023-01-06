@@ -109,6 +109,13 @@ flutter:
     - assets/imgs/new-icon-manga-mini.png
     - assets/imgs/grid-image-ready.png
     - assets/imgs/git-hub-icon.png
+    # manual imgs
+    - assets/manual-imgs/library-1.png
+    - assets/manual-imgs/library-2.png
+    - assets/manual-imgs/library-3.png
+    - assets/manual-imgs/ocult-library-1.png
+    - assets/manual-imgs/downloads-1.png
+    - assets/manual-imgs/downloads-2.png
     # extesion posters
     - assets/extesion_posters/Manga-Yabu.png
     - assets/extesion_posters/Mundo-Manga-Kun.png
