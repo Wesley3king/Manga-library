@@ -37,6 +37,15 @@ class ManualLibraryPage extends StatelessWidget {
             const Text("Para renomear ou deletar uma Categoria clique no icone de lapis, aparecera uma lista com as Categorias, pressionando no icone lateral de uma categoria aparecera as opções renomear e deletar."),
             const SizedBox(height: 5),
             Image.asset("assets/manual-imgs/library-2.png", width: 200, height: 250,),
+            const Text("> Adicionando Mangás/novels a Biblioteca",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold
+              ),),
+            const SizedBox(height: 8),
+            const Text("Você deve buscar pelos seus livros favoritos na opção Navegar. ao acha-lo em uma extensão clique na opção adicionar a biblioteca."),
+            Image.asset("assets/manual-imgs/library-4.png", width: 200, height: 380,),
+            const Text("Assim será exibida uma tela com as categorias existentes. você pode adicionar um mesmo livro a quantas categorias quiser.")
           ],
         ),
       ),
