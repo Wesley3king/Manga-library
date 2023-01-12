@@ -24,6 +24,7 @@ class ManualPage extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.local_library_outlined),
           title: Text("Biblioteca Oculta"),
+          onTap: () => controller.setPage = AboutPageStates.ocultLibrary,
         ),
         ListTile(
           leading: Icon(Icons.backup),
