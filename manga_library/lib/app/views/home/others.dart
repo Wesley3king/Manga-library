@@ -49,7 +49,7 @@ class _OthersPageState extends State<OthersPage> {
                     width: 200,
                     height: 200,
                     child: Image.asset(
-                      'assets/imgs/new-icon-manga-mini.png',
+                      'assets/imgs/logo.png',
                       fit: BoxFit.contain,
                     ),
                   ),

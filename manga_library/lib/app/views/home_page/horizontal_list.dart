@@ -79,6 +79,7 @@ class _HorizontalListState extends State<HorizontalList>
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: widget.dados.books.length,
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               addAutomaticKeepAlives: true,
               itemBuilder: (context, index) =>
                   item(widget.dados.books[index], context),

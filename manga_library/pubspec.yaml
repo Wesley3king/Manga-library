@@ -83,18 +83,18 @@ dev_dependencies:
 #flutter_native_splash config
 flutter_native_splash:
   color: "#ffffff"
-  image: "assets/imgs/new-icon-manga-mini.png"
+  image: "assets/imgs/logo.png"
   android: true
   ios: true
 
 #flutter_launcher_icons config
 flutter_icons:
-  image_path: "assets/imgs/new-teste-icon.png"
+  image_path: "assets/imgs/logo.png"
   ios: true
   remove_alpha_ios: true
   android: "launcher_icon"
   adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/imgs/new-teste-icon.png"
+  adaptive_icon_foreground: "assets/imgs/logo.png"
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -109,6 +109,7 @@ flutter:
     - assets/imgs/new-icon-manga-mini.png
     - assets/imgs/grid-image-ready.png
     - assets/imgs/git-hub-icon.png
+    - assets/imgs/logo.png
     # manual imgs
     - assets/manual-imgs/library-1.png
     - assets/manual-imgs/library-2.png
