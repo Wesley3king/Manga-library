@@ -1,5 +1,4 @@
 import 'package:chaleno/chaleno.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../models/home_page_model.dart';

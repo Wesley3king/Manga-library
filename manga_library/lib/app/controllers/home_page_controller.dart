@@ -56,7 +56,7 @@ class HomePageController {
     try {
       debugPrint("iniciando a atualização do home page!");
       for (Extension font in extensoes) {
-        if ((GlobalData.settings.nSFWContent && GlobalData.settings.showNSFWInList && font.nsfw) || !font.nsfw) {
+        if (!font.isAnDeprecatedExtension && ((GlobalData.settings.nSFWContent && GlobalData.settings.showNSFWInList && font.nsfw) || !font.nsfw)) {
           List<ModelHomePage> extensionData = await font.homePage();
           dados.addAll(extensionData);
         }

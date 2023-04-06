@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 
 Future<dynamic> searchService(String txt) async {
-  Dio dio = Dio(BaseOptions(connectTimeout: 40000));
+  Dio dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 30)));
   try {
     var data = await dio
         .get("https://unionleitor.top/assets/busca.php?nomeManga=$txt");

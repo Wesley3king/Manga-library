@@ -6,18 +6,24 @@ import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 
 final Map<String, dynamic> header = {
-  "cookie": null,
-  "sec-ch-ua":
-      '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-  "sec-ch-ua-mobile": "?0",
-  "sec-ch-ua-platform": '"Linux"',
-  "sec-fetch-dest": "document",
-  "sec-fetch-mode": "navigate",
-  "sec-fetch-site": "none",
-  "sec-fetch-user": "?1",
-  "upgrade-insecure-requests": "1",
-  "user-agent":
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+  "Host": "nhentai.net",
+  // "Content-Type": "application/x-www-form-urlencoded",
+  "Origin": "https://nhentai.net",
+  "Cookie": null,
+  "Referer": "https://nhentai.net/",
+  "DNT": "1",
+  // "Sec-Ch-Ua":
+  //     '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+  // "Sec-Ch-Ua-Mobile": "?0",
+  "Sec-Ch-ua-Platform": '"Linux"',
+  "Sec-Fetch-Dest": "document",
+  "Sec-Fetch-Mode": "navigate",
+  "Sec-Fetch-Site": "same-origin",
+  "Sec-Fetch-User": "?1",
+  "Sec-GPC": "1",
+  "TE": "trailers",
+  "Upgrade-Insecure-Requests": "1",
+  "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"
 };
 final Dio dio = Dio(BaseOptions(
   headers: header,
@@ -29,81 +35,88 @@ set setCookie(String cookie) {
 }
 
 Future<List<ModelHomePage>> scrapingHomePage(String cookie) async {
-  const String indentify = "div.index-container";
-  List<ModelHomePage> models = [];
+  // const String indentify = "div.index-container";
+  // List<ModelHomePage> models = [];
 
-  /// configure cookie
-  setCookie = cookie;
-  try {
-    var dataResponse = await dio.get("https://nhentai.net/");
-    Parser parser = Parser(dataResponse.data);
+  // /// configure cookie
+  // setCookie = cookie;
+  // setCookie =
+  //     "cf_clearance=odTcgz3pQoe4wdLSGrxyawG5fUMBmsBxwV45qaeIi5k-1673972233-0-150; csrftoken=TFLvGlJUMBbyiOd5dsXnzgrgo06zvzsDbbSgleYa7GPencJ34xWUcAcaPQZTjW62";
+  // try {
+  //   var dataResponse = await dio.post("https://nhentai.net/",
+  //       options: Options(
+  //         contentType: "application/x-www-form-urlencoded",
+  //       ));
 
-    List<Result>? result = parser.querySelectorAll(indentify);
-    // debugPrint("${result![0].html}");
+  //   Parser parser = Parser(dataResponse.data);
 
-    List<Result>? data = result[0].querySelectorAll("div.gallery");
+  //   List<Result>? result = parser.querySelectorAll(indentify);
+  //   // debugPrint("${result![0].html}");
 
-    // inicio do processamento individual
-    List<Map<String, String>> books = [];
-    for (Result book in data!) {
-      // debugPrint("book: ${book.html}");
-      // name
-      String? name = book.querySelector("div.caption")!.text;
-      // img
-      List<String> corteNoscript = book.html!.split("<noscript><img");
-      List<String> corteImg1 = corteNoscript[1].split('" width="');
-      List<String> corteImg2 = corteImg1[0].split('src="');
-      String? img = corteImg2[1];
-      // link
-      String? link = book.querySelector("a.cover")!.href;
-      // cortar o link
-      List<String> corteLink = link!.split("g/");
-      // montar o model ModelHomeBook
-      books.add(<String, String>{
-        "name": name ?? "erro",
-        "url": corteLink[1].replaceAll("/", ""),
-        "img": img
-      });
-    }
+  //   List<Result>? data = result[0].querySelectorAll("div.gallery");
 
-    models.add(ModelHomePage.fromJson(
-        {"title": "NHentai Destaques", "books": books, "idExtension": 19}));
-    data = result[1].querySelectorAll("div.gallery");
+  //   // inicio do processamento individual
+  //   List<Map<String, String>> books = [];
+  //   for (Result book in data!) {
+  //     // debugPrint("book: ${book.html}");
+  //     // name
+  //     String? name = book.querySelector("div.caption")!.text;
+  //     // img
+  //     List<String> corteNoscript = book.html!.split("<noscript><img");
+  //     List<String> corteImg1 = corteNoscript[1].split('" width="');
+  //     List<String> corteImg2 = corteImg1[0].split('src="');
+  //     String? img = corteImg2[1];
+  //     // link
+  //     String? link = book.querySelector("a.cover")!.href;
+  //     // cortar o link
+  //     List<String> corteLink = link!.split("g/");
+  //     // montar o model ModelHomeBook
+  //     books.add(<String, String>{
+  //       "name": name ?? "erro",
+  //       "url": corteLink[1].replaceAll("/", ""),
+  //       "img": img
+  //     });
+  //   }
 
-    // reseta os livros
-    books = [];
-    for (Result book in data!) {
-      // name
-      String? name = book.querySelector("div.caption")!.text;
-      // img
-      //String? img = book.querySelector("noscript > img")!.src;
-      List<String> corteNoscript = book.html!.split("<noscript><img");
-      List<String> corteImg1 = corteNoscript[1].split('" width="');
-      List<String> corteImg2 = corteImg1[0].split('src="');
-      String? img = corteImg2[1];
-      // link
-      String? link = book.querySelector("a.cover")!.href;
-      // cortar o link
-      List<String> corteLink = link!.split("g/");
-      // montar o model ModelHomeBook
-      books.add(<String, String>{
-        "name": name ?? "erro",
-        "url": corteLink[1].replaceAll("/", ""),
-        "img": img
-      });
-    }
+  //   models.add(ModelHomePage.fromJson(
+  //       {"title": "NHentai Destaques", "books": books, "idExtension": 19}));
+  //   data = result[1].querySelectorAll("div.gallery");
 
-    models.add(ModelHomePage.fromJson({
-      "title": "NHentai Ultimos Adicionados",
-      "books": books,
-      "idExtension": 19
-    }));
+  //   // reseta os livros
+  //   books = [];
+  //   for (Result book in data!) {
+  //     // name
+  //     String? name = book.querySelector("div.caption")!.text;
+  //     // img
+  //     //String? img = book.querySelector("noscript > img")!.src;
+  //     List<String> corteNoscript = book.html!.split("<noscript><img");
+  //     List<String> corteImg1 = corteNoscript[1].split('" width="');
+  //     List<String> corteImg2 = corteImg1[0].split('src="');
+  //     String? img = corteImg2[1];
+  //     // link
+  //     String? link = book.querySelector("a.cover")!.href;
+  //     // cortar o link
+  //     List<String> corteLink = link!.split("g/");
+  //     // montar o model ModelHomeBook
+  //     books.add(<String, String>{
+  //       "name": name ?? "erro",
+  //       "url": corteLink[1].replaceAll("/", ""),
+  //       "img": img
+  //     });
+  //   }
 
-    return models;
-  } catch (e) {
-    debugPrint("erro no scrapingHomePage at nhen.net: $e");
-    return [];
-  }
+  //   models.add(ModelHomePage.fromJson({
+  //     "title": "NHentai Ultimos Adicionados",
+  //     "books": books,
+  //     "idExtension": 19
+  //   }));
+
+  //   return models;
+  // } catch (e) {
+  //   debugPrint("erro no scrapingHomePage at nhen.net: $e");
+  //   return [];
+  // }
+  return [];
 }
 
 // manga Detail

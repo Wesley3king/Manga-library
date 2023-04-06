@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/extensions/nhen_net/scraping/extension_nhen_net_scraping.dart';
@@ -18,6 +19,8 @@ class ExtensionNHenNet implements Extension {
   @override
   bool nsfw = true;
   @override
+  bool isAnDeprecatedExtension = true;
+  @override
   Map<String, dynamic>? fetchImagesHeader;
 
   String? cookie;
@@ -25,12 +28,12 @@ class ExtensionNHenNet implements Extension {
   Future<void> verifyToken() async {
     if (cookie == null) {
       try {
-        var data = await dio
-            .get("https://wesley3king.github.io/reactJS/token/token_n.json");
+        var data = await Dio().get("https://wesley3king.github.io/reactJS/token/token_n.json");
         debugPrint("token: ${data.data['cookie']}");
         cookie = data.data['cookie'];
       } catch (e) {
         debugPrint("erro no fetchToken at ExtensionNHen.net: $e");
+
       }
     } else {
       debugPrint("token found!");
@@ -39,7 +42,7 @@ class ExtensionNHenNet implements Extension {
 
   @override
   Future<List<ModelHomePage>> homePage() async {
-    await verifyToken();
+    // await verifyToken();
     return await compute(scrapingHomePage, cookie!);
   }
 

@@ -9,6 +9,7 @@ abstract class Extension {
   late final String nome;
   late final int id;
   late final bool nsfw;
+  late final bool isAnDeprecatedExtension;
   late final Map<String, dynamic>? fetchImagesHeader;
 
   // retorna uma lista para o home page

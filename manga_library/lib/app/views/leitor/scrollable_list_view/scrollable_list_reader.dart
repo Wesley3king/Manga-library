@@ -177,7 +177,7 @@ class ScrollablePositionedListPageState
   Future<Uint8List> getOnLineImage(String src) async {
     Response<List<int>> rs = await Dio(BaseOptions(
       headers: mapOfExtensions[widget.idExtension]!.fetchImagesHeader,
-      connectTimeout: 60000,
+      connectTimeout: const Duration(seconds: 60),
     )).get<List<int>>(src, options: Options(responseType: ResponseType.bytes));
     return Uint8List.fromList(rs.data!);
   }

@@ -33,7 +33,7 @@ class AboutHomePage extends StatelessWidget {
         const ListTile(
           leading: Icon(Icons.android),
           title: Text("Versão"),
-          subtitle: Text("beta 1.0.0+1"),
+          subtitle: Text("beta 1.0.1+1"),
         ),
         ListTile(
           leading: const Icon(Icons.info),

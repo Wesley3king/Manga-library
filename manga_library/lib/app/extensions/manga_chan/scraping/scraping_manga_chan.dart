@@ -267,7 +267,7 @@ Future<List<String>> scrapingLeitor(String id) async {
 
     return resultPages;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMangaChan: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionMangaChan: $e");
     debugPrint("$s");
     return [];
   }

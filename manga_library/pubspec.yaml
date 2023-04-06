@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: '>=2.18.0-271.4.beta <3.0.0'
@@ -42,7 +42,7 @@ dependencies:
   hive_flutter: ^1.1.0
   cached_network_image: ^3.2.1
   go_router: ^4.2.8
-  dio: ^4.0.6
+  dio: ^5.0.1
   path_provider: ^2.0.11
   flutter_native_splash: ^2.2.8
   flutter_launcher_icons: ^0.10.0
@@ -64,6 +64,8 @@ dependencies:
   dart_date: ^1.1.1
   url_launcher: ^6.1.7
   system_settings: ^2.1.0
+  image_saver:
+    path: ./lib/image_saver
   #flutter_animated_icons: ^1.0.1
 
 dev_dependencies:
@@ -83,18 +85,18 @@ dev_dependencies:
 #flutter_native_splash config
 flutter_native_splash:
   color: "#ffffff"
-  image: "assets/imgs/logo.png"
+  image: "assets/imgs/new-icon-manga-mini.png"
   android: true
   ios: true
 
 #flutter_launcher_icons config
 flutter_icons:
-  image_path: "assets/imgs/logo.png"
+  image_path: "assets/imgs/new-icon-manga-mini.png"
   ios: true
   remove_alpha_ios: true
   android: "launcher_icon"
   adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/imgs/logo.png"
+  adaptive_icon_foreground: "assets/imgs/new-icon-manga-mini.png"
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -109,7 +111,7 @@ flutter:
     - assets/imgs/new-icon-manga-mini.png
     - assets/imgs/grid-image-ready.png
     - assets/imgs/git-hub-icon.png
-    - assets/imgs/logo.png
+    # - assets/imgs/logo.png
     # manual imgs
     - assets/manual-imgs/library-1.png
     - assets/manual-imgs/library-2.png

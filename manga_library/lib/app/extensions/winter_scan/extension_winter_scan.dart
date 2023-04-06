@@ -20,6 +20,8 @@ class ExtensionWinterScan implements Extension {
   @override
   bool nsfw = false;
   @override
+  bool isAnDeprecatedExtension = false;
+  @override
   Map<String, dynamic>? fetchImagesHeader;
 
   @override

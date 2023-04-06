@@ -6,96 +6,23 @@ import '../../../models/home_page_model.dart';
 import '../../../models/manga_info_offline_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
-  const String url = 'https://seemangas.com/';
+  const String url = 'https://seemangas.com/lista-de-mangas/todos';
   List<ModelHomePage> models = [];
   try {
     var parser = await Chaleno().load(url);
-    // // ==================================================================
-    // //          -- LANCAMENTOS --
-    // List<Result>? lancametosItens = parser?.querySelectorAll(
-    //     "div.lancamento > ul > li.item_news-manga");
     List<Map<String, String>> books = [];
-    // for (Result html in lancametosItens!) {
-    //   // name
-    //   String? name = html
-    //       .querySelector("div.right > div.clearfix > h3.entry-title > a")!
-    //       .text;
-    //   // debugPrint("name: $name");
-    //   // img
-    //   String? img = html.querySelector("a.manga > img")!.src;
-    //   // debugPrint("img: $img");
-    //   // link
-    //   String? link = html.querySelector("a.manga")!.href;
-    //   // debugPrint("link: $link");
-    //   List<String> linkCorte1 = link!.split("manga/");
-
-    //   books.add({
-    //     "name": name!,
-    //     "url": linkCorte1[1].replaceAll("/", ""),
-    //     "img": img ?? ""
-    //   });
-    // }
-    // // print(books);
-    // // monat model destaques
-    // debugPrint("montando o model Lançamentos");
-    // Map<String, dynamic> destaques = {
-    //   "idExtension": 16,
-    //   "title": "See Mangas Ultimas atualizações",
-    //   "books": books
-    // };
-    // models.add(ModelHomePage.fromJson(destaques));
-    // ============================================================
-    // ======================== recomendacoes =============================
-    List<Result>? novosItens =
-        parser?.querySelectorAll("div.slider-des > div.itemC");
-    books.clear();
-
-    for (Result html in novosItens!) {
-      // name
-      String? name = html.querySelector("div.dados > a > div.title > h2")!.text;
-      // debugPrint("name: $name");
-      // img
-      String? img = html.querySelector("a > div.thumb > img")!.src;
-      // debugPrint("img: $img");
-      // link
-      String? link = html.querySelector("a")!.href;
-      // debugPrint("link: $link");
-      List<String> linkCorte1 = link!.split("manga/");
-      // debugPrint("link cortado: ${linkCorte1[1]}");
-
-      books.add({
-        "name": name ?? "erro",
-        "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img ?? ""
-      });
-      // debugPrint("book adicionado!!!");
-    }
-    // print(books);
-    // monat model destaques
-    if (books.isNotEmpty) {
-      debugPrint("montando o model Novos");
-      Map<String, dynamic> novos = {
-        "idExtension": 16,
-        "title": "See Mangas Destaques",
-        "books": books
-      };
-      models.add(ModelHomePage.fromJson(novos));
-    }
     // ====================== Popular ==========================
-    List<Result>? maisLidosItens =
-        parser?.querySelectorAll("ul.sidebar-popular > li.popular-treending");
-    books.clear();
-
+    List<Result>? maisLidosItens = parser?.querySelectorAll("ul.seriesList > li.itemC");
     for (Result html in maisLidosItens!) {
       // name
-      String? name = html.querySelector("div.data-infos > a > h4")!.text;
-      // debugPrint("name: $name");
+      String? name = html.querySelector("div.dados > a > div > h2")!.text;
+      debugPrint("name: $name");
       // img
-      String? img = html.querySelector("a > div.tumbl > img")!.src;
-      // debugPrint("img: $img");
+      String? img = html.querySelector("a > div.thumb > img")!.src;
+      debugPrint("img: $img");
       // link
       String? link = html.querySelector("a")!.href;
-      // debugPrint("link: $link");
+      debugPrint("link: $link");
       List<String> linkCorte1 = link!.split("manga/");
       // debugPrint("link cortado: ${linkCorte1[1]}");
 
@@ -112,19 +39,11 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
       debugPrint("montando o model Mais lidos da semana");
       Map<String, dynamic> maislidos = {
         "idExtension": 16,
-        "title": "See Mangas Populares",
+        "title": "See Mangas",
         "books": books
       };
       models.add(ModelHomePage.fromJson(maislidos));
     }
-    // // montar o model
-    // // debugPrint("$mangas");
-    // Map<String, dynamic> lancamentos = {
-    //   "idExtension": 3,
-    //   "title": "Mundo Mangá Kun Lançamentos",
-    //   "books": mangas
-    // };
-    // models.add(ModelHomePage.fromJson(lancamentos));
 
     return models;
   } catch (e) {

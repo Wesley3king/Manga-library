@@ -18,6 +18,8 @@ class ExtensionPrismaScan implements Extension {
   @override
   bool nsfw = false;
   @override
+  bool isAnDeprecatedExtension = false;
+  @override
   Map<String, dynamic>? fetchImagesHeader;
 
   @override
@@ -70,7 +72,7 @@ class ExtensionPrismaScan implements Extension {
   @override
   Future<List<Books>> search(String txt) async {
     try {
-      debugPrint("SILENCE SCAN SEARCH STARTING...");
+      debugPrint("PRISMA SCAN SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 

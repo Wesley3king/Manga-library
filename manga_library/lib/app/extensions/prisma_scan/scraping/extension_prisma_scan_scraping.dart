@@ -15,8 +15,6 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     //          -- ULTIMAS ATUALIZAÇÕES --
     List<Result>? lancamentos = parser?.querySelectorAll(
         "div#loop-content > div.page-listing-item > div.row > div.col-6 > div.page-item-detail");
-    // List<Result>? lancametosItens =
-    //     lancamentos?.querySelectorAll("div.item-summary > div.post-title > h3.h5 > a");
     List<Map<String, String>> books = [];
     for (Result html in lancamentos!) {
       // name
@@ -94,7 +92,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     }
     return models;
   } catch (e) {
-    debugPrint("erro no scrapingHomePage at ExtensionMangaChan: $e");
+    debugPrint("erro no scrapingHomePage at ExtensionPrismaScan: $e");
     return [];
   }
 }
@@ -105,7 +103,12 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
   //const String indentify = "";
 
   try {
-    var parser = await Chaleno().load("https://prismascans.net/manga/$link/");
+    Response fetchResponse = await Dio().get("https://prismascans.net/manga/$link/",
+    options: Options(headers: {
+      "Referer": "https://prismascans.net/"
+    }));
+    var parser = Parser(fetchResponse.data);
+    // Chaleno().load("https://prismascans.net/manga/$link/");
 
     String? name;
     String? description;
@@ -114,7 +117,6 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     String? status;
     List<String> genres = [];
     List<Capitulos> chapters = [];
-    if (parser != null) {
       // name
       name = parser.querySelector("div.post-title > h1").text;
       // debugPrint("name: $name");
@@ -173,7 +175,6 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
               stateResultado.querySelector("div.summary-content")!.text!;
           status = "${value.trim()}${isInHiato == null ? "" : ", $isInHiato"}";
         }
-      }
       // debugPrint("state: $status");
       // chapters
       final Response response =
@@ -230,7 +231,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
     }
     return null;
   } catch (e) {
-    debugPrint("erro no scrapingMangaDetail at ExtensionMangaChan: $e");
+    debugPrint("erro no scrapingMangaDetail at ExtensionPrismaScan: $e");
     return null;
   }
 }
@@ -269,9 +270,11 @@ Future<List<String>> scrapingLeitor(String id) async {
 
 Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
   try {
-    var parser = await Chaleno().load("https://prismascans.net/?s=$txt&post_type=wp-manga&op=&author=&artist=&release=&adult=");
+    var parser = await Chaleno().load(
+        "https://prismascans.net/?s=$txt&post_type=wp-manga&op=&author=&artist=&release=&adult=");
 
-    var resultHtml = parser?.querySelector("div.search-wrap > div.tab-content-wrap > div.c-tabs-item");
+    var resultHtml = parser?.querySelector(
+        "div.search-wrap > div.tab-content-wrap > div.c-tabs-item");
     List<Map<String, dynamic>> books = [];
     if (resultHtml != null) {
       // projeto
@@ -280,13 +283,20 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
         List<Map<String, dynamic>> projetoBooks =
             projetoData.map((Result data) {
           // name
-          String? name = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!.text;
+          String? name = data
+              .querySelector(
+                  "div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!
+              .text;
           // debugPrint("name: $name");
           // img
-          String? img = data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
+          String? img =
+              data.querySelector("div.col-4 > div.tab-thumb > a > img")!.src;
           // debugPrint("img: $img");
           // link
-          String? link = data.querySelector("div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!.href;
+          String? link = data
+              .querySelector(
+                  "div.col-8 > div.tab-summary > div.post-title > h3.h4 > a")!
+              .href;
           // debugPrint("link: $link");
           List<String> corteLink = link!.split("manga/");
           // print(data.html);

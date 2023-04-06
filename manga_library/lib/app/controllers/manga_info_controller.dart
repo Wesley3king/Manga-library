@@ -17,7 +17,7 @@ import 'package:manga_library/app/models/mark_chapter_model.dart';
 import '../models/libraries_model.dart';
 // import 'extensions/extension_manga_yabu.dart';
 // import 'extensions/manga_yabu/extension_yabu.dart';
-import 'home_page_controller.dart';
+// import 'home_page_controller.dart';
 
 class MangaInfoController {
   // final mangaYabu = ExtensionMangaYabu();
@@ -49,6 +49,7 @@ class MangaInfoController {
   Future start(String url, int idExtension) async {
     state.value = MangaInfoStates.loading;
     try {
+      debugPrint("start MANGA DETAIL: $url");
       // operação OffLine
       MangaInfoOffLineModel? localData =
           await _mangaInfoOffLineController.verifyDatabase(url, idExtension);

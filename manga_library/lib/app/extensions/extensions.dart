@@ -20,7 +20,7 @@ import 'package:manga_library/app/extensions/winter_scan/extension_winter_scan.d
 import 'package:manga_library/app/extensions/yabutoon/extension_yabutoon.dart';
 
 final List<Extension> listOfExtensions = [
-  ExtensionMangaYabu(),
+  // ExtensionMangaYabu(),
   ExtensionMundoMangaKun(),
   ExtensionUnionMangas(),
   ExtensionNHen(),
@@ -37,7 +37,7 @@ final List<Extension> listOfExtensions = [
   ExtensionNeoxScans(),
   ExtensionHqNow(),
   ExtensionHqDragon(),
-  ExtensionNHenNet(),
+  // ExtensionNHenNet(),
   ExtensionMundoWebtoon()
 ];
 

@@ -4,8 +4,8 @@ import 'package:flutter/rendering.dart';
 
 class YabuFetchServices {
   final Dio dio = Dio(BaseOptions(
-    connectTimeout: 40000,
-    sendTimeout: 40000,
+    connectTimeout: const Duration(seconds: 30),
+    sendTimeout: const Duration(seconds: 40),
   ));
 
   Future<List<Map<String, dynamic>>> search(String txt) async {

@@ -17,10 +17,10 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
     return ListView.builder(
         itemCount: keys.length,
         itemBuilder: (context, index) {
-          if ((GlobalData.settings.nSFWContent &&
+          if (!mapOfExtensions[keys[index]]!.isAnDeprecatedExtension && ((GlobalData.settings.nSFWContent &&
                   GlobalData.settings.showNSFWInList &&
                   mapOfExtensions[keys[index]]!.nsfw) ||
-              !mapOfExtensions[keys[index]]!.nsfw) {
+              !mapOfExtensions[keys[index]]!.nsfw)) {
             return ListTile(
               title: Text(mapOfExtensions[keys[index]]!.nome),
               leading: SizedBox(

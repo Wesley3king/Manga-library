@@ -19,6 +19,8 @@ class ExtensionYabutoon implements Extension {
   @override
   bool nsfw = false;
   @override
+  bool isAnDeprecatedExtension = true;
+  @override
   Map<String, dynamic>? fetchImagesHeader;
 
   @override

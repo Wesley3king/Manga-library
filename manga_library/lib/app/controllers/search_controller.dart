@@ -53,7 +53,7 @@ class SearchController {
 
   void buildModels() {
     for (Extension extend in extensions) {
-      if ((GlobalData.settings.nSFWContent && extend.nsfw) || !extend.nsfw) {
+      if (!extend.isAnDeprecatedExtension && ((GlobalData.settings.nSFWContent && extend.nsfw) || !extend.nsfw)) {
         result.add(SearchModel(
           font: extend.nome,
           books: [],

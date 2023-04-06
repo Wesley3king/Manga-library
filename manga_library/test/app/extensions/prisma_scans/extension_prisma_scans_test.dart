@@ -11,17 +11,17 @@ void main() {
   });
   // manga detail
    test("deve retornar um ModelMangaInfoOffLine", () async {
-    var data = await extend.mangaDetail('jungle-juice25');
+    var data = await extend.mangaDetail('suco-da-selva-22');
     debugPrint('$data');
   });
 
   // getPages
   test("deve retornar um model Capitulos", () async {
     //shounen-no-abyss-capitulo-114  shounen-no-abyss_cap-tulo-109
-    var data = await extend.getPages("jungle-juice25__cap-83-fim-da-primeira-temporada__", [
+    var data = await extend.getPages("suco-da-selva-22__cap-83-5__", [
       Capitulos(
         capitulo: "83",
-        id: "jungle-juice25__cap-83-fim-da-primeira-temporada__",
+        id: "suco-da-selva-22__cap-83-5__",
         description: "",
         mark: false,
         download: false,

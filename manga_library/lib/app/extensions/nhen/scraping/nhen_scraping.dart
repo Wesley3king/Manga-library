@@ -6,14 +6,10 @@ import '../../../models/manga_info_offline_model.dart';
 
 Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
   const String url = "https://nhentai.to/";
-  const String indentify = "div.index-container";
   try {
     Parser? parser = await Chaleno().load(url);
 
-    Result? result = parser?.querySelector(indentify);
-    // debugPrint("${result![0].html}");
-
-    List<Result>? data = result?.querySelectorAll("div.gallery");
+    List<Result>? data = parser?.querySelectorAll("div.gallery");
 
     // inicio do processamento individual
     List<Map<String, String>> books = [];
@@ -68,25 +64,30 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       // img
       img = parser.querySelector("div#cover a img").src;
       // debugPrint("img: $img");
-      // genres
+      // genres and author
       List<Result>? genresResult =
           parser.querySelectorAll("div.tag-container"); // $indenify div#tags
       // print(genresResult);
-      List<Result>? generos =
-          genresResult[2].querySelectorAll("a"); // span.tags
+      List<Result>? generos;
+      for (Result result in genresResult) {
+        if (result.text!.contains("Tags")) {
+          generos = result.querySelectorAll("a > span.name");// span.tags
+        } else if (result.text!.contains("Artists")) {
+          // authors
+          List<Result>? artists = result.querySelectorAll("a > span.name");
+          for (int i = 0; i < artists!.length; ++i) {
+            authors.write('${artists[i].text}');
+          }
+        }
+      }
       // print(generos);
 
       for (int i = 0; i < generos!.length; ++i) {
-        genres.add("${generos[i].text}");
+        genres.add("${generos[i].text?.trim()}");
       }
       debugPrint("genres: $genres");
-      // authors
-      List<Result>? artists = genresResult[3].querySelectorAll("a");
-      for (int i = 0; i < artists!.length; ++i) {
-        authors.write('${artists[i].text}');
-      }
       // state
-      state = parser.querySelector("div > time").text;
+      state = "uploaded: ${parser.querySelector("span.tags > time").text}";
 
       // chapters
       Result? chapterPages = parser.querySelector("div#thumbnail-container");
@@ -111,7 +112,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         description: description ?? "erro",
         img: img ?? "erro",
         authors: authors.toString(),
-        state: state ?? "Estado desconhecido",
+        state: state,
         link: "https://nhentai.to/g/$link",
         idExtension: 5,
         genres: genres,
@@ -158,14 +159,12 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
           String? name = data.querySelector("a div.caption")!.text;
           // debugPrint("name: $name");
           // img
-          List<Result>? resultsImg = data.querySelectorAll("a > img");
-
-          String? img = resultsImg?[1].src;
-          // debugPrint("img: $img");
+          String? img = data.querySelector("a > img")?.src;
+          debugPrint("img: $img");
           // link
           String? link = data.querySelector("a")!.href;
           List<String> corteLink = link!.split("g/");
-          // debugPrint("link: ${corteLink[1]}");
+          debugPrint("link: ${corteLink[1]}");
           // print(data.html);
           return {
             "name": name ?? "error",
@@ -181,7 +180,7 @@ Future<List<Map<String, dynamic>>> scrapingSearch(String txt) async {
     debugPrint("sucesso no scraping");
     return books;
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionNHen: $e");
     debugPrint('$s');
     //return SearchModel(font: "", books: [], idExtension: 3);
     return [];

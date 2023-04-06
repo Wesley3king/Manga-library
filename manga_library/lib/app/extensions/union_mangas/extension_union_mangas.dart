@@ -19,6 +19,8 @@ class ExtensionUnionMangas implements Extension {
   @override
   bool nsfw = true;
   @override
+  bool isAnDeprecatedExtension = false;
+  @override
   Map<String, dynamic>? fetchImagesHeader;
 
   @override

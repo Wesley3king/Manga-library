@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 
 class YabutoonRepositories {
-  final Dio dio = Dio(BaseOptions(receiveTimeout: 40000));
+  final Dio dio = Dio(BaseOptions(receiveTimeout: const Duration(seconds: 30)));
 
   Future<List<Map<String, dynamic>>> search(String txt) async {
     try {

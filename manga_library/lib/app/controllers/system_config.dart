@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_saver/image_saver.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/system_settings.dart';
@@ -15,6 +17,16 @@ class SystemController {
     // inicializar o Hive
     await _hiveController.start();
     updateConfig();
+    try {
+      // Response<List<int>> rs = await Dio().get<List<int>>(
+      //     "https://images.pexels.com/photos/15575287/pexels-photo-15575287.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      //     options: Options(responseType: ResponseType.bytes));
+      // await ImageSaver().saveAnImageFromBytes(
+      //     rs.data ?? <int>[], "storage/emulated/0/Pictures/image saver/bytes img test.jpeg");
+      log("DOWNLOAD DID");
+    } catch (e) {
+      log("ERROR AT DOWNLOADER TEST: $e");
+    }
   }
 
   Future updateConfig() async {

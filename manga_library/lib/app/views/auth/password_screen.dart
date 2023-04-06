@@ -40,7 +40,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
               SizedBox(
                 width: 200,
                 height: 200,
-                child: Image.asset('assets/imgs/logo.png'),
+                child: Image.asset('assets/imgs/new-icon-manga-mini.png'),
               ),
               SizedBox(
                 width: (MediaQuery.of(context).size.width - 80),
