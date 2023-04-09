@@ -139,6 +139,7 @@ flutter:
     - assets/extesion_posters/Hq-Now.png
     - assets/extesion_posters/Hq-Dragon.jpg
     - assets/extesion_posters/Mundo-Webtoon.png
+    - assets/extesion_posters/Izakaya.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -124,29 +124,7 @@ class HiveController {
   Future<List<LibraryModel>> writeLibraryData() async {
     final LibraryModel model = LibraryModel.fromJson({
       "library": "favoritos",
-      "books": [
-        // {
-        //   "name": "Kawaii Dake ja Nai Shikimori-san",
-        //   "link": "kawaii-dake-ja-nai-shikimori-san",
-        //   "img":
-        //       "https://mangayabu.top/wp-content/uploads/2022/07/f0037b59a279112676b9.jpg",
-        //   "idExtension": 1
-        // },
-        // {
-        //   "name": "Boku no Hero Academia",
-        //   "link": "boku-no-hero-academia",
-        //   "img":
-        //       "https://mangayabu.top/wp-content/uploads/2022/06/0cb2e604c5c9900bacb7.jpg",
-        //   "idExtension": 1
-        // },
-        // {
-        //   "name": "Mushoku Tensei: Isekai Ittara Honki Dasu",
-        //   "link": "mushoku-tensei-isekai-ittara-honki-dasu",
-        //   "img":
-        //       "https://mangayabu.top/wp-content/uploads/2022/07/97cf1278675bc2fd52b3.jpg",
-        //   "idExtension": 1
-        // },
-      ]
+      "books": []
     });
     libraries?.put('libraries', [model.toJson()]);
     return [model];
@@ -381,8 +359,8 @@ class HiveController {
         writeBook();
         return [];
       } else {
-        debugPrint(" - dados do Hive:");
-        debugPrint('$data');
+        // debugPrint(" - dados do Hive:");
+        // debugPrint('$data');
         return data
             .map((book) => MangaInfoOffLineModel.fromJson(book))
             .toList();

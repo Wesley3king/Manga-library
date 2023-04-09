@@ -32,7 +32,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": 'https:$img'
+        "img": img!.contains("https") ? img :'https:$img'
       });
       // debugPrint("book adicionado!!!");
     }
@@ -67,7 +67,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name!.trim(),
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": 'https:$img'
+        "img": img!.contains("https") ? img :'https:$img'
       });
     }
     // print(books);
@@ -103,7 +103,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": 'https:$img'
+        "img": img!.contains("https") ? img :'https:$img'
       });
       // debugPrint("book adicionado!!!");
     }
@@ -222,7 +222,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
-        img: 'https:$img',
+        img: img!.contains("https") ? img :'https:$img',
         authors: authors,
         state: status ?? "Estado desconhecido",
         link: "https://mangaschan.com/manga/$link/",

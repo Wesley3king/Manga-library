@@ -69,8 +69,8 @@ class ProcessDataFromLibrary {
     for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
       if (clientData.capitulosLidos[i]['link'].contains(regex)) {
         /// modify restantChapters
-        debugPrint(
-            "${data.chapters} - ${clientData.capitulosLidos[i]['capitulos'].length} --${data.chapters - clientData.capitulosLidos[i]['capitulos'].length}");
+        // debugPrint(
+        //     "${data.chapters} - ${clientData.capitulosLidos[i]['capitulos'].length} --${data.chapters - clientData.capitulosLidos[i]['capitulos'].length}");
         model.restantChapters = data.chapters -
             List.from(clientData.capitulosLidos[i]['capitulos']).length;
         isFound = true;
@@ -102,7 +102,7 @@ class ProcessDataFromLibrary {
         return lista[i];
       }
     }
-    debugPrint("não encontrei o manga na memoria");
+    debugPrint("não encontrei o manga na memoria: $link / id: $idExtension");
     return null;
   }
 }

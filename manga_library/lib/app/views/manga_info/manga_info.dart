@@ -9,6 +9,7 @@ import 'package:manga_library/app/views/home_page/error.dart';
 import 'package:manga_library/app/views/manga_info/manga_info_sucess.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../controllers/system_navigation_and_app_bar_styles.dart';
+import 'handle_data/handle_data_manual.dart';
 
 class MangaInfo extends StatefulWidget {
   final String link;
@@ -28,7 +29,7 @@ class _MangaInfoState extends State<MangaInfo> {
     );
   }
 
-  /// menu
+  /// show menu
   Widget _generateMenu() {
     return PopupMenuButton(
       itemBuilder: (context) => [
@@ -38,14 +39,17 @@ class _MangaInfoState extends State<MangaInfo> {
             if (mangaInfoController.state.value == MangaInfoStates.sucess) {
               MessageCore.showMessage("Atualizando...");
               await mangaInfoController.updateBook(
-                      widget.link,
-                      widget.idExtension,
-                      img: mangaInfoController.data.img
-                    )
+                      widget.link, widget.idExtension,
+                      img: mangaInfoController.data.img)
                   ? MessageCore.showMessage("Atualizado com Sucesso!")
                   : MessageCore.showMessage('Falha ao atualizar!');
             }
           },
+        ),
+        PopupMenuItem(
+          child: const Text('Editar dados'),
+          onTap: () => Future.delayed(const Duration(milliseconds: 100),
+                  () => handleData(context, mangaInfoController.data)),
         ),
       ],
     );
@@ -137,14 +141,8 @@ class _MangaInfoState extends State<MangaInfo> {
           ValueListenableBuilder(
             valueListenable: mangaInfoController.state,
             builder: (context, value, child) => IconButton(
-              onPressed: () {
-                // utilize url_launcher
-                // Uri url = Uri.parse(
-                //     mapOfExtensions[widget.idExtension]!.getLink(widget.link));
-                // launchUrl(url, mode: LaunchMode.externalApplication);
-                Share.share(
-                    mapOfExtensions[widget.idExtension]!.getLink(widget.link));
-              },
+              onPressed: () => Share.share(
+                  mapOfExtensions[widget.idExtension]!.getLink(widget.link)),
               tooltip: "Compartilhar",
               icon: const Icon(Icons.share),
             ),
@@ -154,8 +152,9 @@ class _MangaInfoState extends State<MangaInfo> {
       ),
       body: AnimatedBuilder(
         animation: mangaInfoController.state,
-        builder: (context, child) =>
-            stateManagement(mangaInfoController.state.value),
+        builder: (context, child) {
+          return stateManagement(mangaInfoController.state.value);
+        },
       ),
     );
   }

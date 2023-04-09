@@ -21,10 +21,56 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
       SearchShowResultsPageController();
   final ConfigSystemController configSystemController =
       ConfigSystemController();
-  final TextEditingController _textEditingController =
-      TextEditingController(text: GlobalData.searchString == "" ? null : GlobalData.searchString);
+  final TextEditingController _textEditingController = TextEditingController(
+      text: GlobalData.searchString == "" ? null : GlobalData.searchString);
   late List<double> sizeOfBooks;
   String textValue = GlobalData.searchString;
+
+  /// leva até um manga
+  void goToDetailRoute(String id, int idExtension) {
+    GoRouter.of(context).push("/detail/$id/$idExtension");
+  }
+
+  /// mostra um imput para ir por ID
+  dynamic handleId(BuildContext context) async {
+    TextEditingController nameController = TextEditingController();
+    return await showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text("Inserir id"),
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 120,
+                child: TextField(
+                  controller: nameController,
+                  autofocus: true,
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(hintText: "Insira o id"),
+                  onSubmitted: (value) =>
+                      goToDetailRoute(nameController.text, widget.idExtension),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancelar")),
+              TextButton(
+                  onPressed: () =>
+                      goToDetailRoute(nameController.text, widget.idExtension),
+                  child: const Text("Ir")),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 
   /// loading
   Widget get loading => Center(
@@ -96,12 +142,8 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
               ],
             ),
             TextButton(
-              onPressed: () {
-                // print('clickado!');
-                //List<String> corteUrl1 = widget.data.books[index].link.split('manga/');
-                GoRouter.of(context).push(
-                    '/detail/${controller.model.books[index].link}/${controller.model.books[index].idExtension}');
-              },
+              onPressed: () => goToDetailRoute(controller.model.books[index].link,
+                    controller.model.books[index].idExtension),
               style: ButtonStyle(
                   padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
               child: const SizedBox(
@@ -169,9 +211,9 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final InputDecoration? showHint = GlobalData.searchString == "" ? const InputDecoration(
-      hintText: 'Pesquisar'
-    ) : null;
+    final InputDecoration? showHint = GlobalData.searchString == ""
+        ? const InputDecoration(hintText: 'Pesquisar')
+        : null;
     return Scaffold(
         appBar: AppBar(
           title: TextField(
@@ -181,7 +223,8 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
             decoration: showHint,
             scrollPadding: const EdgeInsets.all(5.0),
             style: const TextStyle(fontSize: 18),
-            onSubmitted: (value) => controller.search(textValue, widget.idExtension),
+            onSubmitted: (value) =>
+                controller.search(textValue, widget.idExtension),
             onChanged: ((value) => textValue = value),
           ),
           actions: [
@@ -189,7 +232,11 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
                 onPressed: () =>
                     controller.search(textValue, widget.idExtension),
                 tooltip: 'pesquisar',
-                icon: const Icon(Icons.search))
+                icon: const Icon(Icons.search)),
+            IconButton(
+                onPressed: () => handleId(context),
+                tooltip: 'ir por id',
+                icon: const Icon(Icons.manage_search))
           ],
         ),
         body: AnimatedBuilder(
