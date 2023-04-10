@@ -57,8 +57,8 @@ buildSettingsModel() {
               ]
             },
             {
-              "nameConfig": "Atualizar as Capas",
-              "description": "Caso não queira que as capas sejam atualizadas desligue.",
+              "nameConfig": "Nâo Atualizar as Capas",
+              "description": "Caso não queira que as capas sejam atualizadas ligue.",
               "type": "switch",
               "value": data.updateTheCovers,
               "function": functions['Atualizar as Capas'],

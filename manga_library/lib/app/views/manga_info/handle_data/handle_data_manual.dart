@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/app/views/manga_info/handle_data/handle_data_core.dart';
 
 dynamic handleData(BuildContext context, MangaInfoOffLineModel model) async {
+  final HandleDataCore core = HandleDataCore(genres: model.genres);
+
   /// sizes
   const double heightOfActions = 30;
 
@@ -16,6 +19,8 @@ dynamic handleData(BuildContext context, MangaInfoOffLineModel model) async {
       TextEditingController(text: model.description);
   final TextEditingController authorsController =
       TextEditingController(text: model.authors);
+  final TextEditingController newGenreController = TextEditingController();
+
   // print("--------- HERO'S COME BACK ------------------");
   return await showDialog(
     context: context,
@@ -123,31 +128,66 @@ dynamic handleData(BuildContext context, MangaInfoOffLineModel model) async {
                       ),
                     ),
                   ),
-                  Wrap(
-                    children: model.genres
-                        .map((genre) => Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: SizedBox(
-                                height: 30.0,
-                                child: Chip(
-                                  onDeleted: () {
-                                    print("ggggggggggggg");
-                                  },
-                                  deleteIcon: const Icon(
-                                    Icons.close,
-                                    size: 17.0,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //const Text("Autor"),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 170,
+                                  child: TextField(
+                                    controller: newGenreController,
+                                    decoration: const InputDecoration(
+                                        hintText: "Adicionar genêro"),
+                                    keyboardType: TextInputType.text,
                                   ),
-                                  padding: const EdgeInsets.all(0),
-                                  labelStyle: const TextStyle(height: 1.3),
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  backgroundColor: Colors.transparent,
-                                  label: Text(genre),
                                 ),
-                              ),
-                            ))
-                        .toList(),
+                                IconButton(
+                                    onPressed: () {
+                                      core.addGenre(newGenreController.text);
+                                      newGenreController.clear();
+                                    },
+                                    icon: const Icon(Icons.add))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+                  AnimatedBuilder(
+                    animation: core.notifier,
+                    builder: (context, value) => Wrap(
+                        children: core.genres
+                            .map((genre) => Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: SizedBox(
+                                    height: 30.0,
+                                    child: Chip(
+                                      onDeleted: () => core.removeGenre(genre),
+                                      deleteIcon: const Icon(
+                                        Icons.close,
+                                        size: 17.0,
+                                      ),
+                                      padding: const EdgeInsets.all(0),
+                                      labelStyle: const TextStyle(height: 1.3),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      backgroundColor: Colors.transparent,
+                                      label: Text(genre),
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                  )
                 ],
               ),
             ),
@@ -159,7 +199,18 @@ dynamic handleData(BuildContext context, MangaInfoOffLineModel model) async {
                   TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: const Text("Cancelar")),
-                  TextButton(onPressed: () {}, child: const Text("Modificar")),
+                  TextButton(
+                      onPressed: () {
+                        core.saveData(
+                            model: model,
+                            name: nameController.text,
+                            link: linkController.text,
+                            img: imgController.text,
+                            description: descriptionController.text,
+                            authors: authorsController.text);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Modificar")),
                 ],
               ),
             )

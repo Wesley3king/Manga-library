@@ -12,14 +12,14 @@ class MangaInfoOffLineModel {
     required this.chapters,
     required this.capitulos,
   });
-  late final String name;
-  late final String authors;
-  late final String description;
+  late String name;
+  late String authors;
+  late String description;
   late final String state;
   late String img;
-  late final String link;
+  late String link;
   late final int idExtension;
-  late final List<String> genres;
+  late List<String> genres;
   late final dynamic alternativeName;
   late final int chapters;
   late List<Capitulos> capitulos;

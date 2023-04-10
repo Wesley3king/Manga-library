@@ -22,6 +22,7 @@ class MangaInfo extends StatefulWidget {
 
 class _MangaInfoState extends State<MangaInfo> {
   final MangaInfoController mangaInfoController = MangaInfoController();
+  int editCount = 0;
 
   Widget _loading() {
     return const Center(
@@ -47,9 +48,13 @@ class _MangaInfoState extends State<MangaInfo> {
           },
         ),
         PopupMenuItem(
+          enabled: editCount == 0,
           child: const Text('Editar dados'),
-          onTap: () => Future.delayed(const Duration(milliseconds: 100),
-                  () => handleData(context, mangaInfoController.data)),
+          onTap: () {
+            editCount++;
+            Future.delayed(const Duration(milliseconds: 100),
+                () => handleData(context, mangaInfoController.data));
+          },
         ),
       ],
     );
@@ -61,19 +66,9 @@ class _MangaInfoState extends State<MangaInfo> {
         return _loading();
       case MangaInfoStates.loading:
         return _loading();
-      // case MangaInfoStates.sucess1:
-      //   return SucessMangaInfo(
-      //     dados: mangaInfoController.data,
-      //     sucess2: false,
-      //     capitulosDisponiveis: const [],
-      //     link: widget.link,
-      //     controller: mangaInfoController,
-      //   );
       case MangaInfoStates.sucess:
         return SucessMangaInfo(
           dados: mangaInfoController.data,
-          // sucess2: true,
-          // capitulosDisponiveis: mangaInfoController.capitulosDisponiveis,
           link: widget.link,
           controller: mangaInfoController,
         );

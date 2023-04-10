@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:manga_library/app/controllers/message_core.dart';
@@ -11,21 +10,13 @@ import 'package:manga_library/app/models/downloads_pages_model.dart';
 import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/mark_chapter_model.dart';
-// import 'package:manga_library/repositories/yabu/yabu_fetch_services.dart';
 
-// import '../models/leitor_pages.dart';
 import '../models/libraries_model.dart';
-// import 'extensions/extension_manga_yabu.dart';
-// import 'extensions/manga_yabu/extension_yabu.dart';
-// import 'home_page_controller.dart';
 
 class MangaInfoController {
-  // final mangaYabu = ExtensionMangaYabu();
   final MangaInfoOffLineController _mangaInfoOffLineController =
       MangaInfoOffLineController();
-  // final YabuFetchServices yabuFetchServices = YabuFetchServices();
   static ChaptersController? chaptersController;
-  // final ChaptersController _chaptersController = ChaptersController();
 
   MangaInfoOffLineModel data = MangaInfoOffLineModel(
     name: "",

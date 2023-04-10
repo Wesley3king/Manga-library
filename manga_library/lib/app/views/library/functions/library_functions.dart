@@ -68,9 +68,6 @@ class ProcessDataFromLibrary {
 
     for (int i = 0; i < clientData.capitulosLidos.length; ++i) {
       if (clientData.capitulosLidos[i]['link'].contains(regex)) {
-        /// modify restantChapters
-        // debugPrint(
-        //     "${data.chapters} - ${clientData.capitulosLidos[i]['capitulos'].length} --${data.chapters - clientData.capitulosLidos[i]['capitulos'].length}");
         model.restantChapters = data.chapters -
             List.from(clientData.capitulosLidos[i]['capitulos']).length;
         isFound = true;
