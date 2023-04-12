@@ -249,7 +249,6 @@ class _MangaDetailsState extends State<MangaDetails> {
               AddToLibrary(
                 link: widget.link,
                 dados: widget.dados,
-                capitulos: widget.controller.capitulosDisponiveis ?? [],
               ),
               TextButton(
                   onPressed: () => GoRouter.of(context).push(

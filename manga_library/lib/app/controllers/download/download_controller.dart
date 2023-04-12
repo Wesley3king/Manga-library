@@ -1,15 +1,16 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:manga_library/app/controllers/message_core.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
 import 'package:manga_library/app/models/download_model.dart';
 import 'package:manga_library/app/models/downloads_pages_model.dart';
+import 'package:manga_library/app/models/globais.dart';
 import 'package:manga_library/app/models/manga_info_offline_model.dart';
+import 'package:manga_library/image_saver/lib/image_saver.dart';
 
 import '../../views/manga_info/off_line/controller/off_line_widget_controller.dart';
 import '../manga_info_controller.dart';
@@ -185,14 +186,11 @@ class DownloadController {
     required int index,
     //ValueNotifier<Map<String, int?>>? downloadProgress
   }) async {
+    final ImageSaver imageSaver = ImageSaver();
     try {
       // constroi o sub caminho das paginas baixadas
       List<Pattern> listOfRegExp = [
-        // RegExp(r"( )", caseSensitive: false, dotAll: true),
-        " ",
         RegExp(r'/', caseSensitive: false, dotAll: true),
-        // RegExp(r'\[', caseSensitive: false, dotAll: true),
-        // RegExp(r'\[', caseSensitive: false, dotAll: true),
         RegExp(r'~', caseSensitive: false, dotAll: true),
       ];
       final String chapterPath = "$name/cap_${capitulo.capitulo}";
@@ -214,18 +212,33 @@ class DownloadController {
         // get extesion name
         String extensionaName = mapOfExtensions[idExtension]!.nome;
 
+        /// define o path para o armazenamento
+        String storagePath = "";
+        switch (GlobalData.settings.storageLocation) {
+          case "intern":
+            storagePath =
+                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}";
+            break;
+          case "extern":
+            storagePath =
+                "/storage/emulated/0/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}";
+            break;
+          case "externocult":
+            storagePath =
+                "/storage/emulated/0/Manga Library/Downloads/$extensionaName/.$chapterPath/$i.${exe[0]}";
+            break;
+        }
+
         // cancel download
         if (filaDeDownload[index].cancel) {
           log("Cancelando o download!!!");
           filaDeDownload[index].attempts = 3;
           if (pagesPath.isEmpty) {
             ///[ deve-se modicar ao buildar com outro id ] com.king.manga_library com.example.manga_library
-            await deleteDownloadForCancel(
-                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
+            await deleteDownloadForCancel(storagePath);
           } else {
             if (pagesPath[0].contains("error:")) {
-              await deleteDownloadForCancel(
-                  "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}");
+              await deleteDownloadForCancel(storagePath);
             } else {
               await deleteDownloadForCancel(pagesPath[0]);
             }
@@ -233,33 +246,43 @@ class DownloadController {
           return null;
         }
 
-        String imagePath = "";
-        var imageId = await ImageDownloader.downloadImage(capitulo.pages[i],
-                destination: AndroidDestinationType.custom(
-                    directory: "Manga Library")
-                  ..inExternalFilesDir()
-                  ..subDirectory(
-                      "Downloads/$extensionaName/$chapterPath/$i.${exe[0]}"))
-            .catchError((error) {
-          if (error is PlatformException) {
-            if (error.code == "404") {
-              debugPrint("Not Found Error.");
-              imagePath = "error: 404 Not Found Error.";
-            } else if (error.code == "unsupported_file") {
-              debugPrint("UnSupported FIle Error.");
-              imagePath = "error: UnSupported FIle Error";
-            }
-          }
-        });
-        if (imageId == null) {
-          log("SEM PERMISSÃO!");
-          MessageCore.showMessage("Download Error: SEM PERMISSÃO");
-          return null;
-        }
+        // String imagePath = "";
+        ImageSaverDownloadModel imageSaverModel = ImageSaverDownloadModel(
+          savePath: storagePath,
+          urlPath: capitulo.pages[i],
+          options:
+              Options(headers: mapOfExtensions[idExtension]!.fetchImagesHeader),
+        );
+        bool response = await imageSaver.download(imageSaverModel);
 
-        imagePath = await ImageDownloader.findPath(imageId) ?? imagePath;
-        log(imagePath);
-        pagesPath.add(imagePath);
+        if (!response) return null;
+
+        // var imageId = await ImageDownloader.downloadImage(capitulo.pages[i],
+        //         destination: AndroidDestinationType.custom(
+        //             directory: "Manga Library")
+        //           ..inExternalFilesDir()
+        //           ..subDirectory(
+        //               "Downloads/$extensionaName/$chapterPath/$i.${exe[0]}"))
+        //     .catchError((error) {
+        //   if (error is PlatformException) {
+        //     if (error.code == "404") {
+        //       debugPrint("Not Found Error.");
+        //       imagePath = "error: 404 Not Found Error.";
+        //     } else if (error.code == "unsupported_file") {
+        //       debugPrint("UnSupported FIle Error.");
+        //       imagePath = "error: UnSupported FIle Error";
+        //     }
+        //   }
+        // });
+        // if (imageId == null) {
+        //   log("SEM PERMISSÃO!");
+        //   MessageCore.showMessage("Download Error: SEM PERMISSÃO");
+        //   return null;
+        // }
+
+        // imagePath = await ImageDownloader.findPath(imageId) ?? imagePath;
+        // log(imagePath);
+        pagesPath.add(storagePath);
         Map<String, int?> progressData = {
           "total": capitulo.pages.length,
           "progress": i

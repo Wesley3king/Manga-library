@@ -9,12 +9,10 @@ import '../../models/libraries_model.dart';
 class AddToLibrary extends StatefulWidget {
   final String link;
   final MangaInfoOffLineModel dados;
-  final List<Capitulos> capitulos;
   const AddToLibrary({
     super.key,
     required this.link,
     required this.dados,
-    required this.capitulos,
   });
 
   @override
@@ -102,7 +100,6 @@ class _AddToLibraryState extends State<AddToLibrary> {
                   "idExtension": widget.dados.idExtension
                 },
                 link: widget.link,
-                capitulos: widget.capitulos,
                 model: widget.dados,
               );
               Navigator.of(context).pop();
@@ -273,7 +270,6 @@ class _AddToLibraryState extends State<AddToLibrary> {
         "idExtension": widget.dados.idExtension
       },
       link: widget.link,
-      capitulos: widget.capitulos,
       model: widget.dados,
     );
     startDialog();

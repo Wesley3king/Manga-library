@@ -1,4 +1,0 @@
-
-class ImageSaverException implements Exception {
-
-}

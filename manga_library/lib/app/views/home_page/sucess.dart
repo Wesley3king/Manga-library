@@ -9,8 +9,6 @@ import 'package:manga_library/app/controllers/system_config.dart';
 import 'package:manga_library/app/models/home_page_model.dart';
 import 'package:manga_library/app/views/home_page/horizontal_list.dart';
 
-import '../../models/globais.dart';
-
 class Sucess extends StatefulWidget {
   final List<ModelHomePage> dados;
   final HomePageController controller;
@@ -42,8 +40,10 @@ class _SucessState extends State<Sucess> {
 
   @override
   Widget build(BuildContext context) {
-    final int sortExtension = Random().nextInt(widget.dados.length);
-    final int sortIndice = Random().nextInt(widget.dados[sortExtension].books.length);
+    final int randomExtension = Random().nextInt(widget.dados.length);
+    final int sortExtension = randomExtension >=0 && randomExtension < widget.dados.length ? randomExtension : 0;
+    final int randomIndice = Random().nextInt(widget.dados[sortExtension].books.length);
+    final int sortIndice = randomIndice >= 0 && randomIndice < widget.dados[sortExtension].books.length ? randomIndice : 0;
     return RefreshIndicator(
       color: configSystemController.colorManagement(),
       onRefresh: () => widget.controller.update(),

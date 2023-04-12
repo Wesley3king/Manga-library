@@ -52,16 +52,7 @@ class MangaInfoOffLineController {
     return null;
   }
 
-  // monta e  retorna um List<ModelPages>
-  List<ModelPages> buildModelLeitor(MangaInfoOffLineModel model) {
-    return model.capitulos
-        .map((Capitulos cap) =>
-            ModelPages(capitulo: cap.capitulo, id: cap.id, pages: cap.pages))
-        .toList();
-  }
-
   // add an offline book
-
   Future<bool> addBook(
       {required MangaInfoOffLineModel model,
       required List<Capitulos> capitulos}) async {
@@ -95,14 +86,18 @@ class MangaInfoOffLineController {
 
   // delete an offline book
 
-  Future deleteBook({required String link, required int idExtension}) async {
+  Future<bool> deleteBook(
+      {required String link, required int idExtension}) async {
     List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
     if (data != null) {
       RegExp regex = RegExp(link, caseSensitive: false);
       data.removeWhere((MangaInfoOffLineModel element) {
-        return (element.link.contains(regex)) && (element.idExtension == idExtension);
+        return (element.link.contains(regex)) &&
+            (element.idExtension == idExtension);
       });
-      await _hiveController.updateBook(data);
+      return await _hiveController.updateBook(data);
+    } else {
+      return false;
     }
   }
 
@@ -115,6 +110,7 @@ class MangaInfoOffLineController {
     try {
       RegExp regex = RegExp(model.link, caseSensitive: false);
       List<MangaInfoOffLineModel>? data = await _hiveController.getBooks();
+
       /// verificar se deve atualizar as capas
 
       if (data != null) {

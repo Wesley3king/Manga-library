@@ -341,7 +341,7 @@ buildSettingsModel() {
       "settings": [
         {
           "nameConfig": "Local de armazenamento",
-          "description": "Define o local que fivaram os downloads",
+          "description": "Define o local de armazenamento dos downloads",
           "type": "radio",
           "value": data.storageLocation,
           "function": functions['Local de armazenamento'],

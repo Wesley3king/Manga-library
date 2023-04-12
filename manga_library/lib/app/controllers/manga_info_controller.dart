@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:manga_library/app/controllers/library_management/library_management_controller.dart';
 import 'package:manga_library/app/controllers/message_core.dart';
 import 'package:manga_library/app/extensions/extensions.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
@@ -481,7 +481,11 @@ class ChaptersController {
 enum ChaptersStates { start, loading, sucess, error }
 
 class DialogController {
+  /// CONTROLLERS
   final HiveController hiveController = HiveController();
+  final MangaInfoOffLineController mangaInfoOffLineController =
+        MangaInfoOffLineController();
+  /// MODELS
   List<LibraryModel> dataLibrary = [];
   List<LibraryModel> dataOcultLibrary = [];
   List<CheckboxListTile> addToLibraryCheckboxes = [];
@@ -502,6 +506,60 @@ class DialogController {
     }
   }
 
+  Future<void> addOrRemoveFromLibrary(List<Map> categoryList, Map<String, dynamic> book,
+      {required String link,
+      required MangaInfoOffLineModel model}) async {
+    dataLibrary = await hiveController.getLibraries();
+    bool removeBookFromDb = true;
+
+    for (int categoryIndex = 0;
+        categoryIndex < categoryList.length;
+        ++categoryIndex) {
+      bool isInTheCategory = false;
+      for (int bookIndex = 0;
+          bookIndex < dataLibrary[categoryIndex].books.length;
+          ++bookIndex) {
+        // check if they are the same book
+        if (testBook(
+            dataLibraryName: dataLibrary[categoryIndex].library,
+            categoryName: categoryList[categoryIndex]['library'],
+            book: book,
+            bookLibrary: dataLibrary[categoryIndex].books[bookIndex])) {
+          isInTheCategory = true;
+          if (!categoryList[categoryIndex]['selected']) {
+            debugPrint('remover da library');
+            dataLibrary[categoryIndex] = removeFromLibrary(
+                dataLibrary: dataLibrary[categoryIndex], book: book);
+            break;
+          } else {
+            removeBookFromDb = false;
+          }
+        }
+      }
+      // tests to add the book to this category
+      if (!isInTheCategory && categoryList[categoryIndex]['selected']) {
+        debugPrint('adicionar a library');
+        removeBookFromDb = false;
+        dataLibrary[categoryIndex] =
+            addToLibrary(dataLibrary: dataLibrary[categoryIndex], book: book);
+      }
+    }
+    // save to database
+    await hiveController.updateLibraries(dataLibrary);
+    // add or remove from database
+    if (!MangaInfoController.isAnOffLineBook) {
+      await addToDB(
+        link: link,
+        model: model,
+      );
+    } else if (removeBookFromDb) {
+      await removeFromDB(link: link, idExtension: book['idExtension']);
+    }
+  }
+  // ==========================================================================
+  //                  ---- OCULT LIBRARY ----
+  // ==========================================================================
+
   Future<bool> startOcultLibrary() async {
     // state.value = DialogStates.loading;
     try {
@@ -516,156 +574,73 @@ class DialogController {
     }
   }
 
-  /// adicionar ou remover da library (biblioteca)
-  Future<bool> addOrRemoveFromLibrary(
-      List<Map> lista, Map<String, dynamic> book,
-      {required String link,
-      required MangaInfoOffLineModel model,
-      required List<Capitulos> capitulos}) async {
-    debugPrint('inicio do processo de adicionar/remover da library');
-
-    bool haveError = false;
-    dataLibrary = await hiveController.getLibraries();
-    bool offLine = false;
-    bool removerDB = true;
-
-    for (int i = 0; i < lista.length; ++i) {
-      bool existe = false;
-      bool executed = false;
-      for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-        if ((dataLibrary[i].library == lista[i]['library']) &&
-            (dataLibrary[i].books[iBook].link == book['link']) &&
-            (dataLibrary[i].books[iBook].idExtension == book['idExtension'])) {
-          debugPrint("achei o manga na library");
-          offLine = true;
-          if (!lista[i]['selected']) {
-            debugPrint('remover da library');
-            dataLibrary[i].books.removeWhere((element) =>
-                (element.link == book['link']) &&
-                element.idExtension == book['idExtension']);
-            await hiveController.updateLibraries(dataLibrary)
-                ? haveError = false
-                : haveError = true;
-            executed = true;
-            break;
-          } else {
-            removerDB = false;
-            existe = true;
-          }
-        }
-      }
-      if (!existe && !executed && lista[i]['selected']) {
-        debugPrint('adicionar a library');
-        dataLibrary[i].books.add(Books.fromJson(book));
-        await hiveController.updateLibraries(dataLibrary)
-            ? haveError = false
-            : haveError = true;
-      }
-    }
-    if (!offLine) {
-      // for (Capitulos element in model.capitulos) {
-      //   print("capitulo ${element.capitulo} / ${element.disponivel}");
-      // }
-      await _addOffLineManga(
-        link: link,
-        model: model,
-      )
-          ? haveError = false
-          : haveError = true;
-    } else if (removerDB) {
-      await _removeOffLineManga(link: link, idExtension: book['idExtension'])
-          ? haveError = false
-          : haveError = true;
-    }
-    return !haveError;
-  }
-
   /// adicionar ou remover da ocultLibrary (biblioteca oculta)
-  Future<bool> addOrRemoveFromOcultLibrary(
-      List<Map> lista, Map<String, dynamic> book,
+  Future<void> addOrRemoveFromOcultLibrary(List<Map> categoryList, Map<String, dynamic> book,
       {required String link,
-      required MangaInfoOffLineModel model,
-      required List<Capitulos> capitulos}) async {
-    debugPrint('inicio do processo de atualização da Ocult library');
-
-    bool haveError = false;
+      required MangaInfoOffLineModel model}) async {
     dataOcultLibrary = await hiveController.getOcultLibraries();
-    bool offLine = false;
-    bool removerDB = true;
+    bool removeBookFromDb = true;
 
-    for (int i = 0; i < lista.length; ++i) {
-      bool existe = false;
-      bool executed = false;
-      for (int iBook = 0; iBook < dataOcultLibrary[i].books.length; ++iBook) {
-        if ((dataOcultLibrary[i].library == lista[i]['library']) &&
-            (dataOcultLibrary[i].books[iBook].link == book['link']) &&
-            (dataOcultLibrary[i].books[iBook].idExtension ==
-                book['idExtension'])) {
-          debugPrint("achei o manga na OCULT library");
-          offLine = true;
-          if (!lista[i]['selected']) {
-            debugPrint('remover da OCULT library');
-            dataOcultLibrary[i].books.removeWhere((element) =>
-                (element.link == book['link']) &&
-                element.idExtension == book['idExtension']);
-            await hiveController.updateOcultLibraries(dataOcultLibrary)
-                ? haveError = false
-                : haveError = true;
-            executed = true;
+    for (int categoryIndex = 0;
+        categoryIndex < categoryList.length;
+        ++categoryIndex) {
+      bool isInTheCategory = false;
+      for (int bookIndex = 0;
+          bookIndex < dataOcultLibrary[categoryIndex].books.length;
+          ++bookIndex) {
+        // check if they are the same book
+        if (testBook(
+            dataLibraryName: dataOcultLibrary[categoryIndex].library,
+            categoryName: categoryList[categoryIndex]['library'],
+            book: book,
+            bookLibrary: dataOcultLibrary[categoryIndex].books[bookIndex])) {
+          isInTheCategory = true;
+          if (!categoryList[categoryIndex]['selected']) {
+            debugPrint('remover da library');
+            dataOcultLibrary[categoryIndex] = removeFromLibrary(
+                dataLibrary: dataOcultLibrary[categoryIndex], book: book);
             break;
           } else {
-            removerDB = false;
-            existe = true;
+            removeBookFromDb = false;
           }
         }
       }
-      if (!existe && !executed && lista[i]['selected']) {
-        debugPrint('adicionar a OCULT library');
-        dataOcultLibrary[i].books.add(Books.fromJson(book));
-        await hiveController.updateOcultLibraries(dataOcultLibrary)
-            ? haveError = false
-            : haveError = true;
+      // tests to add the book to this category
+      if (!isInTheCategory && categoryList[categoryIndex]['selected']) {
+        debugPrint('adicionar a library');
+        removeBookFromDb = false;
+        dataOcultLibrary[categoryIndex] =
+            addToLibrary(dataLibrary: dataOcultLibrary[categoryIndex], book: book);
       }
     }
-    if (!offLine) {
-      await _addOffLineManga(
+    // save to database
+    await hiveController.updateOcultLibraries(dataOcultLibrary);
+    // add or remove from database
+    if (!MangaInfoController.isAnOffLineBook) {
+      await addToDB(
         link: link,
         model: model,
-      )
-          ? haveError = false
-          : haveError = true;
-    } else if (removerDB) {
-      await _removeOffLineManga(link: link, idExtension: book['idExtension'])
-          ? haveError = false
-          : haveError = true;
+      );
+    } else if (removeBookFromDb) {
+      await removeFromDB(link: link, idExtension: book['idExtension']);
     }
-    return !haveError;
   }
 
-  // disponibilizar um manga OffLine
-  Future<bool> _addOffLineManga(
-      {required String link, required MangaInfoOffLineModel model}) async {
-    final MangaInfoOffLineController mangaInfoOffLineController =
-        MangaInfoOffLineController();
-
-    return await mangaInfoOffLineController.addBook(
-        model: model, capitulos: ChaptersController.capitulosCorrelacionados);
-  }
-
-  // remove um manga OffLine
-  Future<bool> _removeOffLineManga({
-    required int idExtension,
-    required String link,
-  }) async {
-    final MangaInfoOffLineController mangaInfoOffLineController =
-        MangaInfoOffLineController();
+  /// remove book from database
+  Future<bool> removeFromDB({required String link, required int idExtension}) async {
     try {
       mangaInfoOffLineController.deleteBook(
           link: link, idExtension: idExtension);
       return true;
     } catch (e) {
-      debugPrint("erro no _removeOffLineManga at DialogController: $e");
+      debugPrint("erro no removeFRomDB at DialogController: $e");
       return false;
     }
+  }
+
+  /// add book to database
+  Future<bool> addToDB({required String link, required MangaInfoOffLineModel model}) async {
+    return await mangaInfoOffLineController.addBook(
+        model: model, capitulos: ChaptersController.capitulosCorrelacionados);
   }
 }
