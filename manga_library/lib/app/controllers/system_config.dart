@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:image_saver/image_saver.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
-import 'package:manga_library/app/models/libraries_model.dart';
-import 'package:manga_library/app/models/manga_info_offline_model.dart';
 import 'package:manga_library/app/models/system_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,67 +17,67 @@ class SystemController {
     // inicializar o Hive
     await _hiveController.start();
     updateConfig();
-    try {
-      // List<LibraryModel> dataLibrary = await _hiveController.getLibraries();
-      // List<MangaInfoOffLineModel>? models = await _hiveController.getBooks();
-      // models!.forEach((element) {
-      //   if (element.link.contains("https://mangayabu.top/manga/the-breaker-eternal-force/")) {
-      //     debugPrint("EXISTE");
-      //   }
-      // });
-      // List<Map> lista = [
-      //   {"library": "favoritos", "selected": false},
-      //   {"library": "kkk", "selected": false},
-      //   {"library": "kkk", "selected": false},
-      //   {"library": "Finalizado", "selected": false},
-      //   {"library": "novos", "selected": false},
-      // ];
-      // // Map<String, dynamic> book = {
-      // //   "link": "tower-of-god-season-1",
-      // //   "idExtension": 4
-      // // };
-      // Map<String, dynamic> book = {"link": "the-breaker-eternal-force", "idExtension": 1};
-      // // {required String link,
-      // // required MangaInfoOffLineModel model,
-      // // required List<Capitulos> capitulos}
-      // for (int i = 0; i < lista.length; ++i) {
-      //   bool existe = false;
-      //   bool executed = false;
-      //   for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
-      //     if ((dataLibrary[i].library == lista[i]['library']) &&
-      //         (dataLibrary[i].books[iBook].link == book['link']) &&
-      //         (dataLibrary[i].books[iBook].idExtension ==
-      //             book['idExtension'])) {
-      //       debugPrint("achei o manga na library");
-      //       if (!lista[i]['selected']) {
-      //         debugPrint('remover da library');
-      //         dataLibrary[i].books.removeWhere((element) =>
-      //             (element.link == book['link']) &&
-      //             element.idExtension == book['idExtension']);
-      //         await _hiveController.updateLibraries(dataLibrary);
-      //         executed = true;
-      //         break;
-      //       } else {
-      //         existe = true;
-      //       }
-      //     }
-      //   }
-      //   if (!existe && !executed && lista[i]['selected']) {
-      //     debugPrint('adicionar a library');
-      //     dataLibrary[i].books.add(Books.fromJson(book));
-      //     await _hiveController.updateLibraries(dataLibrary);
-      //   }
-      // }
+    // try {
+    //   // List<LibraryModel> dataLibrary = await _hiveController.getLibraries();
+    //   // List<MangaInfoOffLineModel>? models = await _hiveController.getBooks();
+    //   // models!.forEach((element) {
+    //   //   if (element.link.contains("https://mangayabu.top/manga/the-breaker-eternal-force/")) {
+    //   //     debugPrint("EXISTE");
+    //   //   }
+    //   // });
+    //   // List<Map> lista = [
+    //   //   {"library": "favoritos", "selected": false},
+    //   //   {"library": "kkk", "selected": false},
+    //   //   {"library": "kkk", "selected": false},
+    //   //   {"library": "Finalizado", "selected": false},
+    //   //   {"library": "novos", "selected": false},
+    //   // ];
+    //   // // Map<String, dynamic> book = {
+    //   // //   "link": "tower-of-god-season-1",
+    //   // //   "idExtension": 4
+    //   // // };
+    //   // Map<String, dynamic> book = {"link": "the-breaker-eternal-force", "idExtension": 1};
+    //   // // {required String link,
+    //   // // required MangaInfoOffLineModel model,
+    //   // // required List<Capitulos> capitulos}
+    //   // for (int i = 0; i < lista.length; ++i) {
+    //   //   bool existe = false;
+    //   //   bool executed = false;
+    //   //   for (int iBook = 0; iBook < dataLibrary[i].books.length; ++iBook) {
+    //   //     if ((dataLibrary[i].library == lista[i]['library']) &&
+    //   //         (dataLibrary[i].books[iBook].link == book['link']) &&
+    //   //         (dataLibrary[i].books[iBook].idExtension ==
+    //   //             book['idExtension'])) {
+    //   //       debugPrint("achei o manga na library");
+    //   //       if (!lista[i]['selected']) {
+    //   //         debugPrint('remover da library');
+    //   //         dataLibrary[i].books.removeWhere((element) =>
+    //   //             (element.link == book['link']) &&
+    //   //             element.idExtension == book['idExtension']);
+    //   //         await _hiveController.updateLibraries(dataLibrary);
+    //   //         executed = true;
+    //   //         break;
+    //   //       } else {
+    //   //         existe = true;
+    //   //       }
+    //   //     }
+    //   //   }
+    //   //   if (!existe && !executed && lista[i]['selected']) {
+    //   //     debugPrint('adicionar a library');
+    //   //     dataLibrary[i].books.add(Books.fromJson(book));
+    //   //     await _hiveController.updateLibraries(dataLibrary);
+    //   //   }
+    //   // }
 
-      // Response<List<int>> rs = await Dio().get<List<int>>(
-      //     "https://images.pexels.com/photos/15575287/pexels-photo-15575287.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      //     options: Options(responseType: ResponseType.bytes));
-      // await ImageSaver().saveAnImageFromBytes(
-      //     rs.data ?? <int>[], "storage/emulated/0/Pictures/image saver/bytes img test.jpeg");
-      log("DOWNLOAD DID");
-    } catch (e) {
-      log("ERROR AT DOWNLOADER TEST: $e");
-    }
+    //   // Response<List<int>> rs = await Dio().get<List<int>>(
+    //   //     "https://images.pexels.com/photos/15575287/pexels-photo-15575287.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    //   //     options: Options(responseType: ResponseType.bytes));
+    //   // await ImageSaver().saveAnImageFromBytes(
+    //   //     rs.data ?? <int>[], "storage/emulated/0/Pictures/image saver/bytes img test.jpeg");
+    //   log("DOWNLOAD DID");
+    // } catch (e) {
+    //   log("ERROR AT DOWNLOADER TEST: $e");
+    // }
   }
 
   Future updateConfig() async {
