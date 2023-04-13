@@ -548,23 +548,16 @@ class DialogController {
     await hiveController.updateLibraries(dataLibrary);
     // add or remove from database
     if (!MangaInfoController.isAnOffLineBook) {
-
-      bool inOtherLibrary = await isInOcultLibrary(
-          hiveController: hiveController,
-          link: link,
-          idExtension: book['idExtension']);
-      if (!inOtherLibrary) {
-        await addToDB(
-          link: link,
-          model: model,
-        );
-      }
+      await addToDB(
+        link: link,
+        model: model,
+      );
     } else if (removeBookFromDb) {
       bool inOtherLibrary = await isInOcultLibrary(
           hiveController: hiveController,
           link: link,
           idExtension: book['idExtension']);
-      if (inOtherLibrary) {
+      if (!inOtherLibrary) {
         await removeFromDB(link: link, idExtension: book['idExtension']);
       }
     }
@@ -630,23 +623,16 @@ class DialogController {
     await hiveController.updateOcultLibraries(dataOcultLibrary);
     // add or remove from database
     if (!MangaInfoController.isAnOffLineBook) {
-      
-      bool inOtherLibrary = await isInLibrary(
-          hiveController: hiveController,
-          link: link,
-          idExtension: book['idExtension']);
-      if (!inOtherLibrary) {
-        await addToDB(
-          link: link,
-          model: model,
-        );
-      }
+      await addToDB(
+        link: link,
+        model: model,
+      );
     } else if (removeBookFromDb) {
       bool inOtherLibrary = await isInLibrary(
           hiveController: hiveController,
           link: link,
           idExtension: book['idExtension']);
-      if (inOtherLibrary) {
+      if (!inOtherLibrary) {
         await removeFromDB(link: link, idExtension: book['idExtension']);
       }
     }
