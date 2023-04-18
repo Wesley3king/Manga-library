@@ -60,8 +60,6 @@ class CustomListTile extends StatelessWidget {
     GoRouter.of(context).push('/detail/$link/$idExtension');
   }
 
-  void insertValueNotifier() {}
-
   @override
   Widget build(BuildContext context) {
     return Padding(

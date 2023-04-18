@@ -66,6 +66,7 @@ dependencies:
   system_settings: ^2.1.0
   image_saver:
     path: ./lib/image_saver
+  awesome_notifications: ^0.7.4+1
   #flutter_animated_icons: ^1.0.1
 
 dev_dependencies:

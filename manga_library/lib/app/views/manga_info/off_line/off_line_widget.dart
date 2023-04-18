@@ -45,18 +45,7 @@ class _OffLineWidgetState extends State<OffLineWidget> {
                     double second = first /
                         _offLineWidgetController
                             .downloadProgress.value['total']!;
-                    log("valor de second: $second");
-                    // if (_offLineWidgetController
-                    //         .downloadProgress.value['progress']! ==
-                    //     (_offLineWidgetController
-                    //             .downloadProgress.value['total']! -
-                    //         1)) {
-                    //   Future.delayed(
-                    //     const Duration(milliseconds: 100),
-                    //     () => _offLineWidgetController.state.value =
-                    //         DownloadStates.delete,
-                    //   );
-                    // }
+                    log("Progresso do Download: $second");
                     return CircularProgressIndicator(
                       strokeWidth: 2.0,
                       value: second / 100,
@@ -70,7 +59,7 @@ class _OffLineWidgetState extends State<OffLineWidget> {
               )),
         ),
         IconButton(
-            onPressed: () => _offLineWidgetController.cancel(widget.capitulo, widget.model.idExtension),
+            onPressed: () => _offLineWidgetController.cancel(widget.capitulo, widget.model.link),
             icon: const Icon(Icons.close))
       ],
     );

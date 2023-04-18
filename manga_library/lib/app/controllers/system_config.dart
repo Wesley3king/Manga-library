@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_saver/image_saver.dart';
 import 'package:manga_library/app/controllers/file_manager.dart';
 import 'package:manga_library/app/controllers/hive/hive_controller.dart';
+import 'package:manga_library/app/controllers/notifications/notification_service.dart';
 import 'package:manga_library/app/models/system_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -17,6 +18,7 @@ class SystemController {
     // inicializar o Hive
     await _hiveController.start();
     updateConfig();
+    NotificationService.checkPermissions();
     // try {
     //   // List<LibraryModel> dataLibrary = await _hiveController.getLibraries();
     //   // List<MangaInfoOffLineModel>? models = await _hiveController.getBooks();

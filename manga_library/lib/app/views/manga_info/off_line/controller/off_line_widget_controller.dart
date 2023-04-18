@@ -21,8 +21,6 @@ class OffLineWidgetController {
       state.value = DownloadStates.delete;
     } else {
       // implement downloading verify
-      // List<DownloadModel> filaDownloadFreezed =
-      //     List.unmodifiable(DownloadController.filaDeDownload);
       try {
         bool isDownloading =
             false; // DownloadModel model in filaDownloadFreezed
@@ -93,12 +91,9 @@ class OffLineWidgetController {
     // state.value = DownloadStates.delete;
   }
 
-  void cancel(Capitulos capitulo, int idExtension) async {
-    // await mapOfExtensions[idExtension]!.download(DownloadActions.cancel,
-    // chapter: capitulo, idExtension: idExtension);
-    await DownloadController.cancelDownload(capitulo, idExtension);
+  void cancel(Capitulos capitulo, String link) async {
+    await DownloadController.cancelDownload(capitulo, link);
     state.value = DownloadStates.download;
-    // DownloadController.cancelDownload(capitulo);
   }
 
   void delete(

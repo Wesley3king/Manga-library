@@ -203,8 +203,13 @@ Map<String, Function> settingsFunctions = {
     configSystemController.update(settings);
     controller.updateSetting();
   },
-  "Local de armazenamento":
-      (dynamic value, SettingsOptionsController controller) {},
+  "Local de armazenamento": (dynamic value, SettingsOptionsController controller) {
+    GlobalData.settings.storageLocation = value;
+    final ConfigSystemController configSystemController =
+        ConfigSystemController();
+    configSystemController.update(settings);
+    controller.updateSetting();
+  },
   "Autenticação": (dynamic value, SettingsOptionsController controller) {
     debugPrint("alterar o valor = $value");
     GlobalData.settings.authentication = value;

@@ -290,7 +290,7 @@ class HiveController {
         layout: "bordersLTR",
         showLayout: true,
         scrollWebtoon: 400,
-        storageLocation: "intern",
+        storageLocation: "externocult",
         authentication: false,
         authenticationType: "text",
         authenticationPassword: "",
