@@ -22,6 +22,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     for (Result book in data) {
       // name
       String? name = book.querySelector("div > a > span.thumb-titulo")!.text;
+      if (name!.contains("[Site de Quadrinhos Er")) continue;
       // img
       String? img = book.querySelector("div > a> span.thumb-imagem > img")!.src;
       // link
@@ -31,7 +32,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       List<String> corteLink = link!.split("com/");
       // montar o model ModelHomeBook
       books.add(<String, String>{
-        "name": name ?? "erro",
+        "name": name,
         "url": corteLink[1].replaceAll("/", ""),
         "img": img ?? ""
       });

@@ -12,7 +12,8 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     List<Map<String, String>> books = [];
     // ==============================================
     // -----------------  destaques  ----------------
-    List<Result> destaquesItens = parser!.querySelectorAll("div.bixbox > div.listupd > div.bs > div.bsx > a");
+    List<Result> destaquesItens = parser!
+        .querySelectorAll("div.bixbox > div.listupd > div.bs > div.bsx > a");
     books = [];
 
     for (Result html in destaquesItens) {
@@ -32,7 +33,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img!.contains("https") ? img :'https:$img'
+        "img": img!.contains("https") ? img : 'https:$img'
       });
       // debugPrint("book adicionado!!!");
     }
@@ -67,7 +68,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name!.trim(),
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img!.contains("https") ? img :'https:$img'
+        "img": img!.contains("https") ? img : 'https:$img'
       });
     }
     // print(books);
@@ -80,7 +81,8 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
     };
     models.add(ModelHomePage.fromJson(destaques));
     // mais lidos
-    Result? result3 = parser.querySelector("div.section > div#wpop-items > div.serieslist > ul");
+    Result? result3 = parser
+        .querySelector("div.section > div#wpop-items > div.serieslist > ul");
     List<Result>? maisLidosItens = result3.querySelectorAll("li");
     // print(result3?.html);
     // print("data: $result3 / li: $maisLidosItens");
@@ -103,7 +105,7 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeIndice) async {
       books.add({
         "name": name?.trim() ?? "erro",
         "url": linkCorte1[1].replaceAll("/", ""),
-        "img": img!.contains("https") ? img :'https:$img'
+        "img": img!.contains("https") ? img : 'https:$img'
       });
       // debugPrint("book adicionado!!!");
     }
@@ -222,7 +224,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
       return MangaInfoOffLineModel(
         name: name ?? "erro",
         description: description ?? "erro",
-        img: img!.contains("https") ? img :'https:$img',
+        img: img!.contains("https") ? img : 'https:$img',
         authors: authors,
         state: status ?? "Estado desconhecido",
         link: "https://mangaschan.com/manga/$link/",
@@ -249,10 +251,10 @@ Future<List<String>> scrapingLeitor(String id) async {
     var parser = await Chaleno().load("https://mangaschan.com/$id/");
 
     Result? area = parser?.querySelector("div#readerarea > noscript");
-    // debugPrint("area: ${area?.html}");
+    debugPrint("area: ${area?.html}");
 
     List<String>? resultHtml = area?.html?.split('" alt=');
-    debugPrint('result: $resultHtml');
+    // debugPrint('result: $resultHtml');
 
     List<String> resultPages = [];
     if (resultHtml != null) {
@@ -261,6 +263,10 @@ Future<List<String>> scrapingLeitor(String id) async {
           List<String>? page = image.split('src="'); // image on index 1
           // debugPrint("img: $page");
           resultPages.add('https:${page[1]}');
+        } else if (image.contains('img src="https://')) {
+          List<String>? page = image.split('img src="'); // image on index 1
+          // debugPrint("img: $page");
+          resultPages.add(page[1]);
         }
       }
     }

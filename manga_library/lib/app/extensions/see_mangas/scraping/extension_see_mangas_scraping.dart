@@ -54,7 +54,6 @@ Future<List<ModelHomePage>> scrapingHomePage(int computeInd) async {
 
 // manga Detail
 Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
-  final Dio dio = Dio();
   try {
     var parser = await Chaleno().load("https://seemangas.com/manga/$link");
 

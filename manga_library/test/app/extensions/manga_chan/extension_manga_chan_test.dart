@@ -20,11 +20,12 @@ void main() {
   });
 
   test("deve retornar um model Capitulos com as paginas do leitor", () async {
+    //return-of-the-frozen-player-novel-capitulo-0 tales-of-demons-and-gods-capitulo-312-5
     var data =
-        await extend.getPages("tales-of-demons-and-gods-capitulo-312-5", [
+        await extend.getPages("return-of-the-frozen-player-novel-capitulo-0", [
       Capitulos(
-          capitulo: "312-5",
-          id: "houkago-no-goumon-shoujo-capitulo-116",
+          capitulo: "0",
+          id: "return-of-the-frozen-player-novel-capitulo-0",
           description: "",
           mark: false,
           download: false,

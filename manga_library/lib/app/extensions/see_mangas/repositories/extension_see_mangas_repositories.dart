@@ -7,7 +7,8 @@ import 'package:flutter/rendering.dart';
 
 Future<List<String>> getImagesForLeitor(String id) async {
   final Dio dio = Dio();
-  List<String> corteLink1 = id.split("zyy");
+  Response responseToken = await dio.get("https://wesley3king.github.io/reactJS/token/token_see_manga.json");
+  List<String> corteLink1 = id.split(responseToken.data["token"]);
   try {
     var data = await dio.post("https://seemangas.com/wp-admin/admin-ajax.php",
         data: {
@@ -25,7 +26,7 @@ Future<List<String>> getImagesForLeitor(String id) async {
     final List<Map> convertData = List.from(data.data['images']);
     return convertData.map<String>((map) => map['url']).toList();
   } catch (e, s) {
-    debugPrint("erro no scrapingLeitor at EXtensionMundoMangaKun: $e");
+    debugPrint("erro no scrapingLeitor at ExtensionSeeMangas: $e");
     debugPrint("$s");
     return [];
   }

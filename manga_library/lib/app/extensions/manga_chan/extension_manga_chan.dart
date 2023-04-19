@@ -48,8 +48,6 @@ class ExtensionMangaChan implements Extension {
         pages: [],
         readed: false);
     for (int i = 0; i < listChapters.length; ++i) {
-      // print(
-      //     "teste: num cap: ${listChapters[i].id} $id, id: $id / ${int.parse(listChapters[i].id) == int.parse(id)}");
       if (listChapters[i].id == id) {
         result = listChapters[i];
         break;
@@ -73,7 +71,7 @@ class ExtensionMangaChan implements Extension {
   @override
   Future<List<Books>> search(String txt) async {
     try {
-      debugPrint("SILENCE SCAN SEARCH STARTING...");
+      debugPrint("MANGAS CHAN SEARCH STARTING...");
       StringBuffer buffer = StringBuffer();
       List<String> cortes = txt.split(" ");
 

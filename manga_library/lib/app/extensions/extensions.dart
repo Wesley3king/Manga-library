@@ -1,4 +1,5 @@
 import 'package:manga_library/app/extensions/gekkou_scans/extesion_gekkou_scans.dart';
+import 'package:manga_library/app/extensions/hen_net_br/extension_hen_net_br.dart';
 import 'package:manga_library/app/extensions/hen_season/extension_hen_season.dart';
 import 'package:manga_library/app/extensions/hq_dragon/extension_hq_dragon.dart';
 import 'package:manga_library/app/extensions/hq_now/extension_hq_now.dart';
@@ -40,7 +41,8 @@ final List<Extension> listOfExtensions = [
   ExtensionHqDragon(),
   // ExtensionNHenNet(),
   ExtensionMundoWebtoon(),
-  ExtensionIzakaya()
+  ExtensionIzakaya(),
+  ExtensionHenNetBr()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -63,5 +65,6 @@ final Map<int, Extension> mapOfExtensions = {
   18: ExtensionHqDragon(),
   19: ExtensionNHenNet(),
   20: ExtensionMundoWebtoon(),
-  21: ExtensionIzakaya()
+  21: ExtensionIzakaya(),
+  22: ExtensionHenNetBr()
 };

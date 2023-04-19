@@ -17,10 +17,10 @@ void main() {
 
   // getPages
   test("deve retornar um model Capitulos", () async {
-    var data = await extend.getPages("black-clover-capitulo-1-zyy263", [
+    var data = await extend.getPages("black-clover-capitulo-353-asd127969", [
       Capitulos(
         capitulo: "1",
-        id: "black-clover-capitulo-1-zyy263",
+        id: "black-clover-capitulo-353-asd127969",
         description: "",
         mark: false,
         download: false,
