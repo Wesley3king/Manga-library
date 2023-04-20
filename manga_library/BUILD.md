@@ -7,3 +7,4 @@
     * no build.gradle
     * no file_manager.dart
     * no download_controller
+    * no main.dart(debug: false)

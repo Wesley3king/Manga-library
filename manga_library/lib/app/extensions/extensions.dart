@@ -1,4 +1,5 @@
 import 'package:manga_library/app/extensions/gekkou_scans/extesion_gekkou_scans.dart';
+import 'package:manga_library/app/extensions/hen_hand/extension_hen_hand.dart';
 import 'package:manga_library/app/extensions/hen_net_br/extension_hen_net_br.dart';
 import 'package:manga_library/app/extensions/hen_season/extension_hen_season.dart';
 import 'package:manga_library/app/extensions/hq_dragon/extension_hq_dragon.dart';
@@ -9,6 +10,7 @@ import 'package:manga_library/app/extensions/manga_yabu/extension_yabu.dart';
 import 'package:manga_library/app/extensions/model_extension.dart';
 import 'package:manga_library/app/extensions/mundo_manga_kun/extension_mundo_manga_kun.dart';
 import 'package:manga_library/app/extensions/mundo_webtoon/extension_mundo_webtoon.dart';
+import 'package:manga_library/app/extensions/n_hen_com/extension_n_hen_com.dart';
 import 'package:manga_library/app/extensions/neox_scans/extension_neox_scans.dart';
 import 'package:manga_library/app/extensions/nhen/extension_nhen.dart';
 import 'package:manga_library/app/extensions/nhen_br/extension_n_hen_br.dart';
@@ -42,7 +44,9 @@ final List<Extension> listOfExtensions = [
   // ExtensionNHenNet(),
   ExtensionMundoWebtoon(),
   ExtensionIzakaya(),
-  ExtensionHenNetBr()
+  ExtensionHenNetBr(),
+  ExtensionHenHand(),
+  ExtensionNHenCom()
 ];
 
 final Map<int, Extension> mapOfExtensions = {
@@ -66,5 +70,7 @@ final Map<int, Extension> mapOfExtensions = {
   19: ExtensionNHenNet(),
   20: ExtensionMundoWebtoon(),
   21: ExtensionIzakaya(),
-  22: ExtensionHenNetBr()
+  22: ExtensionHenNetBr(),
+  23: ExtensionHenHand(),
+  24: ExtensionNHenCom()
 };

@@ -142,6 +142,8 @@ flutter:
     - assets/extesion_posters/Mundo-Webtoon.png
     - assets/extesion_posters/Izakaya.png
     - assets/extesion_posters/Hen_net_br.png
+    - assets/extesion_posters/Hen-Hand.png
+    - assets/extesion_posters/H_Hen_com.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
