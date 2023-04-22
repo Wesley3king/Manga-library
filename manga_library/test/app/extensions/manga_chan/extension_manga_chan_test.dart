@@ -21,11 +21,12 @@ void main() {
 
   test("deve retornar um model Capitulos com as paginas do leitor", () async {
     //return-of-the-frozen-player-novel-capitulo-0 tales-of-demons-and-gods-capitulo-312-5
+    // tsuki-ga-michibiku-isekai-douchuu-capitulo-1 wind-breaker-capitulo-0
     var data =
-        await extend.getPages("return-of-the-frozen-player-novel-capitulo-0", [
+        await extend.getPages("wind-breaker-capitulo-0", [
       Capitulos(
           capitulo: "0",
-          id: "return-of-the-frozen-player-novel-capitulo-0",
+          id: "wind-breaker-capitulo-0",
           description: "",
           mark: false,
           download: false,

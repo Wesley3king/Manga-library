@@ -1,4 +1,5 @@
 import 'package:chaleno/chaleno.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 
 import '../../../models/home_page_model.dart';
@@ -247,27 +248,38 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
 // ============================================================================
 
 Future<List<String>> scrapingLeitor(String id) async {
+  final Dio dio = Dio();
   try {
-    var parser = await Chaleno().load("https://mangaschan.com/$id/");
+    var response = await dio.get("https://mangaschan.com/$id/");
+    final Parser parser = Parser(response.data);
 
-    Result? area = parser?.querySelector("div#readerarea > noscript");
-    debugPrint("area: ${area?.html}");
-
-    List<String>? resultHtml = area?.html?.split('" alt=');
+    Result? area1 = parser.querySelector("div#readerarea > noscript");
+    // debugPrint("area: ${area1.html}");
     // debugPrint('result: $resultHtml');
 
     List<String> resultPages = [];
-    if (resultHtml != null) {
-      for (String image in resultHtml) {
-        if (image.contains('src="//img.manga')) {
-          List<String>? page = image.split('src="'); // image on index 1
+    if (area1.html != null) {
+      List<String>? resultHtml = area1.html?.split('" alt=');
+      for (String image in resultHtml!) {
+        // if (image.contains('src="//img.manga')) {
+        //   List<String>? page = image.split('src="'); // image on index 1
+        //   // debugPrint("img: $page");
+        //   resultPages.add('https:${page[1]}');
+        // } else 
+        if (image.contains('src="https://')) {
+          List<String> page1 = image.split('src="'); // image on index 1
+          List<String> page2 = page1[1].split('" title='); // image on index 0
           // debugPrint("img: $page");
-          resultPages.add('https:${page[1]}');
-        } else if (image.contains('img src="https://')) {
-          List<String>? page = image.split('img src="'); // image on index 1
-          // debugPrint("img: $page");
-          resultPages.add(page[1]);
+          resultPages.add(page2[0]);
         }
+      }
+    } else {
+      // area 2
+      Result? area2 = parser.querySelector("div#readerarea > p");
+      // debugPrint("area: ${area2.html}");
+      List<Result>? results = area2.querySelectorAll("img");
+      for (Result result in results!) {
+        resultPages.add(result.src!);
       }
     }
 
