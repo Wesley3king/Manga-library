@@ -52,6 +52,27 @@ class MangaInfoOffLineController {
     return null;
   }
 
+  // is this book on Db
+  Future<bool> isThisBookOnDB(
+      {required String link,
+      required int idExtension}) async {
+    List<MangaInfoOffLineModel>? books = await _hiveController.getBooks();
+    // o link pode acabar vindo inteiro (downloads)
+    if (!link.contains("/")) {
+      link = mapOfExtensions[idExtension]!.getLink(link);
+    }
+    RegExp regex = RegExp(link, caseSensitive: false);
+    for (int i = 0; i < books!.length; ++i) {
+      if ((books[i].link.contains(regex)) &&
+          (books[i].idExtension == idExtension)) {
+        debugPrint("achado na memória!");
+        return true;
+      }
+    }
+    debugPrint("não encontrei o manga na memoria");
+    return false;
+  }
+
   // add an offline book
   Future<bool> addBook(
       {required MangaInfoOffLineModel model,

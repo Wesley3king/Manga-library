@@ -546,8 +546,9 @@ class DialogController {
     }
     // save to database
     await hiveController.updateLibraries(dataLibrary);
+    final bool isOnDb = await mangaInfoOffLineController.isThisBookOnDB(link: link, idExtension: book['idExtension']);
     // add or remove from database
-    if (!MangaInfoController.isAnOffLineBook) {
+    if (!isOnDb) {
       await addToDB(
         link: link,
         model: model,
@@ -621,8 +622,9 @@ class DialogController {
     }
     // save to database
     await hiveController.updateOcultLibraries(dataOcultLibrary);
+    final bool isOnDb = await mangaInfoOffLineController.isThisBookOnDB(link: link, idExtension: book['idExtension']);
     // add or remove from database
-    if (!MangaInfoController.isAnOffLineBook) {
+    if (!isOnDb) {
       await addToDB(
         link: link,
         model: model,

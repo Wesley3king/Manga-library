@@ -94,9 +94,7 @@ class _AddToLibraryState extends State<AddToLibrary> {
               _dialogController.addOrRemoveFromOcultLibrary(
                 resultadoForOcultLibrary,
                 {
-                  // "name": widget.dados.name,
                   "link": widget.link,
-                  // "img": widget.dados.img,
                   "idExtension": widget.dados.idExtension
                 },
                 link: widget.link,

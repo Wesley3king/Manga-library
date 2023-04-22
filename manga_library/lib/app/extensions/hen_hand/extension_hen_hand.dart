@@ -32,7 +32,7 @@ class ExtensionHenHand implements Extension {
   }
 
   @override
-  String getLink(String pieceOfLink) => "https://hentaihand.com/api/comics/$pieceOfLink?lang=en&nsfw=false";
+  String getLink(String pieceOfLink) => "https://hentaihand.com/en/comic/$pieceOfLink";
 
   @override
   Future<Capitulos> getPages(String id, List<Capitulos> listChapters) async {

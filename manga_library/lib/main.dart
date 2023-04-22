@@ -19,7 +19,7 @@ void main() async {
         channelKey: 'downloads_progress_bar_channel',
         channelName: 'Download Progress notifications',
         channelDescription: 'Notification channel for downloads',
-        defaultColor: const Color.fromARGB(255, 80, 221, 92),
+        defaultColor: const Color.fromARGB(255, 35, 228, 51),
         ledColor: Colors.white)
   ],
   // Channel groups are only visual and are not required

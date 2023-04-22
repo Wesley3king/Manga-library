@@ -2,12 +2,18 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 class NotificationService {
   ///checks/requests permissions to display notifications
-  static void checkPermissions() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+  static void checkPermissions() async {
+    final bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    } else {
+      // caso tenha permissão removera todas as notificações
+      removeAllNotifications();
+    }
+  }
+
+  static void removeAllNotifications() {
+    AwesomeNotifications().cancelAll();
   }
 
   void updateProgressBar(
@@ -19,8 +25,8 @@ class NotificationService {
           content: NotificationContent(
               id: id,
               channelKey: 'downloads_progress_bar_channel',
-              title: '$bookAndChapter - Download finalizado',
-              // body: 'filename.txt',
+              title: 'Download finalizado',
+              body: bookAndChapter,
               category: NotificationCategory.Progress,
               // payload: {
               //   'file': 'filename.txt',
@@ -32,8 +38,8 @@ class NotificationService {
           content: NotificationContent(
               id: id,
               channelKey: 'downloads_progress_bar_channel',
-              title: '$progress% - $bookAndChapter',
-              // body: 'filename.txt',
+              title: '$progress% - Download em andamento',
+              body: bookAndChapter,
               category: NotificationCategory.Progress,
               // payload: {
               //   'file': 'filename.txt',
@@ -50,8 +56,8 @@ class NotificationService {
         content: NotificationContent(
             id: id,
             channelKey: 'downloads_progress_bar_channel',
-            title: 'Falha no download: $bookAndChapter',
-            // body: 'filename.txt',
+            title: 'Falha no download',
+            body: bookAndChapter,
             category: NotificationCategory.Progress,
             // payload: {
             //   'file': 'filename.txt',

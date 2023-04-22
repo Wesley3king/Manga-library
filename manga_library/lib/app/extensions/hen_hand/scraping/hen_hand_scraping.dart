@@ -144,7 +144,7 @@ Future<MangaInfoOffLineModel?> scrapingMangaDetail(String link) async {
         img: img ?? "erro",
         state: data.data['uploaded_at'],
         authors: authors ?? "Autor desconhecido",
-        link: "https://hentaihand.com/api/comics/$link?lang=en&nsfw=false",
+        link: "https://hentaihand.com/en/comic/$link",
         idExtension: 23,
         genres: genres,
         alternativeName: false,

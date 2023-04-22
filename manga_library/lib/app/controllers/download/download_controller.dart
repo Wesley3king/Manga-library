@@ -181,10 +181,19 @@ class DownloadController {
       List<Pattern> listOfRegExp = [
         RegExp(r'/', caseSensitive: false, dotAll: true),
         RegExp(r'~', caseSensitive: false, dotAll: true),
+        ":",
+        ";",
+        "|",
+        "\"",
+        "<",
+        ">",
+        '"',
+        "?",
+        "*"
       ];
-      final String chapterPath = "$name/cap_${capitulo.capitulo}";
-      for (dynamic regex in listOfRegExp) {
-        chapterPath.replaceAll(regex, "_");
+      String chapterPath = name;
+      for (Pattern regex in listOfRegExp) {
+        chapterPath = chapterPath.replaceAll(regex, "_");
       }
 
       // caminhos das paginas
@@ -207,15 +216,15 @@ class DownloadController {
         switch (GlobalData.settings.storageLocation) {
           case "intern":
             storagePath =
-                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}";
+                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/cap_${capitulo.capitulo}/$i.${exe[0]}";
             break;
           case "extern":
             storagePath =
-                "/storage/emulated/0/Manga Library/Downloads/$extensionaName/$chapterPath/$i.${exe[0]}";
+                "/storage/emulated/0/Manga Library/Downloads/$extensionaName/$chapterPath/cap_${capitulo.capitulo}/$i.${exe[0]}";
             break;
           case "externocult":
             storagePath =
-                "/storage/emulated/0/Manga Library/Downloads/$extensionaName/.$chapterPath/$i.${exe[0]}";
+                "/storage/emulated/0/Manga Library/Downloads/$extensionaName/.$chapterPath/cap_${capitulo.capitulo}/$i.${exe[0]}";
             break;
         }
 

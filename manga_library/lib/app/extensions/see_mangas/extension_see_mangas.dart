@@ -22,7 +22,15 @@ class ExtensionSeeMangas implements Extension {
   @override
   bool isAnDeprecatedExtension = false;
   @override
-  Map<String, dynamic>? fetchImagesHeader;
+  Map<String, dynamic>? fetchImagesHeader = {
+    "referer": "https://seemangas.com/",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Linux"',
+    "sec-fetch-dest": "image",
+    "sec-fetch-mode": 'no-cors',
+    "sec-fetch-site": "same-site",
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+  };
 
   @override
   Future<List<ModelHomePage>> homePage() async {
