@@ -175,6 +175,10 @@ class _MangaDetailsState extends State<MangaDetails> {
                             widget.dados.img,
                           ),
                           fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) =>
+                          const Center(
+                            child: Icon(Icons.broken_image, size: 45,),
+                          ),
                         ),
                       ),
                     ),

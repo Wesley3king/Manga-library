@@ -15,6 +15,7 @@ class HorizontalList extends StatefulWidget {
 
 class _HorizontalListState extends State<HorizontalList>
     with AutomaticKeepAliveClientMixin {
+
   Widget item(ModelHomeBook data, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
@@ -41,7 +42,7 @@ class _HorizontalListState extends State<HorizontalList>
                         color: Colors.grey,
                       ),
                       errorWidget: (context, url, error) => const Center(
-                        child: Icon(Icons.report_problem),
+                        child: Icon(Icons.broken_image),
                       ),
                       // useOldImageOnUrlChange: true,
                       fit: BoxFit.fill,

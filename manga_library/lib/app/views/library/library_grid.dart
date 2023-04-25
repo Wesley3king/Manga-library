@@ -42,7 +42,7 @@ class _LibraryItensState extends State<LibraryItens>
                   color: Colors.grey,
                 ),
                 errorWidget: (context, url, error) => const Center(
-                  child: Icon(Icons.report_problem),
+                  child: Icon(Icons.broken_image, size: 45,),
                 ),
               ),
             ),

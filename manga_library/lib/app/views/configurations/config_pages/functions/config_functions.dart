@@ -261,7 +261,6 @@ Map<String, Function> settingsFunctions = {
     controller.updateSetting();
   },
   "Limpar o Cache": (dynamic value, SettingsOptionsController controller) {
-    // OpenSettings.openAppSetting();
     SystemSettings.app();
   },
   "Restaurar": (dynamic value, SettingsOptionsController controller) {

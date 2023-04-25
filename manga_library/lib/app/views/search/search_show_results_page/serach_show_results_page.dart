@@ -111,7 +111,7 @@ class _SearchShowResultsPageState extends State<SearchShowResultsPage> {
                   color: Colors.grey,
                 ),
                 errorWidget: (context, url, error) => const Center(
-                  child: Icon(Icons.report_problem),
+                  child: Icon(Icons.broken_image, size: 45,),
                 ),
               ),
             ),

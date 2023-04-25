@@ -49,7 +49,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> with RouteAware {
                       );
                     },
                     errorBuilder: (context, error, stackTrace) => const Center(
-                      child: Icon(Icons.report_problem),
+                      child: Icon(Icons.broken_image),
                     ),
                     fit: BoxFit.fill,
                   ),

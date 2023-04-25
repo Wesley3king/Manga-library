@@ -189,9 +189,10 @@ class DownloadController {
         ">",
         '"',
         "?",
-        "*"
+        "*",
+        "\n"
       ];
-      String chapterPath = name;
+      String chapterPath = name.trim();
       for (Pattern regex in listOfRegExp) {
         chapterPath = chapterPath.replaceAll(regex, "_");
       }
@@ -216,7 +217,7 @@ class DownloadController {
         switch (GlobalData.settings.storageLocation) {
           case "intern":
             storagePath =
-                "/storage/emulated/0/Android/data/com.example.manga_library/files/Manga Library/Downloads/$extensionaName/$chapterPath/cap_${capitulo.capitulo}/$i.${exe[0]}";
+                "/storage/emulated/0/Android/data/com.example.manga_library/files/Downloads/$extensionaName/$chapterPath/cap_${capitulo.capitulo}/$i.${exe[0]}";
             break;
           case "extern":
             storagePath =
